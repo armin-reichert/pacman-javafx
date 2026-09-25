@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
@@ -16,7 +15,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -56,29 +54,35 @@ class XXL_ChaseAnimation {
     public static final float PAC_FLEEING_SPEED = 1.0f;
     public static final float GHOST_CHASE_SPEED = 1.05f;
 
-    private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
-    private final SpriteAnimationContainer animContainer = new SpriteAnimationContainer();
-    private final ActorSpriteAnimController animController = new ActorSpriteAnimController();
-
     private final int numTilesX;
-    private final Timeline chaseSimulation = new Timeline();
+
+    private final SpriteAnimationTimer animationTimer;
+    private final SpriteAnimationContainer animContainer;
+    private final ActorSpriteAnimController animController;
+    private final Timeline chaseSimulation;
+
     private final FloatProperty scaling = new SimpleFloatProperty(1);
 
-    private float y;
+    private GameVariantRuntime variant;
+
     private Pac pac;
     private List<Ghost> ghosts;
     private GhostPoints ghostPoints;
     private ChasingState state;
 
+    private float y;
     private int collisionCount;
-
-    private WorldNavigationSystem navigator;
-    private MovementSystem motor;
 
     private Renderer variantRenderer;
 
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
+
+        animationTimer = new SpriteAnimationTimer();
+        animContainer = new SpriteAnimationContainer();
+        animController = new ActorSpriteAnimController();
+
+        chaseSimulation = new Timeline();
         chaseSimulation.setCycleCount(Animation.INDEFINITE);
         chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update()));
         animationTimer.attachAnimContainer(animContainer);
@@ -88,6 +92,7 @@ class XXL_ChaseAnimation {
         if (variantRenderer == null) {
             return;
         }
+
         final GraphicsContext ctx = variantRenderer.ctx();
         ctx.save();
         ctx.translate(0, scaling.get() * y);
@@ -126,16 +131,11 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private GameVariantRuntime variant;
-
     public void setGameVariant(GameContext game, GameVariantRuntime variant, Canvas canvas) {
         requireNonNull(game);
         this.variant = requireNonNull(variant);
         requireNonNull(canvas);
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-
-        navigator = variant.playConfig().systems().navigator();
-        motor     = variant.playConfig().systems().motor();
 
         variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
         variantRenderer.scalingProperty().bind(scalingProperty());
@@ -151,6 +151,8 @@ class XXL_ChaseAnimation {
         pac = actorFactory.createPacMan();
         pac.pos().setX(numTilesX * WorldMap.TS);
         pac.show();
+
+        final var navigator = variant.playConfig().systems().navigator();
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
@@ -183,8 +185,7 @@ class XXL_ChaseAnimation {
         else {
             if (ghostPoints == null) {
                 pac.show();
-                moveGhosts();
-                movePac();
+                moveActors();
                 checkCollisionPacGhost();
             }
             else {
@@ -197,6 +198,8 @@ class XXL_ChaseAnimation {
     }
 
     private void startGhostsChasePacMan() {
+        final var navigator = variant.playConfig().systems().navigator();
+
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
         pac.pos().setX(numTilesX * WorldMap.TS);
@@ -217,8 +220,9 @@ class XXL_ChaseAnimation {
     }
 
     private void letGhostsChasePacMan() {
-        moveGhosts();
-        movePac();
+        final var navigator = variant.playConfig().systems().navigator();
+
+        moveActors();
 
         if (ghosts.getLast().pos().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.pos().setX(-(numTilesX - 4) * WorldMap.TS);
@@ -266,11 +270,9 @@ class XXL_ChaseAnimation {
         return Math.abs(either.pos().x() - other.pos().x()) < 1;
     }
 
-    private void movePac() {
+    private void moveActors() {
+        final var motor = variant.playConfig().systems().motor();
         motor.move(pac);
-    }
-
-    private void moveGhosts() {
         for (Ghost ghost : ghosts) {
             motor.move(ghost);
         }
