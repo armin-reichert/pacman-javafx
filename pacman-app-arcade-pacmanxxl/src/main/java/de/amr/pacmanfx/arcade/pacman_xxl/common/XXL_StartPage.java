@@ -107,7 +107,7 @@ public class XXL_StartPage implements StartPage {
 
         menu.init(app);
         menu.bind();
-        menu.restartAnimation();
+        menu.restartAnimation(app.variantManager().currentRuntime());
 
         Platform.runLater(() -> {
             menu.requestFocus();

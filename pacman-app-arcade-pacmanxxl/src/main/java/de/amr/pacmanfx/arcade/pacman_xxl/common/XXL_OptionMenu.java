@@ -127,9 +127,9 @@ public class XXL_OptionMenu extends OptionMenu {
         scaling = computeScalingValue(app.ui().window().stage().heightProperty());
     }
 
-    public void restartAnimation() {
+    public void restartAnimation(GameVariantRuntime runtime) {
         animationTimer.stop();
-        createNewChaseAnimation(app.variantManager().currentRuntime(), canvas);
+        createNewChaseAnimation(runtime, canvas);
         chaseAnimation.startGhostsChasePacMan();
         animationTimer.playFromStart();
     }
@@ -200,7 +200,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         stopAnimation();
         createNewChaseAnimation(newRuntime, canvas);
-        restartAnimation();
+        restartAnimation(newRuntime);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

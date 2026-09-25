@@ -43,21 +43,20 @@ class XXL_ChaseAnimation {
     public static final float PAC_FLEEING_SPEED = 1.0f;
     public static final float GHOST_CHASE_SPEED = 1.05f;
 
-    private final int numTilesX;
-
     private final GameVariantRuntime runtime;
+
+    private final int numTilesX;
+    private final float offsetY;
 
     private Pac pac;
     private List<Ghost> ghosts;
     private GhostPoints ghostPoints;
-    private ChasingState state;
 
     private GameEntityView pacView;
     private final Map<Ghost, GameEntityView> ghostViews = new HashMap<>();
     private GameEntityView ghostPointsView;
 
-    private final float offsetY;
-
+    private ChasingState state;
     private int collisionCount;
 
     public XXL_ChaseAnimation(int numTilesX, float offsetY, GameVariantRuntime runtime) {
