@@ -58,7 +58,7 @@ public class GameEntityViewBuilder {
     }
 
     public static GameEntityView messageEntityView(GameEntity gameEntity) {
-        return builder().entity(gameEntity).layer(RenderingLayer.MESSAGE).build();
+        return builder().entity(gameEntity).layer(RenderingLayer.PROPS).z(-10).build();
     }
 
     public static GameEntityView propView(GameEntity gameEntity) {

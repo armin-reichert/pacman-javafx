@@ -119,7 +119,7 @@ public class OptionMenu implements Renderable {
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.MESSAGE;
+        return RenderingLayer.PROPS;
     }
 
     public void setEntrySelectedSound(AudioClip entrySelectedSound) {

@@ -8,7 +8,6 @@ public enum RenderingLayer {
     BACKGROUND,
     SCENE,
     LEVEL,
-    MESSAGE,
     PROPS,
     ACTORS,
     HUD,
