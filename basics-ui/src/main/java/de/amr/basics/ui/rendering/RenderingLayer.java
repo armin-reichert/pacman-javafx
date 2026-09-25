@@ -11,5 +11,5 @@ public enum RenderingLayer {
     PROPS,
     ACTORS,
     HUD,
-    MINIVIEW_OVERLAY
+    MINI_VIEW_OVERLAY
 }

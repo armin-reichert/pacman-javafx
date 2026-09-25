@@ -46,7 +46,7 @@ public class IntroSceneView {
 
     private static final int LEFT_TILE_X = 4;
     private static final int TARGET_ENERGIZER_CENTER_X = TS * LEFT_TILE_X + 2;
-    private static final int TARGET_ENERGIZER_CENTER_Y = TS * 20 + 2;
+    private static final int TARGET_ENERGIZER_CENTER_Y = TS * 20;
 
     final Pulse pulse = new Pulse(10, Pulse.State.ON);
 
@@ -215,6 +215,7 @@ public class IntroSceneView {
             final ImageView imageView = ghostImageViews[i];
             final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
             imageView.image().setImage(spriteSheet.createImage(sprite));
+            imageView.image().setSmoothing(true);
             imageView.pos().set(TS * 4, y + offsetY - 1.5f * TS);
 
             final TextView characterDisplay = ghostCharacterDisplays[i];

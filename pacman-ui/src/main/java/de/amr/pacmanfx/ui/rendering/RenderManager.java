@@ -108,21 +108,25 @@ public class RenderManager {
 
     public void renderFrame(long tick, boolean debugMode) {
         renderQueue.sort();
-
         renderQueue.renderables().forEach(r -> {
-            switch (r.layer()) {
-                case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
-                case SCENE -> doRender(r, sceneRenderer, tick); //TODO get rid of scene renderers
-                case LEVEL -> doRender(r, levelRenderer, tick);
-                default -> doRender(r, variantRenderer, tick);
-            }
+            final Renderer renderer = selectRenderer(r);
+            doRender(r, renderer, tick);
         });
-
         if (debugMode) {
             renderQueue.renderables()
                 .filter(r -> r.layer() == RenderingLayer.SCENE)
                 .forEach(r -> sceneDebugRenderer.render(r, tick));
         }
+    }
+
+    //TODO this renderer per layer design is not the last word
+    private Renderer selectRenderer(Renderable r) {
+        return switch (r.layer()) {
+            case MINI_VIEW_OVERLAY -> miniViewOverlayRenderer;
+            case SCENE -> sceneRenderer; //TODO get rid of scene renderers
+            case LEVEL -> levelRenderer;
+            default -> variantRenderer;
+        };
     }
 
     // Takes offset of renderable into account (in Tengen for example, the game level has horizontal offset)

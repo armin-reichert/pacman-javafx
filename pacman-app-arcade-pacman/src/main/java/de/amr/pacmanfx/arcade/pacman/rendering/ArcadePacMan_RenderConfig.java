@@ -22,7 +22,6 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;

@@ -282,6 +282,7 @@ public class BaseRenderer implements Renderer {
             final double y = imageView.pos().y();
             ctx.save();
             ctx.scale(s, s);
+            ctx.setImageSmoothing(imageView.image().smoothing());
             ctx.drawImage(imageFX, x, y);
             ctx.restore();
         }

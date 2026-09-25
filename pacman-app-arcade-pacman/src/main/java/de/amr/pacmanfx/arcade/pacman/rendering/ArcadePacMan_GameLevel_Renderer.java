@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
+package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
@@ -12,9 +12,6 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;

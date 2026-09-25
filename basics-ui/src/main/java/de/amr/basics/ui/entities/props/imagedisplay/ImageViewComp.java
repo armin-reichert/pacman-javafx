@@ -11,11 +11,21 @@ public class ImageViewComp implements GameEntityComp {
 
     private Image image;
 
+    private boolean smoothing;
+
     public Image image() {
         return image;
     }
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public boolean smoothing() {
+        return smoothing;
+    }
+
+    public void setSmoothing(boolean smoothing) {
+        this.smoothing = smoothing;
     }
 }

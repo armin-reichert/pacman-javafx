@@ -115,7 +115,7 @@ public class MiniPlaySceneView extends HBox {
             level.entitySet().entities()
                 .all()
                 .map(entity ->
-                    GameEntityViewBuilder.builder().entity(entity).layer(RenderingLayer.MINIVIEW_OVERLAY).build())
+                    GameEntityViewBuilder.builder().entity(entity).layer(RenderingLayer.MINI_VIEW_OVERLAY).build())
         );
     }
 
@@ -183,6 +183,6 @@ public class MiniPlaySceneView extends HBox {
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return new GameLevelView(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO);
+        return new GameLevelView(level, info, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
     }
 }
