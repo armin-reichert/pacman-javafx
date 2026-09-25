@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
+import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -18,6 +19,7 @@ import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -38,6 +40,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
     private final Timeline animationTimer;
     private XXL_ChaseAnimation chaseAnimation;
+    private Renderer chaseAnimationRenderer;
 
     private GameApp app;
 
@@ -66,12 +69,26 @@ public class XXL_OptionMenu extends OptionMenu {
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
             chaseAnimation.simulate();
-            menuRenderer.clearCanvas();
-            menuRenderer.draw(this);
-            chaseAnimation.draw(scaling());
+            draw();
         });
         animationTimer = new Timeline(animationFrame);
         animationTimer.setCycleCount(Animation.INDEFINITE);
+    }
+
+    private void draw() {
+        menuRenderer.clearCanvas();
+        menuRenderer.draw(this);
+
+        final GraphicsContext ctx = canvas.getGraphicsContext2D();
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        chaseAnimation.renderables().forEach(r -> {
+            ctx.save();
+            ctx.translate(r.offset().x(), r.offset().y());
+            chaseAnimationRenderer.render(r, 0);
+            ctx.restore();
+        });
+        ctx.restore();
     }
 
     @Override
@@ -113,6 +130,7 @@ public class XXL_OptionMenu extends OptionMenu {
     public void restartAnimation() {
         animationTimer.stop();
         createNewChaseAnimation(app.variantManager().currentRuntime(), canvas);
+        chaseAnimation.startGhostsChasePacMan();
         animationTimer.playFromStart();
     }
 
@@ -120,7 +138,11 @@ public class XXL_OptionMenu extends OptionMenu {
         chaseAnimation = new XXL_ChaseAnimation(
             settings.numTilesX(),
             (settings.numTilesY() - 12) * TS,
-            runtime, canvas);
+            runtime);
+
+        chaseAnimationRenderer = runtime.uiConfig().renderConfig().createVariantRenderer(
+            runtime.playConfig().systems().actorSpriteAnimController(),
+            canvas);
     }
 
     public void stopAnimation() {

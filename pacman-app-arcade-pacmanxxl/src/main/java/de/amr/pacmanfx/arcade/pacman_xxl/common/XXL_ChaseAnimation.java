@@ -12,7 +12,6 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
@@ -25,8 +24,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -49,7 +46,6 @@ class XXL_ChaseAnimation {
     private final int numTilesX;
 
     private final GameVariantRuntime runtime;
-    private final Renderer renderer;
 
     private Pac pac;
     private List<Ghost> ghosts;
@@ -64,20 +60,12 @@ class XXL_ChaseAnimation {
 
     private int collisionCount;
 
-    public XXL_ChaseAnimation(int numTilesX, float offsetY, GameVariantRuntime runtime, Canvas canvas) {
+    public XXL_ChaseAnimation(int numTilesX, float offsetY, GameVariantRuntime runtime) {
         this.numTilesX = numTilesX;
         this.offsetY = offsetY;
         this.runtime = requireNonNull(runtime);
-        requireNonNull(canvas);
-
-        renderer = runtime.uiConfig().renderConfig().createVariantRenderer(
-            runtime.playConfig().systems().actorSpriteAnimController(),
-            canvas);
-
         createPac();
         createGhosts();
-        //TODO check this
-        startGhostsChasePacMan();
     }
 
     public void simulate() {
@@ -87,7 +75,7 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private Stream<Renderable> renderables() {
+    public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             pacView,
             ghostViews.values().stream().filter(view -> view.entity().isVisible()),
@@ -101,19 +89,6 @@ class XXL_ChaseAnimation {
             .layer(RenderingLayer.PROPS)
             .offset(new Vector2f(0, offsetY))
             .build();
-    }
-
-    public void draw(double scaling) {
-        final GraphicsContext ctx = renderer.ctx();
-        ctx.save();
-        ctx.scale(scaling, scaling);
-        renderables().forEach(r -> {
-            ctx.save();
-            ctx.translate(r.offset().x(), r.offset().y());
-            renderer.render(r, 0);
-            ctx.restore();
-        });
-        ctx.restore();
     }
 
     private void createPac() {
