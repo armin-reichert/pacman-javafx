@@ -134,7 +134,10 @@ public class XXL_OptionMenu extends OptionMenu {
         soundEnabledProperty().bind(app.ui().soundManager().muteProperty().not());
         scaling = computeScalingValue(app.ui().window().stage().heightProperty());
 
-        app.variantManager().addVariantListener((_,_,newVariantName) -> {
+        app.variantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
+            final GameVariantRuntime oldRuntime = app.variantManager().variantRuntimeByName(oldVariantName);
+            app.exitGameVariant(oldRuntime);
+
             final GameVariantRuntime newRuntime = app.variantManager().variantRuntimeByName(newVariantName);
             app.enterGameVariant(newRuntime);
             restartChaseAnimation(newRuntime);
@@ -158,7 +161,6 @@ public class XXL_OptionMenu extends OptionMenu {
             runtime.playConfig().systems().actorSpriteAnimController(),
             canvas);
     }
-
 
     public void stopChaseAnimation() {
         chaseAnimationTimer.stop();

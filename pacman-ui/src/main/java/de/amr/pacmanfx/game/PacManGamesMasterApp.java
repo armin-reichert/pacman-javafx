@@ -198,6 +198,20 @@ public final class PacManGamesMasterApp implements GameApp {
         ui.viewModel().maze3DSettings().init(runtime.uiConfig().worldSettings().maze());
     }
 
+    @Override
+    public void exitGameVariant(GameVariantRuntime variantRuntime) {
+        variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
+
+        variantRuntime.uiConfig().unload(this);
+
+        variantRuntime.spriteAnimContainer().clear();
+        ui.spriteAnimTimer().detachAnimationContainer();
+        ui.soundManager().dispose();
+
+        game.eventManager().removeAllSubscribers();
+        game = null;
+    }
+
     // GameLifecycle
 
     @Override
@@ -259,16 +273,4 @@ public final class PacManGamesMasterApp implements GameApp {
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
-    private void exitGameVariant(GameVariantRuntime variantRuntime) {
-        variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-
-        variantRuntime.uiConfig().unload(this);
-
-        variantRuntime.spriteAnimContainer().clear();
-        ui.spriteAnimTimer().detachAnimationContainer();
-        ui.soundManager().dispose();
-
-        game.eventManager().removeAllSubscribers();
-        game = null;
-    }
 }

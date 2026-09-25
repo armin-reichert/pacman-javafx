@@ -20,6 +20,8 @@ import de.amr.pacmanfx.ui.rendering.RenderManager;
  */
 public interface GameApp {
 
+    void exitGameVariant(GameVariantRuntime runtime);
+
     void enterGameVariant(GameVariantRuntime runtime);
 
     void startGame();
