@@ -12,7 +12,6 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -131,10 +130,10 @@ class XXL_ChaseAnimation {
         }
     }
 
-    public void setGameVariant(GameContext game, GameVariantRuntime variant, Canvas canvas) {
-        requireNonNull(game);
+    public void setGameVariant(GameVariantRuntime variant, Canvas canvas) {
         this.variant = requireNonNull(variant);
         requireNonNull(canvas);
+
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
         variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
