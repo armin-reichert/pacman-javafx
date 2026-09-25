@@ -20,6 +20,7 @@ open module de.amr.pacmanfx.arcade.pacman_xxl {
     requires de.amr.pacmanfx.arcade.ms_pacman;
     requires de.amr.pacmanfx.arcade.pacman;
     requires jdk.jfr;
+    requires java.xml;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl.app;
     exports de.amr.pacmanfx.arcade.pacman_xxl.common;

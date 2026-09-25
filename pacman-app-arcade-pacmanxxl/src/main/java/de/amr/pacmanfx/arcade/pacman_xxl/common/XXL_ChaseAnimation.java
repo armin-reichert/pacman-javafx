@@ -10,10 +10,10 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -44,8 +44,7 @@ class XXL_ChaseAnimation {
 
     public enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
-    public static final float FPS = 60;
-    public static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
+    public static final Duration FRAME_TIME = Duration.millis(1000f / 60f);
 
     public static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     public static final int GHOST_POINTS_DISPLAY_SEC = 1;
@@ -55,14 +54,11 @@ class XXL_ChaseAnimation {
 
     private final int numTilesX;
 
-    private final SpriteAnimationTimer animationTimer;
-    private final SpriteAnimationContainer animContainer;
-    private final ActorSpriteAnimController animController;
     private final Timeline chaseSimulation;
 
     private final FloatProperty scaling = new SimpleFloatProperty(1);
 
-    private GameVariantRuntime variant;
+    private GameVariantRuntime runtime;
 
     private Pac pac;
     private List<Ghost> ghosts;
@@ -77,14 +73,15 @@ class XXL_ChaseAnimation {
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
 
-        animationTimer = new SpriteAnimationTimer();
-        animContainer = new SpriteAnimationContainer();
-        animController = new ActorSpriteAnimController();
-
+        final var animationFrame = new KeyFrame(FRAME_TIME, _ -> {
+            switch (state) {
+                case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
+                case PAC_CHASING_GHOSTS -> letPacManChaseGhosts();
+            }
+        });
         chaseSimulation = new Timeline();
+        chaseSimulation.getKeyFrames().add(animationFrame);
         chaseSimulation.setCycleCount(Animation.INDEFINITE);
-        chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update()));
-        animationTimer.attachAnimContainer(animContainer);
     }
 
     public void draw(long tick) {
@@ -113,67 +110,67 @@ class XXL_ChaseAnimation {
         this.y = y;
     }
 
-    public void startChaseSimulation() {
+    public void startChaseSimulation(SpriteAnimationTimer animationTimer) {
         chaseSimulation.play();
         animationTimer.start();
     }
 
-    public void stopChaseSimulation() {
+    public void stopChaseSimulation(SpriteAnimationTimer animationTimer) {
         chaseSimulation.stop();
         animationTimer.stop();
     }
 
-    private void update() {
-        switch (state) {
-            case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
-            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts();
-        }
-    }
-
-    public void setGameVariant(GameVariantRuntime variant, Canvas canvas) {
-        this.variant = requireNonNull(variant);
+    public void setGameVariant(GameVariantRuntime runtime, Canvas canvas) {
+        this.runtime = requireNonNull(runtime);
         requireNonNull(canvas);
 
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
         variantRenderer.scalingProperty().bind(scalingProperty());
 
-        createPac(renderConfig);
-        createGhosts(renderConfig);
+        createPac();
+        createGhosts();
+
+        //TODO check this
         startGhostsChasePacMan();
     }
 
-    private void createPac(GameVariantRenderConfig renderConfig) {
-        final var actorFactory = ArcadePacMan_ActorFactory.instance();
+    private void createPac() {
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
         pac = actorFactory.createPacMan();
         pac.pos().setX(numTilesX * WorldMap.TS);
         pac.show();
 
-        final var navigator = variant.playConfig().systems().navigator();
-
+        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
         navigator.setSpeed(pac, PAC_FLEEING_SPEED);
 
-        animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
+        animController.setAnimations(pac, renderConfig.createPacAnimations(runtime.spriteAnimContainer()));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
     }
 
-    private void createGhosts(GameVariantRenderConfig renderConfig) {
+    private void createGhosts() {
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+
         ghosts = new ArrayList<>(List.of(
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.ORANGE_GHOST_POKEY)
         ));
     }
 
     private void letPacManChaseGhosts() {
         if (ghosts.isEmpty()) {
-            createGhosts(variant.uiConfig().renderConfig());
+            createGhosts();
             collisionCount = 0;
         }
 
@@ -197,7 +194,8 @@ class XXL_ChaseAnimation {
     }
 
     private void startGhostsChasePacMan() {
-        final var navigator = variant.playConfig().systems().navigator();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
@@ -219,7 +217,8 @@ class XXL_ChaseAnimation {
     }
 
     private void letGhostsChasePacMan() {
-        final var navigator = variant.playConfig().systems().navigator();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
         moveActors();
 
@@ -270,7 +269,7 @@ class XXL_ChaseAnimation {
     }
 
     private void moveActors() {
-        final var motor = variant.playConfig().systems().motor();
+        final var motor = runtime.playConfig().systems().motor();
         motor.move(pac);
         for (Ghost ghost : ghosts) {
             motor.move(ghost);

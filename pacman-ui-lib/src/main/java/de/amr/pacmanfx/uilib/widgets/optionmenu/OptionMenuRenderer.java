@@ -35,10 +35,9 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     @Override
-    public void render(Renderable r, long tick) {
-        if (!(r instanceof OptionMenu menu)) {
-            return;
-        }
+    public void render(Renderable r, long tick) {}
+
+    public void draw(OptionMenu menu) {
         final OptionMenuSettings settings = menu.settings();
 
         final Font titleFont = settings.titleFont().toFont();
