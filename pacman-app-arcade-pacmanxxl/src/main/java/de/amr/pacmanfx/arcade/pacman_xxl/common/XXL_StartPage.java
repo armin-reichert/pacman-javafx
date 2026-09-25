@@ -106,7 +106,7 @@ public class XXL_StartPage implements StartPage {
         }
 
         menu.init(app);
-        menu.bind();
+        menu.bindEntries();
         menu.restartChaseAnimation(app.variantManager().currentRuntime());
 
         Platform.runLater(() -> {
@@ -118,7 +118,7 @@ public class XXL_StartPage implements StartPage {
     @Override
     public void onExit() {
         stopTalking();
-        menu.unbind();
+        menu.unbindEntries();
         menu.stopDrawLoop();
         menu.stopChaseAnimation();
     }
@@ -136,7 +136,7 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        app.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+        app.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
     }
 
     private void startTalking() {

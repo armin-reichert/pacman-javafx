@@ -217,7 +217,7 @@ public class GameUI implements GameEventListener {
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (actionBindings.executeMatchingAction(app).isEmpty()) {
-                    viewManager.assertView(currentViewID).onInput(app);
+                    viewManager.reqView(currentViewID).onInput(app);
                 }
             }
         }

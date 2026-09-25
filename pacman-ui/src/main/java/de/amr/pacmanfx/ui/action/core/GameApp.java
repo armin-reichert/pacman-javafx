@@ -24,6 +24,8 @@ public interface GameApp {
 
     void enterGameVariant(GameVariantRuntime runtime);
 
+    void newGameSession();
+
     void startGame();
 
     void suspendGame();

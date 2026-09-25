@@ -99,6 +99,13 @@ public final class PacManGamesMasterApp implements GameApp {
     // GameAppContext
 
     @Override
+    public void newGameSession() {
+        final GameSession session = new GameSession(
+            gameVariantManager.currentVariantName(), new GameCheats(), game.playConfig().initialLifeCount());
+        game.setSession(session);
+    }
+
+    @Override
     public RenderManager renderManager() {
         return renderManager;
     }
@@ -174,8 +181,7 @@ public final class PacManGamesMasterApp implements GameApp {
         // Create new game context
         game = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
 
-        final GameSession session = new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), runtime.playConfig().initialLifeCount());
-        game.setSession(session);
+        //newGameSession();
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 
@@ -200,9 +206,12 @@ public final class PacManGamesMasterApp implements GameApp {
 
     @Override
     public void exitGameVariant(GameVariantRuntime variantRuntime) {
+        requireNonNull(variantRuntime);
+
         variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
         variantRuntime.uiConfig().unload(this);
         variantRuntime.spriteAnimContainer().clear();
+
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 
@@ -214,12 +223,8 @@ public final class PacManGamesMasterApp implements GameApp {
 
     @Override
     public void startGame() {
-        final GameSession session = new GameSession(
-            gameVariantManager.currentVariantName(),
-            new GameCheats(),
-            game.playConfig().initialLifeCount()
-        );
-        game.setSession(session);
+        newGameSession();
+
         game.playConfig().gamePlay().startSession(game);
 
         ui.window().mainScene().connect(game.session());

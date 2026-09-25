@@ -33,10 +33,10 @@ public final class GameViewManager {
             app.ui().clearMessage();
 
             if (oldID != null) {
-                assertView(oldID).onExit();
+                reqView(oldID).onExit();
             }
 
-            final GameView newView = assertView(newID);
+            final GameView newView = reqView(newID);
             app.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
@@ -52,12 +52,12 @@ public final class GameViewManager {
         Logger.info("Game view registered. ID='{}': {}", viewID, gameView);
     }
 
-    public GameView assertView(GameViewID viewID) {
-        return assertView(viewID, GameView.class);
+    public GameView reqView(GameViewID viewID) {
+        return reqView(viewID, GameView.class);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameView> T assertView(GameViewID viewID, Class<T> viewClass) {
+    public <T extends GameView> T reqView(GameViewID viewID, Class<T> viewClass) {
         final GameView view = views.get(viewID);
         if (view == null) {
             throw new IllegalStateException("No view found for ID: " + viewID);
@@ -89,7 +89,7 @@ public final class GameViewManager {
     }
 
     public GameView assertCurrentView() {
-        return assertView(currentViewID());
+        return reqView(currentViewID());
     }
 
     public Optional<GameView> optCurrentView() {
@@ -111,7 +111,7 @@ public final class GameViewManager {
     }
 
     public StartPagesView startPagesView() {
-        return (StartPagesView) assertView(GameViewID.START_PAGES);
+        return (StartPagesView) reqView(GameViewID.START_PAGES);
     }
 
     // Game play view
@@ -121,7 +121,7 @@ public final class GameViewManager {
     }
 
     public GamePlayView gamePlayView() {
-        return (GamePlayView) assertView(GameViewID.GAMEPLAY);
+        return (GamePlayView) reqView(GameViewID.GAMEPLAY);
     }
 
     // Editor view

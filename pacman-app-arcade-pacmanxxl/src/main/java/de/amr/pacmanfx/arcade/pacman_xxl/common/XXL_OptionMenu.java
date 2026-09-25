@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -112,6 +113,7 @@ public class XXL_OptionMenu extends OptionMenu {
     public void init(GameApp app) {
         this.app = requireNonNull(app);
 
+        final GameUI ui = app.ui();
         final String variantName = app.variantManager().currentVariantName();
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
 
@@ -122,17 +124,20 @@ public class XXL_OptionMenu extends OptionMenu {
         }
         xxlMapManager.loadMapPrototypes();
 
+        app.newGameSession();
+
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
-        meView3DEnabled.setValue(app.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
+        meView3DEnabled.setValue(ui.viewModel().common3DSettings().view3DEnabledProperty().get());
         meCutScenesEnabled.setValue(app.game().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
         meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(app.ui().soundManager().muteProperty().not());
-        scaling = computeScalingValue(app.ui().window().stage().heightProperty());
+        soundEnabledProperty().bind(ui.soundManager().muteProperty().not());
+
+        scaling = computeScalingValue(ui.window().stage().heightProperty());
 
         app.variantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
             final GameVariantRuntime oldRuntime = app.variantManager().variantRuntimeByName(oldVariantName);
@@ -166,15 +171,14 @@ public class XXL_OptionMenu extends OptionMenu {
         chaseAnimationTimer.stop();
     }
 
-    public void bind() {
-        unbind();
+    public void bindEntries() {
         meGameVariantID.valueProperty().addListener(this::onGameVariantNameChanged);
         meView3DEnabled.valueProperty().addListener(this::onPlay3DSettingsChange);
         meCutScenesEnabled.valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().bind(scaling);
     }
 
-    public void unbind() {
+    public void unbindEntries() {
         meGameVariantID.valueProperty().removeListener(this::onGameVariantNameChanged);
         meView3DEnabled.valueProperty().removeListener(this::onPlay3DSettingsChange);
         meCutScenesEnabled.valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);

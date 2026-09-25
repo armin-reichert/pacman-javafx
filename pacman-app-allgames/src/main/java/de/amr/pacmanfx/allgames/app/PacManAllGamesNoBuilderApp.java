@@ -64,7 +64,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
             TengenDashboardFactory.instance()
         );
 
-        final StartPagesView startPages = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPages = ui.viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
         startPages.addStartPage(app, new ArcadePacMan_StartPage());
         startPages.addStartPage(app, new ArcadeMsPacMan_StartPage());
         startPages.addStartPage(app, new TengenMsPacMan_StartPage());
