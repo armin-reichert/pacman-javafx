@@ -166,11 +166,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        return null;
-    }
-
-    @Override
     public Renderer createGameSceneDebugRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
             case TengenMsPacMan_PlayScene2D _ -> new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas);

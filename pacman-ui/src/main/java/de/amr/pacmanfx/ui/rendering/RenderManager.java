@@ -28,7 +28,6 @@ public class RenderManager {
 
     private Renderer variantRenderer;
     private Renderer levelRenderer;
-    private Renderer sceneRenderer;
     private Renderer sceneDebugRenderer;
     private Renderer miniViewOverlayRenderer;
 
@@ -51,7 +50,6 @@ public class RenderManager {
     private void clearAllRenderers() {
         variantRenderer = null;
         levelRenderer = null;
-        sceneRenderer = null;
         sceneDebugRenderer = null;
     }
 
@@ -85,11 +83,9 @@ public class RenderManager {
         }
 
         variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
-        sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
         sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
         levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
 
-        bindRendererProperties(sceneRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
         bindRendererProperties(variantRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
         bindRendererProperties(sceneDebugRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
         bindRendererProperties(levelRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
@@ -114,7 +110,7 @@ public class RenderManager {
         });
         if (debugMode) {
             renderQueue.renderables()
-                .filter(r -> r.layer() == RenderingLayer.SCENE)
+                .filter(r -> r.layer() == RenderingLayer.DEBUG)
                 .forEach(r -> sceneDebugRenderer.render(r, tick));
         }
     }
@@ -123,7 +119,6 @@ public class RenderManager {
     private Renderer selectRenderer(Renderable r) {
         return switch (r.layer()) {
             case MINI_VIEW_OVERLAY -> miniViewOverlayRenderer;
-            case SCENE -> sceneRenderer; //TODO get rid of scene renderers
             case LEVEL -> levelRenderer;
             default -> variantRenderer;
         };

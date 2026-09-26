@@ -6,10 +6,10 @@ package de.amr.basics.ui.rendering;
 
 public enum RenderingLayer {
     BACKGROUND,
-    SCENE,
     LEVEL,
     PROPS,
     ACTORS,
     HUD,
-    MINI_VIEW_OVERLAY
+    MINI_VIEW_OVERLAY,
+    DEBUG
 }

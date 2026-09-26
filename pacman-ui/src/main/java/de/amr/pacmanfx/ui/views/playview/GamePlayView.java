@@ -15,9 +15,9 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
@@ -263,7 +263,7 @@ public class GamePlayView implements GameView {
         currentGameScene.renderables().forEach(renderManager::addRenderable);
 
         if (debugMode) {
-            renderManager.addRenderable(new GameSceneView(abstractGameScene)); //TODO change this
+            renderManager.addRenderable(new GameSceneDebugView(abstractGameScene));
         }
 
         // Clear canvases

@@ -32,6 +32,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -77,7 +78,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameSceneView(AbstractGameScene gameScene) -> render(gameScene);
+            case GameSceneDebugView(AbstractGameScene gameScene) -> render(gameScene);
             default -> {}
         }
     }

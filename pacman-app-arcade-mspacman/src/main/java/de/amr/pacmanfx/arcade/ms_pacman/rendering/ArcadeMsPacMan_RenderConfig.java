@@ -98,11 +98,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        return null;
-    }
-
-    @Override
     public Renderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(animSystem);
         requireNonNull(canvas);

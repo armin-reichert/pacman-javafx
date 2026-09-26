@@ -112,11 +112,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        return null;
-    }
-
-    @Override
     public Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new ArcadePacMan_GameLevel_Renderer(canvas, this);
     }
