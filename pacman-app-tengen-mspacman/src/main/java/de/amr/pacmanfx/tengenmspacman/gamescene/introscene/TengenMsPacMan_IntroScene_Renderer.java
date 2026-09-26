@@ -12,9 +12,8 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.SceneState;
+import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.*;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
@@ -24,23 +23,11 @@ import javafx.scene.text.Font;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_X;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_Y;
-import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
-
-    public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
-    public static final String PRESS_START = "PRESS START";
-    public static final String NAMCO_LTD = "MS PAC-MAN TM NAMCO LTD";
-    public static final String TENGEN_INC = "©1990 TENGEN INC";
-    public static final String ALL_RIGHTS_RESERVED = "ALL RIGHTS RESERVED";
-    public static final String WITH = "WITH";
-    public static final String STARRING = "STARRING";
-    public static final String MS_PAC_MAN = "MS PAC-MAN";
-    public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
     private final TengenMsPacMan_UISettings uiSettings;
@@ -72,13 +59,29 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
 
         switch (introScene.flow.state()) {
 
-            case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
+            case SceneState.PRESENTING_GAME -> {
+                if (introScene.dark) {
+                    return;
+                }
+                final long stateTick = introScene.flow.state().timer().tickCount();
+                final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
+//                fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
+                //drawSprite(spriteSheet.findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 7 * TS, ANCHOR_Y, true);
+                if (bright) {
+//                    fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
+                }
+                //fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, ANCHOR_Y + 15 * TS);
+                //fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, ANCHOR_Y + 16 * TS);
+                //fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, ANCHOR_Y + 17 * TS);
+            }
+
+            //case SceneState.SHOWING_MARQUEE -> fillText(TITLE_TEXT, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
 
             case SceneState.GHOSTS_MARCHING_IN -> {
                 final Ghost currentGhost = introScene.currentGhost();
                 final int personalityIndex = currentGhost.personality().ordinal();
                 final Color ghostColor = introScene.ghostColors[personalityIndex];
-                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
+                fillText(MARQUEE_TITLE_TEXT, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
                 if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 23);
                 }
@@ -86,26 +89,9 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
+                //fillText(TITLE_TEXT, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), ANCHOR_X + 28, ANCHOR_Y + 38);
-            }
-
-            case SceneState.WAITING_FOR_START -> {
-                if (introScene.dark) {
-                    return;
-                }
-                final long stateTick = introScene.flow.state().timer().tickCount();
-                final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
-                    introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
-                drawSprite(spriteSheet.findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 7 * TS, ANCHOR_Y, true);
-                if (bright) {
-                    fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
-                }
-                fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, ANCHOR_Y + 15 * TS);
-                fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, ANCHOR_Y + 16 * TS);
-                fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, ANCHOR_Y + 17 * TS);
             }
 
             default -> {}

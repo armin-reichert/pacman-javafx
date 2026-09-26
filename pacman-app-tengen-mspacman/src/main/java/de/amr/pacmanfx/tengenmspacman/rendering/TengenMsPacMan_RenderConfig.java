@@ -170,7 +170,8 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
-            case TengenMsPacMan_IntroScene ignore -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
+            case TengenMsPacMan_IntroScene ignore ->
+                new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
             default -> null;
         };
     }

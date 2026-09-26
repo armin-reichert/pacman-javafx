@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -71,6 +72,13 @@ public class GameEntityViewBuilder {
 
     public static Stream<Renderable> streamOfPropViews(GameEntity... entities) {
         return Stream.of(entities)
+            .filter(Objects::nonNull)
+            .filter(GameEntity::isVisible)
+            .map(GameEntityViewBuilder::propView);
+    }
+
+    public static Stream<Renderable> streamOfPropViews(Collection<GameEntity> entities) {
+        return entities.stream()
             .filter(Objects::nonNull)
             .filter(GameEntity::isVisible)
             .map(GameEntityViewBuilder::propView);

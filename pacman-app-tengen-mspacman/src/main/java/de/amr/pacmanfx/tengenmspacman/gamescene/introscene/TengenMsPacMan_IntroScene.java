@@ -4,14 +4,16 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
@@ -32,7 +34,10 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
+import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
@@ -52,6 +57,20 @@ import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
+    public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
+    public static final String PRESS_START = "PRESS START";
+
+    // Footer
+    public static final String NAMCO_LTD = "MS PAC-MAN TM NAMCO LTD";
+    public static final String TENGEN_INC = "©1990 TENGEN INC";
+    public static final String ALL_RIGHTS_RESERVED = "ALL RIGHTS RESERVED";
+
+    // Marquee
+    public static final String MARQUEE_TITLE_TEXT = "\"MS PAC-MAN\"";
+    public static final String WITH = "WITH";
+    public static final String STARRING = "STARRING";
+    public static final String MS_PAC_MAN = "MS PAC-MAN";
+
     // Anchor point for everything
     public static final int ANCHOR_X = 76, ANCHOR_Y = 64;
 
@@ -60,20 +79,27 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public static final int MS_PAC_MAN_STOP_X = ANCHOR_X + 62;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
-    public final StateMachine<TengenMsPacMan_IntroScene> flow;
 
     public TengenMsPacMan_SpriteSheet spriteSheet;
-
     public Color[] ghostColors;
 
+    // First sub-scene
+    private List<GameEntity> tengenPresentsContent;
+    private TextView tengenPresentsTextView;
+    private TextView pressStartTextView;
+
+    // Seconds sub-scene
+    private List<GameEntity> marqueeContent;
+    private TextView marqueeTitleTextView;
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
 
-    public Vector2f presentsTextPosition;
     public int ghostIndex;
     private int waitBeforeRising;
     public boolean dark;
+
+    public final StateMachine<TengenMsPacMan_IntroScene> flow;
 
     public TengenMsPacMan_IntroScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -89,12 +115,21 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            new GameSceneView(this),
-            propView(marquee),
-            propView(msPacMan),
-            ghosts.stream().map(GameEntityViewBuilder::propView)
-        );
+        return switch (flow.state()) {
+            case SceneState.PRESENTING_GAME
+                -> dark? Stream.empty() : GameEntityViewBuilder.streamOfPropViews(tengenPresentsContent);
+
+            case SceneState.SHOWING_MARQUEE,
+                 SceneState.GHOSTS_MARCHING_IN,
+                 SceneState.MS_PACMAN_MARCHING_IN -> Ufx.streamOf(
+                //TODO replace by renderables:
+                new GameSceneView(this),
+                propView(marquee),
+                propView(msPacMan),
+                ghosts.stream().map(GameEntityViewBuilder::propView)
+            );
+            default -> Stream.empty();
+        };
     }
 
     @Override
@@ -121,10 +156,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
-        presentsTextPosition = new Vector2f(8 * TS, ANCHOR_Y - TS);
+        createTengenPresentsContent();
+        createMarqueeContent();
 
-        createEntities();
-        flow.restartState(this, SceneState.WAITING_FOR_START);
+        flow.restartState(this, SceneState.PRESENTING_GAME);
     }
 
     @Override
@@ -134,8 +169,69 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     // --- private
 
-    private void createEntities() {
-        marquee = createMarquee();
+    private void createTengenPresentsContent() {
+        tengenPresentsTextView = new TextView();
+        tengenPresentsTextView.pos().set(8 * TS, ANCHOR_Y - TS);
+        tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
+        tengenPresentsTextView.data().setFillColor(Color.WHITE); // TODO animate
+        tengenPresentsTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        tengenPresentsTextView.show();
+
+        final ImageView titleImageView = new ImageView();
+        titleImageView.pos().set(7 * TS, ANCHOR_Y);
+        titleImageView.image().setImage(spriteSheet.createImage(SpriteID.LARGE_MS_PAC_MAN_TEXT));
+        titleImageView.show();
+
+        pressStartTextView = new TextView();
+        pressStartTextView.pos().set(10 * TS, ANCHOR_Y + 9 * TS);
+        pressStartTextView.data().setText(PRESS_START);
+        pressStartTextView.data().setFillColor(NES_Palette.color(0x20)); // TODO animate
+        pressStartTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        pressStartTextView.show();
+
+        final TextView footer1 = new TextView();
+        footer1.pos().set(5 * TS, ANCHOR_Y + 15 * TS);
+        footer1.data().setText(NAMCO_LTD);
+        footer1.data().setFillColor(NES_Palette.color(0x25));
+        footer1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        footer1.show();
+
+        final TextView footer2 = new TextView();
+        footer2.pos().set(7 * TS, ANCHOR_Y + 16 * TS);
+        footer2.data().setText(TENGEN_INC);
+        footer2.data().setFillColor(NES_Palette.color(0x25));
+        footer2.data().setFont(GlobalFonts.ARCADE.font(TS));
+        footer2.show();
+
+        final TextView footer3 = new TextView();
+        footer3.pos().set(6 * TS, ANCHOR_Y + 17 * TS);
+        footer3.data().setText(ALL_RIGHTS_RESERVED);
+        footer3.data().setFillColor(NES_Palette.color(0x25));
+        footer3.data().setFont(GlobalFonts.ARCADE.font(TS));
+        footer3.show();
+
+        tengenPresentsContent = List.of(tengenPresentsTextView, titleImageView, pressStartTextView, footer1, footer2, footer3);
+    }
+
+    private void createMarqueeContent() {
+        marqueeTitleTextView = new TextView();
+        marqueeTitleTextView.pos().set(ANCHOR_X + 20, ANCHOR_Y - 18);
+        marqueeTitleTextView.data().setFillColor(NES_Palette.color(0x28));
+        marqueeTitleTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeTitleTextView.data().setText(MARQUEE_TITLE_TEXT);
+        marqueeTitleTextView.show();
+
+        marquee = new Marquee();
+        marquee.pos().set(ANCHOR_X, ANCHOR_Y);
+
+        marquee.layout().setNumBulbsHorizontally(34);
+        marquee.layout().setNumBulbsVertically(16);
+        marquee.layout().setBulbSize(4);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOnColor(NES_Palette.rgb(0x20));
+        marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
@@ -155,28 +251,11 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         );
     }
 
-    private Marquee createMarquee() {
-        final var marquee = new Marquee();
-
-        marquee.pos().set(ANCHOR_X, ANCHOR_Y);
-
-        marquee.layout().setNumBulbsHorizontally(34);
-        marquee.layout().setNumBulbsVertically(16);
-        marquee.layout().setBulbSize(4);
-        marquee.layout().setBrightBulbsCount(6);
-        marquee.layout().setBrightBulbsDistance(16);
-
-        marquee.visualization().setBulbOnColor(NES_Palette.rgb(0x20));
-        marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
-
-        return marquee;
-    }
-
     // --- State machine ---
 
     public enum SceneState implements State<TengenMsPacMan_IntroScene> {
 
-        WAITING_FOR_START {
+        PRESENTING_GAME {
 
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
@@ -194,6 +273,15 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 } else if (timer.atSecond(9)) {
                     scene.dark = false;
                     scene.flow.enterState(scene, SHOWING_MARQUEE);
+                }
+                final long stateTick = timer().tickCount();
+                final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
+
+                scene.tengenPresentsTextView.data().setFillColor(TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick));
+                if (bright) {
+                    scene.pressStartTextView.show();
+                } else {
+                    scene.pressStartTextView.hide();
                 }
             }
         },
