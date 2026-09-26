@@ -17,7 +17,6 @@ import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -40,8 +39,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
-import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -53,7 +50,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
@@ -89,8 +86,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     private TextView pressStartTextView;
 
     // Second sub-scene (marquee)
-    private List<GameEntity> marqueeContent;
-    private TextView marqueeTitleTextView;
+    private List<GameEntity> marqueeSubSceneContent;
     private TextView marqueeTextView1;
     private TextView marqueeTextView2;
     private Marquee marquee;
@@ -117,22 +113,15 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
+        if (dark) return Stream.empty();
+
         return switch (flow.state()) {
-            case SceneState.PRESENTING_GAME
-                -> dark? Stream.empty() : GameEntityViewBuilder.streamOfPropViews(tengenPresentsContent);
+            case SceneState.PRESENTING_GAME -> streamOfPropViews(tengenPresentsContent);
 
             case SceneState.SHOWING_MARQUEE,
                  SceneState.GHOSTS_MARCHING_IN,
-                 SceneState.MS_PACMAN_MARCHING_IN -> Ufx.streamOf(
-                //TODO replace by renderables:
-                new GameSceneView(this),
-                propView(marqueeTitleTextView),
-                propView(marquee),
-                propView(marqueeTextView1),
-                propView(marqueeTextView2),
-                propView(msPacMan),
-                ghosts.stream().map(GameEntityViewBuilder::propView)
-            );
+                 SceneState.MS_PACMAN_MARCHING_IN -> streamOfPropViews(marqueeSubSceneContent);
+
             default -> Stream.empty();
         };
     }
@@ -219,7 +208,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     private void createMarqueeSubSceneContent() {
-        marqueeTitleTextView = new TextView();
+        final var marqueeTitleTextView = new TextView();
         marqueeTitleTextView.pos().set(ANCHOR_X + 20, ANCHOR_Y - 18);
         marqueeTitleTextView.data().setFillColor(NES_Palette.color(0x28));
         marqueeTitleTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
@@ -239,26 +228,21 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
 
         marqueeTextView1 = new TextView();
-        marqueeTextView1.data().setFillColor(Color.WHITE); //TODO
+        marqueeTextView1.data().setFillColor(Color.WHITE);
         marqueeTextView1.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeTextView1.data().setText("Text 1 in Marquee");
         marqueeTextView1.show();
 
         marqueeTextView2 = new TextView();
-        marqueeTextView2.data().setFillColor(Color.WHITE); //TODO
+        marqueeTextView2.data().setFillColor(Color.WHITE);
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeTextView1.data().setText("Text 2 in Marquee");
-
         marqueeTextView2.show();
 
-        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
+        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
-        final GameVariantRuntime variant = app().variantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
-
-        msPacMan = actorFactory.createMsPacMan();
+        msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
 
         ghosts = List.of(
@@ -266,6 +250,18 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+        );
+
+        marqueeSubSceneContent = List.of(
+            marqueeTitleTextView,
+            marquee,
+            marqueeTextView1,
+            marqueeTextView2,
+            msPacMan,
+            ghosts.get(0),
+            ghosts.get(1),
+            ghosts.get(2),
+            ghosts.get(3)
         );
     }
 
