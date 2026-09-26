@@ -56,13 +56,22 @@ public class BaseRenderer implements Renderer {
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
-    protected final GraphicsContext ctx;
+    protected GraphicsContext ctx;
+
+    public BaseRenderer() {}
 
     public BaseRenderer(Canvas canvas) {
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
+        setCanvas(canvas);
+    }
+
+    public void setCanvas(Canvas canvas) {
+        requireNonNull(canvas);
+        ctx = canvas.getGraphicsContext2D();
     }
 
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        requireNonNull(gameEntity);
+
         switch (gameEntity) {
             case ImageView imageView -> drawImageView(imageView);
             case TextView textView -> drawTextView(textView);
@@ -77,7 +86,6 @@ public class BaseRenderer implements Renderer {
     public void render(Renderable r, long tick) {
         ctx.save();
         switch (r) {
-            case null -> {}
             case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
             case ColoredBackground coloredBackground -> fillColoredRect(coloredBackground);
             default -> throw new IllegalStateException("Cannot render: " + r);
