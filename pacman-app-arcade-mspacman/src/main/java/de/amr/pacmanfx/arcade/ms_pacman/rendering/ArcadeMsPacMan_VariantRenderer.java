@@ -16,6 +16,10 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.BlankCanvas;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
@@ -77,6 +81,10 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
             // This case will disappear:
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            case BlankCanvas _ -> clearCanvas();
+            case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
+            case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
+            case GridPattern gridPattern -> renderGridPattern(gridPattern);
             default -> super.render(r, tick);
         }
     }
@@ -250,6 +258,46 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
         }
+    }
+
+    //TODO implement only once
+
+    private void renderHexCodeBlock(HexDigitsBlock block) {
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(TS));
+        ctx.setFill(ArcadeColor.WHITE.color());
+        ctx.setFont(arcade8);
+        for (int row = 0; row < block.height(); ++row) {
+            final double y = scaled(TS * row);
+            for (int col = 0; col < block.width(); ++col) {
+                final double x = scaled(TS * col);
+                final byte number = block.digits()[row][col];
+                ctx.fillText(Integer.toHexString(number), x, y + scaled(TS)); // Note: y param is baseline!
+            }
+        }
+    }
+
+    private void renderSpritesBlock(SpritesBlock block) {
+        for (int row = 0; row < block.numSpritesY(); ++row) {
+            for (int col = 0; col < block.numSpritesX(); ++col) {
+                int i = row * block.numSpritesX() + col;
+                drawSprite(block.sprites()[i], block.spriteSize() * col, block.spriteSize() * row, true);
+            }
+        }
+    }
+
+    private void renderGridPattern(GridPattern grid) {
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setStroke(ArcadeColor.WHITE.color());
+        for (int row = 0; row < grid.height(); ++row) {
+            final int y = row * grid.cellSize();
+            ctx.strokeLine(0, y, grid.width() * TS, y);
+        }
+        for (int col = 0; col < grid.width(); ++col) {
+            final int x = col * grid.cellSize();
+            ctx.strokeLine(x, 0, x, grid.height() * TS);
+        }
+        ctx.restore();
     }
 
 }

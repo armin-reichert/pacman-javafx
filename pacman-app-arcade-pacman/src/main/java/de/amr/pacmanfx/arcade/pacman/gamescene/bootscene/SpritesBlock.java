@@ -42,6 +42,6 @@ public record SpritesBlock(RectShort[] sprites, int spriteSize, int numSpritesX,
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
+        return RenderingLayer.BACKGROUND;
     }
 }

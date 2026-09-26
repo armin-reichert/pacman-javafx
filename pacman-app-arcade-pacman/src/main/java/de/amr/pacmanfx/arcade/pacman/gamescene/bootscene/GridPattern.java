@@ -7,6 +7,6 @@ public record GridPattern(int cellSize, int width, int height) implements Render
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
+        return RenderingLayer.BACKGROUND;
     }
 }

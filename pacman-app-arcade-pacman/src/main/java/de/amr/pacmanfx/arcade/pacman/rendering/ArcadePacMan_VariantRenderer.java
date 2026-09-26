@@ -21,11 +21,16 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.BlankCanvas;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.NailDressRapturing;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -63,6 +68,10 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
         switch (r) {
             case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            case BlankCanvas _ -> clearCanvas();
+            case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
+            case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
+            case GridPattern gridPattern -> renderGridPattern(gridPattern);
             default -> super.render(r, tick);
         }
     }
@@ -193,4 +202,43 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     private void draw(NailDressRapturing nailDressRapturing) {
         drawSprite(animController.currentSprite(nailDressRapturing), nailDressRapturing.pos().x(), nailDressRapturing.pos().y(), true);
     }
+
+    private void renderHexCodeBlock(HexDigitsBlock block) {
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(TS));
+        ctx.setFill(ArcadeColor.WHITE.color());
+        ctx.setFont(arcade8);
+        for (int row = 0; row < block.height(); ++row) {
+            final double y = scaled(TS * row);
+            for (int col = 0; col < block.width(); ++col) {
+                final double x = scaled(TS * col);
+                final byte number = block.digits()[row][col];
+                ctx.fillText(Integer.toHexString(number), x, y + scaled(TS)); // Note: y param is baseline!
+            }
+        }
+    }
+
+    private void renderSpritesBlock(SpritesBlock block) {
+        for (int row = 0; row < block.numSpritesY(); ++row) {
+            for (int col = 0; col < block.numSpritesX(); ++col) {
+                int i = row * block.numSpritesX() + col;
+                drawSprite(block.sprites()[i], block.spriteSize() * col, block.spriteSize() * row, true);
+            }
+        }
+    }
+
+    private void renderGridPattern(GridPattern grid) {
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setStroke(ArcadeColor.WHITE.color());
+        for (int row = 0; row < grid.height(); ++row) {
+            final int y = row * grid.cellSize();
+            ctx.strokeLine(0, y, grid.width() * TS, y);
+        }
+        for (int col = 0; col < grid.width(); ++col) {
+            final int x = col * grid.cellSize();
+            ctx.strokeLine(x, 0, x, grid.height() * TS);
+        }
+        ctx.restore();
+    }
+
 }

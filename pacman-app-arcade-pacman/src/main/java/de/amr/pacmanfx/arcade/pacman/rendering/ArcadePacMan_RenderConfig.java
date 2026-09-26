@@ -20,8 +20,6 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -115,15 +113,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
 
     @Override
     public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        requireNonNull(gameScene);
-        requireNonNull(animController);
-        requireNonNull(canvas);
-
-        return switch (gameScene) {
-            //TODO Get rid of all scene renderers!
-            case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
-            default -> null;
-        };
+        return null;
     }
 
     @Override

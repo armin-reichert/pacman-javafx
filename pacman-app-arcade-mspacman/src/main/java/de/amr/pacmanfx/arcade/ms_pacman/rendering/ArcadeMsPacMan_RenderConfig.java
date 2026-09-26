@@ -20,8 +20,6 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -101,13 +99,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        requireNonNull(canvas);
-        requireNonNull(gameScene);
-
-        return switch (gameScene) {
-            case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
-            default -> null;
-        };
+        return null;
     }
 
     @Override

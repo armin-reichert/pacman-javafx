@@ -16,7 +16,7 @@ public record HexDigitsBlock(byte[][] digits, int width, int height) implements 
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
+        return RenderingLayer.BACKGROUND;
     }
 
     private static byte[][] randomBytesBlock(int width, int height) {
