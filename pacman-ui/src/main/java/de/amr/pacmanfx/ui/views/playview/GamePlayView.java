@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
@@ -236,9 +238,10 @@ public class GamePlayView implements GameView {
         renderManager.clearRenderQueue();
 
         // HUD
-        final GameSession session = app.game().session();
-        if (session.isHUDVisible()) {
-            session.hud().renderables().forEach(renderManager::addRenderable);
+        if (app.game().session().isHUDVisible()) {
+            GameEntityViewBuilder
+                .streamOfViews(app.game().session().hud().allEntities(), RenderingLayer.HUD)
+                .forEach(renderManager::addRenderable);
         }
 
         // Mini view

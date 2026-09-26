@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -26,6 +27,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfViews;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -107,7 +109,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         renderer.fillCanvas(backgroundColor);
 
         // Note: the HUD entities above do not need a HUD style so we don't set one
-        hud.renderables().forEach(renderable -> renderer.render(renderable, 0));
+        streamOfViews(hud.allEntities(), RenderingLayer.HUD).forEach(view -> renderer.render(view, 0));
 
         return canvas.snapshot(null, null);
     }

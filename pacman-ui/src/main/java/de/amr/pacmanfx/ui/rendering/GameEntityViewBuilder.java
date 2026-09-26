@@ -84,6 +84,13 @@ public class GameEntityViewBuilder {
             .map(GameEntityViewBuilder::propView);
     }
 
+    public static Stream<Renderable> streamOfViews(Stream<GameEntity> entities, RenderingLayer layer) {
+        return entities
+            .filter(Objects::nonNull)
+            .filter(GameEntity::isVisible)
+            .map(gameEntity -> builder().entity(gameEntity).layer(layer).build());
+    }
+
     // General builder API
 
     public static GameEntityViewBuilder builder() {

@@ -2,18 +2,13 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.GameEntityView;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -28,8 +23,6 @@ public class HUD {
 
     private final QuerySet<GameEntity> additionalEntities = new QuerySet<>();
 
-    private List<Renderable> renderables = List.of();
-
     public HUD() {
     }
 
@@ -42,8 +35,6 @@ public class HUD {
         highScore = ScoreSystem.createHighScore(variantName);
         highScore.pos().set(14 * TS, TS);
         highScore.show();
-
-        updateRenderables();
     }
 
     public LevelCounter levelCounter() {
@@ -62,31 +53,23 @@ public class HUD {
         return highScore;
     }
 
-    public Stream<Renderable> renderables() {
-        return renderables.stream();
-    }
-
-    public void updateRenderables() {
-        renderables = Ufx.streamOf(
-            levelCounter,
-            livesCounter,
-            creditDisplay,
-            gameScore,
-            highScore,
-            additionalEntities.all()
-        )
-            .map(e -> new GameEntityView((GameEntity) e, RenderingLayer.HUD, 0, Vector2f.ZERO))
-            .map(Renderable.class::cast)
-            .toList();
-    }
-
     public TextView creditDisplay() {
         return creditDisplay;
     }
 
     public void addAdditionalEntities(GameEntity... entities) {
         additionalEntities.addAll(entities);
-        updateRenderables();
+    }
+
+    public Stream<GameEntity> allEntities() {
+        return Ufx.streamOf(
+            levelCounter,
+            livesCounter,
+            creditDisplay,
+            gameScore,
+            highScore,
+            additionalEntities.all()
+        );
     }
 
     public QuerySet<GameEntity> additionalEntities() {
