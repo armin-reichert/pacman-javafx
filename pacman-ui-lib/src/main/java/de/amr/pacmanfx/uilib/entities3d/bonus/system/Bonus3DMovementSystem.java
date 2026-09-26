@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.entities3d.bonus.system;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
 

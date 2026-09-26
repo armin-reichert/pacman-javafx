@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
-import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -24,11 +23,8 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Optional;

@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities3d.messageview;
 
-import de.amr.basics.util.Ufx;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.entities3d.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3d.messageview.comp.MessageView3DComp;
 import javafx.scene.canvas.Canvas;

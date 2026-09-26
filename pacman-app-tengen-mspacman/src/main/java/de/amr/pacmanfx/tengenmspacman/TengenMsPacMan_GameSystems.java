@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.*;
-import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.system.TengenMsPacMan_PacAnimationSystem;

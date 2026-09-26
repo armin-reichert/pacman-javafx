@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.entities3d.ghost.anim;
 
-import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.basics.ui.animation.ManagedAnimation;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;

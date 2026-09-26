@@ -1,12 +1,12 @@
 package de.amr.pacmanfx.uilib.entities3d.house.comp;
 
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3d.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

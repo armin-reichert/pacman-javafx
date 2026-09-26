@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
@@ -16,9 +19,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.basics.ui.assets.TranslationManager;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 

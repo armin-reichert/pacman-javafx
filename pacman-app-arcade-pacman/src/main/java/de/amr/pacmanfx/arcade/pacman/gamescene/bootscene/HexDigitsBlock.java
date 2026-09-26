@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
 import de.amr.basics.math.RandomNumbers;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 
 public record HexDigitsBlock(byte[][] digits, int width, int height) implements Renderable {
 

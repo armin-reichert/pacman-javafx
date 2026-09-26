@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -18,9 +21,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import org.tinylog.Logger;
 

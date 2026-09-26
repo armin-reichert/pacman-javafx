@@ -4,11 +4,11 @@
 package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapLayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.uilib.renderer.TileRenderer;
 
 import java.util.function.Consumer;

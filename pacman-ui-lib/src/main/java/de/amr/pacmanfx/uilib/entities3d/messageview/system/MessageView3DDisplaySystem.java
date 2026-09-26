@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.uilib.entities3d.messageview.system;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.uilib.entities3d.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.uilib.entities3d.messageview.comp.MessageView3DComp;
 import javafx.scene.Group;

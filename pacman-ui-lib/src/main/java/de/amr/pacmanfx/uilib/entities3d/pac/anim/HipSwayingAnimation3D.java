@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.uilib.entities3d.pac.anim;
 
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;

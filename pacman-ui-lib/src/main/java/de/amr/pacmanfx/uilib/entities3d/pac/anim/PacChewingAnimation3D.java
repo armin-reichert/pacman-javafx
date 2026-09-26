@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.entities3d.pac.anim;
 
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.basics.ui.animation.ManagedAnimation;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.geometry.Point3D;

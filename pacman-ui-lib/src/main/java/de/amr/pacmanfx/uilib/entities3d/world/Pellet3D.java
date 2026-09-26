@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.entities3d.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.shape.Shape3D;
 
 import static java.util.Objects.requireNonNull;

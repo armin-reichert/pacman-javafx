@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.uilib.entities3d.ghost.system;
 
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostStateComp;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostAppearance;

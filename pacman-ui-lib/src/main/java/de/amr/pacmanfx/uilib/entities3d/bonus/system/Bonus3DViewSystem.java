@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities3d.bonus.system;
 
-import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.uilib.entities3d.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
 import javafx.scene.shape.Box;

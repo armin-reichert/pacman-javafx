@@ -5,8 +5,8 @@
 package de.amr.basics.ui.entities.props;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import javafx.scene.paint.Color;
 
 public class ColoredBackground implements Renderable {

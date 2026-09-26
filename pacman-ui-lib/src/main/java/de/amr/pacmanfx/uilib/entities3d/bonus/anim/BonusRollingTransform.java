@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.entities3d.bonus.anim;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
 

@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.rules;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Vector2f;
 import org.tinylog.Logger;
 
 import static de.amr.basics.ecs.system.PositionSystem.boundingBox;

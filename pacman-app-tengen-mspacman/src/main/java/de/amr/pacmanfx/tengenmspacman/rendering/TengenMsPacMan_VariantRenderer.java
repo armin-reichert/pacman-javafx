@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
@@ -21,8 +21,8 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.basics.util.Ufx;

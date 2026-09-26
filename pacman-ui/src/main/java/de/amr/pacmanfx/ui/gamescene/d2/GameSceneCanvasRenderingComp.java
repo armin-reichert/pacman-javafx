@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
