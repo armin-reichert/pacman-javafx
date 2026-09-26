@@ -144,9 +144,9 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(worldMap);
         requireNonNull(worldSettings);
 
-        final WorldMapColorScheme spec = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final WorldMapColorScheme colorSchemeInfo = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final GenericWorldMapColorScheme colorScheme = new GenericWorldMapColorScheme(
-            spec.wallFill(), spec.wallStroke(), spec.door(), spec.pellet());
+            colorSchemeInfo.wallFill(), colorSchemeInfo.wallStroke(), colorSchemeInfo.door(), colorSchemeInfo.pellet());
         return GlobalAssets.enhanceContrast(worldSettings, colorScheme);
     }
 

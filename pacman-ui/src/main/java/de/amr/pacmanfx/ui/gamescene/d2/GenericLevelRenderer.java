@@ -34,7 +34,7 @@ import static java.util.function.Predicate.not;
  */
 public class GenericLevelRenderer extends BaseRenderer {
 
-    public enum RenderInfoKey {TERRAIN_MAP_COLORING}
+    public enum RenderInfoKey {TERRAIN_MAP_COLORING, PELLET_COLOR}
 
     private final TerrainMapVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
@@ -65,21 +65,14 @@ public class GenericLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> {
-                //TODO don't do this in every render frame
-                final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-                final var mapColoring = new TerrainMapColoring(
-                    backgroundColor(),
-                    Color.valueOf(worldMapColorScheme.wallFill()),
-                    Color.valueOf(worldMapColorScheme.wallStroke()),
-                    Color.valueOf(worldMapColorScheme.door())
-                );
-                renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-                draw(level, renderInfo);
-            }
-            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo) -> houseRenderer.drawHouse(house, renderInfo);
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap _) -> draw(energizer);
-            default -> super.render(r, tick);
+            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
+                -> draw(level, renderInfo);
+            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
+                -> houseRenderer.drawHouse(house, renderInfo);
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
+                -> draw(energizer, renderInfo);
+            default
+                -> super.render(r, tick);
         }
     }
 
@@ -106,20 +99,23 @@ public class GenericLevelRenderer extends BaseRenderer {
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
+/*
             if (renderInfo.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN)) {
                 foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
                     .filter(level.food()::hasFoodAtTile)
                     .forEach(foodRenderer::drawEnergizer);
             }
+ */
         }
     }
 
-    private void draw(Energizer energizer) {
+    private void draw(Energizer energizer, InfoMap renderInfo) {
         if (energizer.isVisible() && energizer.on()) {
+            final Color pelletColor = renderInfo.get(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
             final Vector2f center = energizer.pos().asVector2f();
             ctx.save();
-            ctx.setFill(Color.WHITE);
+            ctx.setFill(pelletColor);
             ctx.scale(scaling(), scaling());
             ctx.fillOval(center.x(), center.y(), 8, 8);
             ctx.restore();

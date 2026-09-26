@@ -9,26 +9,34 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -67,10 +75,31 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         }
 
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
+
+        final TerrainMapColoring terrainMapColoring = findMapColoring(level);
+
+        // Only available for generic level renderer in XXL game variants
+        //TODO simplify and don't call this in every render step
+        final Color pelletColor = findPelletColor(level);
+        final InfoMap energizerRenderInfo = new InfoMap();
+        if (pelletColor != null) {
+            energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor);
+        }
+
         return Ufx.streamOf(
             createRenderableLevel(level),
-            // This assigns correct layer and z-order:
-            level.entitySet().all().map(renderConfig::createEntityView)
+
+            level.entitySet().all().map(entity -> {
+                if (entity instanceof Energizer energizer) {
+                    return GameEntityViewBuilder.builder()
+                        .entity(energizer)
+                        .layer(RenderingLayer.LEVEL)
+                        .renderInfo(energizerRenderInfo)
+                        .build();
+                } else {
+                    return renderConfig.createEntityView(entity);
+                }
+            })
         );
     }
 
@@ -170,6 +199,32 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         }
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
         renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
+
+        final TerrainMapColoring terrainMapColoring = findMapColoring(level);
+        if (terrainMapColoring != null) {
+            // Only available for generic level renderer in XXL game variants
+            renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, findMapColoring(level));
+        }
+
         return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
+    }
+
+    private TerrainMapColoring findMapColoring(GameLevel level) {
+        final Color backgroundColor = app().ui().viewModel().common2DSettings().canvasBackgroundColorProperty().get();
+        final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        if (worldMapColorScheme == null) {
+            return null;
+        }
+        return new TerrainMapColoring(
+            backgroundColor,
+            Color.valueOf(worldMapColorScheme.wallFill()),
+            Color.valueOf(worldMapColorScheme.wallStroke()),
+            Color.valueOf(worldMapColorScheme.door())
+        );
+    }
+
+    private Color findPelletColor(GameLevel level) {
+        final GenericWorldMapColorScheme foodColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        return foodColorScheme != null ? Color.valueOf(foodColorScheme.pellet()) : null;
     }
 }
