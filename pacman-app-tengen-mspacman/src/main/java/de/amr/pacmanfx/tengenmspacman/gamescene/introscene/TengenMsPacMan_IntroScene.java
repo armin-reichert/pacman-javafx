@@ -83,14 +83,16 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public TengenMsPacMan_SpriteSheet spriteSheet;
     public Color[] ghostColors;
 
-    // First sub-scene
+    // First sub-scene (Tengen presents)
     private List<GameEntity> tengenPresentsContent;
     private TextView tengenPresentsTextView;
     private TextView pressStartTextView;
 
-    // Seconds sub-scene
+    // Second sub-scene (marquee)
     private List<GameEntity> marqueeContent;
     private TextView marqueeTitleTextView;
+    private TextView marqueeTextView1;
+    private TextView marqueeTextView2;
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
@@ -124,7 +126,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                  SceneState.MS_PACMAN_MARCHING_IN -> Ufx.streamOf(
                 //TODO replace by renderables:
                 new GameSceneView(this),
+                propView(marqueeTitleTextView),
                 propView(marquee),
+                propView(marqueeTextView1),
+                propView(marqueeTextView2),
                 propView(msPacMan),
                 ghosts.stream().map(GameEntityViewBuilder::propView)
             );
@@ -156,8 +161,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
-        createTengenPresentsContent();
-        createMarqueeContent();
+        createTengenPresentsSubSceneContent();
+        createMarqueeSubSceneContent();
 
         flow.restartState(this, SceneState.PRESENTING_GAME);
     }
@@ -169,7 +174,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     // --- private
 
-    private void createTengenPresentsContent() {
+    private void createTengenPresentsSubSceneContent() {
         tengenPresentsTextView = new TextView();
         tengenPresentsTextView.pos().set(8 * TS, ANCHOR_Y - TS);
         tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
@@ -213,7 +218,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         tengenPresentsContent = List.of(tengenPresentsTextView, titleImageView, pressStartTextView, footer1, footer2, footer3);
     }
 
-    private void createMarqueeContent() {
+    private void createMarqueeSubSceneContent() {
         marqueeTitleTextView = new TextView();
         marqueeTitleTextView.pos().set(ANCHOR_X + 20, ANCHOR_Y - 18);
         marqueeTitleTextView.data().setFillColor(NES_Palette.color(0x28));
@@ -232,6 +237,19 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
         marquee.visualization().setBulbOnColor(NES_Palette.rgb(0x20));
         marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
+
+        marqueeTextView1 = new TextView();
+        marqueeTextView1.data().setFillColor(Color.WHITE); //TODO
+        marqueeTextView1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeTextView1.data().setText("Text 1 in Marquee");
+        marqueeTextView1.show();
+
+        marqueeTextView2 = new TextView();
+        marqueeTextView2.data().setFillColor(Color.WHITE); //TODO
+        marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeTextView1.data().setText("Text 2 in Marquee");
+
+        marqueeTextView2.show();
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
@@ -338,6 +356,22 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
+
+                final Ghost currentGhost = scene.currentGhost();
+                final int personalityIndex = currentGhost.personality().ordinal();
+                final Color ghostColor = scene.ghostColors[personalityIndex];
+                if (scene.ghostIndex == 0) {
+                    scene.marqueeTextView1.data().setText(WITH);
+                    scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
+                    scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 23);
+                    scene.marqueeTextView1.show();
+                } else {
+                    scene.marqueeTextView1.hide();
+                }
+                scene.marqueeTextView2.data().setText(currentGhost.name().toUpperCase());
+                scene.marqueeTextView2.data().setFillColor(ghostColor);
+                scene.marqueeTextView2.pos().set(ANCHOR_X + 44, ANCHOR_Y + 41);
+
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -346,6 +380,12 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                         ++scene.ghostIndex;
                     }
                 }
+            }
+
+            @Override
+            public void onExit(TengenMsPacMan_IntroScene scene) {
+                scene.marqueeTextView1.hide();
+                scene.marqueeTextView2.hide();
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
@@ -399,6 +439,16 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();
+
+                scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 22);
+                scene.marqueeTextView1.data().setText(STARRING);
+                scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
+                scene.marqueeTextView1.show();
+
+                scene.marqueeTextView2.pos().set(ANCHOR_X + 28, ANCHOR_Y + 38);
+                scene.marqueeTextView2.data().setText(MS_PAC_MAN);
+                scene.marqueeTextView2.data().setFillColor(NES_Palette.color(0x28));
+                scene.marqueeTextView2.show();
 
                 motor.move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
