@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParser;
@@ -19,7 +18,6 @@ import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
 import de.amr.pacmanfx.uilib.renderer.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.renderer.TileRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
-import de.amr.pacmanfx.uilib.rendering.WorldMapView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -129,12 +127,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     @Override
-    public void render(Renderable r, long tick) {
-        switch (r) {
-            case WorldMapView(WorldMap worldMap, RenderingLayer _, int _, Vector2f _) -> draw(worldMap);
-            default -> {}
-        }
-    }
+    public void render(Renderable r, long tick) {}
 
     public void draw(WorldMap worldMap) {
         ctx.save();
