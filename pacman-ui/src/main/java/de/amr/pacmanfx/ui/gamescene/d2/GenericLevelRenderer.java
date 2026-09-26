@@ -25,6 +25,7 @@ import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -64,7 +65,7 @@ public class GenericLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, InfoMap _, RenderingLayer _, int _, Vector2f _) -> {
+            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> {
                 //TODO don't do this in every render frame
                 final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 final var mapColoring = new TerrainMapColoring(
@@ -73,8 +74,8 @@ public class GenericLevelRenderer extends BaseRenderer {
                     Color.valueOf(worldMapColorScheme.wallStroke()),
                     Color.valueOf(worldMapColorScheme.door())
                 );
-                info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-                draw(level);
+                renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+                draw(level, renderInfo);
             }
             case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo) -> houseRenderer.drawHouse(house, renderInfo);
             case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap _) -> draw(energizer);
@@ -82,13 +83,16 @@ public class GenericLevelRenderer extends BaseRenderer {
         }
     }
 
-    public void draw(GameLevel level) {
-        if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
-            terrainRenderer.setMapColoring(info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
+    public void draw(GameLevel level, InfoMap renderInfo) {
+        requireNonNull(level);
+        requireNonNull(renderInfo);
+
+        if (renderInfo.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+            terrainRenderer.setMapColoring(renderInfo.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.draw(level.worldMap());
         }
         else {
-            final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
+            final TerrainMapColoring mapColoring = renderInfo.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(level.worldMap());
 
@@ -102,7 +106,7 @@ public class GenericLevelRenderer extends BaseRenderer {
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
-            if (info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN)) {
+            if (renderInfo.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN)) {
                 foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
                     .filter(level.food()::hasFoodAtTile)

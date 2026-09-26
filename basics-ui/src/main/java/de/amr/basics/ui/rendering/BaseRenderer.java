@@ -4,7 +4,6 @@
 
 package de.amr.basics.ui.rendering;
 
-import de.amr.basics.InfoMap;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
@@ -59,12 +58,8 @@ public class BaseRenderer implements Renderer {
 
     protected final GraphicsContext ctx;
 
-    protected InfoMap info;
-
-
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        info = new InfoMap();
     }
 
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
@@ -107,11 +102,6 @@ public class BaseRenderer implements Renderer {
     @Override
     public GraphicsContext ctx() {
         return ctx;
-    }
-
-    @Override
-    public InfoMap info() {
-        return info;
     }
 
     @Override

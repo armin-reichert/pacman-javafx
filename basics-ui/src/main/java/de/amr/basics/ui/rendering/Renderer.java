@@ -4,7 +4,6 @@
 
 package de.amr.basics.ui.rendering;
 
-import de.amr.basics.InfoMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -18,8 +17,6 @@ public interface Renderer {
     int TS = 8;
 
     void render(Renderable r, long tick);
-
-    InfoMap info();
 
     GraphicsContext ctx();
 
