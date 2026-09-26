@@ -88,7 +88,7 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case GameEntityView gameEntityView -> renderGameEntity(gameEntityView.entity(), tick);
+            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
             case JoypadKeyBindingsView(JoypadKeyBinding joypadKeyBinding, Vector2f _) -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
             case MenuOptionView menuOptionView -> draw(menuOptionView);
             case MenuSeparatorBarView barView -> draw(barView);

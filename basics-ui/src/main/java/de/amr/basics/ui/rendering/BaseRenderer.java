@@ -83,8 +83,7 @@ public class BaseRenderer implements Renderer {
         ctx.save();
         switch (r) {
             case null -> {}
-            case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
-            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
             case ColoredBackground coloredBackground -> fillColoredRect(coloredBackground);
             default -> throw new IllegalStateException("Cannot render: " + r);
         }

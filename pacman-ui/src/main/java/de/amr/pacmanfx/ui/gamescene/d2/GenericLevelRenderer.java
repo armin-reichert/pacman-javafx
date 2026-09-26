@@ -76,8 +76,8 @@ public class GenericLevelRenderer extends BaseRenderer {
                 info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
                 draw(level);
             }
-            case GameEntityView(House house, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) -> houseRenderer.drawHouse(house, renderInfo);
-            case GameEntityView(Energizer energizer, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) -> draw(energizer, renderInfo);
+            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo) -> houseRenderer.drawHouse(house, renderInfo);
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap _) -> draw(energizer);
             default -> super.render(r, tick);
         }
     }
@@ -111,7 +111,7 @@ public class GenericLevelRenderer extends BaseRenderer {
         }
     }
 
-    private void draw(Energizer energizer, InfoMap renderInfo) {
+    private void draw(Energizer energizer) {
         if (energizer.isVisible() && energizer.on()) {
             final Vector2f center = energizer.pos().asVector2f();
             ctx.save();

@@ -66,8 +66,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
-            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
             case ClearCanvas _ -> clearCanvas();
             case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
             case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);

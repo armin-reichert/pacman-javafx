@@ -78,9 +78,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
-            // This case will disappear:
-            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
             case ClearCanvas _ -> clearCanvas();
             case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
             case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
