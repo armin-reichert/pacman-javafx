@@ -183,9 +183,6 @@ public class GamePlayView implements GameView {
         app.gameSceneManager().optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
-    public void onLevelCompleted() {
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -272,13 +269,17 @@ public class GamePlayView implements GameView {
             renderManager.clearSceneCanvas(abstractGameScene);
         }
 
+        // Render the current game content
         renderManager.renderFrame(tick, debugMode);
+    }
 
-        // Dashboard must always be updated, so do it in the render step!
+    public void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
             dashboard.update(app);
         }
+    }
 
+    public void updateMiniView() {
         layers.miniViewLayer().update(app.gameSceneManager());
     }
 
@@ -289,24 +290,6 @@ public class GamePlayView implements GameView {
         }
         nextGameScene.onBeforeEmbedded();
         embedGameScene(nextGameScene);
-    }
-
-    private void embedGameScene(GameScene gameScene) {
-        requireNonNull(gameScene);
-
-        final GameMainScene mainScene = app.ui().window().mainScene();
-        final GameVariantUIConfig config = app.variantManager().currentRuntime().uiConfig();
-
-        if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
-        } else {
-            embedGameScene2D(decorationPane, mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
-        }
-
-        contextMenuManager.hideContextMenu();
-        gameScene.activate();
-
-        Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
     }
 
     public void disembedGameScene(GameScene gameScene) {
@@ -343,6 +326,24 @@ public class GamePlayView implements GameView {
 
 
     // Private
+
+    private void embedGameScene(GameScene gameScene) {
+        requireNonNull(gameScene);
+
+        final GameMainScene mainScene = app.ui().window().mainScene();
+        final GameVariantUIConfig config = app.variantManager().currentRuntime().uiConfig();
+
+        if (gameScene.optSubSceneFX().isPresent()) {
+            embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
+        } else {
+            embedGameScene2D(decorationPane, mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
+        }
+
+        contextMenuManager.hideContextMenu();
+        gameScene.activate();
+
+        Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
+    }
 
     private void createLayers() {
         // Layer 1: Game scene with optional decoration

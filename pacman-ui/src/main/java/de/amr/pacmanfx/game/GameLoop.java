@@ -55,6 +55,8 @@ public final class GameLoop {
         try {
             if (views.isSelected(GameViewID.GAMEPLAY)) {
                 views.gamePlayView().render(renderManager, clock.currentTick());
+                views.gamePlayView().updateDashboard();
+                views.gamePlayView().updateMiniView();
             }
         } catch (Exception x) {
             Logger.error(x, "Rendering triggered exception");
