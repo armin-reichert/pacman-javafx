@@ -16,7 +16,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.BlankCanvas;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.ClearCanvas;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
             // This case will disappear:
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
-            case BlankCanvas _ -> clearCanvas();
+            case ClearCanvas _ -> clearCanvas();
             case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
             case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
             case GridPattern gridPattern -> renderGridPattern(gridPattern);

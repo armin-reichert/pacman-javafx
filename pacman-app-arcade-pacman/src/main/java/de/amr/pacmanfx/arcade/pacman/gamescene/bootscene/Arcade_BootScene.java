@@ -27,7 +27,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     public static final int WIDTH_IN_TILES  = 28;
     public static final int HEIGHT_IN_TILES = 36;
 
-    private static final Renderable BLANK_CANVAS = new BlankCanvas();
+    private static final Renderable BLANK_CANVAS = new ClearCanvas();
     private static final Renderable GRID = new GridPattern(GRID_SIZE, WIDTH_IN_TILES, HEIGHT_IN_TILES);
 
     public enum SceneState {
