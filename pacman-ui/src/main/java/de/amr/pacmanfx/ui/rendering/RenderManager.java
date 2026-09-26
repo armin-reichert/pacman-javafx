@@ -118,6 +118,7 @@ public class RenderManager {
     //TODO this renderer per layer design is not the last word
     private Renderer selectRenderer(Renderable r) {
         return switch (r.layer()) {
+            case DEBUG -> sceneDebugRenderer;
             case MINI_VIEW_OVERLAY -> miniViewOverlayRenderer;
             case LEVEL -> levelRenderer;
             default -> variantRenderer;
