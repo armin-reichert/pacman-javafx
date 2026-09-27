@@ -89,10 +89,7 @@ public class RenderManager {
 
     public void renderFrame(long tick, boolean debugMode) {
         renderQueue.sort();
-        renderQueue.renderables().forEach(r -> {
-            final Renderer renderer = selectRenderer(r);
-            doRender(r, renderer, tick);
-        });
+        renderQueue.renderables().forEach(r -> render(r, tick));
         if (debugMode) {
             renderQueue.renderables()
                 .filter(r -> r.layer() == RenderingLayer.DEBUG)
@@ -100,7 +97,7 @@ public class RenderManager {
         }
     }
 
-    //TODO this renderer per layer design is not the last word
+    //TODO this is not the last word
     private Renderer selectRenderer(Renderable r) {
         return switch (r.layer()) {
             case DEBUG -> sceneDebugRenderer;
@@ -111,7 +108,8 @@ public class RenderManager {
     }
 
     // Takes optional offset of renderable into account (in Tengen for example, the game level has horizontal offset)
-    private void doRender(Renderable r, Renderer renderer, long tick) {
+    private void render(Renderable r, long tick) {
+        final Renderer renderer = selectRenderer(r);
         if (renderer == null) {
             return;
         }
