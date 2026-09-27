@@ -6,10 +6,14 @@ package de.amr.basics.ui.entities.props.marquee;
 
 import de.amr.basics.ecs.GameEntityComp;
 
-public class MarqueeVisualComp implements GameEntityComp {
+public class MarqueeColorsComp implements GameEntityComp {
 
     private String bulbOnColor = "#fff";
+
     private String bulbOffColor = "333";
+
+    public MarqueeColorsComp() {
+    }
 
     public String bulbOnColor() {
         return bulbOnColor;

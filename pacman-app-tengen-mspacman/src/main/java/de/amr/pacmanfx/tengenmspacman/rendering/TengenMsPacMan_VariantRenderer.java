@@ -11,7 +11,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
@@ -306,7 +306,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(Score score, long tick) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         switch (score.type()) {
             case GAME_SCORE -> {
@@ -328,7 +328,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LivesCounter livesCounter) {
-        final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
+        final HUDStyleComp style = livesCounter.reqComp(HUDStyleComp.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 

@@ -9,10 +9,10 @@ import de.amr.basics.ecs.GameEntity;
 public class LevelCounter extends GameEntity {
 
     public LevelCounter() {
-        setComp(LevelCounterData.class, new LevelCounterData());
+        setComp(LevelCounterDataComp.class, new LevelCounterDataComp());
     }
 
-    public LevelCounterData data() {
-        return reqComp(LevelCounterData.class);
+    public LevelCounterDataComp data() {
+        return reqComp(LevelCounterDataComp.class);
     }
 }

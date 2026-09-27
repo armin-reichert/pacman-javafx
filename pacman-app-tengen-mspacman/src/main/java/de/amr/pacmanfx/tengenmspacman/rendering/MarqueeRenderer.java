@@ -39,7 +39,7 @@ public class MarqueeRenderer extends BaseRenderer {
 
     public void renderMarquee(Marquee marquee, long tick) {
         final MarqueeLayoutComp layout = marquee.layout();
-        final MarqueeVisualComp visualComp = marquee.visualization();
+        final MarqueeColorsComp visualComp = marquee.colors();
 
         final MarqueeArea area = layout.computeArea(marquee.pos());
         final MarqueeCorners corners = layout.corners();

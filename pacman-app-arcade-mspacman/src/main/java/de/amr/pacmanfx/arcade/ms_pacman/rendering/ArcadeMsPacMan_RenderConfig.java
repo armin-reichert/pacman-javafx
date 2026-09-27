@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
@@ -45,14 +45,14 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
 //    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
-    protected final HUD_Style hudStyle;
+    protected final HUDStyleComp hudStyle;
 
     protected final AssetMap assets;
 
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
 
-        hudStyle = new HUD_Style(
+        hudStyle = new HUDStyleComp(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
             spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HUD_Style hudStyle() {
+    public HUDStyleComp hudStyle() {
         return hudStyle;
     }
 

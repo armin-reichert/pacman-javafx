@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
@@ -113,7 +113,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     private final AssetMap assets;
 
-    private final HUD_Style hudStyle = new HUD_Style(
+    private final HUDStyleComp hudStyle = new HUDStyleComp(
         spriteSheet(),
         spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
         spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
@@ -179,7 +179,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HUD_Style hudStyle() {
+    public HUDStyleComp hudStyle() {
         return hudStyle;
     }
 

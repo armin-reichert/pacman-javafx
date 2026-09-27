@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
-import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterData;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterDataComp;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.entities3d.levelcounter.comp.LevelCounter3DSettings;
 import javafx.scene.Group;
@@ -27,7 +27,7 @@ public class LevelCounter3DFactory {
         LevelCounter3DSettings config,
         GameVariantRenderConfig renderConfig)
     {
-        final LevelCounterData data = levelCounter.data();
+        final LevelCounterDataComp data = levelCounter.data();
         final List<Integer> symbolCodes = data.symbolCodes();
 
         final Group root = new Group();

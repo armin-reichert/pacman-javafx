@@ -13,10 +13,7 @@ public class Clapperboard extends GameEntity {
 
     public Clapperboard(String number, String text) {
         setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
-        setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
-
-        inscription().setNumber(number);
-        inscription().setText(text);
+        setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp(number, text));
     }
 
     public ClapperboardInscriptionComp inscription() {

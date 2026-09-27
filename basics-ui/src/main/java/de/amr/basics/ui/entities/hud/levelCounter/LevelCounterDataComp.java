@@ -9,7 +9,7 @@ import de.amr.basics.ecs.GameEntityComp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelCounterData implements GameEntityComp {
+public class LevelCounterDataComp implements GameEntityComp {
 
     private final List<Integer> symbolCodes = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class LevelCounterData implements GameEntityComp {
 
     private int capacity;
 
-    public LevelCounterData() {}
+    public LevelCounterDataComp() {}
 
     @Override
     public void reset() {

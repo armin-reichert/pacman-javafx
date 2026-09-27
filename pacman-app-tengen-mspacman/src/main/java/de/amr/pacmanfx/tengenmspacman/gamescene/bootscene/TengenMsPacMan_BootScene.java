@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.CanvasFill;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
@@ -127,11 +127,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUD_Style hudStyle = app().variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
-        hud.levelCounter().setComp(HUD_Style.class, hudStyle);
-        hud.livesCounter().setComp(HUD_Style.class, hudStyle);
-        hud.gameScore().setComp(HUD_Style.class, hudStyle);
-        hud.highScore().setComp(HUD_Style.class, hudStyle);
-        hud.creditDisplay().setComp(HUD_Style.class, hudStyle);
+        final HUDStyleComp hudStyle = app().variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        hud.levelCounter().setComp(HUDStyleComp.class, hudStyle);
+        hud.livesCounter().setComp(HUDStyleComp.class, hudStyle);
+        hud.gameScore().setComp(HUDStyleComp.class, hudStyle);
+        hud.highScore().setComp(HUDStyleComp.class, hudStyle);
+        hud.creditDisplay().setComp(HUDStyleComp.class, hudStyle);
     }
 }

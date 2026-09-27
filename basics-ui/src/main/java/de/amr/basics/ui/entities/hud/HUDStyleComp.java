@@ -10,7 +10,7 @@ import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public record HUD_Style(
+public record HUDStyleComp(
     SpriteSheet<?> spriteSheet,
     RectShort livesCounterSymbolSprite,
     RectShort[] bonusSymbolSprites,

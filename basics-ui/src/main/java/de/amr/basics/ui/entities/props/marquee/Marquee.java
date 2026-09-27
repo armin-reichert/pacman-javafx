@@ -10,14 +10,14 @@ public final class Marquee extends GameEntity {
 
     public Marquee() {
         setComp(MarqueeLayoutComp.class, new MarqueeLayoutComp());
-        setComp(MarqueeVisualComp.class, new MarqueeVisualComp());
+        setComp(MarqueeColorsComp.class, new MarqueeColorsComp());
     }
 
     public MarqueeLayoutComp layout() {
         return reqComp(MarqueeLayoutComp.class);
     }
 
-    public MarqueeVisualComp visualization() {
-        return reqComp(MarqueeVisualComp.class);
+    public MarqueeColorsComp colors() {
+        return reqComp(MarqueeColorsComp.class);
     }
 }

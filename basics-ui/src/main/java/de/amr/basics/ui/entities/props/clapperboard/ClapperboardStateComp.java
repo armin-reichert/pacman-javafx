@@ -9,9 +9,14 @@ import de.amr.basics.ecs.GameEntityComp;
 public class ClapperboardStateComp implements GameEntityComp {
 
     private ClapperboardState enumValue;
+
     private boolean textVisible;
+
     private int tick;
+
     private boolean running;
+
+    public ClapperboardStateComp() {}
 
     public ClapperboardState enumValue() {
         return enumValue;

@@ -17,6 +17,9 @@ public class MarqueeLayoutComp implements GameEntityComp {
     private int brightBulbsDistance;
     private MarqueeCorners corners;
 
+    public MarqueeLayoutComp() {
+    }
+
     public MarqueeArea computeArea(PositionComp pos) {
         return new MarqueeArea(pos.x(), pos.y(), pos.x() + (numBulbsHorizontally - 1) * bulbSize, pos.y() + (numBulbsVertically - 1) * bulbSize);
     }

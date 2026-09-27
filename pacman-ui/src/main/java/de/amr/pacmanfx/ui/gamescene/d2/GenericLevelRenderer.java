@@ -67,10 +67,13 @@ public class GenericLevelRenderer extends BaseRenderer {
         switch (r) {
             case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> draw(level, renderInfo);
+
             case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
                 -> houseRenderer.drawHouse(house, renderInfo);
+
             case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
                 -> draw(energizer, renderInfo);
+
             default
                 -> super.render(r, tick);
         }

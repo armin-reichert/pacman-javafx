@@ -224,8 +224,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);
 
-        marquee.visualization().setBulbOnColor(NES_Palette.rgb(0x20));
-        marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
+        marquee.colors().setBulbOnColor(NES_Palette.rgb(0x20));
+        marquee.colors().setBulbOffColor(NES_Palette.rgb(0x15));
 
         marqueeTextView1 = new TextView();
         marqueeTextView1.data().setFillColor(Color.WHITE);

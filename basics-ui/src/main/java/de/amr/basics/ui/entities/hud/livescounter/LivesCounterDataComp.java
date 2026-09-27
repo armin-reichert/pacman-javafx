@@ -14,6 +14,8 @@ public class LivesCounterDataComp implements GameEntityComp {
 
     private int numLives;
 
+    public LivesCounterDataComp() {}
+
     /** Number of lives shown in counter */
     public int numLivesShown() {
         return numLivesShown;

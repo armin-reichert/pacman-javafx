@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.requireNonNull;
 
-public class ScorePersistencyComp implements GameEntityComp {
+public record ScorePersistencyComp(File file) implements GameEntityComp {
 
     public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 
@@ -18,13 +18,7 @@ public class ScorePersistencyComp implements GameEntityComp {
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final File file;
-
     public ScorePersistencyComp(File file) {
         this.file = requireNonNull(file);
-    }
-
-    public File file() {
-        return file;
     }
 }

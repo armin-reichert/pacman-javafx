@@ -8,7 +8,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
@@ -31,7 +31,7 @@ public interface GameVariantRenderConfig {
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
-    HUD_Style hudStyle();
+    HUDStyleComp hudStyle();
 
     GameEntityView createEntityView(GameEntity gameEntity);
 

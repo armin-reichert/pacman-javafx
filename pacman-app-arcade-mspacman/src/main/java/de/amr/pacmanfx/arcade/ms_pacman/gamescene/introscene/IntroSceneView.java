@@ -114,8 +114,8 @@ public class IntroSceneView {
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);
 
-        marquee.visualization().setBulbOffColor(ArcadeColor.RED.toString());
-        marquee.visualization().setBulbOnColor(ArcadeColor.WHITE.toString());
+        marquee.colors().setBulbOffColor(ArcadeColor.RED.toString());
+        marquee.colors().setBulbOnColor(ArcadeColor.WHITE.toString());
 
         marqueeTextView1 = new TextView();
         marqueeTextView1.data().setFont(GlobalFonts.ARCADE.font(TS));

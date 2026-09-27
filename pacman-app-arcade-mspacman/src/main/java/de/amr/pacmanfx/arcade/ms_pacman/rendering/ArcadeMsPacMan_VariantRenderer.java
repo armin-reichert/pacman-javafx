@@ -10,7 +10,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
@@ -203,14 +203,14 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     // --- HUD ---
 
     private void drawGameScore(Score score) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
 
     }
 
     private void drawHighScore(Score score) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final boolean disabled = !score.data().isEnabled();
         final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
@@ -228,7 +228,7 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
-        final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
+        final HUDStyleComp style = livesCounter.reqComp(HUDStyleComp.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
@@ -246,7 +246,7 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-        final HUD_Style style = levelCounter.reqComp(HUD_Style.class);
+        final HUDStyleComp style = levelCounter.reqComp(HUDStyleComp.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {

@@ -9,7 +9,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
@@ -57,12 +57,12 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
 
     private final AssetMap assets;
 
-    private final HUD_Style hudStyle;
+    private final HUDStyleComp hudStyle;
 
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
 
-        hudStyle = new HUD_Style(
+        hudStyle = new HUDStyleComp(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
             spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
@@ -116,7 +116,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public HUD_Style hudStyle() {
+    public HUDStyleComp hudStyle() {
         return hudStyle;
     }
 
