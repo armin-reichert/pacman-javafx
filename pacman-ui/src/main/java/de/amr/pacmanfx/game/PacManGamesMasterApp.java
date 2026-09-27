@@ -181,7 +181,7 @@ public final class PacManGamesMasterApp implements GameApp {
         // Create new game context
         game = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
 
-        //newGameSession();
+        newGameSession();
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 
