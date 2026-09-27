@@ -11,7 +11,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.Energizer;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -88,7 +88,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     }
 
     private void hideEnergizerIfOff(Energizer energizer) {
-        if (!energizer.on()) {
+        if (!energizer.state().on()) {
             final double size = scaled(9);
             ctx.save();
             ctx.setFill(backgroundColor());

@@ -25,7 +25,7 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.NailDressRapturing;
-import de.amr.pacmanfx.core.Energizer;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -158,7 +158,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawInactiveEnergizer(Energizer energizer) {
-        if (!energizer.on()) {
+        if (!energizer.state().on()) {
             final double size = scaled(9);
             ctx.save();
             ctx.setFill(backgroundColor());

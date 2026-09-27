@@ -10,7 +10,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.Energizer;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -114,7 +114,7 @@ public class GenericLevelRenderer extends BaseRenderer {
     }
 
     private void draw(Energizer energizer, InfoMap renderInfo) {
-        if (energizer.isVisible() && energizer.on()) {
+        if (energizer.isVisible() && energizer.state().on()) {
             final Color pelletColor = renderInfo.get(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
             final Vector2f center = energizer.pos().asVector2f();
             ctx.save();

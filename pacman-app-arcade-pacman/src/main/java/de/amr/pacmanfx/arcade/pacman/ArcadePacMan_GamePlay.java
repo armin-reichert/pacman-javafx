@@ -18,6 +18,7 @@ import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.*;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.ElroyComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -316,9 +317,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.add(orangeGhost);
 
         foodLayer.energizerTiles().forEach(energizerTile -> {
-            final Energizer energizer = new Energizer(energizerTile);
+            final Energizer energizer = new Energizer();
+            energizer.pos().set(energizerTile.scaled(TS).toVector2f());
             energizer.show();
-            energizer.pos().set(energizerTile.toVector2f().scaled(TS));
             entities.add(energizer);
         });
     }

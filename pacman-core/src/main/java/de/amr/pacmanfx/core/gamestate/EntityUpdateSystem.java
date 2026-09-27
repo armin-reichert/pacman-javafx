@@ -4,8 +4,9 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.Energizer;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -34,9 +35,10 @@ public class EntityUpdateSystem {
         systems.ghostUpdate().update(game, level);
 
         level.entitySet().entities().ofType(Energizer.class).forEach(energizer -> {
-            final boolean eaten = level.food().hasEatenFoodAtTile(energizer.tile());
+            final Vector2i tile = energizer.pos().tile();
+            final boolean eaten = level.food().hasEatenFoodAtTile(tile);
             final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
-            energizer.setOn(!eaten && pulse);
+            energizer.state().setOn(!eaten && pulse);
         });
 
 
