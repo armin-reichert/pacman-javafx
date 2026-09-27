@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.basics.ui.entities.props.ColoredBackground;
+import de.amr.basics.ui.entities.props.CanvasFill;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     private boolean gray;
 
-    private final ColoredBackground grayRect;
+    private final CanvasFill grayCanvasFill;
     private final TextView tengenPresentsTextView;
 
     private Ghost ghost;
@@ -52,7 +52,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         rendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        grayRect = new ColoredBackground(0, 0, NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT, NES_Palette.color(0x10));
+        grayCanvasFill = new CanvasFill(NES_Palette.color(0x10));
 
         tengenPresentsTextView = new TextView();
         tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
@@ -62,7 +62,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        if (gray) return Stream.of(grayRect);
+        if (gray) return Stream.of(grayCanvasFill);
         return streamOfPropViews(tengenPresentsTextView, ghost);
     }
 
@@ -87,9 +87,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         final Color shadeOfBlue = shadeOfBlue(stateTick);
 
         switch (stateTick) {
-            case   1 -> grayScreen(false);
-            case   7 -> grayScreen(true);
-            case  12 -> grayScreen(false);
+            case   1 -> fillCanvasGray(false);
+            case   7 -> fillCanvasGray(true);
+            case  12 -> fillCanvasGray(false);
             case  21 -> {
                 tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, reqCanvasRendering().unscaledHeight()); // lower border of screen
                 tengenPresentsTextView.show();
@@ -108,8 +108,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
                 tengenPresentsTextView.hide();
                 ghost.hide();
             }
-            case 204 -> grayScreen(true);
-            case 214 -> grayScreen(false);
+            case 204 -> fillCanvasGray(true);
+            case 214 -> fillCanvasGray(false);
             case 220 -> {
                 game().state().triggerTimeout();
                 return;
@@ -122,7 +122,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         systems.motor().move(ghost);
     }
 
-    private void grayScreen(boolean gray) {
+    private void fillCanvasGray(boolean gray) {
         this.gray = gray;
     }
 

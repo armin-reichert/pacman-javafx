@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.entities.props.ColoredBackground;
+import de.amr.basics.ui.entities.props.CanvasFill;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class BaseRenderer implements Renderer {
 
-    private static final Text dummy = new Text();
+    private static final Text DUMMY_TEXT = new Text();
 
     /**
      * Computes the layout width of the given string when rendered with the specified font.
@@ -39,9 +39,9 @@ public class BaseRenderer implements Renderer {
      * @return the width in pixels
      */
     public static double textWidth(String s, Font font) {
-        dummy.setText(s);
-        dummy.setFont(font);
-        return dummy.getLayoutBounds().getWidth();
+        DUMMY_TEXT.setText(s);
+        DUMMY_TEXT.setFont(font);
+        return DUMMY_TEXT.getLayoutBounds().getWidth();
     }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
@@ -67,7 +67,7 @@ public class BaseRenderer implements Renderer {
     public void render(Renderable r, long tick) {
         ctx.save();
         switch (r) {
-            case ColoredBackground coloredBackground -> fillColoredRect(coloredBackground);
+            case CanvasFill canvasFill -> fillCanvas(canvasFill.color());
             default -> throw new IllegalStateException("Cannot render: " + r);
         }
         ctx.restore();
@@ -154,8 +154,6 @@ public class BaseRenderer implements Renderer {
     public void drawSpriteCentered(RectShort sprite, Vector2f centerUnscaled) {
         drawSpriteCentered(sprite, centerUnscaled.x(), centerUnscaled.y());
     }
-
-    // -----------
 
     public void setScaling(double value) {
         if (value <= 0) {
@@ -246,16 +244,6 @@ public class BaseRenderer implements Renderer {
             ctx.setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
             ctx.strokeLine(x, 0, x, height);
         }
-        ctx.restore();
-    }
-
-
-    private void fillColoredRect(ColoredBackground coloredBackground) {
-        final var rect = coloredBackground.rect();
-        ctx.save();
-        ctx.scale(scaling(), scaling());
-        ctx.setFill(coloredBackground.color());
-        ctx.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
         ctx.restore();
     }
 }
