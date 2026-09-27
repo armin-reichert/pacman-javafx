@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
@@ -111,15 +110,23 @@ public class RenderManager {
         };
     }
 
-    // Takes offset of renderable into account (in Tengen for example, the game level has horizontal offset)
+    // Takes optional offset of renderable into account (in Tengen for example, the game level has horizontal offset)
     private void doRender(Renderable r, Renderer renderer, long tick) {
-        if (renderer != null) {
-            final Vector2f offset = r.offset().scaled(renderer.scaling());
-            final GraphicsContext ctx = renderer.ctx();
-            ctx.save();
-            ctx.translate(offset.x(), offset.y());
-            renderer.render(r, tick);
-            ctx.restore();
+        if (renderer == null) {
+            return;
+        }
+
+        final boolean needsTranslate = !r.offset().equals(Vector2f.ZERO);
+        if (needsTranslate) {
+            final Vector2f translate = r.offset().scaled(renderer.scaling());
+            renderer.ctx().save();
+            renderer.ctx().translate(translate.x(), translate.y());
+        }
+
+        renderer.render(r, tick);
+
+        if (needsTranslate) {
+            renderer.ctx().restore();
         }
     }
 
