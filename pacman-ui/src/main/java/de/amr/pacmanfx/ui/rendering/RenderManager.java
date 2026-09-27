@@ -9,9 +9,9 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import javafx.beans.property.DoubleProperty;
@@ -53,53 +53,39 @@ public class RenderManager {
         sceneDebugRenderer = null;
     }
 
-    public void createRenderers(
-        GameVariantPlayConfig playConfig,
+    public void updateRenderers(
+        ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig,
-        AbstractGameScene gameScene,
+        GameScene gameScene,
+        GameSceneCanvasRenderingComp canvasRendering,
         MiniPlaySceneView miniView)
     {
-        requireNonNull(playConfig);
+        requireNonNull(animController);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
         clearAllRenderers();
 
-        final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
-
         //TODO This is just a temporary solution
         miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
 
         // If this scene has 2D rendering support, create and configure renderers
-        final var rendering2D = gameScene.optCanvasRendering().orElse(null);
-        if (rendering2D == null) {
-            return;
-        }
-
-        final Canvas sceneCanvas = rendering2D.canvas();
-        if (sceneCanvas == null) {
-            return;
-        }
-
-        variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
-        sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
-        levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
-
-        bindRendererProperties(variantRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
-        bindRendererProperties(sceneDebugRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
-        bindRendererProperties(levelRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
-    }
-
-    public void clearSceneCanvas(AbstractGameScene gameScene) {
-        gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+        if (canvasRendering != null) {
             final Canvas canvas = canvasRendering.canvas();
             if (canvas != null) {
-                final var ctx = canvas.getGraphicsContext2D();
-                ctx.setFill(canvasRendering.backgroundColor());
-                ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
+                sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
+                levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
             }
-        });
+            bindRendererProperties(variantRenderer,    canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
+            bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
+            bindRendererProperties(levelRenderer,      canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
+        }
+    }
+
+    public Renderer variantRenderer() {
+        return variantRenderer;
     }
 
     public void renderFrame(long tick, boolean debugMode) {

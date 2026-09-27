@@ -54,10 +54,6 @@ public abstract class AbstractGameScene
         return reqComp(GameSceneCanvasRenderingComp.class);
     }
 
-    public boolean wantsClearCanvas() {
-        return true;
-    }
-
     public ActionBindingsComp actionBindings() {
         ActionBindingsComp actionBindings = optComp(ActionBindingsComp.class).orElse(null);
         if (actionBindings == null) {

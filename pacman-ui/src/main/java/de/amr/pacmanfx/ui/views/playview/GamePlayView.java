@@ -7,8 +7,10 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
@@ -231,47 +233,53 @@ public class GamePlayView implements GameView {
     }
 
     public void render(RenderManager renderManager, long tick) {
+        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        final GameSession session = app.game().session();
         final GameViewModel viewModel = app.ui().viewModel();
-        final boolean debugMode = viewModel.debugModeOnProperty().get();
 
         renderManager.clearRenderQueue();
 
         // HUD
-        if (app.game().session().isHUDVisible()) {
+        if (session.isHUDVisible()) {
             GameEntityViewBuilder
-                .streamOfViews(app.game().session().hud().allEntities(), RenderingLayer.HUD)
+                .streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
                 .forEach(renderManager::addRenderable);
         }
 
         // Mini view
         layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
 
-        // Game scene renderables
-        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElseThrow();
-        if (!(currentGameScene instanceof AbstractGameScene abstractGameScene)) {
-            return;
+        // Game scene
+        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        if (gameScene != null) {
+            gameScene.renderables().forEach(renderManager::addRenderable);
         }
 
-        renderManager.createRenderers(
-            app.variantManager().currentRuntime().playConfig(),
-            app.variantManager().currentRuntime().uiConfig().renderConfig(),
-            abstractGameScene,
+        // Debug mode rendering
+        final boolean debugMode = viewModel.debugModeOnProperty().get();
+        if (debugMode) {
+            renderManager.addRenderable(new GameSceneDebugView(gameScene));
+        }
+
+        // Update renderers
+        final GameSceneCanvasRenderingComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
+            ? abstractGameScene.optCanvasRendering().orElse(null)
+            : null;
+
+        renderManager.updateRenderers(
+            runtime.playConfig().systems().actorSpriteAnimController(),
+            runtime.uiConfig().renderConfig(),
+            gameScene,
+            canvasRendering,
             layers.miniViewLayer()
         );
 
-        currentGameScene.renderables().forEach(renderManager::addRenderable);
-
-        if (debugMode) {
-            renderManager.addRenderable(new GameSceneDebugView(abstractGameScene));
-        }
-
-        // Clear canvases
         layers.miniViewLayer().clearCanvas();
-        if (abstractGameScene.wantsClearCanvas()) {
-            renderManager.clearSceneCanvas(abstractGameScene);
+        if (canvasRendering != null && canvasRendering.autoClearCanvas()) {
+            renderManager.variantRenderer().clearCanvas();
         }
 
-        // Render the current game content
+        // Render everything for current frame
         renderManager.renderFrame(tick, debugMode);
     }
 

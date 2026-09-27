@@ -54,14 +54,10 @@ public class Arcade_BootScene extends AbstractGameScene {
 
     public Arcade_BootScene() {
         final var rendering = new GameSceneCanvasRenderingComp();
+        rendering.setAutoClearCanvas(false);
         rendering.setUnscaledWidth(WIDTH_IN_TILES * TS);
         rendering.setUnscaledHeight(HEIGHT_IN_TILES * TS);
         setComp(GameSceneCanvasRenderingComp.class, rendering);
-    }
-
-    @Override
-    public boolean wantsClearCanvas() {
-        return false;
     }
 
     @Override

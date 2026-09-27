@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 
-public record GameSceneDebugView(AbstractGameScene gameScene) implements Renderable {
+public record GameSceneDebugView(GameScene gameScene) implements Renderable {
 
     @Override
     public RenderingLayer layer() {

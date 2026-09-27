@@ -26,6 +26,8 @@ public class GameSceneCanvasRenderingComp implements Disposable {
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
+    private boolean autoClearCanvas = true;
+
     public GameSceneCanvasRenderingComp() {
         this(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(), WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
@@ -56,6 +58,14 @@ public class GameSceneCanvasRenderingComp implements Disposable {
         renderer.backgroundColorProperty().bind(backgroundColorProperty());
         renderer.scalingProperty().bind(scalingProperty());
         return renderer;
+    }
+
+    public boolean autoClearCanvas() {
+        return autoClearCanvas;
+    }
+
+    public void setAutoClearCanvas(boolean autoClearCanvas) {
+        this.autoClearCanvas = autoClearCanvas;
     }
 
     /**
