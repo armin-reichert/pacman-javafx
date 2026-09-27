@@ -9,7 +9,6 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -26,21 +25,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.Optional;
-
 import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
-
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas) {
         super(canvas);
-    }
-
-    @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.of(spriteSheet);
+        setSpriteSheet(TengenMsPacMan_SpriteSheet.instance());
     }
 
     @Override

@@ -37,7 +37,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
@@ -48,17 +47,17 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 300, 500, 700, 1000, 2000, 3000, 5000 };
 
-    private final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
 
     public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
+        setSpriteSheet(ArcadePacMan_SpriteSheet.instance());
     }
 
     @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.of(spriteSheet);
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return (ArcadePacMan_SpriteSheet) spriteSheet;
     }
 
     @Override
@@ -99,7 +98,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     private RectShort computeSprite(Pac pac) {
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final Direction dir = pac.worldNavigation().moveDir();
-            final RectShort[] sprites = spriteSheet.pacMunchingSprites(dir);
+            final RectShort[] sprites = spriteSheet().pacMunchingSprites(dir);
             return SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else {
@@ -109,11 +108,11 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
 
     private RectShort computeSprite(Ghost ghost) {
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(ghost));
         }
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            return spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
+            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         final RectShort sprite = animController.currentSprite(ghost);
         if (sprite == null) {
@@ -124,18 +123,18 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     //TODO: decouple symbol code from index in sprite array
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE   -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE   -> SpriteSheet.spriteOrNullSprite(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
         };
     }

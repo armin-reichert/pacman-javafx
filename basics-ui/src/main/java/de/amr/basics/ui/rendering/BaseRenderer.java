@@ -21,8 +21,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.util.Optional;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -51,6 +49,8 @@ public class BaseRenderer implements Renderer {
 
     protected GraphicsContext ctx;
 
+    protected SpriteSheet<?> spriteSheet;
+
     public BaseRenderer() {}
 
     public BaseRenderer(Canvas canvas) {
@@ -60,6 +60,14 @@ public class BaseRenderer implements Renderer {
     public void setCanvas(Canvas canvas) {
         requireNonNull(canvas);
         ctx = canvas.getGraphicsContext2D();
+    }
+
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
+    }
+
+    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
+        this.spriteSheet = spriteSheet;
     }
 
     // Renderer interface
@@ -112,11 +120,7 @@ public class BaseRenderer implements Renderer {
         return backgroundColorProperty().get();
     }
 
-    // SpriteRenderer
-
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.empty();
-    }
+    // Sprites
 
     /**
      * Draws a sprite (region inside sprite sheet) at the given position.
@@ -128,12 +132,12 @@ public class BaseRenderer implements Renderer {
      */
     public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> {
+        if (spriteSheet != null) {
             final double s = scaled ? scaling() : 1;
             ctx().drawImage(spriteSheet.sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 s * x, s * y, s * sprite.width(), s * sprite.height());
-        });
+        }
     }
 
     /**

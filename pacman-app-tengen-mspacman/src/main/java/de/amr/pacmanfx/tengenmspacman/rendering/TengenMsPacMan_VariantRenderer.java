@@ -53,7 +53,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
@@ -65,13 +64,13 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000 };
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
-
     private final ActorSpriteAnimController animSystem;
     private final MarqueeRenderer marqueeRenderer;
 
     public TengenMsPacMan_VariantRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
+        setSpriteSheet(TengenMsPacMan_SpriteSheet.instance());
+
         this.animSystem = requireNonNull(animSystem);
 
         marqueeRenderer = new MarqueeRenderer(canvas);
@@ -80,8 +79,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.of(spriteSheet);
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
@@ -142,7 +141,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private FacingSprite facingSprite(SpriteID spriteArrayID, int frame, Direction dir) {
-        return new FacingSprite(SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(spriteArrayID), frame), dir);
+        return new FacingSprite(SpriteSheet.spriteOrNullSprite(spriteSheet().findSpriteSequence(spriteArrayID), frame), dir);
     }
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
@@ -164,11 +163,11 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private RectShort computeSprite(Ghost ghost) {
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return SpriteSheet.spriteOrNullSprite(sprites, animSystem.currentFrame(ghost));
         }
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            return spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
+            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
             return animSystem.currentSprite(ghost);
@@ -185,19 +184,19 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     // Assumes the unrotated sprite is facing left (like Ms. Pac-Man sprite in the current sprite sheet).
@@ -272,16 +271,16 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
         final GameOptionsDataComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {
-            case BIG     -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> null;
         };
 
         final RectShort difficultySprite = switch (options.difficulty()) {
-            case EASY   -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> null;
         };
 
@@ -291,10 +290,10 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
         ctx.save();
         ctx.setImageSmoothing(false);
 
-        drawSpriteCentered(spriteSheet.findSprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
 
         if (options.boosterMode() != BoosterMode.BOOSTER_OFF) {
-            drawSpriteCentered(spriteSheet.findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
+            drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         if (difficultySprite != null) {
             drawSpriteCentered(difficultySprite, centerX, y);
@@ -352,7 +351,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
         float y = levelCounter.pos().y();
 
         // Symbols are drawn from right to left!
-        final RectShort[] symbolSprites = spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         for (int code : levelCounter.data().symbolCodes()) {
             if (0 <= code && code < symbolSprites.length) {
                 drawSprite(symbolSprites[code], x, y, true);
@@ -366,15 +365,15 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
         final float y = display.pos().y();
         final int number = display.levelNumber().number();
 
-        drawSprite(spriteSheet.findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
 
         final int tens = number / 10;
         if (tens > 0) {
-            final RectShort tensSprite = spriteSheet.findDigitSprite(number / 10);
+            final RectShort tensSprite = spriteSheet().findDigitSprite(number / 10);
             drawSprite(tensSprite, x + 2, y + 2, true);
         }
 
-        final RectShort onesSprite = spriteSheet.findDigitSprite(number % 10);
+        final RectShort onesSprite = spriteSheet().findDigitSprite(number % 10);
         drawSprite(onesSprite, x + 10, y + 2, true);
     }
 

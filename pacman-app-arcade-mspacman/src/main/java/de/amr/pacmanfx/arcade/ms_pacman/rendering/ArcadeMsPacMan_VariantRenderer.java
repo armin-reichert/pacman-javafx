@@ -42,7 +42,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
@@ -56,13 +55,13 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 5000 };
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
     private final MarqueeRenderer marqueeRenderer;
 
     public ArcadeMsPacMan_VariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
+        setSpriteSheet(ArcadeMsPacMan_SpriteSheet.instance());
 
         this.marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
@@ -70,8 +69,8 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.of(spriteSheet);
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
@@ -119,11 +118,11 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     private RectShort computeSprite(Ghost ghost) {
         RectShort sprite;
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(ghost));
         }
         else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            sprite = spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
+            sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
             sprite = animController.currentSprite(ghost);
@@ -137,11 +136,11 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     private RectShort computeSprite(Pac pac) {
         RectShort sprite;
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
-            final RectShort[] sprites = spriteSheet.msPacManMunchingSprites(pac.worldNavigation().moveDir());
+            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else if (animController.isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet.mrPacManMunchingSprites(pac.worldNavigation().moveDir());
+            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else {
@@ -156,19 +155,19 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     // TODO decouple symbol code from sprite index
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(Bag bag) {
