@@ -31,7 +31,7 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
         final GameSession session = game.session();
         final AbstractGameState gameState = game.state();
 
-        drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
+        drawDebugGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
         ctx.save();
         ctx.translate(scaled(2*TS), 0);

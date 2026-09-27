@@ -88,7 +88,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
         ctx.save();
-        drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
+        drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
