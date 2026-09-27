@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static de.amr.basics.ui.rendering.Renderable.filterRenderables;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
@@ -112,10 +113,6 @@ public class IntroSceneView {
         pointsEnergizer.pos().set(tilesPx(LEFT_TILE_X + 6), tilesPx(26));
     }
 
-    public void removePointsEnergizer() {
-        pointsEnergizer = null;
-    }
-
     public void createAndShowTargetEnergizer() {
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
@@ -145,7 +142,7 @@ public class IntroSceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return Renderable.createRenderableStream(
+        return filterRenderables(
             propView(titleTextView),
             visibleEntities(ghostImageViews).map(GameEntityViewBuilder::propView),
             visibleEntities(ghostCharacterDisplays).map(GameEntityViewBuilder::propView),

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public interface Renderable {
 
-    static Stream<Renderable> createRenderableStream(Object... things) {
+    static Stream<Renderable> filterRenderables(Object... things) {
         return Ufx.streamOf(things)
             .peek(thing -> {
                 if (!(thing instanceof Renderable)) {
