@@ -21,7 +21,6 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.ClearCanvas;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
@@ -67,7 +66,6 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
         requireNonNull(r);
         switch (r) {
             case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
-            case ClearCanvas _ -> clearCanvas();
             case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
             case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
             case GridPattern gridPattern -> renderGridPattern(gridPattern);

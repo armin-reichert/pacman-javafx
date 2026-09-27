@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.props.CanvasClear;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -27,7 +28,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     public static final int WIDTH_IN_TILES  = 28;
     public static final int HEIGHT_IN_TILES = 36;
 
-    private static final Renderable BLANK_CANVAS = new ClearCanvas();
+    private static final CanvasClear CANVAS_CLEAR = new CanvasClear();
     private static final Renderable GRID = new GridPattern(GRID_SIZE, WIDTH_IN_TILES, HEIGHT_IN_TILES);
 
     public enum SceneState {
@@ -99,11 +100,11 @@ public class Arcade_BootScene extends AbstractGameScene {
         final int mod4 = (int) (t - currentState.startTick()) % 4;
 
         switch (currentState) {
-            case DARK -> currentSceneContent = BLANK_CANVAS;
+            case DARK -> currentSceneContent = CANVAS_CLEAR;
 
             case HEX_CODES -> {
                 if (mod4 == 0) {
-                    currentSceneContent = BLANK_CANVAS;
+                    currentSceneContent = CANVAS_CLEAR;
                 } else if (mod4 == 1) {
                     currentSceneContent = HexDigitsBlock.randomHexDigits(WIDTH_IN_TILES, HEIGHT_IN_TILES);
                 }
@@ -111,7 +112,7 @@ public class Arcade_BootScene extends AbstractGameScene {
 
             case SPRITE_NOISE -> {
                 if (mod4 == 0) {
-                    currentSceneContent = BLANK_CANVAS;
+                    currentSceneContent = CANVAS_CLEAR;
                 } else if (mod4 == 1) {
                     currentSceneContent = SpritesBlock.randomSpritesBlock(16, WIDTH_IN_TILES, HEIGHT_IN_TILES);
                 }
@@ -119,12 +120,11 @@ public class Arcade_BootScene extends AbstractGameScene {
 
             case GRID -> {
                 if (t == currentState.startTick()) {
-                    currentSceneContent = BLANK_CANVAS;
+                    currentSceneContent = CANVAS_CLEAR;
                 } else {
                     currentSceneContent = GRID;
                 }
             }
-
         }
     }
 

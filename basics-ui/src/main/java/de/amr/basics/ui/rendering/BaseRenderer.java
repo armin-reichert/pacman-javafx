@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
+import de.amr.basics.ui.entities.props.CanvasClear;
 import de.amr.basics.ui.entities.props.CanvasFill;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -67,6 +68,7 @@ public class BaseRenderer implements Renderer {
     public void render(Renderable r, long tick) {
         ctx.save();
         switch (r) {
+            case CanvasClear _ -> clearCanvas();
             case CanvasFill canvasFill -> fillCanvas(canvasFill.color());
             default -> throw new IllegalStateException("Cannot render: " + r);
         }

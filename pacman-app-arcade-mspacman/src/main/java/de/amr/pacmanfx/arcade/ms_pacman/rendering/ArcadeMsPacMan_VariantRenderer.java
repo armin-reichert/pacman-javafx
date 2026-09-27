@@ -28,7 +28,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
 import de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard.ClapperboardAnimationSystem;
-import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.ClearCanvas;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
@@ -79,7 +78,6 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
-            case ClearCanvas _ -> clearCanvas();
             case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
             case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
             case GridPattern gridPattern -> renderGridPattern(gridPattern);
