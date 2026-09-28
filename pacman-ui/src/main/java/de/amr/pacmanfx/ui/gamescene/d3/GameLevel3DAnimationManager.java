@@ -223,7 +223,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         return ghost.reqComp(Ghost3DAnimationComp.class);
     }
 
-    private void createEnergizerParticlesAnimation(Maze3D maze3D, GameLevel level) {
+    private void createEnergizerParticlesAnimation(MapView3D maze3D, GameLevel level) {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
         final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()

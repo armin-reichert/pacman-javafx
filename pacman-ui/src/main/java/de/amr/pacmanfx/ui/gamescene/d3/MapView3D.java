@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
  */
-public class Maze3D implements DisposableGraphicsObject {
+public class MapView3D implements DisposableGraphicsObject {
 
     public record Materials(
         PhongMaterial floorMaterial,
@@ -47,7 +47,7 @@ public class Maze3D implements DisposableGraphicsObject {
 
     private final Materials materials;
 
-    public Maze3D(TerrainLayer terrain, Materials materials) {
+    public MapView3D(TerrainLayer terrain, Materials materials) {
         this.terrain = requireNonNull(terrain);
         this.materials = requireNonNull(materials);
     }

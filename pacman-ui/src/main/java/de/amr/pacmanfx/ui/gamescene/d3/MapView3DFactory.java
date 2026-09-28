@@ -24,13 +24,13 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-public class MazeFactory3D {
+public class MapView3DFactory {
 
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
-    public Maze3D createMaze3D(
+    public MapView3D createMapView3D(
         Predicate<Vector2f> obstacleStartPointIgnored,
         TerrainLayer terrain,
         WorldSettings worldSettings,
@@ -41,49 +41,49 @@ public class MazeFactory3D {
         requireNonNull(worldSettings);
         requireNonNull(colorScheme);
 
-        final var maze3D = new Maze3D(terrain, createMazeMaterials(colorScheme));
-        buildFloor(maze3D, terrain, worldSettings.floor());
-        addObstacles(maze3D, terrain, worldSettings.maze(), obstacleStartPointIgnored);
-        bindWallBaseMaterialColor(maze3D, maze3D.materials().wallBaseMaterial(), Color.valueOf(colorScheme.wallStroke()));
+        final var mapView3D = new MapView3D(terrain, createMazeMaterials(colorScheme));
+        buildFloor(mapView3D, terrain, worldSettings.floor());
+        addObstacles(mapView3D, terrain, worldSettings.maze(), obstacleStartPointIgnored);
+        bindWallBaseMaterialColor(mapView3D, mapView3D.materials().wallBaseMaterial(), Color.valueOf(colorScheme.wallStroke()));
 
-        return maze3D;
+        return mapView3D;
     }
 
-    private void buildFloor(Maze3D maze3D, TerrainLayer terrain,  Floor3DSettings floorConfig) {
+    private void buildFloor(MapView3D mapView3D, TerrainLayer terrain, Floor3DSettings floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
 
         final Box floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
-        floor3D.setMaterial(maze3D.materials().floorMaterial());
+        floor3D.drawModeProperty().bindBidirectional(mapView3D.drawModeProperty());
+        floor3D.setMaterial(mapView3D.materials().floorMaterial());
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());
         floor3D.setTranslateY(0.5 * height);
         floor3D.setTranslateZ(0.5 * thickness);
 
-        maze3D.setFloor3D(floor3D);
+        mapView3D.setFloor3D(floor3D);
 
-        final PhongMaterial floorMaterial = maze3D.materials().floorMaterial();
-        floorMaterial.diffuseColorProperty().bind(maze3D.floorColorProperty());
-        floorMaterial.specularColorProperty().bind(maze3D.floorColorProperty().map(Color::brighter));
+        final PhongMaterial floorMaterial = mapView3D.materials().floorMaterial();
+        floorMaterial.diffuseColorProperty().bind(mapView3D.floorColorProperty());
+        floorMaterial.specularColorProperty().bind(mapView3D.floorColorProperty().map(Color::brighter));
     }
 
     private void addObstacles(
-        Maze3D maze3D, TerrainLayer terrain, Maze3DSettings maze3DSettings,
+        MapView3D mapView3D, TerrainLayer terrain, Maze3DSettings maze3DSettings,
         Predicate<Vector2f> obstacleStartPointIgnored) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final AtomicInteger wallCount = new AtomicInteger(0);
         renderer3D.setOnWallCreatedCallback(wall3D -> {
             wallCount.incrementAndGet();
-            wall3D.setBaseMaterial(maze3D.materials().wallBaseMaterial());
-            wall3D.setTopMaterial(maze3D.materials().wallTopMaterial());
-            wall3D.bindBaseHeight(maze3D.wallBaseHeightProperty());
-            wall3D.base().drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
-            wall3D.top() .drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
-            maze3D.root().getChildren().addAll(wall3D.base(), wall3D.top());
+            wall3D.setBaseMaterial(mapView3D.materials().wallBaseMaterial());
+            wall3D.setTopMaterial(mapView3D.materials().wallTopMaterial());
+            wall3D.bindBaseHeight(mapView3D.wallBaseHeightProperty());
+            wall3D.base().drawModeProperty().bindBidirectional(mapView3D.drawModeProperty());
+            wall3D.top() .drawModeProperty().bindBidirectional(mapView3D.drawModeProperty());
+            mapView3D.root().getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
 
@@ -108,7 +108,7 @@ public class MazeFactory3D {
         }
     }
 
-    private Maze3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
+    private MapView3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 
@@ -118,11 +118,11 @@ public class MazeFactory3D {
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
         wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
 
-        return new Maze3D.Materials(floorMaterial, wallBaseMaterial, wallTopMaterial);
+        return new MapView3D.Materials(floorMaterial, wallBaseMaterial, wallTopMaterial);
     }
 
-    private void bindWallBaseMaterialColor(Maze3D maze3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
-        wallBaseMaterial.diffuseColorProperty().bind(maze3D.wallOpacityProperty()
+    private void bindWallBaseMaterialColor(MapView3D mapView3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
+        wallBaseMaterial.diffuseColorProperty().bind(mapView3D.wallOpacityProperty()
             .map(opacity -> Ufx.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
         );
     }

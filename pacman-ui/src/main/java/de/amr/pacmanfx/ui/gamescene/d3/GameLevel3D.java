@@ -78,11 +78,11 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     private final PointLight ghostHunterLight = new PointLight();
 
-    private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
+    private final Map<Vector2i, Energizer3D> energizerViews3D = new HashMap<>();
 
-    private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
+    private final Map<Vector2i, Pellet3D> pelletViews3D = new HashMap<>();
 
-    private Maze3D maze3D;
+    private MapView3D mapView3D;
 
     private GameLevel3DAnimationManager animationManager;
 
@@ -132,8 +132,8 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     @Override
     public void dispose() {
-        if (maze3D != null) {
-            maze3D.dispose();
+        if (mapView3D != null) {
+            mapView3D.dispose();
         }
         cleanupGroup(root, true);
     }
@@ -144,8 +144,8 @@ public class GameLevel3D implements DisposableGraphicsObject {
         return animationManager;
     }
 
-    public Maze3D maze3D() {
-        return maze3D;
+    public MapView3D maze3D() {
+        return mapView3D;
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
@@ -161,33 +161,33 @@ public class GameLevel3D implements DisposableGraphicsObject {
     }
 
     public Stream<Energizer3D> energizers3D() {
-        return energizer3DByTile.values().stream();
+        return energizerViews3D.values().stream();
     }
 
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
-        return Optional.ofNullable(energizer3DByTile.get(tile));
+        return Optional.ofNullable(energizerViews3D.get(tile));
     }
 
     public Stream<Pellet3D> pellets3D() {
-        return pellet3DByTile.values().stream();
+        return pelletViews3D.values().stream();
     }
 
     public Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
-        return Optional.ofNullable(pellet3DByTile.get(tile));
+        return Optional.ofNullable(pelletViews3D.get(tile));
     }
 
     public void cleanupFoodAndParticles() {
-        energizer3DByTile.values().forEach(Energizer3D::hide);
+        energizerViews3D.values().forEach(Energizer3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        pellet3DByTile.values().forEach(pellet3D -> pellet3D.root().setVisible(false));
-        maze3D.particlesGroup().getChildren().clear();
+        pelletViews3D.values().forEach(pellet3D -> pellet3D.root().setVisible(false));
+        mapView3D.particlesGroup().getChildren().clear();
     }
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
         Ufx.setDrawMode(level.entitySet().pac().reqComp(Pac3DViewComp.class).root(), drawMode);
         level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.reqComp(Ghost3DViewComp.class).root(), drawMode));
-        Ufx.setDrawMode(maze3D.root(), drawMode);
+        Ufx.setDrawMode(mapView3D.root(), drawMode);
     }
 
     public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus) {
@@ -217,16 +217,16 @@ public class GameLevel3D implements DisposableGraphicsObject {
     // Private area, no trespassing!
 
     private void createMaze3DView(WorldMap worldMap, House house, WorldMapColorScheme colorScheme) {
-        maze3D = new MazeFactory3D().createMaze3D(
+        mapView3D = new MapView3DFactory().createMapView3D(
             p -> house.contains(PositionSystem.computeTileAt(p)),
             worldMap.terrainLayer(),
             uiConfig.worldSettings(),
             colorScheme);
 
-        maze3D.drawModeProperty()      .bind(viewModel.common3DSettings().drawModeProperty());
-        maze3D.wallOpacityProperty()   .bind(viewModel.maze3DSettings().wallOpacityProperty());
-        maze3D.wallBaseHeightProperty().bind(viewModel.maze3DSettings().wallHeightProperty());
-        maze3D.floorColorProperty()    .bind(viewModel.maze3DSettings().floorColorProperty());
+        mapView3D.drawModeProperty()      .bind(viewModel.common3DSettings().drawModeProperty());
+        mapView3D.wallOpacityProperty()   .bind(viewModel.maze3DSettings().wallOpacityProperty());
+        mapView3D.wallBaseHeightProperty().bind(viewModel.maze3DSettings().wallHeightProperty());
+        mapView3D.floorColorProperty()    .bind(viewModel.maze3DSettings().floorColorProperty());
     }
 
     private void createFood3DViews() {
@@ -236,18 +236,18 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         final Pellet3DSettings pelletConfig3D = uiConfig.worldSettings().pellet();
-        final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
+        final double pelletZ = mapView3D.floorTop() - pelletConfig3D.floorElevation();
 
         final Energizer3DSettings energizerConfig3D = uiConfig.worldSettings().energizer();
-        final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
+        final double energizerZ = mapView3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
             .filter(level.food()::hasFoodAtTile)
             .forEach(tile -> {
                 if (foodLayer.isEnergizerTile(tile)) {
-                    energizer3DByTile.put(tile, createEnergizer3D(tile, energizerZ, foodMaterial));
+                    energizerViews3D.put(tile, createEnergizer3D(tile, energizerZ, foodMaterial));
                 } else {
-                    pellet3DByTile.put(tile, createPellet3D(tile, pelletZ, foodMaterial));
+                    pelletViews3D.put(tile, createPellet3D(tile, pelletZ, foodMaterial));
                 }
             });
     }
@@ -332,40 +332,37 @@ public class GameLevel3D implements DisposableGraphicsObject {
         root.getChildren().add(view3D.root());
     }
 
-    // Order matters for correct transparency!
-    private void composeLevel3D(
-        Pac pac,
-        List<Ghost> ghosts,
-        LivesCounter livesCounter,
-        House house) {
+    private void composeLevel3D(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {
 
-        final LivesCounter3DViewComp livesCounter3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
-        root.getChildren().add(livesCounter3D.root());
+        // Adding-order matters for correct transparency!
 
-        final Pac3DViewComp pac3D = pac.reqComp(Pac3DViewComp.class);
-        root.getChildren().add(pac3D.root());
-        root.getChildren().add(pac3D.powerLight());
+        final LivesCounter3DViewComp livesCounterView3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
+        root.getChildren().add(livesCounterView3D.root());
+
+        final Pac3DViewComp pacView3D = pac.reqComp(Pac3DViewComp.class);
+        root.getChildren().add(pacView3D.root());
+        root.getChildren().add(pacView3D.powerLight());
 
         for (Ghost ghost: ghosts) {
-            final Ghost3DViewComp ghost3D = ghost.reqComp(Ghost3DViewComp.class);
-            root.getChildren().add(ghost3D.root());
+            final Ghost3DViewComp ghostView3D = ghost.reqComp(Ghost3DViewComp.class);
+            root.getChildren().add(ghostView3D.root());
         }
 
-        for (Energizer3D energizer3D : energizer3DByTile.values()) {
-            root.getChildren().add(energizer3D.root());
+        for (Energizer3D energizerView3D : energizerViews3D.values()) {
+            root.getChildren().add(energizerView3D.root());
         }
 
-        for (Pellet3D pellet3D : pellet3DByTile.values()) {
-            root.getChildren().add(pellet3D.root());
+        for (Pellet3D pelletView3D : pelletViews3D.values()) {
+            root.getChildren().add(pelletView3D.root());
         }
 
-        root.getChildren().add(maze3D.particlesGroup());
-        root.getChildren().add(maze3D.root());
+        root.getChildren().add(mapView3D.particlesGroup());
+        root.getChildren().add(mapView3D.root());
 
         root.getChildren().add(ghostHunterLight);
 
-        final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
-        root.getChildren().add(house3D.root());
-        root.getChildren().add(house3D.doors());
+        final House3DViewComp houseView3D = house.reqComp(House3DViewComp.class);
+        root.getChildren().add(houseView3D.root());
+        root.getChildren().add(houseView3D.doors());
     }
 }

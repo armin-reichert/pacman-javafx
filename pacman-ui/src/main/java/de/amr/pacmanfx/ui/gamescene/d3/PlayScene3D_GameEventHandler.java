@@ -368,7 +368,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         AnimationRegistry animationRegistry,
         Game3DSettingsVM settings3D,
         Maze3DSettingsVM maze3DSettings,
-        Maze3D maze3D,
+        MapView3D maze3D,
         boolean cutSceneFollows)
     {
         final GameLevel3DAnimationManager.AnimationID animationID = cutSceneFollows
