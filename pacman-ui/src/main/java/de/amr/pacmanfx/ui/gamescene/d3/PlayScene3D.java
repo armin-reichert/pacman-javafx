@@ -286,7 +286,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(level);
 
         final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        systems3D.transform().init(pac, level);
+        systems3D.transform().init(pac, level.worldMap());
         systems3D.animation().stopAnimations(pac);
         systems3D.animation().setPowerMode(pac, false);
     }

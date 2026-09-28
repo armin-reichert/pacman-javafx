@@ -38,7 +38,7 @@ public class GameLevel3DUpdateController {
         final Pac pac = level.entitySet().pac();
         final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
 
-        systems3D.transform().update(pac, level);
+        systems3D.transform().update(pac, level.worldMap());
         systems3D.animation().updateAnimations(pac);
         systems3D.animation().updatePowerLight(pac);
     }

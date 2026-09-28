@@ -19,25 +19,27 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DTransformSystem {
 
-    public void init(Pac pac, GameLevel level) {
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+    public void init(Pac pac, WorldMap worldMap) {
+        requireNonNull(pac);
+        requireNonNull(worldMap);
 
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
 
-        update(pac, level);
+        update(pac, worldMap);
     }
 
-    public void update(Pac pac, GameLevel level) {
+    public void update(Pac pac, WorldMap worldMap) {
         requireNonNull(pac);
-        requireNonNull(level);
+        requireNonNull(worldMap);
 
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final Vector2f center = pac.pos().bodyCenter();
 
         if (pac.state().enumValue() == PacState.ACTIVE) {
-            updateVisibility(pac, center, level.worldMap());
+            updateVisibility(pac, center, worldMap);
             updatePosition(view3D, center);
             final Direction moveDir = pac.worldNavigation().moveDir();
             if (moveDir != null) {
