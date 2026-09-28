@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.entities3D.bonus.anim;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.uilib.entities3d.world.MaterialColorAnimations;
-import de.amr.pacmanfx.uilib.entities3d.world.NumberBox3D;
+import de.amr.pacmanfx.ui.entities3D.world.MaterialColorAnimations;
+import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import javafx.animation.*;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;

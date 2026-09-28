@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.NumberBoxRisingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
-import de.amr.pacmanfx.uilib.entities3d.world.NumberBox3D;
+import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;

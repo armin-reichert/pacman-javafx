@@ -46,7 +46,7 @@ import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSy
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3d.world.Pellet3D;
+import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
