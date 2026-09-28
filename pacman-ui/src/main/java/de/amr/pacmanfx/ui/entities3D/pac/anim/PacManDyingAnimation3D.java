@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.entities3d.pac.anim;
+package de.amr.pacmanfx.ui.entities3D.pac.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.scene.Node;
 import javafx.scene.PointLight;

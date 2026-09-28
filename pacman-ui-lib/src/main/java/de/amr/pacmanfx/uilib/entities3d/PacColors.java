@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.pac.comp;
+package de.amr.pacmanfx.uilib.entities3d;
 
 import javafx.scene.paint.Color;
 

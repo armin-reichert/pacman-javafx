@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
+import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 import de.amr.pacmanfx.uilib.entities3d.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3d.world.Pellet3D;
 import javafx.scene.Node;

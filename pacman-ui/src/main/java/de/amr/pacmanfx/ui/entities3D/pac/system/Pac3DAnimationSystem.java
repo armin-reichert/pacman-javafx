@@ -2,16 +2,16 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.pac.system;
+package de.amr.pacmanfx.ui.entities3D.pac.system;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
-import de.amr.pacmanfx.uilib.entities3d.pac.anim.Pac3DMovementAnimation;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DAnimationComp;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 

@@ -8,7 +8,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 
 public class LivesCounter3DViewSystem {
 

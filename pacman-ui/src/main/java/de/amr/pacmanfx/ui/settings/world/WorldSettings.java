@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DSettings;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DSettings;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
+import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 
 import java.util.List;
 

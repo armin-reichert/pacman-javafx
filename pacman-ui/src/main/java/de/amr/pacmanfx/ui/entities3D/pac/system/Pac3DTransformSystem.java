@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.pac.system;
+package de.amr.pacmanfx.ui.entities3D.pac.system;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.basics.TileDimension.HTS;

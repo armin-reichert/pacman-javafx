@@ -19,9 +19,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
 
-    exports de.amr.pacmanfx.uilib.entities3d.pac.anim;
-    exports de.amr.pacmanfx.uilib.entities3d.pac.comp;
-    exports de.amr.pacmanfx.uilib.entities3d.pac.system;
     exports de.amr.pacmanfx.uilib.entities3d.messageview.comp;
     exports de.amr.pacmanfx.uilib.entities3d.messageview.system;
     exports de.amr.pacmanfx.uilib.entities3d.messageview;
@@ -30,6 +27,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.decorationpane;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
-    exports de.amr.pacmanfx.uilib.entities3d;
     exports de.amr.pacmanfx.uilib.renderer;
+    exports de.amr.pacmanfx.uilib.entities3d;
 }

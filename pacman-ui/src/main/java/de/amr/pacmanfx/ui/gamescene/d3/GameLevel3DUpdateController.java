@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
-import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
 
 import java.util.Set;
 

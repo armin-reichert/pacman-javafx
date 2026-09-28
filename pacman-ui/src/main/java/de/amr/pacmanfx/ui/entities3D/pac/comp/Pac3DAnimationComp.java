@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.pac.comp;
+package de.amr.pacmanfx.ui.entities3D.pac.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3d.pac.anim.Pac3DAnimationID;
-import de.amr.pacmanfx.uilib.entities3d.pac.anim.Pac3DMovementAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DAnimationID;
+import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
 
 public class Pac3DAnimationComp implements GameEntityComp {
 

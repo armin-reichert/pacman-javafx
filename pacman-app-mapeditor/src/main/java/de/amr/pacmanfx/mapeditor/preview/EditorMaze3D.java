@@ -13,10 +13,10 @@ import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.uilib.PacManMeshes3D;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DFactory;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.FemaleBodyPartsColors;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacColors;
-import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
+import de.amr.pacmanfx.uilib.entities3d.FemaleBodyPartsColors;
+import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.entities3d.PacColors;
+import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 import de.amr.pacmanfx.uilib.entities3d.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.entities3d.world.Wall3D;
 import javafx.beans.property.BooleanProperty;
@@ -127,7 +127,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Pac3DFactory.createPacBody(PAC_CONFIG, true);
+        pacmanShape3D = Pac3DShapeFactory.createPacBody(PAC_CONFIG, true);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {
