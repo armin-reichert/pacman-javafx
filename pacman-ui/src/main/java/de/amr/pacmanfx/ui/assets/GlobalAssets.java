@@ -8,7 +8,7 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.EggradientSamples;
+import de.amr.basics.ui.assets.Eggradients;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
@@ -25,7 +25,7 @@ public final class GlobalAssets {
     public static final Background BACKGROUND_PAC_MAN_WALLPAPER = Ufx.createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
-    public static final Background[] GRADIENT_BACKGROUNDS = EggradientSamples.backgrounds();
+    public static final Background[] GRADIENT_BACKGROUNDS = Eggradients.backgrounds();
 
     public static GenericWorldMapColorScheme enhanceContrast(WorldSettings worldSettings, GenericWorldMapColorScheme colorScheme) {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());

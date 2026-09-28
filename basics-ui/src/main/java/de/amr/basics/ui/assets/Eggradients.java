@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib;
+package de.amr.basics.ui.assets;
 
 import de.amr.basics.GradientAxis;
 import de.amr.basics.util.Ufx;
@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 
 /**
- * Samples taken from <a href="https://www.eggradients.com/">Eggradients website.</a>.
+ * Samples taken from the <a href="https://www.eggradients.com/">Eggradients website</a>.
  */
-public enum EggradientSamples {
+public enum Eggradients {
 
     BLUE_BELL_DREAMS(
         "#6495ed", "#7c9ec3", GradientAxis.HORIZONTAL),
@@ -45,12 +45,12 @@ public enum EggradientSamples {
         return gradient;
     }
 
-    EggradientSamples(String start, String end, GradientAxis axis) {
+    Eggradients(String start, String end, GradientAxis axis) {
         gradient = Ufx.createGradient(start, end, axis);
     }
 
     public static Background[] backgrounds() {
-        return Stream.of(values()).map(EggradientSamples::gradient).map(Background::fill).toArray(Background[]::new);
+        return Stream.of(values()).map(Eggradients::gradient).map(Background::fill).toArray(Background[]::new);
     }
 
     public static LinearGradient random() {
