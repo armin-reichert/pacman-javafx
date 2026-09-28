@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.entities3d.house.comp;
+package de.amr.pacmanfx.ui.entities3D.house.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2f;

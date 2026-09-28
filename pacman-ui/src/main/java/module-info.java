@@ -47,4 +47,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.views.miniview;
     exports de.amr.pacmanfx.ui.rendering;
     exports de.amr.pacmanfx.ui.assets;
+    exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
+    exports de.amr.pacmanfx.ui.entities3D.comp;
 }

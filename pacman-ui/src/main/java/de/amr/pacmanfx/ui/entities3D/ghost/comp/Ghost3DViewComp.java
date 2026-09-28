@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.entities3d.ghost.comp;
+package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.PacManMeshes3D;

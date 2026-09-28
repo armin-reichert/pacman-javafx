@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.ghost.anim;
+package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
 
 import de.amr.pacmanfx.core.model.GhostPersonality;

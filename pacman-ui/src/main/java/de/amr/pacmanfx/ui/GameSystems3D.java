@@ -9,9 +9,9 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSyste
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DAppearanceSystem;
-import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3d.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DAppearanceSystem;
+import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DMovementSystem;
+import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 
 public class GameSystems3D {
 

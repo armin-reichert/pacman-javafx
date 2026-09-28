@@ -40,7 +40,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsVM;
-import de.amr.pacmanfx.uilib.entities3d.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3d.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3d.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3d.messageview.system.MessageView3DDisplaySystem;

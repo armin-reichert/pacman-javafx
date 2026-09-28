@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.ghost.anim;
+package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;

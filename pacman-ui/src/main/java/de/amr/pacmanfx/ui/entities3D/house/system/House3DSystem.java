@@ -1,8 +1,8 @@
-package de.amr.pacmanfx.uilib.entities3d.house.system;
+package de.amr.pacmanfx.ui.entities3D.house.system;
 
 import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.uilib.entities3d.house.comp.House3DAnimationComp;
-import de.amr.pacmanfx.uilib.entities3d.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 
 public class House3DSystem {
 
