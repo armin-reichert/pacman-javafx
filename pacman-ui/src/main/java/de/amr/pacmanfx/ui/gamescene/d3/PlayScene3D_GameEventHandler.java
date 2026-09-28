@@ -31,6 +31,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -39,7 +40,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsVM;
-import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3d.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3d.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3d.messageview.system.MessageView3DAnimationSystem;
@@ -122,9 +122,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     public void onBonusActivated(BonusActivatedEvent e) {
         final GameLevel3D level3D = assertLevel3D();
         final Bonus bonus = e.bonus();
+        final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
 
         level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
-        Bonus3DViewSystem.lookEdible(bonus);
+        systems3D.view3D().lookEdible(bonus);
         optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
@@ -132,22 +133,25 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.lookEaten(bonus, assertLevel3D().animationManager().registry());
+        final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+
+        systems3D.view3D().lookEaten(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.lookExpired(bonus, assertLevel3D().animationManager().registry());
+        final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+
+        systems3D.view3D().lookExpired(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entitySet()
-            .entities().theOne(MessageView.class);
+        final MessageView messageView = game().session().level().entitySet().entities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -305,7 +309,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            Bonus3DViewSystem.lookExpired(bonus, animationRegistry);
+            final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+            systems3D.view3D().lookExpired(bonus, animationRegistry);
         }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
@@ -342,7 +347,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
+            final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+            systems3D.view3D().lookExpired(bonus, level3D.animationManager().registry());
         }
 
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
@@ -408,7 +414,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
+            final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+            systems3D.view3D().lookExpired(bonus, level3D.animationManager().registry());
         }
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }

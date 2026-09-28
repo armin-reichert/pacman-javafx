@@ -247,7 +247,6 @@ public class GameSystems {
 
     // Bonus systems
 
-
     public BonusUpdateSystem bonusUpdateSystem() {
         return bonusUpdateSystem;
     }

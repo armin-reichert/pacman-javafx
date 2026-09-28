@@ -6,14 +6,13 @@ package de.amr.pacmanfx.uilib.entities3d.bonus.system;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
 
 import static de.amr.basics.TileDimension.HTS;
 
 public class Bonus3DMovementSystem {
 
-    public static void update(GameEntity bonus) {
+    public void update(GameEntity bonus) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
 
         final Vector2f center = bonus.pos().bodyCenter();

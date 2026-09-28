@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.MapWithTypedAccess;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.AssetMap;
@@ -55,13 +55,13 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap _) -> hideEnergizerIfOff(energizer);
+            case GameLevelView(GameLevel level, MapWithTypedAccess renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithTypedAccess _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }
 
-    private void renderGameLevel(GameLevel level, InfoMap info) {
+    private void renderGameLevel(GameLevel level, MapWithTypedAccess info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 

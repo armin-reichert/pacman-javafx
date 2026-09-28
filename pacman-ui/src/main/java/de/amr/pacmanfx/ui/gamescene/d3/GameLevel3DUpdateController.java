@@ -10,9 +10,8 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3d.house.comp.House3DViewComp;
@@ -85,14 +84,16 @@ public class GameLevel3DUpdateController {
     private static void updateBonus3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final GameSystems3D.BonusSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+
         if (bonus != null) {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
             switch (bonus.state().enumValue()) {
-                case EDIBLE -> Bonus3DViewSystem.lookEdible(bonus);
-                case EATEN -> Bonus3DViewSystem.lookEaten(bonus, level3D.animationManager().registry());
+                case EDIBLE -> systems3D.view3D().lookEdible(bonus);
+                case EATEN  -> systems3D.view3D().lookEaten(bonus, level3D.animationManager().registry());
                 case INACTIVE -> {}
             }
-            Bonus3DMovementSystem.update(bonus);
+            systems3D.movement().update(bonus);
         }
     }
 }

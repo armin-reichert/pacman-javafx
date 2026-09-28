@@ -9,9 +9,9 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class InfoMap {
+public class MapWithTypedAccess {
 
-    public static final InfoMap EMPTY = new InfoMap() {
+    public static final MapWithTypedAccess EMPTY = new MapWithTypedAccess() {
         @Override
         public Map<Object, Object> entries() {
             return Map.of();
@@ -21,7 +21,7 @@ public class InfoMap {
     // create on-access
     private Map<Object, Object> entries;
 
-    public InfoMap() {}
+    public MapWithTypedAccess() {}
 
     public boolean getBoolean(Object key) {
         final Boolean b = get(key, Boolean.class);
@@ -48,7 +48,7 @@ public class InfoMap {
         entries().put(key, value);
     }
 
-    public void putAll(InfoMap infoMap) {
+    public void putAll(MapWithTypedAccess infoMap) {
         entries().putAll(infoMap.entries());
     }
 

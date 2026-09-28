@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.renderer;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.MapWithTypedAccess;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -80,7 +80,7 @@ public class ArcadeHouseRenderer extends BaseRenderer {
         }
     }
 
-    public void drawHouse(House house, InfoMap renderInfo) {
+    public void drawHouse(House house, MapWithTypedAccess renderInfo) {
         drawHouse(
             house.floorplan().minTile(),
             house.sizeInTiles(),

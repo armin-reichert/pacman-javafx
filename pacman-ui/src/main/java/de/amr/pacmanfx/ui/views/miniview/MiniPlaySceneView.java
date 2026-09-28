@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.miniview;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.MapWithTypedAccess;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -178,7 +178,7 @@ public class MiniPlaySceneView extends HBox {
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
-        final InfoMap info = new InfoMap();
+        final MapWithTypedAccess info = new MapWithTypedAccess();
         info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
