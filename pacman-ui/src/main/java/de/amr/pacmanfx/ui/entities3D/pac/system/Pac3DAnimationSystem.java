@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.entities3D.pac.system;
 
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
@@ -31,7 +30,6 @@ public class Pac3DAnimationSystem {
     }
 
     public void updateAnimations(Pac pac) {
-        final PacStateComp state = pac.state();
         final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
 
         final Pac3DMovementAnimation movementAnimation = animation.movement();
@@ -39,15 +37,16 @@ public class Pac3DAnimationSystem {
             movementAnimation.update();
         }
 
-        final ManagedAnimation chewing = animation.chewing();
-        if (chewing != null) {
+        if (animation.chewing() != null) {
             final boolean moved = pac.worldNavigation().info().moved;
             if (moved) {
-                chewing.playOrContinue();
+                animation.chewing().playOrContinue();
             } else {
-                chewing.stop();
+                animation.chewing().stop();
             }
         }
+
+        updatePowerLight(pac);
     }
 
     public void setPowerMode(Pac pac, boolean power) {
@@ -55,28 +54,6 @@ public class Pac3DAnimationSystem {
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
-        }
-    }
-
-    /**
-     * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
-     */
-    public void updatePowerLight(Pac pac) {
-        final PacStateComp state = pac.state();
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
-
-        final boolean lighted = state.enumValue() != PacState.DEAD;
-        if (lighted) {
-            final boolean powerActive      = pac.power().isActive();
-            final long powerTicksRemaining = pac.power().ticksRemaining();
-            final long powerTicksTotal     = pac.power().ticksTotal();
-            if (powerActive && pac.isVisible()) {
-                view3D.powerLight().setLightOn(true);
-                final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
-                view3D.powerLight().setMaxRange(maxRange);
-            } else {
-                view3D.powerLight().setLightOn(false);
-            }
         }
     }
 
@@ -100,5 +77,27 @@ public class Pac3DAnimationSystem {
             pacAnimation.movement().managedAnimation().stop();
         }
         animation.play();
+    }
+
+    /**
+     * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
+     */
+    private void updatePowerLight(Pac pac) {
+        final PacStateComp state = pac.state();
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+
+        final boolean lighted = state.enumValue() != PacState.DEAD;
+        if (lighted) {
+            final boolean powerActive      = pac.power().isActive();
+            final long powerTicksRemaining = pac.power().ticksRemaining();
+            final long powerTicksTotal     = pac.power().ticksTotal();
+            if (powerActive && pac.isVisible()) {
+                view3D.powerLight().setLightOn(true);
+                final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
+                view3D.powerLight().setMaxRange(maxRange);
+            } else {
+                view3D.powerLight().setLightOn(false);
+            }
+        }
     }
 }

@@ -342,6 +342,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
+
         houseSystem3D.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
