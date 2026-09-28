@@ -32,8 +32,8 @@ public class GameBox implements Disposable {
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public GameBox(GameClock clock) {
-        this.clock = requireNonNull(clock);
+    public GameBox() {
+        clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
 
         final boolean ok = validateUserDirs();
