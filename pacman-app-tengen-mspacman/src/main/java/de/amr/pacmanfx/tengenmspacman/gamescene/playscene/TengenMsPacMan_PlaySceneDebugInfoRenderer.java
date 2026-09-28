@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {
@@ -34,7 +35,7 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
         drawDebugGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
         ctx.save();
-        ctx.translate(scaled(2*TS), 0);
+        ctx.translate(scaled(2 * TS), 0);
         ctx.setFill(debugTextFill);
         ctx.setFont(debugTextFont);
         ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * TS));

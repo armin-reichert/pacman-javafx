@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Pac3DTransformSystem {
@@ -46,8 +48,8 @@ public class Pac3DTransformSystem {
 
     private static void updateVisibility(Pac pac, Vector2f center, WorldMap worldMap) {
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
-        final boolean outside = center.x() < WorldMap.HTS
-            || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
+        final boolean outside = center.x() < HTS
+            || center.x() > TS * worldMap.numCols() - HTS;
         view3D.root().setVisible(pac.isVisible() && !outside);
     }
 

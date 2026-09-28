@@ -28,7 +28,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
@@ -38,8 +37,9 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.halfTileRightOf;
 import static de.amr.basics.math.RandomNumbers.*;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
@@ -161,7 +161,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Bonus bonus = Bonus.createStaticBonus(symbolCode);
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-        bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
+        bonus.pos().set(halfTileRightOf(bonusTile));
         bonus.setLifetimeSec(lifetimeSec);
         return bonus;
     }

@@ -46,7 +46,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;

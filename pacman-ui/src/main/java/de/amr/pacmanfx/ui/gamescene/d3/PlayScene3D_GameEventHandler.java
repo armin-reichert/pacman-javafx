@@ -30,7 +30,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -56,6 +55,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.pauseSecThen;
 
@@ -273,7 +274,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
                 final House house = level.entitySet().entities().theOne(House.class);
                 yield house.centerPositionUnderHouse();
             }
-            case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
+            case TEST -> vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS);
         };
         MessageView3DDisplaySystem.showMessage(
             messageView,

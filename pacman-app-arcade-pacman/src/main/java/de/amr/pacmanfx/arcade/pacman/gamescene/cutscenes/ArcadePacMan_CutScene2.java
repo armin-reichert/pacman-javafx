@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -25,6 +24,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 /**
@@ -34,8 +34,8 @@ import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
  */
 public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
-    public final float nailX = WorldMap.TS * 14;
-    public final float nailY = WorldMap.TS * 19.5f - 2;
+    public final float nailX = TS * 14;
+    public final float nailY = TS * 19.5f - 2;
 
     private Pac pacMan;
     private Ghost blinky;

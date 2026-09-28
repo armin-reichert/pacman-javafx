@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class TotalPerspective implements Perspective<GameLevel> {
@@ -29,8 +29,8 @@ public class TotalPerspective implements Perspective<GameLevel> {
 
     @Override
     public void update(GameLevel level) {
-        int sizeX = level.worldMap().numCols() * WorldMap.TS;
-        int sizeY = level.worldMap().numRows() * WorldMap.TS;
+        int sizeX = level.worldMap().numCols() * TS;
+        int sizeY = level.worldMap().numRows() * TS;
         camera.setTranslateX(sizeX * 0.5);
         camera.setTranslateY(sizeY * 1.5);
         camera.setTranslateZ(-100);

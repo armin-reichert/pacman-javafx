@@ -23,6 +23,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 
@@ -40,7 +42,7 @@ public class Preview2D extends Canvas {
          * @param sprite actor sprite
          */
         public void drawActorSprite(Vector2i tile, RectShort sprite) {
-            Vector2i center = tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            Vector2i center = tile.scaled(TS).plus(TS, HTS);
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().drawImage(ArcadeSprites.SPRITE_SHEET,
@@ -59,7 +61,7 @@ public class Preview2D extends Canvas {
     private final FoodMapRenderer foodRenderer;
     private final ArcadeHouseRenderer houseRenderer;
 
-    private final DoubleProperty gridSize = new SimpleDoubleProperty(WorldMap.TS);
+    private final DoubleProperty gridSize = new SimpleDoubleProperty(TS);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
@@ -84,7 +86,7 @@ public class Preview2D extends Canvas {
                 || code == TerrainTile.WALL_V.$;
         });
 
-        DoubleBinding scaling = gridSize.divide(WorldMap.TS);
+        DoubleBinding scaling = gridSize.divide(TS);
         terrainRenderer.scalingProperty().bind(scaling);
         terrainTileRenderer.scalingProperty().bind(scaling);
         foodRenderer.scalingProperty().bind(scaling);

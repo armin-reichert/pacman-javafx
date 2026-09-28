@@ -16,19 +16,14 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.basics.TileDimension.*;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.isBlocked;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public final class TerrainLayer extends WorldMapLayer {
-
-    private static Vector2f halfTileRightOf(Vector2i tile) {
-        return vec2_float(tile.x() * WorldMap.TS + WorldMap.HTS, tile.y() * WorldMap.TS);
-    }
 
     private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
@@ -113,7 +108,7 @@ public final class TerrainLayer extends WorldMapLayer {
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {
-            Vector2i houseStartPoint = houseMinTile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
             obstacleSet.stream()
                 .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
                 .findFirst().ifPresent(houseObstacle -> {
@@ -164,7 +159,7 @@ public final class TerrainLayer extends WorldMapLayer {
      * @return world size in pixels as (width, height)
      */
     public Vector2i sizeInPixel() {
-        return new Vector2i(numCols() * WorldMap.TS, numRows() * WorldMap.TS);
+        return new Vector2i(numCols() * TS, numRows() * TS);
     }
 
     /**

@@ -5,7 +5,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
@@ -20,6 +19,8 @@ import org.tinylog.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -101,9 +102,9 @@ public class MazeFactory3D {
     private boolean isWorldBorder(TerrainLayer terrain, Obstacle obstacle) {
         final Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == WorldMap.TS || start.y() == terrain.emptyRowsOverMaze() * WorldMap.TS + WorldMap.HTS;
+            return start.x() == TS || start.y() == terrain.emptyRowsOverMaze() * TS + HTS;
         } else {
-            return start.x() == 0 || start.x() == terrain.numCols() * WorldMap.TS;
+            return start.x() == 0 || start.x() == terrain.numCols() * TS;
         }
     }
 

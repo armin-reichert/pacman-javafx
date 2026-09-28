@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.entities3d.world;
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -16,6 +15,8 @@ import javafx.scene.shape.Sphere;
 
 import java.util.function.Supplier;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements DisposableGraphicsObject {
@@ -44,12 +45,12 @@ public class Energizer3D implements DisposableGraphicsObject {
 
     public Energizer3D() {
         this.shapeFactory = Energizer3D::createDefaultShape;
-        setLocation(Vector2i.ZERO, WorldMap.HTS);
+        setLocation(Vector2i.ZERO, HTS);
     }
 
     public void setLocation(Vector2i tile, double centerZ) {
         this.tile = requireNonNull(tile);
-        final Vector2i centerXY = tile.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS);
+        final Vector2i centerXY = tile.scaled(TS).plus(HTS, HTS);
         center = new Point3D(centerXY.x(), centerXY.y(), centerZ);
         if (shape != null) {
             updateShapeLocation();

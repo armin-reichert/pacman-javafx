@@ -22,7 +22,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class LivesCounter3DViewComp implements GameEntityComp, DisposableGraphicsObject {

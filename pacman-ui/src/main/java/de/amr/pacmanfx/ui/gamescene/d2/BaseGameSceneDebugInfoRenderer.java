@@ -28,7 +28,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -42,6 +41,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 //TODO Use renderables with suitable z order
@@ -238,8 +239,8 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     public void drawTerrainDebugInfo(GameLevel level) {
         // We assume all ghosts have the same set of special terrain tiles
         level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
-            final double x = scaled(tile.x() * WorldMap.TS);
-            final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
+            final double x = scaled(tile.x() * TS);
+            final double y = scaled(tile.y() * TS + HTS), size = scaled(TS);
             ctx.setFill(Color.RED);
             ctx.fillRect(x, y, size, 2);
         });
@@ -252,12 +253,12 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
             .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
             .filter(tile -> terrain.isRealIntersectionTile(tile, house::contains))
             .forEach(tile -> {
-                final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
-                final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
+                final double cx = tile.x() * TS + HTS;
+                final double cy = tile.y() * TS + HTS;
                 for (Direction dir : CLOCK_WISE) {
                     if (!terrain.isInaccessibleTile(tile.plus(dir.vector()))) {
-                        final double x = cx + dir.vector().x() * WorldMap.HTS;
-                        final double y = cy + dir.vector().y() * WorldMap.HTS;
+                        final double x = cx + dir.vector().x() * HTS;
+                        final double y = cy + dir.vector().y() * HTS;
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(2);
                         ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));

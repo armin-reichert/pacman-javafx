@@ -17,12 +17,15 @@ import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
-import de.amr.pacmanfx.core.*;
-import de.amr.pacmanfx.core.entities.world.Energizer;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.ElroyComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.world.HouseFactory;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -47,8 +50,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static de.amr.basics.TileDimension.*;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -264,7 +267,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         // In XXL game variant, the bonus position is stored inside the terrain map
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
-        bonus.pos().set(WorldMap.halfTileRightOf(tile));
+        bonus.pos().set(halfTileRightOf(tile));
         bonus.setLifetimeSec(rules.edibleBonusDisplaySeconds());
         systems.bonusState().setEdible(bonus);
         bonus.show();

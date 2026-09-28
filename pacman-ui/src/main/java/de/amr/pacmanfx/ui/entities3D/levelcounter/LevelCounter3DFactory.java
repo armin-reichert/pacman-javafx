@@ -16,7 +16,7 @@ import javafx.scene.shape.Box;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
+import static de.amr.basics.TileDimension.HTS;
 
 public class LevelCounter3DFactory {
 

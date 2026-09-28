@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -96,7 +97,7 @@ class XXL_ChaseAnimation {
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
         pac = actorFactory.createPacMan();
-        pac.pos().setX(numTilesX * WorldMap.TS);
+        pac.pos().setX(numTilesX * TS);
         pac.show();
 
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
@@ -132,7 +133,7 @@ class XXL_ChaseAnimation {
         }
 
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
-        if (pac.pos().x() > (numTilesX + 14) * WorldMap.TS) {
+        if (pac.pos().x() > (numTilesX + 14) * TS) {
             startGhostsChasePacMan();
         }
         else {
@@ -157,10 +158,10 @@ class XXL_ChaseAnimation {
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
-        pac.pos().setX(numTilesX * WorldMap.TS);
+        pac.pos().setX(numTilesX * TS);
 
         for (Ghost ghost : ghosts) {
-            ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+            ghost.pos().setX((numTilesX + 4) * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
             navigator.setMoveDir(ghost, Direction.LEFT);
@@ -180,14 +181,14 @@ class XXL_ChaseAnimation {
 
         moveActors();
 
-        if (ghosts.getLast().pos().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
-            pac.pos().setX(-(numTilesX - 4) * WorldMap.TS);
+        if (ghosts.getLast().pos().x() < -4 * TS) { // ghosts left screen on the left side
+            pac.pos().setX(-(numTilesX - 4) * TS);
             navigator.setMoveDir(pac, Direction.RIGHT);
             navigator.setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.show();
-                ghost.pos().setX(pac.pos().x() + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+                ghost.pos().setX(pac.pos().x() + 22 * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
                 navigator.setMoveDir(ghost, Direction.RIGHT);
                 navigator.setWishDir(ghost, Direction.RIGHT);

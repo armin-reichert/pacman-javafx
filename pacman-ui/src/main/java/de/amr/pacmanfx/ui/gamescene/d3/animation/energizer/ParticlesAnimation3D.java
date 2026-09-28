@@ -10,7 +10,6 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D.ParticleState;
 import javafx.animation.Animation;
@@ -26,6 +25,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.RandomNumbers.chance;
 import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static java.util.Objects.requireNonNull;
@@ -77,7 +78,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         // The 3 ghost revival positions inside the house from left to right
         swirlBases = Stream.of(GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(house.floorplan()::ghostRevivalTile)
-            .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS))
+            .map(tile -> tile.scaled(TS).plus(TS, HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 

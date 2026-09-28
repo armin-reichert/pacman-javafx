@@ -11,9 +11,9 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.tile;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.*;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.lang.Math.signum;
 
 /**

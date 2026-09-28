@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {

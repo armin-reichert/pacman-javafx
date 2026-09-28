@@ -18,7 +18,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -29,8 +28,7 @@ import javafx.scene.paint.Color;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -43,15 +41,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     static final ArcadeColor[] GHOST_COLORS = { ArcadeColor.RED, ArcadeColor.PINK, ArcadeColor.CYAN, ArcadeColor.ORANGE };
 
     static final int TITLE_X             = TS * 10;
-     static final int TITLE_Y             = TS * 8;
-     static final int TOP_Y               = TS * 11;
-     static final int GHOST_RAISE_POS_X   = TS * 6 - WorldMap.HTS;
-     static final int MS_PACMAN_END_POS_X = TS * 15 + 2;
+    static final int TITLE_Y             = TS * 8;
+    static final int TOP_Y               = TS * 11;
+    static final int GHOST_RAISE_POS_X   = TS * 6 - HTS;
+    static final int MS_PACMAN_END_POS_X = TS * 15 + 2;
 
-     static final Vector2f PAC_START_POS = new Vector2f(31 * TS, 20 * TS);
-     static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
+    static final Vector2f PAC_START_POS   = new Vector2f(31 * TS, 20 * TS);
+    static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
 
-     static final float ACTOR_SPEED = 1.10f;
+    static final float ACTOR_SPEED = 1.10f;
 
     private final IntroSceneController flow;
     

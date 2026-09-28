@@ -1,11 +1,11 @@
 package de.amr.pacmanfx.uilib.entities3d.score.comp;
 
 import de.amr.basics.ui.entities.hud.score.Score;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class ScoresView {
@@ -20,7 +20,7 @@ public class ScoresView {
         this.leftScore = requireNonNull(leftScore);
         this.rightScore = requireNonNull(rightScore);
 
-        gridPane.setHgap(5 * WorldMap.TS);
+        gridPane.setHgap(5 * TS);
 
         final ScoreViewComp leftScoreView = leftScore.reqComp(ScoreViewComp.class);
         gridPane.add(leftScoreView.titleDisplay(),  0, 0);

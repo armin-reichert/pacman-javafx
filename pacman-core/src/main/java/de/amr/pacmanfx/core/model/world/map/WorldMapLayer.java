@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
+import static de.amr.basics.TileDimension.tile;
 import static java.util.Objects.requireNonNull;
 
 public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {

@@ -24,8 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfViews;
 

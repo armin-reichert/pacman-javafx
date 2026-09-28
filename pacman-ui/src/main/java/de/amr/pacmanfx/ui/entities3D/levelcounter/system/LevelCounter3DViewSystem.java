@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.entities3d.levelcounter.comp.LevelCounter3DAnimatio
 import de.amr.pacmanfx.uilib.entities3d.levelcounter.comp.LevelCounter3DViewComp;
 import javafx.scene.Group;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.tilesPx;
 
 public class LevelCounter3DViewSystem {
 

@@ -28,9 +28,9 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.arcade.pacman.gamescene.introscene.IntroSceneController.*;
 import static de.amr.pacmanfx.core.entities.actor.ghost.GhostState.EATEN;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.

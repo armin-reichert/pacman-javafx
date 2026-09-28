@@ -20,7 +20,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 //TODO Should a game scene really be a renderable itself or only produce renderables?

@@ -27,9 +27,9 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class XXL_OptionMenu extends OptionMenu {

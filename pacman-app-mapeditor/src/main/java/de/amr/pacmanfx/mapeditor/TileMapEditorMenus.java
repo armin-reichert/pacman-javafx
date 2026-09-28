@@ -13,7 +13,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
+import static de.amr.basics.TileDimension.tile;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 

@@ -8,11 +8,11 @@ import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.SpriteMap;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import javafx.scene.image.Image;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.RectShort.sprite;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
@@ -30,8 +30,8 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     }
 
     // Size of Arcade maze (without the 3 empty rows above and the 2 below the maze!)
-    private static final int MAP_SPRITE_WIDTH  = 28 * WorldMap.TS;
-    private static final int MAP_SPRITE_HEIGHT = 31 * WorldMap.TS;
+    private static final int MAP_SPRITE_WIDTH  = 28 * TS;
+    private static final int MAP_SPRITE_HEIGHT = 31 * TS;
 
     private static RectShort spriteAtCell(int row, int col) {
         return sprite(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);

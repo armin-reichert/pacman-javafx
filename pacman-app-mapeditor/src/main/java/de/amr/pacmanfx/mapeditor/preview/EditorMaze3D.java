@@ -38,6 +38,7 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.*;
 import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
@@ -154,8 +155,8 @@ public class EditorMaze3D extends Group {
     }
 
     public void rebuildMaze() {
-        final double width  = worldMap().numCols() * WorldMap.TS;
-        final double height = worldMap().numRows() * WorldMap.TS;
+        final double width  = worldMap().numCols() * TS;
+        final double height = worldMap().numRows() * TS;
 
         mazeGroup.getChildren().clear();
 
@@ -185,7 +186,7 @@ public class EditorMaze3D extends Group {
         });
         for (Obstacle obstacle : worldMap().terrainLayer().obstacles()) {
             boolean worldBorder = ObstacleBuilder.isBorderObstacle(obstacle, worldMap());
-            r3D.renderObstacle3D(obstacle, worldBorder, 2, WorldMap.HTS);
+            r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreatedCallback(null);
 
@@ -242,8 +243,8 @@ public class EditorMaze3D extends Group {
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
-        Vector2i houseRightUpper = WorldMap.tile(houseMaxTile.x(), houseMinTile.y());
-        Vector2i houseLeftLower = WorldMap.tile(houseMinTile.x(), houseMaxTile.y());
+        Vector2i houseRightUpper = tile(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower  = tile(houseMinTile.x(), houseMaxTile.y());
 
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
@@ -267,10 +268,10 @@ public class EditorMaze3D extends Group {
             WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         var doorMaterial = Ufx.coloredPhongMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
-            Box door = new Box(WorldMap.TS + WorldMap.HTS, 2, HOUSE_DOOR_HEIGHT);
+            Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
             door.setMaterial(doorMaterial);
-            door.setTranslateX(doorTile.x() * WorldMap.TS + WorldMap.HTS);
-            door.setTranslateY(doorTile.y() * WorldMap.TS + WorldMap.HTS);
+            door.setTranslateX(doorTile.x() * TS + HTS);
+            door.setTranslateY(doorTile.y() * TS + HTS);
             door.setTranslateZ(-door.getDepth() * 0.5);
             door.visibleProperty().bind(terrainVisibleProperty());
             mazeGroup.getChildren().add(door);
@@ -282,7 +283,7 @@ public class EditorMaze3D extends Group {
         if (tile == null) {
             return;
         }
-        Vector2f center = tile.scaled(WorldMap.TS).toVector2f().plus(WorldMap.TS, WorldMap.HTS);
+        Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);
         actorShape.setTranslateX(center.x());
         actorShape.setTranslateY(center.y());
         actorShape.setTranslateZ(-0.5 * GHOST_SIZE);
@@ -298,7 +299,7 @@ public class EditorMaze3D extends Group {
         var foodMaterial = Ufx.coloredPhongMaterial(foodColor);
         foodGroup.getChildren().clear();
         worldMap().terrainLayer().tiles().filter(this::hasFoodAt).forEach(tile -> {
-            Point3D position = new Point3D(tile.x() * WorldMap.TS + WorldMap.HTS, tile.y() * WorldMap.TS + WorldMap.HTS, -4);
+            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);
             boolean energizer = hasEnergizerAt(tile);
             var pellet = new Sphere(energizer ? 4 : 1, 32);
             pellet.setMaterial(foodMaterial);

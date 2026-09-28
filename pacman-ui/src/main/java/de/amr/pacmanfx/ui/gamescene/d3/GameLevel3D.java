@@ -60,6 +60,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -297,8 +298,8 @@ public class GameLevel3D implements DisposableGraphicsObject {
         if (!livesCounter.hasComp(LivesCounter3DViewComp.class)) {
             final LivesCounter3DViewComp view3D = new LivesCounter3DViewComp(uiConfig.factory3D(), uiConfig.worldSettings());
             livesCounter.setComp(LivesCounter3DViewComp.class, view3D);
-            view3D.root().setTranslateX(2 * WorldMap.TS);
-            view3D.root().setTranslateY(2 * WorldMap.TS);
+            view3D.root().setTranslateX(2 * TS);
+            view3D.root().setTranslateY(2 * TS);
         }
     }
 

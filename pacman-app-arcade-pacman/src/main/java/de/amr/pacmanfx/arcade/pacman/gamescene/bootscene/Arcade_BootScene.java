@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.basics.TileDimension.TS;
 
 /**
  * The boot screen displays some strange hex codes, garbage from the graphics memory

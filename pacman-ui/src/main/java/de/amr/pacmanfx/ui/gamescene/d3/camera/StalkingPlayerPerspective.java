@@ -5,10 +5,10 @@ package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.MathAdds.lerp;
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +34,7 @@ public class StalkingPlayerPerspective implements Perspective<GameLevel> {
         final Pac pac = level.entitySet().pac();
         double speedX = 0.04;
         double speedY = 0.04;
-        double worldWidth = level.worldMap().numCols() * WorldMap.TS;
+        double worldWidth = level.worldMap().numCols() * TS;
         double targetX = Math.clamp(pac.pos().x(), 40, worldWidth - 40);
         double targetY = pac.pos().y() + 100;
         camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));

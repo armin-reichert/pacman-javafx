@@ -21,7 +21,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -30,8 +29,8 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
@@ -211,7 +210,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         final MovementSystem motor = game().playConfig().systems().motor();
 
         // release bag from beak when stork reaches tile 20
-        if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {
+        if (stork.pos().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {
             motor.setAcceleration(bag, 0, 0.04f); // set tileY-gravity to let bag fall to ground
             motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
             stork.setBagReleasedFromBeak(true);

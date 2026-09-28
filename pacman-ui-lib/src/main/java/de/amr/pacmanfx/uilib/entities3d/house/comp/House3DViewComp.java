@@ -6,7 +6,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.HouseFloorplanComp;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -17,6 +16,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
@@ -78,15 +79,15 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
         barThicknessProperty.set(barThickness);
 
         // Compute house corner coordinates in world space
-        float xMin = floorplan.minTile().x() * WorldMap.TS + WorldMap.HTS;
-        float yMin = floorplan.minTile().y() * WorldMap.TS + WorldMap.HTS;
-        float xMax = floorplan.maxTile().x() * WorldMap.TS + WorldMap.HTS;
-        float yMax = floorplan.maxTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMin = floorplan.minTile().x() * TS + HTS;
+        float yMin = floorplan.minTile().y() * TS + HTS;
+        float xMax = floorplan.maxTile().x() * TS + HTS;
+        float yMax = floorplan.maxTile().y() * TS + HTS;
 
         // Define wall corner points
         Vector2f p0 = vec2_float(xMin, yMin);
-        Vector2f p1 = floorplan.leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
-        Vector2f p2 = floorplan.rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+        Vector2f p1 = floorplan.leftDoorTile().scaled((float) TS).plus(0, HTS);
+        Vector2f p2 = floorplan.rightDoorTile().scaled((float) TS).plus(TS, HTS);
         Vector2f p3 = vec2_float(xMax, yMin);
         Vector2f p4 = vec2_float(xMin, yMax);
         Vector2f p5 = vec2_float(xMax, yMax);
@@ -119,7 +120,7 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
         // Interior light
         Vector2f houseCenter = p0.midpoint(p5);
         light = new PointLight(Color.GHOSTWHITE);
-        light.setMaxRange(2.5 * WorldMap.TS);
+        light.setMaxRange(2.5 * TS);
         light.setTranslateX(houseCenter.x());
         light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
@@ -167,10 +168,10 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
      */
     private Group createDoor(Vector2i tile, double height) {
         var door = new Group();
-        door.setTranslateX(tile.x() * WorldMap.TS);
-        door.setTranslateY(tile.y() * WorldMap.TS + WorldMap.HTS);
+        door.setTranslateX(tile.x() * TS);
+        door.setTranslateY(tile.y() * TS + HTS);
 
-        float barDistance = (float) WorldMap.TS / DOOR_VERTICAL_BAR_COUNT;
+        float barDistance = (float) TS / DOOR_VERTICAL_BAR_COUNT;
 
         // Vertical bars
         for (int i = 0; i < DOOR_VERTICAL_BAR_COUNT; ++i) {
@@ -185,12 +186,12 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
         }
 
         // Horizontal top bar
-        var hBar = new Cylinder(barThicknessProperty.get(), 2 * WorldMap.TS);
+        var hBar = new Cylinder(barThicknessProperty.get(), 2 * TS);
         hBar.radiusProperty().bind(barThicknessProperty);
         hBar.setMaterial(barMaterial);
         hBar.setRotationAxis(Rotate.Z_AXIS);
         hBar.setRotate(90);
-        hBar.setTranslateX(WorldMap.HTS);
+        hBar.setTranslateX(HTS);
         hBar.setTranslateZ(-0.5 * (height + barThickness));
         door.getChildren().add(hBar);
 

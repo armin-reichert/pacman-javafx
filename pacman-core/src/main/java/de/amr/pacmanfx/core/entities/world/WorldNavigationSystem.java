@@ -14,11 +14,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 
@@ -142,8 +143,8 @@ public class WorldNavigationSystem {
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
         final Vector2i tileBefore = actor.pos().tile();
 
-        position.setX(tx * WorldMap.TS + ox);
-        position.setY(ty * WorldMap.TS + oy);
+        position.setX(tx * TS + ox);
+        position.setY(ty * TS + oy);
 
         final Vector2i tileAfter = actor.pos().tile();
         navigation.setNewTileEntered(!tileAfter.equals(tileBefore));
@@ -288,7 +289,7 @@ public class WorldNavigationSystem {
 
         final Vector2f center = actor.pos().bodyCenter();
         final int leftBorder = 0;
-        final int rightBorder = level.worldMap().numCols() * WorldMap.TS;
+        final int rightBorder = level.worldMap().numCols() * TS;
         navigation.setInTeleportingSpace(center.x() < leftBorder || center.x() > rightBorder);
 
         if (navigation.isTurnBackRequested() && movementPolicy.canTurnBack(actor)) {
@@ -327,7 +328,7 @@ public class WorldNavigationSystem {
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.speed());
-        final Vector2f touchPosition = actor.pos().bodyCenter().plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
+        final Vector2f touchPosition = actor.pos().bodyCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = PositionSystem.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(navigation.moveDir().vector());
 

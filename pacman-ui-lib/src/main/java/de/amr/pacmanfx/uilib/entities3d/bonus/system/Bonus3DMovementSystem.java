@@ -9,6 +9,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
 
+import static de.amr.basics.TileDimension.HTS;
+
 public class Bonus3DMovementSystem {
 
     public static void update(GameEntity bonus) {
@@ -18,7 +20,7 @@ public class Bonus3DMovementSystem {
 
         view3D.translate().setX(center.x());
         view3D.translate().setY(center.y());
-        view3D.translate().setZ(-WorldMap.HTS);
+        view3D.translate().setZ(-HTS);
 
         view3D.rollingTransform().update(bonus);
     }

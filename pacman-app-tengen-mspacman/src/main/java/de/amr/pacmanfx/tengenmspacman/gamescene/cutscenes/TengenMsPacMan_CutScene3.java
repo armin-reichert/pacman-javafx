@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
@@ -33,6 +32,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
@@ -50,8 +50,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 660;
 
-    private static final int GROUND_Y = WorldMap.TS * 24;
-    private static final int RIGHT_BORDER = WorldMap.TS * 30;
+    private static final int GROUND_Y = TS * 24;
+    private static final int RIGHT_BORDER = TS * 30;
 
     private Clapperboard clapperboard;
     private Pac pacMan;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.pos().set(3 * TS, 10 * TS);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -164,7 +164,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         
         if (tick == 130) {
             pacMan.show();
-            pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
+            pacMan.pos().set(TS * 3, GROUND_Y - 4);
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
             navigator.setSpeed(pacMan, 0);
@@ -172,7 +172,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.stopSelected(pacMan);
 
-            msPacMan.pos().set(WorldMap.TS * 5, GROUND_Y - 4);
+            msPacMan.pos().set(TS * 5, GROUND_Y - 4);
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
@@ -182,7 +182,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             animSystem.stopSelected(msPacMan);
 
             stork.show();
-            stork.pos().set(RIGHT_BORDER, WorldMap.TS * 7);
+            stork.pos().set(RIGHT_BORDER, TS * 7);
             motor.setVelocity(stork, -0.8f, 0);
 
             animSystem.select(stork, CommonSpriteAnimationID.STORK_FLYING);

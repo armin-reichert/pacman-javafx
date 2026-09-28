@@ -28,7 +28,7 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 
 public class Tengen_GameOverState extends AbstractGameState {

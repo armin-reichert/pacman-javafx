@@ -8,8 +8,9 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
@@ -18,7 +19,7 @@ public class HouseFactory {
     /**
      * Size of house in tiles (x=width, y=height).
      */
-    public static final Vector2i ARCADE_HOUSE_SIZE_IN_TILES = WorldMap.tile(8, 5);
+    public static final Vector2i ARCADE_HOUSE_SIZE_IN_TILES = new Vector2i(8, 5);
 
     public static final byte[][] ARCADE_HOUSE_TILES = {
         { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$,   DOOR.$,   WALL_H.$, WALL_H.$, ARC_NE.$ },
@@ -41,8 +42,8 @@ public class HouseFactory {
 
         floorplan.setEntryPosition(
             floorplan.rightDoorTile().toVector2f()
-            .scaled(WorldMap.TS)
-            .minus(WorldMap.HTS, WorldMap.TS));
+            .scaled(TS)
+            .minus(HTS, TS));
 
         floorplan.ghostRevivalTileMap().put(GhostPersonality.RED_GHOST_SHADOW,   minTile.plus(3, 2));
         floorplan.ghostRevivalTileMap().put(GhostPersonality.PINK_GHOST_SPEEDY,  minTile.plus(3, 2));

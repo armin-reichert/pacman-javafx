@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class FoodMapRenderer extends BaseRenderer implements TileRenderer {

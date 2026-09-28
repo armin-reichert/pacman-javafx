@@ -6,9 +6,10 @@ package de.amr.pacmanfx.uilib.entities3d.world;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.shape.Shape3D;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Pellet3D implements DisposableGraphicsObject {
@@ -18,7 +19,7 @@ public class Pellet3D implements DisposableGraphicsObject {
 
     public Pellet3D(Shape3D shape) {
         this.shape = requireNonNull(shape);
-        setLocation(Vector2i.ZERO, -WorldMap.HTS);
+        setLocation(Vector2i.ZERO, -HTS);
     }
 
     @Override
@@ -35,8 +36,8 @@ public class Pellet3D implements DisposableGraphicsObject {
 
     public void setLocation(Vector2i tile, double z) {
         this.tile = requireNonNull(tile);
-        shape.setTranslateX(tile.x() * WorldMap.TS + WorldMap.HTS);
-        shape.setTranslateY(tile.y() * WorldMap.TS + WorldMap.HTS);
+        shape.setTranslateX(tile.x() * TS + HTS);
+        shape.setTranslateY(tile.y() * TS + HTS);
         shape.setTranslateZ(z);
     }
 

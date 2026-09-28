@@ -39,7 +39,7 @@ import javafx.scene.input.KeyCode;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-import static de.amr.basics.ui.rendering.Renderer.TS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -99,8 +99,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         chooseOptionsTextView = createChooseOptionsTextDisplay();
         pressStartTextView = createPressStartTextDisplay();
 
-        topBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
-        botBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
+        topBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, TS, new Vector2f(0,  2.5f * TS));
+        botBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, TS, new Vector2f(0, 26.5f * TS));
     }
 
     @Override

@@ -18,6 +18,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.basics.TileDimension.TS;
+
 /**
  * Infobox with 3D related settings.
  */
@@ -161,7 +163,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
         if (level != null) {
             final WorldMap worldMap = level.worldMap();
-            return "%dx%d (map size px)".formatted(worldMap.numCols() * WorldMap.TS, worldMap.numRows() * WorldMap.TS);
+            return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
 
         return NO_INFO;

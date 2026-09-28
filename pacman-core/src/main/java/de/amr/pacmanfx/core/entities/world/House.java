@@ -7,10 +7,10 @@ package de.amr.pacmanfx.core.entities.world;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
 public class House extends GameEntity {
@@ -21,7 +21,7 @@ public class House extends GameEntity {
         requireNonNull(floorplan);
         setComp(HouseFloorplanComp.class, floorplan);
 
-        final Vector2f doorPos = floorplan.leftDoorTile().toVector2f().scaled(WorldMap.TS);
+        final Vector2f doorPos = floorplan.leftDoorTile().toVector2f().scaled(TS);
         door = new Door();
         door.reqComp(DoorDataComp.class).setLeftTile(floorplan.leftDoorTile());
         door.reqComp(DoorDataComp.class).setRightTile(floorplan.rightDoorTile());
@@ -55,8 +55,8 @@ public class House extends GameEntity {
         final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
         Vector2i sizeTiles = sizeInTiles();
         return vec2_float(
-            WorldMap.TS * (fp.minTile().x() + 0.5f * sizeTiles.x()),
-            WorldMap.TS * (fp.minTile().y() +        sizeTiles.y())
+            TS * (fp.minTile().x() + 0.5f * sizeTiles.x()),
+            TS * (fp.minTile().y() +        sizeTiles.y())
         );
     }
 
@@ -79,6 +79,6 @@ public class House extends GameEntity {
 
     public Vector2f center() {
         final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
-        return fp.minTile().toVector2f().scaled(WorldMap.TS).plus(sizeInTiles().toVector2f().scaled(HTS));
+        return fp.minTile().toVector2f().scaled(TS).plus(sizeInTiles().toVector2f().scaled(HTS));
     }
 }

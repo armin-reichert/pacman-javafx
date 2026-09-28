@@ -15,7 +15,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
+import static de.amr.basics.TileDimension.HTS;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {

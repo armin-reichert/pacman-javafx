@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
@@ -11,7 +15,7 @@ import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.basics.TileDimension.TS;
 
 public class HUD {
 

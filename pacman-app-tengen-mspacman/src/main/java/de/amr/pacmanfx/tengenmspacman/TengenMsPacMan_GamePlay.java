@@ -54,18 +54,17 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.basics.TileDimension.*;
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
-    public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
+    public static final Vector2i HOUSE_MIN_TILE = tile(10, 15);
 
     public static GameFlow createGameFlow() {
         final var gameFlow = new GameFlow("Tengen Ms. Pac-Man Game Flow");

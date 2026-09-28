@@ -10,8 +10,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import javafx.scene.image.Image;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.RectShort.sprite;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 /**
  * SpriteSheet for non‐arcade maps in Tengen Ms. Pac-Man.

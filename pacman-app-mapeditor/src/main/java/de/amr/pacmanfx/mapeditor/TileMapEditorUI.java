@@ -41,6 +41,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.*;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
@@ -612,7 +613,7 @@ public class TileMapEditorUI {
     }
 
     private boolean isTemplateImageSizeOk(Image image) {
-        return image.getHeight() % WorldMap.TS == 0 && image.getWidth() % WorldMap.TS == 0;
+        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
     }
 
     private Node createPreview3DNavigationHint() {

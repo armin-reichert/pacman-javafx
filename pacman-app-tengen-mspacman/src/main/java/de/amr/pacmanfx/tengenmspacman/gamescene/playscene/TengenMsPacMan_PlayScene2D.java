@@ -24,7 +24,6 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
@@ -43,12 +42,10 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -60,13 +57,13 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -79,7 +76,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  */
 public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
-    static final Vector2f RENDER_OFFSET = new Vector2f(2 * WorldMap.TS, 0);
+    static final Vector2f RENDER_OFFSET = new Vector2f(2 * TS, 0);
 
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 

@@ -38,7 +38,8 @@ import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {

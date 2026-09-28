@@ -8,7 +8,6 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -87,8 +87,8 @@ public class OptionMenu implements Renderable {
     public OptionMenu(OptionMenuSettings settings) {
         this.settings = requireNonNull(settings);
 
-        canvas.widthProperty() .bind(scaling.multiply(settings.numTilesX() * WorldMap.TS));
-        canvas.heightProperty().bind(scaling.multiply(settings.numTilesY() * WorldMap.TS));
+        canvas.widthProperty() .bind(scaling.multiply(settings.numTilesX() * TS));
+        canvas.heightProperty().bind(scaling.multiply(settings.numTilesY() * TS));
 
         canvas.focusedProperty().addListener((_, _, focus) ->
             Logger.debug("Option menu canvas focus: {}", focus));

@@ -18,7 +18,6 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -54,6 +53,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
@@ -374,9 +374,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         root.rotateProperty().bind(camera.rotateProperty());
 
         // Scores are shown slightly "behind" and over game level from viewer's perspective
-        root.translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
-        root.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
-        root.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
+        root.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
+        root.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * TS));
+        root.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * TS));
     }
 
     private void disposeContextMenu() {

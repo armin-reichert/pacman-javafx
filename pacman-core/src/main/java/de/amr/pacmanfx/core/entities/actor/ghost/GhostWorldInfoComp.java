@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.halfTileRightOf;
+import static de.amr.basics.TileDimension.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 public class GhostWorldInfoComp implements GameEntityComp {

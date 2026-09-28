@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -24,7 +23,7 @@ import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
@@ -93,17 +92,17 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case  21 -> {
                 tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, reqCanvasRendering().unscaledHeight()); // lower border of screen
                 tengenPresentsTextView.show();
-                systems.motor().setVelocity(tengenPresentsTextView, 0, -WorldMap.HTS);
+                systems.motor().setVelocity(tengenPresentsTextView, 0, -HTS);
             }
             case  55 -> systems.motor().setVelocity(tengenPresentsTextView, 0, 0);
             case 113 -> {
-                ghost.pos().set(reqCanvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.pos().set(reqCanvasRendering().unscaledWidth() - TS, GHOST_Y);
                 ghost.show();
                 systems.navigator().setMoveDir(ghost, Direction.LEFT);
                 systems.navigator().setWishDir(ghost, Direction.LEFT);
-                systems.navigator().setSpeed(ghost, WorldMap.TS);
+                systems.navigator().setSpeed(ghost, TS);
             }
-            case 181 -> systems.motor().setVelocity(tengenPresentsTextView, 0, WorldMap.TS);
+            case 181 -> systems.motor().setVelocity(tengenPresentsTextView, 0, TS);
             case 203 -> {
                 tengenPresentsTextView.hide();
                 ghost.hide();

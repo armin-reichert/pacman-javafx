@@ -10,8 +10,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
+import static de.amr.basics.TileDimension.*;
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 import static java.util.Objects.requireNonNull;
@@ -53,8 +53,8 @@ public class GhostHouseAccessSystem {
         final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
         if (house.isVisitedBy(ghost)) {
-            final float minY = (house.floorplan().minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
-            final float maxY = (house.floorplan().maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
+            final float minY = (house.floorplan().minTile().y() + 1) * TS + HTS;
+            final float maxY = (house.floorplan().maxTile().y() - 1) * TS - HTS;
             if (position.y() <= minY) {
                 navigator.setMoveDir(ghost, DOWN);
                 navigator.setWishDir(ghost, DOWN);
@@ -95,11 +95,11 @@ public class GhostHouseAccessSystem {
             ghost.houseAccess().setLeftHouse(true);
         }
         else {
-            final float centerX = position.x() + WorldMap.HTS;
+            final float centerX = position.x() + HTS;
             final float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
-                position.setX(houseCenterX - WorldMap.HTS);
+                position.setX(houseCenterX - HTS);
                 navigator.setMoveDir(ghost, UP);
                 navigator.setWishDir(ghost, UP);
             }
@@ -127,7 +127,7 @@ public class GhostHouseAccessSystem {
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
-        final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.floorplan().ghostRevivalTile(ghost.personality()));
+        final Vector2f revivalPosition = halfTileRightOf(house.floorplan().ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
 
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {

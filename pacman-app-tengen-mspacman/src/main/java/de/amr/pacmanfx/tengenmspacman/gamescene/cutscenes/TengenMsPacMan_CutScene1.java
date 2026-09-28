@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
@@ -31,7 +30,8 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
@@ -48,11 +48,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 775;
 
-    private static final int UPPER_LANE   = WorldMap.TS * 8;
-    private static final int LOWER_LANE   = WorldMap.TS * 24;
-    private static final int MIDDLE_LANE  = WorldMap.TS * 16;
-    private static final int LEFT_BORDER  = WorldMap.TS;
-    private static final int RIGHT_BORDER = WorldMap.TS * 30;
+    private static final int UPPER_LANE   = TS * 8;
+    private static final int LOWER_LANE   = TS * 24;
+    private static final int MIDDLE_LANE  = TS * 16;
+    private static final int LEFT_BORDER  = TS;
+    private static final int RIGHT_BORDER = TS * 30;
 
     private static final float SPEED_CHASING = 2.0f;
     private static final float SPEED_RISING = 1.0f;
@@ -115,7 +115,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void getReady(WorldNavigationSystem navigator) {
-        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.pos().set(3 * TS, 10 * TS);
 
         msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
@@ -193,11 +193,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             pacMan.pos().set(RIGHT_BORDER, MIDDLE_LANE);
             navigator.setMoveDir(pacMan, Direction.LEFT);
 
-            pinky.pos().set(msPacMan.pos().x() - WorldMap.TS * 11, msPacMan.pos().y());
+            pinky.pos().set(msPacMan.pos().x() - TS * 11, msPacMan.pos().y());
             navigator.setMoveDir(pinky, Direction.RIGHT);
             navigator.setWishDir(pinky, Direction.RIGHT);
 
-            inky.pos().set(pacMan.pos().x() + WorldMap.TS * 11, pacMan.pos().y());
+            inky.pos().set(pacMan.pos().x() + TS * 11, pacMan.pos().y());
             navigator.setMoveDir(inky, Direction.LEFT);
             navigator.setWishDir(inky, Direction.LEFT);
         }

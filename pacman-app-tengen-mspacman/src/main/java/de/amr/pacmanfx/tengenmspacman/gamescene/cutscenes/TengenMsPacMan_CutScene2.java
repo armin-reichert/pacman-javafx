@@ -13,7 +13,6 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
@@ -27,6 +26,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
@@ -41,11 +41,12 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     public static final int TICK_EXPIRES = 1380;
 
-    private static final int UPPER_LANE = WorldMap.TS * 8;
-    private static final int LOWER_LANE = WorldMap.TS * 22;
-    private static final int MIDDLE_LANE = WorldMap.TS * 10;
-    private static final int LEFT_BORDER = WorldMap.TS;
-    private static final int RIGHT_BORDER = WorldMap.TS * 30;
+    private static final int UPPER_LANE   = TS * 8;
+    private static final int LOWER_LANE   = TS * 22;
+    private static final int MIDDLE_LANE  = TS * 10;
+    private static final int LEFT_BORDER  = TS;
+    private static final int RIGHT_BORDER = TS * 30;
+
     public static final int TICK_CLAP = 2;
 
     private Clapperboard clapperboard;
@@ -88,7 +89,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
-            clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+            clapperboard.pos().set(3 * TS, 10 * TS);
             ClapperboardStateSystem.init(clapperboard);
             playMusic();
         }

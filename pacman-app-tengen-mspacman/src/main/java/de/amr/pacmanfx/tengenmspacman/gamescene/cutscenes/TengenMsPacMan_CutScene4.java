@@ -40,9 +40,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.basics.math.RandomNumbers.randomInt;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;

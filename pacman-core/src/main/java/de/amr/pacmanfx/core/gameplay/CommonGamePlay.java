@@ -37,8 +37,8 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.util.Set;
 
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

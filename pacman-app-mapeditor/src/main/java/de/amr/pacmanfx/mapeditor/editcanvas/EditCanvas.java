@@ -36,6 +36,8 @@ import javafx.scene.text.Font;
 
 import java.util.function.Predicate;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.COLOR_FOOD;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
@@ -57,7 +59,7 @@ public class EditCanvas extends Canvas {
          * @param sprite actor sprite
          */
         public void drawActorSprite(Vector2i tile, RectShort sprite) {
-            Vector2i center = tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            Vector2i center = tile.scaled(TS).plus(TS, HTS);
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().drawImage(ArcadeSprites.SPRITE_SHEET,
@@ -137,7 +139,7 @@ public class EditCanvas extends Canvas {
         obstacleInnerAreaDisplayedProperty().bind(ui.obstacleInnerAreaDisplayedProperty());
         obstaclesJoiningProperty()          .bind(ui.obstaclesJoiningProperty());
         segmentNumbersVisibleProperty()     .bind(ui.segmentNumbersVisibleProperty());
-        scalingProperty()                   .bind(gridSize.divide(WorldMap.TS));
+        scalingProperty()                   .bind(gridSize.divide(TS));
         symmetricEditModeProperty()         .bind(ui.editor().symmetricEditModeProperty());
         templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
@@ -279,7 +281,7 @@ public class EditCanvas extends Canvas {
     }
 
     public void draw(TerrainMapColoring colors) {
-        final double scaledTileSize = scaling() * WorldMap.TS;
+        final double scaledTileSize = scaling() * TS;
         final TerrainLayer terrain = worldMap().terrainLayer();
 
         ctx.setImageSmoothing(false);

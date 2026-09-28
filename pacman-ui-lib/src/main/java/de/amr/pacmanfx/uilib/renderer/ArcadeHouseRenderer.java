@@ -18,14 +18,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
+
 /**
  * Renders an arcade house shape. Used by generic level renderer (XXL game variants) and by the world map editor preview.
  */
 public class ArcadeHouseRenderer extends BaseRenderer {
 
-    // Define tile size here to avoid dependency.
-    static final int TS = 8, HTS = 4;
-    
     private final ObjectProperty<TerrainMapColoring> mapColoring = new SimpleObjectProperty<>(TerrainMapRenderer.DEFAULT_MAP_COLORING);
 
     public void setMapColoring(TerrainMapColoring mapColoring) {

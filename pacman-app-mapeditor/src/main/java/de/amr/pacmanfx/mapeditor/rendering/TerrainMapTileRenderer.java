@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
+import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -242,27 +244,27 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     private void drawDoor(Vector2i tile, Color color) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
-        double height = WorldMap.TS * 0.25;
+        double x = tile.x() * TS, y = tile.y() * TS;
+        double height = TS * 0.25;
         ctx.setFill(color);
-        ctx.fillRect(x, y + 0.5 * (WorldMap.TS - height), WorldMap.TS, height);
+        ctx.fillRect(x, y + 0.5 * (TS - height), TS, height);
     }
 
     public void drawScatterTarget(Vector2i tile, Color color) {
         if (scatterTargetsDisplayed) {
-            double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+            double x = tile.x() * TS, y = tile.y() * TS;
             ctx.setFill(color);
-            ctx.fillRect(x, y, WorldMap.TS, WorldMap.TS);
+            ctx.fillRect(x, y, TS, TS);
             ctx.setStroke(Color.WHITE);
             ctx.setLineWidth(0.5);
-            ctx.strokeOval(x + 2, y + 2, WorldMap.TS - 4, WorldMap.TS - 4);
-            ctx.strokeLine(x + 0.5 * WorldMap.TS, y, x + 0.5 * WorldMap.TS, y + WorldMap.TS);
-            ctx.strokeLine(x, y + 0.5 * WorldMap.TS, x + WorldMap.TS, y + 0.5 * WorldMap.TS);
+            ctx.strokeOval(x + 2, y + 2, TS - 4, TS - 4);
+            ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
+            ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
         }
     }
 
     private void drawOneWaySign(Vector2i tile, byte code) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         Direction dir = switch (code) {
             case 0x14 -> Direction.UP;
             case 0x15 -> Direction.RIGHT;
@@ -284,7 +286,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
 
     private void drawTunnelIcon(Vector2i tile) {
         if (tunnelIconsDisplayed) {
-            double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+            double x = tile.x() * TS, y = tile.y() * TS;
             ctx.setFont(SYMBOL_FONT);
             ctx.setFill(SYMBOL_COLOR);
             ctx.fillText(TUNNEL_SYMBOL, x, y + 7);
@@ -292,32 +294,32 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     private void drawWallH(Vector2i tile) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         ctx.setFill(colorScheme().wallStrokeColor());
-        ctx.fillRect(x, y + 3.5f, WorldMap.TS, 1);
+        ctx.fillRect(x, y + 3.5f, TS, 1);
     }
 
     private void drawWallV(Vector2i tile) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         ctx.setFill(colorScheme().wallStrokeColor());
         // add 1 pixel to avoid gaps
-        ctx.fillRect(x + 3.5f, y, 1, WorldMap.TS);
+        ctx.fillRect(x + 3.5f, y, 1, TS);
     }
 
     private void drawArc(Vector2i tile, byte cornerType) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         ctx.setStroke(colorScheme().wallStrokeColor());
         ctx.setLineWidth(1);
-        if (cornerType == TerrainTile.ARC_NW.$) ctx.strokeArc(x + 4, y + 4, WorldMap.TS, WorldMap.TS, 90, 90,  ArcType.OPEN);
-        if (cornerType == TerrainTile.ARC_NE.$) ctx.strokeArc(x - 4, y + 4, WorldMap.TS, WorldMap.TS, 0, 90,   ArcType.OPEN);
-        if (cornerType == TerrainTile.ARC_SE.$) ctx.strokeArc(x - 4, y - 4, WorldMap.TS, WorldMap.TS, 270, 90, ArcType.OPEN);
-        if (cornerType == TerrainTile.ARC_SW.$) ctx.strokeArc(x + 4, y - 4, WorldMap.TS, WorldMap.TS, 180, 90, ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_NW.$) ctx.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_NE.$) ctx.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_SE.$) ctx.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_SW.$) ctx.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
     }
 
     private void drawDCorner(Vector2i tile, byte code, double[] xp, double[] yp) {
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         double cx = x + HTS, cy = y + HTS;
-        double rightEdge = x + WorldMap.TS, bottomEdge = y + WorldMap.TS;
+        double rightEdge = x + TS, bottomEdge = y + TS;
         double d = 1;
         ctx.setStroke(colorScheme().wallStrokeColor());
         ctx.setLineWidth(1);

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.core.model.world.map;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import org.tinylog.Logger;
 
@@ -16,46 +15,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
-
-    // Tile coordinates
-
-    /** Tile size: 8px */
-    public static final byte TS = 8;
-
-    /** Half tile size: 4px */
-    public static final byte HTS = 4;
-
-    public static Vector2i tile(int x, int y) {
-        return new Vector2i(x, y);
-    }
-
-    /**
-     * @param numTiles number of tiles
-     * @return pixels corresponding to given number of tiles
-     */
-    public static float tilesPx(double numTiles) { return (float) numTiles * TS; }
-
-    /**
-     * @param tileX tile x coordinate
-     * @param tileY tile y coordinate
-     * @return position (scaled by tile size) half tile right of tile origin
-     */
-    public static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return vec2_float(TS * tileX + HTS, TS * tileY);
-    }
-
-    /**
-     * @param tile some tile
-     * @return position (scaled by tile size) half tile right of tile origin
-     */
-    public static Vector2f halfTileRightOf(Vector2i tile) {
-        return halfTileRightOf(tile.x(), tile.y());
-    }
 
     /**
      * Arcade maps have a size of 28x36 tiles (28 cols, 36 rows, including the empty rows over and under the maze).
