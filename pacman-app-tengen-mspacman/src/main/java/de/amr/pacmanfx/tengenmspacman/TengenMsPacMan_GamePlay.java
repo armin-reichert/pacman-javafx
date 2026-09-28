@@ -253,6 +253,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+
+        msPacMan.worldNavigation().setWorldMap(worldMap);
     }
 
     private void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {

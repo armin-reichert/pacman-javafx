@@ -134,7 +134,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final WorldMap worldMap = game.playConfig().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntitySet();
 
-        createAndAddEntities(entities, worldMap.terrainLayer(), worldMap.foodLayer());
+        createAndAddEntities(entities, worldMap);
 
         final var huntingTimer = new DefaultHuntingTimer("Arcade Hunting Timer", rules.numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -297,10 +297,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return messageView;
     }
 
-    protected void createAndAddEntities(GameLevelEntitySet entities, TerrainLayer terrain, FoodLayer foodLayer) {
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
+    protected void createAndAddEntities(GameLevelEntitySet entities, WorldMap worldMap) {
+        final Vector2i houseMinTile = worldMap.terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
+        worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         final MessageView messageView = createMessageView(house);
@@ -319,7 +319,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.add(cyanGhost);
         entities.add(orangeGhost);
 
-        foodLayer.energizerTiles().forEach(energizerTile -> {
+        pac.worldNavigation().setWorldMap(worldMap);
+
+        worldMap.foodLayer().energizerTiles().forEach(energizerTile -> {
             final Energizer energizer = new Energizer();
             energizer.pos().set(energizerTile.scaled(TS).toVector2f());
             energizer.show();

@@ -25,6 +25,8 @@ import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
+import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -36,8 +38,6 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
-import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -197,13 +197,11 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             return;
         }
 
-        level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> {
-            level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
-        });
+        level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> level3D.ensureBonus3DViewAddedToSceneGraph(bonus));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = GameSystems3D.reqSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, level.worldMap(), animationRegistry);
+        updateSystem.updateEntities(game, animationRegistry);
 
         updateHUD3D(game);
 

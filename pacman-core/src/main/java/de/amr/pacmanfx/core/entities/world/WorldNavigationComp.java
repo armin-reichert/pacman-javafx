@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.entities.world;
 import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ public class WorldNavigationComp implements GameEntityComp {
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
     public static final boolean DEFAULT_CAN_TELEPORT = true;
 
+    private WorldMap worldMap;
     private Direction moveDir;
     private Direction wishDir;
 
@@ -66,6 +68,14 @@ public class WorldNavigationComp implements GameEntityComp {
 
     public WorldNavigationInfo info() {
         return info;
+    }
+
+    public WorldMap worldMap() {
+        return worldMap;
+    }
+
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
     }
 
     public boolean isPaused() {

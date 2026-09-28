@@ -8,27 +8,26 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 
 public class World3DUpdateSystem {
 
-    public void updateEntities(GameContext game, WorldMap worldMap, AnimationRegistry animationRegistry) {
+    public void updateEntities(GameContext game, AnimationRegistry animationRegistry) {
         final GameSession session = game.session();
         final GameLevelEntitySet entitySet = session.level().entitySet();
 
         updateLivesCounter3D(session.hud().livesCounter());
         updateHouse3D(entitySet.entities().theOne(House.class), entitySet);
-        updatePac3D(entitySet.pac(), worldMap);
+        updatePac3D(entitySet.pac());
         updateGhosts3D(entitySet);
         updateBonus3D(entitySet.entities().anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
-    private void updatePac3D(Pac pac, WorldMap worldMap) {
+    private void updatePac3D(Pac pac) {
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        pacSystems3D.transform().update(pac, worldMap);
+        pacSystems3D.transform().update(pac);
         pacSystems3D.animation().updateAnimations(pac);
     }
 
