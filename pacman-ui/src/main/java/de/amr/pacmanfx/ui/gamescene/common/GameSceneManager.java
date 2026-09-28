@@ -5,11 +5,13 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
@@ -146,7 +148,10 @@ public class GameSceneManager {
         playScene3D.initFood3D(level, true);
         playScene3D.updateHUD3D(game);
 
-        LivesCounter3DViewSystem.startTracking(session.hud().livesCounter(), pac);
+        // Lives counter shapes follow Pac location
+        final LivesCounter livesCounter = session.hud().livesCounter();
+        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
+        livesCounter3DViewSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

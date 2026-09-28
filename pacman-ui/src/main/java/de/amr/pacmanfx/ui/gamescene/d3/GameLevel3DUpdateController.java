@@ -2,8 +2,8 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
@@ -31,7 +31,7 @@ public class GameLevel3DUpdateController {
         GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
 
     public static void update3DSceneEntities(GameContext game, GameLevel3D level3D) {
-        updateLivesCounter3D(game);
+        updateLivesCounter3D(game.session().hud().livesCounter());
         updateHouse3D(level3D);
         updatePac3D(level3D);
         updateGhosts3D(level3D);
@@ -46,9 +46,10 @@ public class GameLevel3DUpdateController {
         Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
-    private static void updateLivesCounter3D(GameContext game) {
-        final GameSession session = game.session();
-        LivesCounter3DViewSystem.update(session.hud().livesCounter());
+    private static void updateLivesCounter3D(LivesCounter livesCounter) {
+        // Lives counter shapes follow Pac location
+        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
+        livesCounter3DViewSystem.update(livesCounter);
     }
 
     private static void updateGhosts3D(GameLevel3D level3D) {

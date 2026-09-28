@@ -8,6 +8,7 @@ import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.assets.RandomTextPicker;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
@@ -19,6 +20,7 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -326,7 +328,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final Pac pac = level.entitySet().pac();
         initPac3DProperties(level, pac);
 
-        LivesCounter3DViewSystem.startTracking(session.hud().livesCounter(), pac);
+        // Lives counter shapes follow Pac location
+        final LivesCounter livesCounter = session.hud().livesCounter();
+        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
+        livesCounter3DViewSystem.startTrackingPac(livesCounter, pac);
     }
 
     /**

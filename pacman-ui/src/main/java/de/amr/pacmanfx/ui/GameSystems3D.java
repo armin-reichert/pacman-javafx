@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DViewSystem;
 
@@ -36,6 +37,7 @@ public class GameSystems3D {
     public GameSystems3D() {
         systems.add(new BonusSystems3D());
         systems.add(new LevelCounter3DViewSystem());
+        systems.add(new LivesCounter3DViewSystem());
     }
 
 }
