@@ -12,10 +12,7 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DAppearanceSystem;
-import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3d.house.comp.House3DViewComp;
-import de.amr.pacmanfx.uilib.entities3d.house.system.House3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3d.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DTransformSystem;
@@ -73,8 +70,9 @@ public class GameLevel3DUpdateController {
             .filter(ghost -> ghostIsNearHouseDoor(house, ghost))
             .anyMatch(GameEntity::isVisible);
 
-        House3DSystem.showLight(house, ghostNearHouseDoor);
-        House3DAnimationSystem.update(house, accessRequested);
+        final var houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
+        houseSystem3D.updateLight(house, ghostNearHouseDoor);
+        houseSystem3D.update(house, accessRequested);
     }
 
     private static boolean ghostIsNearHouseDoor(House house, Ghost ghost) {

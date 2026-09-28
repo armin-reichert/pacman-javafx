@@ -334,11 +334,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameViewModel viewModel = app().ui().viewModel();
         final GameLevel level = game().session().level();
         final House house = level.entitySet().entities().theOne(House.class);
+        final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
         final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
-        House3DSystem.hideDoors(house);
+        houseSystem3D.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 

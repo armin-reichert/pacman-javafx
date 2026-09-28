@@ -11,6 +11,7 @@ import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DMovementSystem;
+import de.amr.pacmanfx.uilib.entities3d.house.system.House3DSystem;
 
 public class GameSystems3D {
 
@@ -47,6 +48,7 @@ public class GameSystems3D {
         systems.add(new LevelCounter3DViewSystem());
         systems.add(new LivesCounter3DViewSystem());
         systems.add(new GhostSystems3D());
+        systems.add(new House3DSystem());
     }
 
 }
