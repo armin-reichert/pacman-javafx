@@ -11,7 +11,10 @@ import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
 
 public class Ghost3DMovementSystem {
 
-    public static void update(Ghost ghost) {
+    public Ghost3DMovementSystem() {
+    }
+
+    public void update(Ghost ghost) {
         final Ghost3DViewComp view3D = ghost.reqComp(Ghost3DViewComp.class);
 
         final Vector2f center = ghost.pos().bodyCenter();

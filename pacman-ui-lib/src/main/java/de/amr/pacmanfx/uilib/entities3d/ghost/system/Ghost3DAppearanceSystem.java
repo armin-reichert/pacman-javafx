@@ -9,7 +9,10 @@ import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostAppearance;
 
 public class Ghost3DAppearanceSystem {
 
-    public static void update(Ghost ghost) {
+    public Ghost3DAppearanceSystem() {
+    }
+
+    public void update(Ghost ghost) {
         final GhostStateComp state = ghost.state();
 
         final GhostAppearance appearance = switch (state.enumValue()) {
@@ -22,11 +25,11 @@ public class Ghost3DAppearanceSystem {
         setAppearance(ghost, appearance);
     }
 
-    private static GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
+    private GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
         return state.isPacPowerFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 
-    private static void setAppearance(Ghost ghost, GhostAppearance appearance) {
+    private void setAppearance(Ghost ghost, GhostAppearance appearance) {
         final Ghost3DViewComp view3D = ghost.reqComp(Ghost3DViewComp.class);
         final Ghost3DAnimationComp animation3D = ghost.reqComp(Ghost3DAnimationComp.class);
 
@@ -51,7 +54,7 @@ public class Ghost3DAppearanceSystem {
         }
     }
 
-    private static void ensureFlashingPlays(ManagedAnimation flashing) {
+    private void ensureFlashingPlays(ManagedAnimation flashing) {
         if (!flashing.isRunning()) {
             flashing.playOrContinue();
         }

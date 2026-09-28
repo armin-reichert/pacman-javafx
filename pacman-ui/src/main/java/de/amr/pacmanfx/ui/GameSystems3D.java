@@ -9,6 +9,8 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSyste
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3d.bonus.system.Bonus3DViewSystem;
+import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DAppearanceSystem;
+import de.amr.pacmanfx.uilib.entities3d.ghost.system.Ghost3DMovementSystem;
 
 public class GameSystems3D {
 
@@ -38,6 +40,8 @@ public class GameSystems3D {
         systems.add(new BonusSystems3D());
         systems.add(new LevelCounter3DViewSystem());
         systems.add(new LivesCounter3DViewSystem());
+        systems.add(new Ghost3DAppearanceSystem());
+        systems.add(new Ghost3DMovementSystem());
     }
 
 }

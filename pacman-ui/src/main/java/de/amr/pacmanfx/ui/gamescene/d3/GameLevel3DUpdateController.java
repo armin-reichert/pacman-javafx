@@ -54,9 +54,11 @@ public class GameLevel3DUpdateController {
 
     private static void updateGhosts3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
+        final var ghostAppearanceSystem = GameSystems3D.reqSystem(Ghost3DAppearanceSystem.class);
+        final var ghostMovementSystem = GameSystems3D.reqSystem(Ghost3DMovementSystem.class);
         level.entitySet().ghosts().forEach(ghost -> {
-            Ghost3DMovementSystem.update(ghost);
-            Ghost3DAppearanceSystem.update(ghost);
+            ghostMovementSystem.update(ghost);
+            ghostAppearanceSystem.update(ghost);
         });
     }
 
