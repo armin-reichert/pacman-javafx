@@ -15,6 +15,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -25,6 +26,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -61,7 +63,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
     private final PerspectiveManager perspectiveManager;
-    private final AnimationRegistry registry = new AnimationRegistry();
+    private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final SubScene subScene;
     private final Group subSceneRoot;
     private final PerspectiveCamera camera;
@@ -195,7 +197,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             return;
         }
 
-        GameLevel3DUpdateController.update3DSceneEntities(game, level3D);
+        level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> {
+            level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
+        });
+
+        //TODO move out of this class?
+        final World3DUpdateSystem updateSystem = GameSystems3D.reqSystem(World3DUpdateSystem.class);
+        updateSystem.updateEntities(game, level.worldMap(), animationRegistry);
+
         updateHUD3D(game);
 
         ensureAnimationsRunning();
@@ -316,10 +325,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(game, registry, viewModel, uiConfig);
+        level3D = new GameLevel3D(game, animationRegistry, viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
-        level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, config, uiConfig));
+        level3D.setAnimationManager(new GameLevel3DAnimationManager(animationRegistry, level3D, config, uiConfig));
 
         level3DParent.getChildren().setAll(level3D.root());
 

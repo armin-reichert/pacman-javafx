@@ -5,15 +5,16 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.QuerySet;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 
 public class GameSystems3D {
 
@@ -58,5 +59,6 @@ public class GameSystems3D {
         systems.add(new GhostSystems3D());
         systems.add(new House3DSystem());
         systems.add(new PacSystems3D());
+        systems.add(new World3DUpdateSystem());
     }
 }

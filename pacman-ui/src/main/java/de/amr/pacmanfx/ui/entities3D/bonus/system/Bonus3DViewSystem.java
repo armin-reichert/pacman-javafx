@@ -13,6 +13,14 @@ import javafx.scene.shape.Box;
 
 public class Bonus3DViewSystem {
 
+    public void update(Bonus bonus, AnimationRegistry animationRegistry) {
+        switch (bonus.state().enumValue()) {
+            case EDIBLE -> lookEdible(bonus);
+            case EATEN  -> lookEaten(bonus, animationRegistry);
+            case INACTIVE -> {}
+        }
+    }
+
     public void lookEdible(Bonus bonus) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
@@ -22,7 +30,7 @@ public class Bonus3DViewSystem {
         shape3D.setMaterial(view3D.symbolTexture());
     }
 
-    public void lookEaten(Bonus bonus, AnimationRegistry animations) {
+    public void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
@@ -35,16 +43,16 @@ public class Bonus3DViewSystem {
         view3D.rotateY().setAngle(0);
 
         // Rotate around x-axis
-        animations.requireAnimation(Bonus3DAnimationID.BONUS_EATEN).playFromStart();
+        animationRegistry.requireAnimation(Bonus3DAnimationID.BONUS_EATEN).playFromStart();
     }
 
-    public void lookExpired(Bonus bonus, AnimationRegistry animations) {
+    public void lookExpired(Bonus bonus, AnimationRegistry animationRegistry) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(false);
 
-        animations.optAnimation(Bonus3DAnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
-        animations.optAnimation(Bonus3DAnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
+        animationRegistry.optAnimation(Bonus3DAnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
+        animationRegistry.optAnimation(Bonus3DAnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
     }
 }
