@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 import javafx.scene.shape.Box;
 
-public class Bonus3DViewSystem {
+public class Bonus3DAnimationSystem {
 
     public void update(Bonus bonus, AnimationRegistry animationRegistry) {
         switch (bonus.state().enumValue()) {
@@ -21,7 +21,7 @@ public class Bonus3DViewSystem {
         }
     }
 
-    public void lookEdible(Bonus bonus) {
+    private void lookEdible(Bonus bonus) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
@@ -30,7 +30,7 @@ public class Bonus3DViewSystem {
         shape3D.setMaterial(view3D.symbolTexture());
     }
 
-    public void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {
+    private void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 

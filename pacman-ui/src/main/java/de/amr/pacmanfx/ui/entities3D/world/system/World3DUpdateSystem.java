@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.ui.GameSystems3D;
+import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 
@@ -52,14 +53,7 @@ public class World3DUpdateSystem {
 
     private void updateBonus3D(Bonus bonus, AnimationRegistry animationRegistry) {
         if (bonus != null) {
-            final GameSystems3D.BonusSystems3D bonusSystems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
-            bonusSystems3D.view3D().update(bonus, animationRegistry);
-            switch (bonus.state().enumValue()) {
-                case EDIBLE -> bonusSystems3D.view3D().lookEdible(bonus);
-                case EATEN  -> bonusSystems3D.view3D().lookEaten(bonus, animationRegistry);
-                case INACTIVE -> {}
-            }
-            bonusSystems3D.movement().update(bonus);
+            GameSystems3D.reqSystem(Bonus3DUpdateSystem.class).update(bonus, animationRegistry);
         }
     }
 }

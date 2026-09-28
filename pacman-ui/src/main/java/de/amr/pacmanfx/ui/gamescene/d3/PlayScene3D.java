@@ -248,6 +248,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         return subScene;
     }
 
+    public AnimationRegistry animationRegistry() {
+        return animationRegistry;
+    }
+
     public PerspectiveManager perspectiveManager() {
         return perspectiveManager;
     }

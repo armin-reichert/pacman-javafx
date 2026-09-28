@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 
 import static de.amr.basics.TileDimension.HTS;
 
-public class Bonus3DMovementSystem {
+class Bonus3DMovementSystem {
 
     public void update(GameEntity bonus) {
         final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
