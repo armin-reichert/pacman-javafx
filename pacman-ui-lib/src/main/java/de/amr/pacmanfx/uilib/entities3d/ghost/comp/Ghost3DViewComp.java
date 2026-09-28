@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.entities3d.ghost.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
-import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
@@ -124,7 +124,7 @@ public class Ghost3DViewComp implements GameEntityComp {
 
         root.getChildren().add(facingGroup);
 
-        facingGroup.getTransforms().addAll(facingRotate, PacMan3DModel.ORIENTATION_ADJUSTMENT);
+        facingGroup.getTransforms().addAll(facingRotate, PacManMeshes3D.ORIENTATION_ADJUSTMENT);
 
         // Center meshes
         final Bounds db = dressMeshView.getBoundsInLocal();

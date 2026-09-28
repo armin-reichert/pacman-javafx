@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
-import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.entities3d.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.FemaleBodyPartsColors;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacColors;
@@ -209,13 +209,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(PacMan3DModel.instance().ghostDressMesh());
+        final MeshView dressMeshView = new MeshView(PacManMeshes3D.instance().ghostDressMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(PacMan3DModel.instance().ghostPupilsMesh());
+        final MeshView pupilsMeshView = new MeshView(PacManMeshes3D.instance().ghostPupilsMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(PacMan3DModel.instance().ghostEyeballsMesh());
+        final MeshView eyeballsMeshView = new MeshView(PacManMeshes3D.instance().ghostEyeballsMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

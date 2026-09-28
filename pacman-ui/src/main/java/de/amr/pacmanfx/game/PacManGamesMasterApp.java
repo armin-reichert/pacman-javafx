@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
-import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import javafx.application.Platform;
 import org.tinylog.Logger;
 
@@ -273,7 +273,7 @@ public final class PacManGamesMasterApp implements GameApp {
         ui.spriteAnimTimer().start();
 
         //noinspection ResultOfMethodCallIgnored
-        PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
+        PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
 }

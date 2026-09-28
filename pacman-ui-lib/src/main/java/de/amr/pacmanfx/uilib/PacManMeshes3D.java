@@ -30,16 +30,16 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * For the pellets, another model is used, and the maze is procedurally generated from the map data.
  */
-public class PacMan3DModel {
+public class PacManMeshes3D {
 
-    static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/entities3d/pacmanworld/pacman.obj";
+    private static final String OBJ_PATH = "/de/amr/pacmanfx/uilib/entities3d/pacman.obj";
 
-    private static class LazyThreadSafeSingletonHolder {
-        static final PacMan3DModel SINGLETON = new PacMan3DModel();
+    private static class SingletonHolder {
+        static final PacManMeshes3D SINGLETON = new PacManMeshes3D();
     }
 
-    public static PacMan3DModel instance() {
-        return LazyThreadSafeSingletonHolder.SINGLETON;
+    public static PacManMeshes3D instance() {
+        return SingletonHolder.SINGLETON;
     }
 
     public static final Rotate ORIENTATION_ADJUSTMENT = new Rotate(270, Rotate.X_AXIS);
@@ -64,15 +64,15 @@ public class PacMan3DModel {
 
     private Map<String, Mesh> meshes;
 
-    private PacMan3DModel() {
-        Ufx.measureDuration("3D model loading", this::loadPacManWorldModel);
+    private PacManMeshes3D() {
+        Ufx.measureDuration("3D model loading", this::loadMeshes);
         MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
-    private void loadPacManWorldModel() {
-        final URL url = getClass().getResource(PAC_MAN_WORLD_OBJ_FILE);
+    private void loadMeshes() {
+        final URL url = getClass().getResource(OBJ_PATH);
         if (url == null) {
-            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
+            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + OBJ_PATH);
         }
         try {
             final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();

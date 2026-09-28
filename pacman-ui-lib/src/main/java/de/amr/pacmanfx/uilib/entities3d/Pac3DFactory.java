@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3d;
 
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DTransformComp;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
@@ -67,13 +67,13 @@ public class Pac3DFactory {
     public static Group createPacBody(PacSettings config, boolean withEyes) {
         requireNonNull(config);
 
-        final MeshView head = new MeshView(PacMan3DModel.instance().pacHeadMesh());
+        final MeshView head = new MeshView(PacManMeshes3D.instance().pacHeadMesh());
         head.setMaterial(coloredPhongMaterial(config.colors().headColor()));
 
-        final MeshView eyes = new MeshView(PacMan3DModel.instance().pacEyesMesh());
+        final MeshView eyes = new MeshView(PacManMeshes3D.instance().pacEyesMesh());
         eyes.setMaterial(coloredPhongMaterial(config.colors().eyesColor()));
 
-        final MeshView palate = new MeshView(PacMan3DModel.instance().pacPalateMesh());
+        final MeshView palate = new MeshView(PacManMeshes3D.instance().pacPalateMesh());
         palate.setMaterial(coloredPhongMaterial(config.colors().palateColor()));
 
         final List<Node> parts = withEyes ? List.of(head, eyes, palate) : List.of(head, palate);
@@ -84,7 +84,7 @@ public class Pac3DFactory {
 
         body.getTransforms().addAll(
             scaleTo(body, config.size3D()),
-            PacMan3DModel.ORIENTATION_ADJUSTMENT);
+            PacManMeshes3D.ORIENTATION_ADJUSTMENT);
 
         return body;
     }

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.entities3d.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.*;
 import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
@@ -46,7 +46,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createGhost3D(Ghost ghost, GhostSettings settings) {
-        final PacMan3DModel model = PacMan3DModel.instance();
+        final PacManMeshes3D model = PacManMeshes3D.instance();
         final Ghost3DViewComp view3D = ensureGhostHas3DView(ghost);
         final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
 
