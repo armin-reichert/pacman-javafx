@@ -29,7 +29,7 @@ public class Pac3DShapeFactory {
      * @param withEyes if Pac has eyes
      * @return a new Pac body group
      */
-    public static Group createPacBody(PacSettings config, boolean withEyes) {
+    public Group createPacBody(PacSettings config, boolean withEyes) {
         requireNonNull(config);
 
         final MeshView head = new MeshView(PacManMeshes3D.instance().pacHeadMesh());
@@ -54,7 +54,7 @@ public class Pac3DShapeFactory {
         return body;
     }
 
-    public static Group createFemalePacBodyParts(PacSettings config) {
+    public Group createFemalePacBodyParts(PacSettings config) {
         requireNonNull(config);
 
         final int sphereDivisions = 16; // 64 is default
@@ -101,13 +101,13 @@ public class Pac3DShapeFactory {
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
-    private static Translate moveToOrigin(Node node) {
+    private Translate moveToOrigin(Node node) {
         requireNonNull(node);
         final Bounds b = node.getBoundsInLocal();
         return new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
     }
 
-    private static Scale scaleTo(Node node, float size) {
+    private Scale scaleTo(Node node, float size) {
         requireNonNull(node);
         final Bounds b = node.getBoundsInLocal();
         return new Scale(size / b.getWidth(), size / b.getHeight(), size / b.getDepth());

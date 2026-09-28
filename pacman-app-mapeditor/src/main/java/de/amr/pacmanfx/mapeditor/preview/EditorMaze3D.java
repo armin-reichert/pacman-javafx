@@ -114,7 +114,7 @@ public class EditorMaze3D extends Group {
     private final Node pacmanShape3D;
     private final Group[] ghostShapes;
 
-    public EditorMaze3D() {
+    public EditorMaze3D(Pac3DShapeFactory shapeFactory) {
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
@@ -127,7 +127,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Pac3DShapeFactory.createPacBody(PAC_CONFIG, true);
+        pacmanShape3D = shapeFactory.createPacBody(PAC_CONFIG, true);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {

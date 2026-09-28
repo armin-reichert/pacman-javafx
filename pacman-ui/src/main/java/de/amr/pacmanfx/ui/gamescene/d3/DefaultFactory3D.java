@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.PacManMeshes3D;
-import de.amr.pacmanfx.ui.entities3D.Pac3DFactory;
+import de.amr.pacmanfx.ui.entities3D.Pac3DViewFactory;
 import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 import de.amr.pacmanfx.uilib.entities3d.world.Energizer3D;
@@ -29,6 +29,9 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
+    protected Pac3DShapeFactory shapeFactory = new Pac3DShapeFactory();
+    protected Pac3DViewFactory viewFactory = new Pac3DViewFactory();
+
     protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
 
@@ -42,7 +45,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
-        Pac3DFactory.createPacManView3D(pac, settings);
+        viewFactory.createPacManView3D(shapeFactory, pac, settings);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(WorldSettings settings) {
         requireNonNull(settings);
         final PacSettings livesCounterPacSettings = settings.pac().resized(settings.livesCounter().shapeSize());
-        return Pac3DShapeFactory.createPacBody(livesCounterPacSettings, true);
+        return shapeFactory.createPacBody(livesCounterPacSettings, true);
     }
 
     @Override

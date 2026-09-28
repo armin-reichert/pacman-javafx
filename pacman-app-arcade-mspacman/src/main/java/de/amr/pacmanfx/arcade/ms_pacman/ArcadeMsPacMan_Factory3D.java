@@ -5,10 +5,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.entities3D.Pac3DFactory;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 import javafx.scene.Group;
 
@@ -18,7 +16,7 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
-        Pac3DFactory.createMsPacManView3D(pac, settings);
+        viewFactory.createMsPacManView3D(shapeFactory, pac, settings);
     }
 
     @Override
@@ -26,8 +24,8 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
         requireNonNull(settings);
         final PacSettings config = settings.pac().resized(settings.livesCounter().shapeSize());
         return new Group(
-            Pac3DShapeFactory.createPacBody(config, true),
-            Pac3DShapeFactory.createFemalePacBodyParts(config)
+            shapeFactory.createPacBody(config, true),
+            shapeFactory.createFemalePacBodyParts(config)
         );
     }
 }

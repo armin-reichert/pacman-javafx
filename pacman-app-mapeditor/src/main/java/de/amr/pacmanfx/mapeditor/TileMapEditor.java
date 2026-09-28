@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.map.WorldMapWriter;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
+import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -36,10 +37,13 @@ public class TileMapEditor {
     private SampleMaps sampleMaps;
     private Consumer<TileMapEditor> quitEditorAction = _ -> {};
 
-    public TileMapEditor(Stage stage) {
+    public TileMapEditor(Stage stage, Pac3DShapeFactory shapeFactory) {
         requireNonNull(stage);
-        ui = new TileMapEditorUI(stage, this);
+        requireNonNull(shapeFactory);
+
+        ui = new TileMapEditorUI(stage, this, shapeFactory);
         currentWorldMap.addListener((_, _, _) -> setWorldMapChanged());
+
         sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> {
             final String source = WorldMapWriter.createSourceCode(currentWorldMap(), lineNumbers);
             sourceCode.set(source);

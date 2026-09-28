@@ -16,6 +16,7 @@ import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.preview.Preview2D;
 import de.amr.pacmanfx.mapeditor.preview.Preview3D;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
+import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -316,12 +317,13 @@ public class TileMapEditorUI {
 
     // end of property section
 
-    public TileMapEditorUI(Stage stage, TileMapEditor editor) {
+    public TileMapEditorUI(Stage stage, TileMapEditor editor, Pac3DShapeFactory shapeFactory) {
         this.stage = requireNonNull(stage);
         this.editor = editor;
+        requireNonNull(shapeFactory);
 
         createEditArea();
-        createPreviewArea();
+        createPreviewArea(shapeFactory);
         createPropertyEditors();
         createStatusLine();
         editorPaletteTabPane = new EditorPaletteTabPane(editor, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
@@ -506,8 +508,8 @@ public class TileMapEditorUI {
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
     }
 
-    private void createPreview3D() {
-        preview3D = new Preview3D(this, 500, 500);
+    private void createPreview3D(Pac3DShapeFactory shapeFactory) {
+        preview3D = new Preview3D(shapeFactory, this, 500, 500);
         preview3D.foodVisibleProperty().bind(foodVisibleProperty());
         preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview3D.worldMapProperty().bind(editor.currentWorldMapProperty());
@@ -642,9 +644,9 @@ public class TileMapEditorUI {
         return text;
     }
 
-    private void createPreviewArea() {
+    private void createPreviewArea(Pac3DShapeFactory shapeFactory) {
         createPreview2D();
-        createPreview3D();
+        createPreview3D(shapeFactory);
         createSourceView();
 
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
