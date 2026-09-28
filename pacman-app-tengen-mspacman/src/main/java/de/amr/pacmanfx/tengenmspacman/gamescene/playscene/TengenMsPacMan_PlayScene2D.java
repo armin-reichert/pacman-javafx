@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
-import de.amr.basics.MapWithTypedAccess;
+import de.amr.basics.MapWithAccessors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -395,7 +395,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private GameLevelView createRenderableLevel(GameLevel level, long tick) {
-        final MapWithTypedAccess renderInfo = new MapWithTypedAccess();
+        final MapWithAccessors renderInfo = new MapWithAccessors();
         final WorldMap worldMap = level.worldMap();
 
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);

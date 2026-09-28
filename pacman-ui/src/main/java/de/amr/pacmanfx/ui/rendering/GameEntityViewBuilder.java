@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.rendering;
 
-import de.amr.basics.MapWithTypedAccess;
+import de.amr.basics.MapWithAccessors;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -101,7 +101,7 @@ public class GameEntityViewBuilder {
     private RenderingLayer layer;
     private int z = 0;
     private Vector2f offset = Vector2f.ZERO;
-    private MapWithTypedAccess renderInfo = MapWithTypedAccess.EMPTY;
+    private MapWithAccessors renderInfo = MapWithAccessors.EMPTY;
 
     private GameEntityViewBuilder() {}
 
@@ -125,7 +125,7 @@ public class GameEntityViewBuilder {
         return this;
     }
 
-    public GameEntityViewBuilder renderInfo(final MapWithTypedAccess renderInfo) {
+    public GameEntityViewBuilder renderInfo(final MapWithAccessors renderInfo) {
         this.renderInfo = requireNonNull(renderInfo);
         return this;
     }

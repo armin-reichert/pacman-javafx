@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.view2d;
 
-import de.amr.basics.MapWithTypedAccess;
+import de.amr.basics.MapWithAccessors;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -73,13 +73,13 @@ public class ArcadeHouseRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof GameEntityView rge
-            && rge.entity() instanceof House house) {
-            drawHouse(house, rge.renderInfo());
+        if (r instanceof GameEntityView entityView
+            && entityView.entity() instanceof House house) {
+            drawHouse(house, entityView.renderInfo());
         }
     }
 
-    public void drawHouse(House house, MapWithTypedAccess renderInfo) {
+    public void drawHouse(House house, MapWithAccessors renderInfo) {
         drawHouse(
             house.floorplan().minTile(),
             house.sizeInTiles(),
