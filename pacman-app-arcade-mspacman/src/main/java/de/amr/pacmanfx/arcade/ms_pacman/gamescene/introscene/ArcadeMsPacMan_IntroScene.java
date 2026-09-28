@@ -22,7 +22,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.ArcadeColor;
+import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.paint.Color;
 
 import java.util.List;

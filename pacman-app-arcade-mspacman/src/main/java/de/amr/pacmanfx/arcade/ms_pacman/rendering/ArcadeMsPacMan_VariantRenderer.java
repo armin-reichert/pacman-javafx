@@ -35,7 +35,7 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.uilib.ArcadeColor;
+import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

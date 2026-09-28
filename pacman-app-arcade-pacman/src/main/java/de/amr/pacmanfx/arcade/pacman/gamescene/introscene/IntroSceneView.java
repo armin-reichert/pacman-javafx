@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.pacmanfx.uilib.ArcadeColor;
+import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.image.Image;
 
 import java.util.Arrays;

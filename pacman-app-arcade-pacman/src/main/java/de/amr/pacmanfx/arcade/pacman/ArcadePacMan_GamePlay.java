@@ -43,7 +43,7 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.uilib.ArcadeColor;
+import de.amr.basics.ui.assets.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.List;

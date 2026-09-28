@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.pacmanfx.uilib.ArcadeColor;
+import de.amr.basics.ui.assets.ArcadeColor;
 
 import java.util.ArrayList;
 import java.util.List;
