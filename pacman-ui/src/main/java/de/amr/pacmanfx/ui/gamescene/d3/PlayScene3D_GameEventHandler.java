@@ -34,19 +34,18 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
+import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
+import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsVM;
-import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
-import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
-import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
-import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
-import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -247,9 +246,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().playConfig().rules().isLevelCompleted(level)) {
-            optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
-            Pac3DAnimationSystem.setPowerMode(pac, true);
+            final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+            systems3D.animation().setPowerMode(pac, true);
             level3D.animationManager().startWallFlashing();
+            optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
 
@@ -257,10 +257,11 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     public void onPacPowerEnds(PacPowerEndsEvent e) {
         final Pac pac = e.pac();
         final GameLevel3D level3D = assertLevel3D();
+        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
 
-        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        systems3D.animation().setPowerMode(pac, false);
         level3D.animationManager().stopWallFlashing();
-        Pac3DAnimationSystem.setPowerMode(pac, true);
+        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
@@ -309,12 +310,14 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            final var systems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
-            systems3D.view3D().lookExpired(bonus, animationRegistry);
+            final var bonusSystems3D = GameSystems3D.reqSystem(GameSystems3D.BonusSystems3D.class);
+            bonusSystems3D.view3D().lookExpired(bonus, animationRegistry);
         }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
-        Pac3DAnimationSystem.playDyingAnimation(
+
+        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        pacSystems3D.animation().playDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
             game().state()::triggerTimeout

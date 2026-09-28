@@ -11,11 +11,9 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.GameSystems3D;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 
 import java.util.Set;
 
@@ -38,9 +36,11 @@ public class GameLevel3DUpdateController {
     private static void updatePac3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         final Pac pac = level.entitySet().pac();
-        Pac3DTransformSystem.update(pac, level);
-        Pac3DAnimationSystem.update(pac);
-        Pac3DAnimationSystem.updatePowerLight(pac);
+        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+
+        systems3D.transform().update(pac, level);
+        systems3D.animation().updateAnimations(pac);
+        systems3D.animation().updatePowerLight(pac);
     }
 
     private static void updateLivesCounter3D(LivesCounter livesCounter) {

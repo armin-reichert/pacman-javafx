@@ -12,6 +12,8 @@ import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
 
 public class GameSystems3D {
 
@@ -28,6 +30,12 @@ public class GameSystems3D {
     }
 
     // Systems
+
+    public record PacSystems3D(Pac3DTransformSystem transform, Pac3DAnimationSystem animation) {
+        public PacSystems3D() {
+            this(new Pac3DTransformSystem(), new Pac3DAnimationSystem());
+        }
+    }
 
     public record GhostSystems3D(Ghost3DMovementSystem movement, Ghost3DAppearanceSystem appearance) {
         public GhostSystems3D() {
@@ -49,6 +57,6 @@ public class GameSystems3D {
         systems.add(new LivesCounter3DViewSystem());
         systems.add(new GhostSystems3D());
         systems.add(new House3DSystem());
+        systems.add(new PacSystems3D());
     }
-
 }

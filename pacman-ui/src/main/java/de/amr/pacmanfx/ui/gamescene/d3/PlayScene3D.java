@@ -34,8 +34,6 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
@@ -287,9 +285,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(pac);
         requireNonNull(level);
 
-        Pac3DTransformSystem.init(pac, level);
-        Pac3DAnimationSystem.stopAll(pac);
-        Pac3DAnimationSystem.setPowerMode(pac, false);
+        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        systems3D.transform().init(pac, level);
+        systems3D.animation().stopAnimations(pac);
+        systems3D.animation().setPowerMode(pac, false);
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {

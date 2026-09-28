@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DTransformSystem {
 
-    public static void init(Pac pac, GameLevel level) {
+    public void init(Pac pac, GameLevel level) {
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
 
         view3D.root().setScaleX(1.0);
@@ -29,7 +29,7 @@ public class Pac3DTransformSystem {
         update(pac, level);
     }
 
-    public static void update(Pac pac, GameLevel level) {
+    public void update(Pac pac, GameLevel level) {
         requireNonNull(pac);
         requireNonNull(level);
 
@@ -46,20 +46,20 @@ public class Pac3DTransformSystem {
         }
     }
 
-    private static void updateVisibility(Pac pac, Vector2f center, WorldMap worldMap) {
+    private void updateVisibility(Pac pac, Vector2f center, WorldMap worldMap) {
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final boolean outside = center.x() < HTS
             || center.x() > TS * worldMap.numCols() - HTS;
         view3D.root().setVisible(pac.isVisible() && !outside);
     }
 
-    private static void updatePosition(Pac3DViewComp view3D, Vector2f center) {
+    private void updatePosition(Pac3DViewComp view3D, Vector2f center) {
         view3D.root().setTranslateX(center.x());
         view3D.root().setTranslateY(center.y());
         view3D.root().setTranslateZ(-8); //TODO should depend on size
     }
     
-    private static void updateFacing(Pac3DViewComp view3D, Direction dir) {
+    private void updateFacing(Pac3DViewComp view3D, Direction dir) {
         final int angle = switch (dir) {
             case LEFT -> 0;
             case UP -> 90;

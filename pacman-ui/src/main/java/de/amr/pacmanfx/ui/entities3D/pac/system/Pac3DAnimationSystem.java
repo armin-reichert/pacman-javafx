@@ -17,7 +17,7 @@ import javafx.animation.SequentialTransition;
 
 public class Pac3DAnimationSystem {
 
-    public static void stopAll(Pac pac) {
+    public void stopAnimations(Pac pac) {
         final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
         if (animation.chewing() != null) {
             animation.chewing().stop();
@@ -30,7 +30,7 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void update(Pac pac) {
+    public void updateAnimations(Pac pac) {
         final PacStateComp state = pac.state();
         final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
 
@@ -50,7 +50,7 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void setPowerMode(Pac pac, boolean power) {
+    public void setPowerMode(Pac pac, boolean power) {
         final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
@@ -61,7 +61,7 @@ public class Pac3DAnimationSystem {
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    public static void updatePowerLight(Pac pac) {
+    public void updatePowerLight(Pac pac) {
         final PacStateComp state = pac.state();
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
 
@@ -80,7 +80,7 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void playDyingAnimation(
+    public void playDyingAnimation(
         Pac pac,
         Runnable pacDeadSoundEffect,
         Runnable onFinishedCallback) {
