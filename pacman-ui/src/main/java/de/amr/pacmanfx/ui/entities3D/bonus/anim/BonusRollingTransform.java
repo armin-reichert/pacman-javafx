@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.bonus.anim;
+package de.amr.pacmanfx.ui.entities3D.bonus.anim;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
-import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 
 public class BonusRollingTransform {
 

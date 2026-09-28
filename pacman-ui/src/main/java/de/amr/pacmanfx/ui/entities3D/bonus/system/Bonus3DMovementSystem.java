@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.bonus.system;
+package de.amr.pacmanfx.ui.entities3D.bonus.system;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 
 import static de.amr.basics.TileDimension.HTS;
 

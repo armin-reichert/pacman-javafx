@@ -20,7 +20,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls.skin;
 
     exports de.amr.pacmanfx.uilib.entities3d.ghost.comp;
-    exports de.amr.pacmanfx.uilib.entities3d.bonus.anim;
     exports de.amr.pacmanfx.uilib.entities3d.ghost.system;
     exports de.amr.pacmanfx.uilib.entities3d.house.comp;
     exports de.amr.pacmanfx.uilib.entities3d.house.system;
@@ -28,10 +27,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.entities3d.pac.comp;
     exports de.amr.pacmanfx.uilib.entities3d.pac.system;
     exports de.amr.pacmanfx.uilib.entities3d.ghost.anim;
-    exports de.amr.pacmanfx.uilib.entities3d.bonus.system;
-    exports de.amr.pacmanfx.uilib.entities3d.bonus.comp;
     exports de.amr.pacmanfx.uilib.entities3d.score.comp;
-    exports de.amr.pacmanfx.uilib.entities3d.levelcounter.comp;
     exports de.amr.pacmanfx.uilib.entities3d.messageview.comp;
     exports de.amr.pacmanfx.uilib.entities3d.messageview.system;
     exports de.amr.pacmanfx.uilib.entities3d.messageview;

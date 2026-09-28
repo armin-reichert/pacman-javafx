@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.entities3d.bonus.anim;
+package de.amr.pacmanfx.ui.entities3D.bonus.anim;
 
 import de.amr.basics.Named;
 

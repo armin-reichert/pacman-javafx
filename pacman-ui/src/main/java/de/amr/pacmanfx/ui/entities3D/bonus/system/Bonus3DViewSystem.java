@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.bonus.system;
+package de.amr.pacmanfx.ui.entities3D.bonus.system;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.uilib.entities3d.bonus.anim.Bonus3DAnimationID;
-import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 import javafx.scene.shape.Box;
 
 public class Bonus3DViewSystem {
