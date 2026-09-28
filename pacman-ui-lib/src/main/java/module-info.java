@@ -19,9 +19,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
 
-    exports de.amr.pacmanfx.uilib.entities3d.messageview.comp;
-    exports de.amr.pacmanfx.uilib.entities3d.messageview.system;
-    exports de.amr.pacmanfx.uilib.entities3d.messageview;
     exports de.amr.pacmanfx.uilib.entities3d.world;
 
     exports de.amr.pacmanfx.uilib.widgets;

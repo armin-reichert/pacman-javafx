@@ -41,7 +41,7 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
-import de.amr.pacmanfx.uilib.entities3d.messageview.MessageView3DBuilder;
+import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3d.PacSettings;
 import de.amr.pacmanfx.uilib.entities3d.world.Energizer3D;
