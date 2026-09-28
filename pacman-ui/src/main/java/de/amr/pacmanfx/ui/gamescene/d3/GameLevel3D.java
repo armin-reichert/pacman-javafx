@@ -328,7 +328,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
             root.getChildren().remove(oldRoot);
         }
 
-        viewSystem.updateLevelCounter3D(uiConfig, levelCounter, level);
+        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
         root.getChildren().add(view3D.root());
     }
 

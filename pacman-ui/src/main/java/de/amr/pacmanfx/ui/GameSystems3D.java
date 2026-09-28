@@ -28,6 +28,12 @@ public class GameSystems3D {
 
     // Systems
 
+    public record GhostSystems3D(Ghost3DMovementSystem movement, Ghost3DAppearanceSystem appearance) {
+        public GhostSystems3D() {
+            this(new Ghost3DMovementSystem(), new Ghost3DAppearanceSystem());
+        }
+    }
+
     public record BonusSystems3D(Bonus3DMovementSystem movement, Bonus3DViewSystem view3D) {
         public BonusSystems3D() {
             this(new Bonus3DMovementSystem(), new Bonus3DViewSystem());
@@ -40,8 +46,7 @@ public class GameSystems3D {
         systems.add(new BonusSystems3D());
         systems.add(new LevelCounter3DViewSystem());
         systems.add(new LivesCounter3DViewSystem());
-        systems.add(new Ghost3DAppearanceSystem());
-        systems.add(new Ghost3DMovementSystem());
+        systems.add(new GhostSystems3D());
     }
 
 }
