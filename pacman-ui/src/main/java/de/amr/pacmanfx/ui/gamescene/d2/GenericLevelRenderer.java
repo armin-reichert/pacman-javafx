@@ -16,12 +16,11 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.uilib.renderer.ArcadeHouseRenderer;
-import de.amr.pacmanfx.uilib.renderer.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.renderer.TerrainMapVectorRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelView;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.ArcadeHouseRenderer;
+import de.amr.pacmanfx.uilib.view2d.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapVectorRenderer;
+import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

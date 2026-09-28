@@ -22,8 +22,8 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelView;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
+import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 

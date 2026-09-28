@@ -2,9 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d;
+package de.amr.pacmanfx.uilib.view3d;
 
-import de.amr.pacmanfx.uilib.PacManMeshes3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

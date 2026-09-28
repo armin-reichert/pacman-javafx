@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.entities3d.PacSettings;
+import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;

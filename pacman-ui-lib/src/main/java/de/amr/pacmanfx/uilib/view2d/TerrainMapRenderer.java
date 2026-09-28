@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.renderer;
+package de.amr.pacmanfx.uilib.view2d;
 
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.TerrainMapColoring;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 

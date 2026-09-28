@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib;
+package de.amr.pacmanfx.uilib.view3d;
 
 import de.amr.basics.util.Ufx;
 import de.amr.meshbuilder.MeshBuilder;

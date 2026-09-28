@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.uilib.entities3d.Wall3D;
+import de.amr.pacmanfx.uilib.view3d.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

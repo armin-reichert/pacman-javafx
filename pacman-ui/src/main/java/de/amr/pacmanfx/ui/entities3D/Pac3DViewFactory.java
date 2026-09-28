@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.entities3D;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DTransformComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
-import de.amr.pacmanfx.uilib.entities3d.PacSettings;
+import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 

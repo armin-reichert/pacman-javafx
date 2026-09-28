@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapLayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
-import de.amr.pacmanfx.uilib.renderer.TileRenderer;
+import de.amr.pacmanfx.uilib.view2d.TileRenderer;
 
 import java.util.function.Consumer;
 

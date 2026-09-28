@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.map.WorldMapWriter;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.entities3d.TerrainRenderer3D;
+import de.amr.pacmanfx.uilib.view3d.TerrainRenderer3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;

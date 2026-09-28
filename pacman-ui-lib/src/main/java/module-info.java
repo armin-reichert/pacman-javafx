@@ -15,12 +15,11 @@ open module de.amr.pacmanfx.uilib {
     requires de.amr.basics.ui;
 
     exports de.amr.pacmanfx.uilib;
-    exports de.amr.pacmanfx.uilib.rendering;
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.decorationpane;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
-    exports de.amr.pacmanfx.uilib.renderer;
-    exports de.amr.pacmanfx.uilib.entities3d;
+    exports de.amr.pacmanfx.uilib.view2d;
+    exports de.amr.pacmanfx.uilib.view3d;
 }

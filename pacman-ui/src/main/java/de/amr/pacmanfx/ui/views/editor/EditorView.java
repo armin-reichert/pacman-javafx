@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;

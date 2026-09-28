@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
-import de.amr.pacmanfx.uilib.PacManMeshes3D;
+import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;

@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.uilib.rendering.GameLevelView;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 
 public class MiniViewOverlayRenderer extends BaseRenderer {
 

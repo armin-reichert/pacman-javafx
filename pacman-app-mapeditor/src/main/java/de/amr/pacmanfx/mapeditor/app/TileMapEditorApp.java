@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.app;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.uilib.entities3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;

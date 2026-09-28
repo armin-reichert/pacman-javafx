@@ -43,7 +43,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationCo
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
-import de.amr.pacmanfx.uilib.entities3d.PacSettings;
+import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;

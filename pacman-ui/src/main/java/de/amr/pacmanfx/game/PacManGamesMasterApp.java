@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
-import de.amr.pacmanfx.uilib.PacManMeshes3D;
+import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import org.tinylog.Logger;
 
