@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGamesMasterApp;
-import de.amr.pacmanfx.uilib.TimelineGameClock;
+import de.amr.pacmanfx.game.DefaultGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        gameBox = new GameBox(new TimelineGameClock());
+        gameBox = new GameBox(new DefaultGameClock());
     }
 
     @Override

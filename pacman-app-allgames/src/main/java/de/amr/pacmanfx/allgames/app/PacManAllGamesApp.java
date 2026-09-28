@@ -19,7 +19,7 @@ import de.amr.pacmanfx.game.PacManGamesMasterApp;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
-import de.amr.pacmanfx.uilib.TimelineGameClock;
+import de.amr.pacmanfx.game.DefaultGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -32,7 +32,7 @@ public class PacManAllGamesApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(new TimelineGameClock());
+        gameBox = new GameBox(new DefaultGameClock());
     }
 
     @Override

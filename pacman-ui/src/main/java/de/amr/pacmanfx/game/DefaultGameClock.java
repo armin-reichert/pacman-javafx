@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib;
+package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.Validations;
@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * All tick execution occurs on the JavaFX Application Thread, as required by
  * {@link Timeline}. Actions should therefore avoid long‑running work.
  */
-public class TimelineGameClock implements GameClock {
+public class DefaultGameClock implements GameClock {
 
     /**
      * The desired frame rate. Changing this property rebuilds the internal
@@ -88,7 +88,7 @@ public class TimelineGameClock implements GameClock {
      * Creates a new game clock with the default target frame rate.
      * The internal {@link Timeline} is initialized immediately.
      */
-    public TimelineGameClock() {
+    public DefaultGameClock() {
         createClockwork();
         clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
             Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, targetFrameRate()));
