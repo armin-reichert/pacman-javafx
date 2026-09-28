@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.entities3D;
 
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DTransformComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
@@ -32,7 +31,6 @@ public class Pac3DViewFactory {
     private void ensurePacHas3DView(Pac pac) {
         if (!pac.hasComp(Pac3DViewComp.class)) {
             pac.setComp(Pac3DViewComp.class, new Pac3DViewComp());
-            pac.setComp(Pac3DTransformComp.class, new Pac3DTransformComp());
         }
     }
 
