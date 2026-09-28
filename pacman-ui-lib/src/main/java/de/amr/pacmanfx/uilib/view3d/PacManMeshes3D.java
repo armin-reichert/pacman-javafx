@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManMeshes3D {
 
-    private static final String OBJ_PATH = "/de/amr/pacmanfx/uilib/entities3d/pacman.obj";
+    private static final String OBJ_PATH = "/de/amr/pacmanfx/uilib/model3d/pacman.obj";
 
     private static class SingletonHolder {
         static final PacManMeshes3D SINGLETON = new PacManMeshes3D();
