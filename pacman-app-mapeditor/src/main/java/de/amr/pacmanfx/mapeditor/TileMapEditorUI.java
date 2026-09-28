@@ -17,7 +17,7 @@ import de.amr.pacmanfx.mapeditor.preview.Preview2D;
 import de.amr.pacmanfx.mapeditor.preview.Preview3D;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

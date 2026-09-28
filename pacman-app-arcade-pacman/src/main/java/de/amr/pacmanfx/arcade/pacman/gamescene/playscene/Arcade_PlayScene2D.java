@@ -32,7 +32,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.paint.Color;

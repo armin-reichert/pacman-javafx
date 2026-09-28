@@ -20,7 +20,7 @@ import de.amr.pacmanfx.uilib.view2d.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.view2d.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapVectorRenderer;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

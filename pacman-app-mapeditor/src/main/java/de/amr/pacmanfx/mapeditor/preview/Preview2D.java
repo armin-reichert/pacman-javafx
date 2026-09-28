@@ -13,7 +13,7 @@ import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.view2d.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.view2d.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapVectorRenderer;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;

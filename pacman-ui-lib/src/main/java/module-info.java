@@ -14,7 +14,6 @@ open module de.amr.pacmanfx.uilib {
     requires de.amr.pacmanfx.core;
     requires de.amr.basics.ui;
 
-    exports de.amr.pacmanfx.uilib;
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;

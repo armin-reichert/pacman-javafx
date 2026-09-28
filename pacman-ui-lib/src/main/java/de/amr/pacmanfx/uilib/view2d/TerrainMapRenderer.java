@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.view2d;
 
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 

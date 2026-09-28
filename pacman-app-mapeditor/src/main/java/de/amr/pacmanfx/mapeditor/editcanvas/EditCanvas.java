@@ -20,7 +20,7 @@ import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.view2d.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Cursor;

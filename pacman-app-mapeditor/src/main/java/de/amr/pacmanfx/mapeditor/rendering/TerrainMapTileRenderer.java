@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.view2d.TileRenderer;
-import de.amr.pacmanfx.uilib.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
