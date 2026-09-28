@@ -17,7 +17,7 @@ import static de.amr.basics.TileDimension.tilesPx;
 
 public class LevelCounter3DViewSystem {
 
-    public static void updateLevelCounter3D(GameVariantUIConfig gameVariantConfig, LevelCounter levelCounter, GameLevel level) {
+    public void updateLevelCounter3D(GameVariantUIConfig gameVariantConfig, LevelCounter levelCounter, GameLevel level) {
 
         final Group root = LevelCounter3DFactory.buildLevelCounter3D(
             levelCounter,

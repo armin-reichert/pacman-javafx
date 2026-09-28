@@ -25,6 +25,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
@@ -319,6 +320,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
     }
 
     public void replaceLevelCounter3D(LevelCounter levelCounter) {
+        final LevelCounter3DViewSystem viewSystem = GameSystems3D.reqSystem(LevelCounter3DViewSystem.class);
         final LevelCounter3DViewComp view3D = levelCounter.reqComp(LevelCounter3DViewComp.class);
 
         final Group oldRoot = view3D.root();
@@ -326,7 +328,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
             root.getChildren().remove(oldRoot);
         }
 
-        LevelCounter3DViewSystem.updateLevelCounter3D(uiConfig, levelCounter, level);
+        viewSystem.updateLevelCounter3D(uiConfig, levelCounter, level);
         root.getChildren().add(view3D.root());
     }
 
