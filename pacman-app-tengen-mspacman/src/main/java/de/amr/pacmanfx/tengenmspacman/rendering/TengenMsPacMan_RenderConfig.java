@@ -18,10 +18,10 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -171,11 +171,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case TengenMsPacMan_PlayScene2D _ -> new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas);
             default -> GameVariantRenderConfig.super.createGameSceneDebugRenderer(gameScene, animController, canvas);
         };
-    }
-
-    @Override
-    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-        return new TengenMsPacMan_GameLevelRenderer(canvas);
     }
 
     @Override

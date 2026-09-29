@@ -73,8 +73,7 @@ public class GenericLevelRenderer extends BaseRenderer {
             case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithAccessors renderInfo)
                 -> draw(energizer, renderInfo);
 
-            default
-                -> super.render(r, tick);
+            default -> super.render(r, tick);
         }
     }
 

@@ -6,20 +6,16 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.MapWithAccessors;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -48,15 +44,9 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     }
 
     @Override
-    public void render(Renderable r, long tick) {
-        switch (r) {
-            case GameLevelView(GameLevel level, MapWithAccessors renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithAccessors _) -> hideEnergizerIfOff(energizer);
-            default -> {}
-        }
-    }
+    public void render(Renderable r, long tick) {}
 
-    private void renderGameLevel(GameLevel level, MapWithAccessors info) {
+    public void renderGameLevel(GameLevel level, MapWithAccessors info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
@@ -88,7 +78,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
         ctx.restore();
     }
 
-    private void hideEnergizerIfOff(Energizer energizer) {
+    public void hideEnergizerIfOff(Energizer energizer) {
         if (!energizer.state().on()) {
             final double size = scaled(9);
             ctx.save();

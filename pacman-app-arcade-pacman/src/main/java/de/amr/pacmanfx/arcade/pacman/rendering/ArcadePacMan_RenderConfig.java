@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.Disposable;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
@@ -16,15 +17,14 @@ import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -33,7 +33,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -111,11 +110,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-        return new ArcadePacMan_GameLevel_Renderer(canvas, this);
-    }
-
-    @Override
     public HUDStyleComp hudStyle() {
         return hudStyle;
     }
@@ -124,7 +118,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     public BaseRenderer createVariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
-        return new ArcadePacMan_VariantRenderer(animController, canvas);
+        return new ArcadePacMan_VariantRenderer(animController, this, canvas);
     }
 
     @Override

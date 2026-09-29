@@ -42,7 +42,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         }
     }
 
-    private void renderGameLevel(GameLevel level, MapWithAccessors renderInfo) {
+    public void renderGameLevel(GameLevel level, MapWithAccessors renderInfo) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();

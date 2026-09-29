@@ -4,10 +4,12 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.MapWithAccessors;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
@@ -19,18 +21,20 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.GameEntityRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.GridPattern;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.HexDigitsBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.SpritesBlock;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.NailDressRapturing;
-import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.Energizer;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.basics.ui.assets.ArcadeColor;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -49,11 +53,16 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     private static final int[] BONUS_POINTS = { 100, 300, 500, 700, 1000, 2000, 3000, 5000 };
 
     private final ActorSpriteAnimController animController;
+    private final ArcadePacMan_GameLevel_Renderer levelRenderer;
 
-    public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadePacMan_RenderConfig renderConfig, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
         setSpriteSheet(ArcadePacMan_SpriteSheet.instance());
+
+        levelRenderer = new ArcadePacMan_GameLevel_Renderer(canvas, renderConfig);
+        levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        levelRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -65,10 +74,24 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
-            case HexDigitsBlock hexBlock -> renderHexCodeBlock(hexBlock);
-            case SpritesBlock spritesBlock -> renderSpritesBlock(spritesBlock);
-            case GridPattern gridPattern -> renderGridPattern(gridPattern);
+            case GameLevelView(GameLevel level, MapWithAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
+                -> levelRenderer.renderGameLevel(level, renderInfo);
+
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithAccessors _)
+                -> levelRenderer.hideEnergizerIfOff(energizer);
+
+            case GameEntityView entityView
+                -> renderGameEntity(entityView.entity(), tick);
+
+            case HexDigitsBlock hexBlock
+                -> renderHexCodeBlock(hexBlock);
+
+            case SpritesBlock spritesBlock
+                -> renderSpritesBlock(spritesBlock);
+
+            case GridPattern gridPattern
+                -> renderGridPattern(gridPattern);
+
             default -> super.render(r, tick);
         }
     }

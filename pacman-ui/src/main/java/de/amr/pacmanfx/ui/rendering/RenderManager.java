@@ -29,7 +29,6 @@ public class RenderManager {
     private final RenderQueue renderQueue = new RenderQueue();
 
     private Renderer variantRenderer;
-    private Renderer levelRenderer;
     private Renderer sceneDebugRenderer;
     private Renderer miniViewOverlayRenderer;
 
@@ -53,7 +52,6 @@ public class RenderManager {
 
     private void clearAllRenderers() {
         variantRenderer = null;
-        levelRenderer = null;
         sceneDebugRenderer = null;
     }
 
@@ -80,13 +78,11 @@ public class RenderManager {
             if (canvas != null) {
                 variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
                 sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
-                levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
 
                 clipRect = canvasRendering.clipRect();
             }
             bindRendererProperties(variantRenderer,    canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
             bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
-            bindRendererProperties(levelRenderer,      canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
         }
     }
 
@@ -109,7 +105,6 @@ public class RenderManager {
         return switch (r.layer()) {
             case DEBUG -> sceneDebugRenderer;
             case MINI_VIEW_OVERLAY -> miniViewOverlayRenderer;
-            case LEVEL -> levelRenderer;
             default -> variantRenderer;
         };
     }

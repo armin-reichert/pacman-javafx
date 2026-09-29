@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.MapWithAccessors;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
@@ -23,6 +24,7 @@ import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.GameEntityRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.basics.util.Ufx;
@@ -31,6 +33,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
@@ -45,6 +48,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.basics.ui.assets.FacingSprite;
 import javafx.scene.canvas.Canvas;
@@ -68,11 +72,17 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     private final ActorSpriteAnimController animSystem;
     private final MarqueeRenderer marqueeRenderer;
 
+    private final TengenMsPacMan_GameLevelRenderer levelRenderer;
+
     public TengenMsPacMan_VariantRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         setSpriteSheet(TengenMsPacMan_SpriteSheet.instance());
 
         this.animSystem = requireNonNull(animSystem);
+
+        levelRenderer = new TengenMsPacMan_GameLevelRenderer(canvas);
+        levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        levelRenderer.scalingProperty().bind(scalingProperty());
 
         marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
@@ -88,10 +98,21 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);
-            case JoypadKeyBindingsView(JoypadKeyBinding joypadKeyBinding, Vector2f _) -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
-            case MenuOptionView menuOptionView -> draw(menuOptionView);
-            case MenuSeparatorBarView barView -> draw(barView);
+            case  GameLevelView(GameLevel level, MapWithAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
+                -> levelRenderer.renderGameLevel(level, renderInfo);
+
+            case GameEntityView entityView
+                -> renderGameEntity(entityView.entity(), tick);
+
+            case JoypadKeyBindingsView(JoypadKeyBinding joypadKeyBinding, Vector2f _)
+                -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
+
+            case MenuOptionView menuOptionView
+                -> draw(menuOptionView);
+
+            case MenuSeparatorBarView barView
+                -> draw(barView);
+
             default -> super.render(r, tick);
         }
     }

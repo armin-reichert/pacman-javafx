@@ -35,8 +35,6 @@ public interface GameVariantRenderConfig {
 
     GameEntityView createEntityView(GameEntity gameEntity);
 
-    Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
-
     default Renderer createGameSceneDebugRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return BaseGameSceneDebugInfoRenderer.createDefaultGameSceneDebugRenderer(gameScene, canvas);
     }
