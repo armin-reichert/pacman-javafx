@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -27,6 +28,8 @@ public class GameSceneCanvasRenderingComp implements Disposable {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     private boolean autoClearCanvas = true;
+
+    private RectShort clipRect;
 
     public GameSceneCanvasRenderingComp() {
         this(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(), WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
@@ -168,5 +171,13 @@ public class GameSceneCanvasRenderingComp implements Disposable {
     /** @return the aspect ratio (width / height) */
     public double aspectRatio() {
         return scaledWidth() / scaledHeight();
+    }
+
+    public RectShort clipRect() {
+        return clipRect;
+    }
+
+    public void setClipRect(RectShort clipRect) {
+        this.clipRect = clipRect;
     }
 }

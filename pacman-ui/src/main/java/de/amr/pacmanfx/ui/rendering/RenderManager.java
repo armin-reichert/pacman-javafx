@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.rendering;
 
+import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
@@ -16,8 +17,10 @@ import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,6 +32,8 @@ public class RenderManager {
     private Renderer levelRenderer;
     private Renderer sceneDebugRenderer;
     private Renderer miniViewOverlayRenderer;
+
+    private RectShort clipRect;
 
     public RenderManager() {
         clearAllRenderers();
@@ -76,6 +81,8 @@ public class RenderManager {
                 variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
                 sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
                 levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
+
+                clipRect = canvasRendering.clipRect();
             }
             bindRendererProperties(variantRenderer,    canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
             bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
@@ -107,23 +114,30 @@ public class RenderManager {
         };
     }
 
-    // Takes optional offset of renderable into account (in Tengen for example, the game level has horizontal offset)
     private void render(Renderable r, long tick) {
         final Renderer renderer = selectRenderer(r);
-        if (renderer == null) {
-            return;
-        }
 
-        final boolean needsTranslate = !r.offset().equals(Vector2f.ZERO);
-        if (needsTranslate) {
+        final boolean hasOffset = !r.offset().equals(Vector2f.ZERO);
+        if (hasOffset) {
             final Vector2f translate = r.offset().scaled(renderer.scaling());
             renderer.ctx().save();
             renderer.ctx().translate(translate.x(), translate.y());
         }
 
-        renderer.render(r, tick);
+        // This supports scenes defining a clip rectangle as for example the Tengen 2D play scene does
+        if (clipRect != null && r.layer() != RenderingLayer.DEBUG && r.layer() != RenderingLayer.MINI_VIEW_OVERLAY) {
+            final double s = renderer.scaling();
+            final Node clipNode = new Rectangle(s * clipRect.x(), s * clipRect.y(), s * clipRect.width(), s * clipRect.height());
+            renderer.ctx().save();
+            renderer.canvas().setClip(clipNode);
+            renderer.render(r, tick);
+            renderer.ctx().restore();
+        }
+        else {
+            renderer.render(r, tick);
+        }
 
-        if (needsTranslate) {
+        if (hasOffset) {
             renderer.ctx().restore();
         }
     }

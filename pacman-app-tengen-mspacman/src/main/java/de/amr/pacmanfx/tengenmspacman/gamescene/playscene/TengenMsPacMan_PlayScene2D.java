@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.MapWithAccessors;
+import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -41,10 +42,10 @@ import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -318,6 +319,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         canvasRendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         canvasRendering.scalingProperty().addListener(scalingListener);
         canvasRendering.canvasProperty().addListener(canvasListener);
+        // Clip 16 pixels on each side of the canvas such that actors moving through horizontal portal are not visible.
+        // All maps are 28 tiles wide but NES screen is 32 tiles wide, so we have to clip 16 pixels on each side.
+        // The one extra pixel clipped on the right side helps to hide a spritesheet issue (hides ugly map image border).
+        canvasRendering.setClipRect(RectShort.sprite(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE));
         return canvasRendering;
     }
 
@@ -410,8 +415,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, mapCategory);
         renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
 
-        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
-        renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
         renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
 
