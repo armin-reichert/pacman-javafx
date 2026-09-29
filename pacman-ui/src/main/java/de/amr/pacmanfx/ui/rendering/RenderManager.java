@@ -32,9 +32,7 @@ public class RenderManager {
 
     private RectShort clipRect;
 
-    public RenderManager() {
-        clearAllRenderers();
-    }
+    public RenderManager() {}
 
     public void clearRenderQueue() {
         renderQueue.clear();
@@ -48,16 +46,11 @@ public class RenderManager {
         renderQueue.add(renderable);
     }
 
-    private void clearAllRenderers() {
-        variantRenderer = null;
-        sceneDebugRenderer = null;
-    }
-
     public void updateRenderers(
         ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        GameSceneCanvasRenderingComp canvasRendering,
+        GameSceneCanvasRenderingComp sceneRendering, // can be null!
         MiniPlaySceneView miniView)
     {
         requireNonNull(animController);
@@ -65,29 +58,28 @@ public class RenderManager {
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
-        //TODO This is just a temporary solution
-        requireNonNull(miniView);
-
-        clearAllRenderers();
-
-        // If this scene has 2D rendering support, create and configure renderers
-        if (canvasRendering != null) {
-            final Canvas canvas = canvasRendering.canvas();
+        if (sceneRendering != null) {
+            // A game scene that can be rendered in 2D
+            clipRect = sceneRendering.clipRect();
+            final Canvas canvas = sceneRendering.canvas();
             if (canvas != null) {
                 variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
-                sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
+                variantRenderer.backgroundColorProperty().bind(sceneRendering.backgroundColorProperty());
+                variantRenderer.scalingProperty().bind(sceneRendering.scalingProperty());
 
-                clipRect = canvasRendering.clipRect();
+                sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
+                sceneDebugRenderer.backgroundColorProperty().bind(variantRenderer.backgroundColorProperty());
+                sceneDebugRenderer.scalingProperty().bind(variantRenderer().scalingProperty());
             }
-            bindRendererProperties(variantRenderer,    canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
-            bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
         }
         else {
             // Assume game scene is 3D scene and mini view is active
             variantRenderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
-            variantRenderer.backgroundColorProperty().bind(
-                miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
+            variantRenderer.backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
             variantRenderer.scalingProperty().bind(miniView.scalingProperty());
+
+            // No debug rendering in mini view
+            sceneDebugRenderer = null;
         }
     }
 
@@ -105,16 +97,8 @@ public class RenderManager {
         }
     }
 
-    //TODO this is not the last word
-    private Renderer selectRenderer(Renderable r) {
-        return switch (r.layer()) {
-            case DEBUG -> sceneDebugRenderer;
-            default -> variantRenderer;
-        };
-    }
-
     private void render(Renderable r, long tick) {
-        final Renderer renderer = selectRenderer(r);
+        final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? sceneDebugRenderer : variantRenderer;
 
         final boolean hasOffset = !r.offset().equals(Vector2f.ZERO);
         if (hasOffset) {
@@ -138,13 +122,6 @@ public class RenderManager {
 
         if (hasOffset) {
             renderer.ctx().restore();
-        }
-    }
-
-    private void bindRendererProperties(Renderer renderer, ObjectProperty<Color> backgroundColorProperty, DoubleProperty scalingProperty) {
-        if (renderer != null) {
-            renderer.backgroundColorProperty().bind(backgroundColorProperty);
-            renderer.scalingProperty().bind(scalingProperty);
         }
     }
 }
