@@ -15,10 +15,13 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
+import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
+import de.amr.pacmanfx.ui.rendering.RenderingUtil;
+import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -178,11 +181,18 @@ public class MiniPlaySceneView extends HBox {
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
-        final MapWithAccessors info = new MapWithAccessors();
-        info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-        info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-        info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
-        info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return new GameLevelView(level, info, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
+        final MapWithAccessors renderInfo = new MapWithAccessors();
+        renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+        renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
+
+        final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(viewModel, level.worldMap());
+        if (terrainMapColoring != null) {
+            // Only available for generic level renderer in XXL game variants
+            renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
+        }
+
+        return new GameLevelView(level, renderInfo, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
     }
 }
