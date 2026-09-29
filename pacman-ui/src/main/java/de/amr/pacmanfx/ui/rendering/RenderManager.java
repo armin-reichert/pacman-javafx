@@ -14,7 +14,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
-import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
@@ -30,7 +29,6 @@ public class RenderManager {
 
     private Renderer variantRenderer;
     private Renderer sceneDebugRenderer;
-    private Renderer miniViewOverlayRenderer;
 
     private RectShort clipRect;
 
@@ -67,10 +65,10 @@ public class RenderManager {
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
-        clearAllRenderers();
-
         //TODO This is just a temporary solution
-        miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
+        requireNonNull(miniView);
+
+        clearAllRenderers();
 
         // If this scene has 2D rendering support, create and configure renderers
         if (canvasRendering != null) {
@@ -87,8 +85,9 @@ public class RenderManager {
         else {
             // Assume game scene is 3D scene and mini view is active
             variantRenderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
-            variantRenderer.backgroundColorProperty().bind(miniViewOverlayRenderer.backgroundColorProperty());
-            variantRenderer.scalingProperty().bind(miniViewOverlayRenderer.scalingProperty());
+            variantRenderer.backgroundColorProperty().bind(
+                miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
+            variantRenderer.scalingProperty().bind(miniView.scalingProperty());
         }
     }
 
@@ -110,7 +109,6 @@ public class RenderManager {
     private Renderer selectRenderer(Renderable r) {
         return switch (r.layer()) {
             case DEBUG -> sceneDebugRenderer;
-            case MINI_VIEW_OVERLAY -> miniViewOverlayRenderer;
             default -> variantRenderer;
         };
     }
