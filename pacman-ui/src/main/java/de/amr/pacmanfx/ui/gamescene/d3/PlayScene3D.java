@@ -110,7 +110,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
 
         actionBindings = app().commonActions().camera3DActions().bindings();
-        gameEventHandler = new PlayScene3D_GameEventHandler(app(), this);
+        gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
 
     public Optional<GameEventListener> optGameEventHandler() {

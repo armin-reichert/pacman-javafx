@@ -64,11 +64,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
-    private final GameApp app;
     private final PlayScene3D gameScene;
 
-    public PlayScene3D_GameEventHandler(GameApp app, PlayScene3D gameScene) {
-        this.app = app;
+    public PlayScene3D_GameEventHandler(PlayScene3D gameScene) {
         this.gameScene = gameScene;
     }
 
@@ -77,7 +75,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private GameApp app() {
-        return app;
+        return gameScene().app();
     }
 
     private GameContext game() {
