@@ -42,12 +42,12 @@ public class PlaySceneFadeInAnimation extends ManagedAnimation {
 
             new KeyFrame(Duration.ZERO,
                 new KeyValue(playScene3D.subScene().fillProperty(), Color.BLACK),
-                new KeyValue(playScene3D.scoreOpacity, 0)
+                new KeyValue(playScene3D.opacityProperty(), 0)
             ),
 
             new KeyFrame(fadeInDuration,
                 new KeyValue(playScene3D.subScene().fillProperty(), Color.TRANSPARENT, Interpolator.EASE_IN),
-                new KeyValue(playScene3D.scoreOpacity, 1, Interpolator.EASE_IN)
+                new KeyValue(playScene3D.opacityProperty(), 1, Interpolator.EASE_IN)
             )
         ));
     }

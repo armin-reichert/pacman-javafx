@@ -60,38 +60,43 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
 
-    public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
+    private final DoubleProperty opacity = new SimpleDoubleProperty(0);
 
-    private final PerspectiveManager perspectiveManager;
-    private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final SubScene subScene;
-    private final Group subSceneRoot;
     private final PerspectiveCamera camera;
-    private final Group level3DParent = new Group();
-    private final CoordinateSystem coordinateSystem;
+    private PerspectiveManager perspectiveManager;
 
-    private final ChangeListener<DrawMode> drawModeChangeListener;
+    private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
-    private Set<ActionKeyBinding> actionBindings;
+    private ChangeListener<DrawMode> drawModeChangeListener;
     private PlayScene3D_GameEventHandler gameEventHandler;
-    private RandomTextPicker textPicker;
+
+    private final SubScene subScene;
+    private final Group root;
+    private final Group level3DParent;
 
     private GameLevel3D level3D;
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
+    private CoordinateSystem coordinateSystem;
+
+    private Set<ActionKeyBinding> actionBindings;
+    private RandomTextPicker textPicker;
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
     public PlayScene3D() {
-        camera = new PerspectiveCamera(true);
-        perspectiveManager = new PerspectiveManager(camera);
+        level3DParent = new Group();
         coordinateSystem = new CoordinateSystem();
         ambientLight = new AmbientLight();
-        subSceneRoot = new Group(level3DParent, coordinateSystem, ambientLight);
-        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
+
+        root = new Group(level3DParent, coordinateSystem, ambientLight);
+        subScene = new SubScene(root, 888, 666, true, SceneAntialiasing.BALANCED);
+
+        camera = new PerspectiveCamera(true);
+        perspectiveManager = new PerspectiveManager(camera);
         subScene.setCamera(camera);
 
         drawModeChangeListener = (_, _, drawMode) -> {
@@ -99,6 +104,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
                 level3D.setDrawMode(drawMode);
             }
         };
+
+        gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
 
     @Override
@@ -106,11 +113,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final GameViewModel viewModel = app().ui().viewModel();
         coordinateSystem.visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
         ambientLight.colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
-
         textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
-
         actionBindings = app().commonActions().camera3DActions().bindings();
-        gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
 
     public Optional<GameEventListener> optGameEventHandler() {
@@ -128,17 +132,33 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void dispose() {
+        // Dispose the scene components
         super.dispose();
 
-        perspectiveManager.dispose();
+        if (perspectiveManager != null) {
+            perspectiveManager.dispose();
+            perspectiveManager = null;
+        }
+
         disposeContextMenu();
+
         if (level3D != null) {
-            level3DParent.getChildren().clear();
             level3D.dispose();
             level3D = null;
         }
-        cleanupLight(ambientLight);
-        ambientLight = null;
+
+        if (coordinateSystem != null) {
+            coordinateSystem.dispose();
+            coordinateSystem = null;
+        }
+
+        if (ambientLight != null) {
+            cleanupLight(ambientLight);
+            ambientLight = null;
+        }
+
+        drawModeChangeListener = null;
+        gameEventHandler = null;
     }
 
     @Override
@@ -231,7 +251,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        contextMenu = new PlaySceneContextMenu(app());
+        contextMenu = new PlaySceneContextMenu(this);
         return Optional.of(contextMenu);
     }
 
@@ -250,6 +270,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     public AnimationRegistry animationRegistry() {
         return animationRegistry;
+    }
+
+    public DoubleProperty opacityProperty() {
+        return opacity;
     }
 
     public PerspectiveManager perspectiveManager() {
@@ -360,7 +384,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {
-            subSceneRoot.getChildren().remove(oldScoresView.root());
+            root.getChildren().remove(oldScoresView.root());
         }
 
         final Score leftScore = session.hud().gameScore();
@@ -379,7 +403,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         scoresView = new ScoresView(leftScore, rightScore);
         scoresView.setFont(arcade8);
 
-        subSceneRoot.getChildren().add(scoresView.root());
+        root.getChildren().add(scoresView.root());
 
         //scoresView.textOpacity.bind(scoreOpacity);
 

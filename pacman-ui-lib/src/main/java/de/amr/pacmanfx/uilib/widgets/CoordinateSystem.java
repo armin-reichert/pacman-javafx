@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -13,7 +14,7 @@ import javafx.scene.transform.Rotate;
 /**
  * Shows coordinates axes (x-axis=red, y-axis=green, z-axis=blue).
  */
-public class CoordinateSystem extends Group {
+public class CoordinateSystem extends Group implements DisposableGraphicsObject {
 
     public CoordinateSystem() {
         this(1000);
@@ -41,6 +42,11 @@ public class CoordinateSystem extends Group {
         zAxisMarker.setTranslateZ(10);
 
         getChildren().addAll(origin, xAxis, xAxisMarker, yAxis, yAxisMarker, zAxis, zAxisMarker);
+    }
+
+    @Override
+    public void dispose() {
+        cleanupGroup(this, true);
     }
 
     // Cylinder height points to y-direction

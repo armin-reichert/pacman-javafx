@@ -12,7 +12,7 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
 /**
- * Mixin interface providing default methods for safely cleaning up JavaFX 3D graphics resources.
+ * Interface providing default methods for safely cleaning up JavaFX 3D graphics resources.
  * <p>
  * Classes that own or manage {@link Shape3D}, {@link MeshView}, {@link LightBase},
  * {@link Group}, or other {@link Node}-based 3D subtrees should implement this interface.

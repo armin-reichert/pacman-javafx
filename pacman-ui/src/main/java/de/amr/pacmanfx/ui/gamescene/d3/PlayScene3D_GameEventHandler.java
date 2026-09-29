@@ -70,12 +70,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         this.gameScene = gameScene;
     }
 
-    public PlayScene3D gameScene() {
+    public PlayScene3D playScene3D() {
         return gameScene;
     }
 
     private GameApp app() {
-        return gameScene().app();
+        return playScene3D().app();
     }
 
     private GameContext game() {
@@ -135,7 +135,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         updateSystem3D.update(bonus, gameScene.animationRegistry());
         //TODO integrate into update, set flag at animation component
-        updateSystem3D.animation3D().lookExpired(bonus, gameScene().animationRegistry());
+        updateSystem3D.animation3D().lookExpired(bonus, playScene3D().animationRegistry());
 
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
@@ -180,7 +180,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        gameScene().replaceGameLevel3D(game(), event.level());
+        playScene3D().replaceGameLevel3D(game(), event.level());
     }
 
     @Override
@@ -193,7 +193,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
-            gameScene().replaceGameLevel3D(game(), level);
+            playScene3D().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
             final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
@@ -202,8 +202,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entitySet().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
-        gameScene().replaceActionBindings(game().session(), level);
-        gameScene().fadeIn();
+        playScene3D().replaceActionBindings(game().session(), level);
+        playScene3D().fadeIn();
     }
 
     @Override
@@ -295,7 +295,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        gameScene().initPac3DProperties(level, level.entitySet().pac());
+        playScene3D().initPac3DProperties(level, level.entitySet().pac());
 
         level3D.animationManager().startEnergizerPumping();
         level3D.animationManager().startParticlesAnimation();
@@ -343,7 +343,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
-        gameScene().scoreOpacity.set(0);
+        playScene3D().opacityProperty().set(0);
 
         houseSystem3D.hideDoors(house);
 
@@ -429,14 +429,14 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        gameScene().optGameLevel3D().ifPresent(level3D -> {
-            gameScene().replaceGameLevel3D(game(), level);
+        playScene3D().optGameLevel3D().ifPresent(level3D -> {
+            playScene3D().replaceGameLevel3D(game(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIDProperty().set(PerspectiveID.TOTAL);
         });
     }
 
     private GameLevel3D assertLevel3D() {
-        return gameScene().optGameLevel3D().orElseThrow();
+        return playScene3D().optGameLevel3D().orElseThrow();
     }
 }
