@@ -232,13 +232,17 @@ public class GamePlayView implements GameView {
         return rootPane;
     }
 
-    public void render(RenderManager renderManager, GameScene gameScene, long tick, boolean debugMode) {
+    public void render(long tick) {
+        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        final RenderManager renderManager = app.renderManager();
+        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
+
         final GameSceneCanvasRenderingComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
             ? abstractGameScene.optCanvasRendering().orElse(null)
             : null;
 
-        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
-        app.renderManager().updateRenderers(
+        renderManager.updateRenderers(
             runtime.playConfig().systems().actorSpriteAnimController(),
             runtime.uiConfig().renderConfig(),
             gameScene,
@@ -252,37 +256,8 @@ public class GamePlayView implements GameView {
             renderManager.variantRenderer().clearCanvas();
         }
 
-        fillRenderQueue(renderManager);
+        populateRenderQueue(renderManager, gameScene);
         renderManager.renderFrame(tick, debugMode);
-    }
-
-    private void fillRenderQueue(RenderManager renderManager) {
-        final GameSession session = app.game().session();
-        final GameViewModel viewModel = app.ui().viewModel();
-
-        renderManager.clearRenderQueue();
-
-        // HUD
-        if (session.isHUDVisible()) {
-            GameEntityViewBuilder
-                .streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
-                .forEach(renderManager::addRenderable);
-        }
-
-        // Mini view
-        layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
-
-        // Game scene content
-        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
-        if (gameScene != null) {
-            gameScene.renderables().forEach(renderManager::addRenderable);
-        }
-
-        // Debug mode rendering
-        final boolean debugMode = viewModel.debugModeOnProperty().get();
-        if (debugMode) {
-            renderManager.addRenderable(new GameSceneDebugView(gameScene));
-        }
     }
 
     public void updateDashboard() {
@@ -338,6 +313,30 @@ public class GamePlayView implements GameView {
 
 
     // Private
+
+    private void populateRenderQueue(RenderManager renderManager, GameScene gameScene) {
+        renderManager.clearRenderQueue();
+
+        // HUD
+        final GameSession session = app.game().session();
+        if (session.isHUDVisible()) {
+            GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
+                .forEach(renderManager::addRenderable);
+        }
+
+        // Mini view
+        layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
+
+        // Game scene content
+        if (gameScene != null) {
+            gameScene.renderables().forEach(renderManager::addRenderable);
+        }
+
+        // Debug mode rendering
+        if (app.ui().viewModel().debugModeOnProperty().get()) {
+            renderManager.addRenderable(new GameSceneDebugView(gameScene));
+        }
+    }
 
     private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);

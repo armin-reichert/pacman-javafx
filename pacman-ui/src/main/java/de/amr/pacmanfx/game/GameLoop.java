@@ -61,10 +61,7 @@ public final class GameLoop {
     }
 
     private void renderPlayView(GamePlayView view) {
-        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
-        final long tick = clock.currentTick();
-        final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
-        view.render(app.renderManager(), gameScene, tick, debugMode);
+        view.render(clock.currentTick());
         view.updateDashboard();
         view.updateMiniView();
     }
