@@ -85,6 +85,7 @@ public class RenderManager {
             bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
         }
         else {
+            // Assume game scene is 3D scene and mini view is active
             variantRenderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
             variantRenderer.backgroundColorProperty().bind(miniViewOverlayRenderer.backgroundColorProperty());
             variantRenderer.scalingProperty().bind(miniViewOverlayRenderer.scalingProperty());
