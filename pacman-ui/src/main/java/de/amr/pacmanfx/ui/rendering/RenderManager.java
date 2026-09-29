@@ -84,6 +84,11 @@ public class RenderManager {
             bindRendererProperties(variantRenderer,    canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
             bindRendererProperties(sceneDebugRenderer, canvasRendering.backgroundColorProperty(), canvasRendering.scalingProperty());
         }
+        else {
+            variantRenderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
+            variantRenderer.backgroundColorProperty().bind(miniViewOverlayRenderer.backgroundColorProperty());
+            variantRenderer.scalingProperty().bind(miniViewOverlayRenderer.scalingProperty());
+        }
     }
 
     public Renderer variantRenderer() {
