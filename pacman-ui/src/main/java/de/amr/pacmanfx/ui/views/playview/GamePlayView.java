@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
@@ -32,7 +33,6 @@ import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPane;
@@ -232,8 +232,31 @@ public class GamePlayView implements GameView {
         return rootPane;
     }
 
-    public void render(RenderManager renderManager, long tick) {
+    public void render(RenderManager renderManager, GameScene gameScene, long tick, boolean debugMode) {
+        final GameSceneCanvasRenderingComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
+            ? abstractGameScene.optCanvasRendering().orElse(null)
+            : null;
+
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        app.renderManager().updateRenderers(
+            runtime.playConfig().systems().actorSpriteAnimController(),
+            runtime.uiConfig().renderConfig(),
+            gameScene,
+            canvasRendering,
+            layers.miniViewLayer()
+        );
+
+        // Clear canvases
+        layers.miniViewLayer().clearCanvas();
+        if (canvasRendering != null && canvasRendering.autoClearCanvas()) {
+            renderManager.variantRenderer().clearCanvas();
+        }
+
+        fillRenderQueue(renderManager);
+        renderManager.renderFrame(tick, debugMode);
+    }
+
+    private void fillRenderQueue(RenderManager renderManager) {
         final GameSession session = app.game().session();
         final GameViewModel viewModel = app.ui().viewModel();
 
@@ -249,7 +272,7 @@ public class GamePlayView implements GameView {
         // Mini view
         layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
 
-        // Game scene
+        // Game scene content
         final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene != null) {
             gameScene.renderables().forEach(renderManager::addRenderable);
@@ -260,27 +283,6 @@ public class GamePlayView implements GameView {
         if (debugMode) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
         }
-
-        // Update renderers
-        final GameSceneCanvasRenderingComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
-            ? abstractGameScene.optCanvasRendering().orElse(null)
-            : null;
-
-        renderManager.updateRenderers(
-            runtime.playConfig().systems().actorSpriteAnimController(),
-            runtime.uiConfig().renderConfig(),
-            gameScene,
-            canvasRendering,
-            layers.miniViewLayer()
-        );
-
-        layers.miniViewLayer().clearCanvas();
-        if (canvasRendering != null && canvasRendering.autoClearCanvas()) {
-            renderManager.variantRenderer().clearCanvas();
-        }
-
-        // Render everything for current frame
-        renderManager.renderFrame(tick, debugMode);
     }
 
     public void updateDashboard() {

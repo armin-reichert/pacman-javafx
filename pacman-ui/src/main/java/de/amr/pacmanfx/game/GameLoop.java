@@ -8,9 +8,10 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.rendering.RenderManager;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -20,12 +21,10 @@ public final class GameLoop {
 
     private final GameApp app;
     private final GameClock clock;
-    private final RenderManager renderManager;
 
-    public GameLoop(GameApp app, GameClock clock, RenderManager renderManager) {
+    public GameLoop(GameApp app, GameClock clock) {
         this.app = requireNonNull(app);
         this.clock = requireNonNull(clock);
-        this.renderManager = requireNonNull(renderManager);
     }
 
     public void start() {
@@ -54,13 +53,20 @@ public final class GameLoop {
         final GameViewManager views = app.ui().viewManager();
         try {
             if (views.isSelected(GameViewID.GAMEPLAY)) {
-                views.gamePlayView().render(renderManager, clock.currentTick());
-                views.gamePlayView().updateDashboard();
-                views.gamePlayView().updateMiniView();
+                renderPlayView(views.gamePlayView());
             }
         } catch (Exception x) {
             Logger.error(x, "Rendering triggered exception");
         }
+    }
+
+    private void renderPlayView(GamePlayView view) {
+        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        final long tick = clock.currentTick();
+        final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
+        view.render(app.renderManager(), gameScene, tick, debugMode);
+        view.updateDashboard();
+        view.updateMiniView();
     }
 
     private void handleFatalError(Throwable reason) {
