@@ -61,7 +61,11 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
         final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
-        return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
+
+        final BaseGameSceneDebugInfoRenderer debugRenderer = new BaseGameSceneDebugInfoRenderer(animController, canvas);
+        debugRenderer.backgroundColorProperty().bind(r2D.backgroundColorProperty());
+        debugRenderer.scalingProperty().bind(r2D.scalingProperty());
+        return debugRenderer;
     }
 
     protected Color debugTextFill = Color.WHITE;
@@ -78,9 +82,9 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        switch (r) {
-            case GameSceneDebugView(AbstractGameScene gameScene) -> render(gameScene);
-            default -> {}
+        requireNonNull(r);
+        if (r instanceof GameSceneDebugView(AbstractGameScene gameScene)) {
+            render(gameScene);
         }
     }
 

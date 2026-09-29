@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.beans.property.*;
@@ -47,20 +46,6 @@ public class GameSceneCanvasRenderingComp implements Disposable {
         scaling.unbind();
         backgroundColor.unbind();
         canvas.unbind();
-    }
-
-    /**
-     * Binds renderer properties (background color, scaling) to this scene's
-     * corresponding properties.
-     *
-     * @param <T>      renderer type
-     * @param renderer the renderer to configure
-     * @return the same renderer instance for fluent usage
-     */
-    public <T extends Renderer> T configureRenderer(T renderer) {
-        renderer.backgroundColorProperty().bind(backgroundColorProperty());
-        renderer.scalingProperty().bind(scalingProperty());
-        return renderer;
     }
 
     public boolean autoClearCanvas() {
