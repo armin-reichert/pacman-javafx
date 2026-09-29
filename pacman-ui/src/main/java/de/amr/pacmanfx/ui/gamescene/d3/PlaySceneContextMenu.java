@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -49,16 +50,17 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         final GameApp app = playScene3D.app();
         final Game3DSettingsVM settings3D = app.ui().viewModel().common3DSettings();
         final GameCheats cheats = playScene3D.game().session().cheats();
+        final TranslationManager translator = app.ui().translationManager();
 
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 
-        addLocalizedTitleItem(this, app.ui().translationManager(), "context_menu.scene_display");
-        addLocalizedActionItem(app, this, app.ui().translationManager(), app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
-        addLocalizedCheckBox(this, app.ui().translationManager(), app.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
-        addLocalizedTitleItem(this, app.ui().translationManager(), "context_menu.select_perspective");
+        addLocalizedTitleItem(this, translator, "context_menu.scene_display");
+        addLocalizedActionItem(app, this, translator, app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+        addLocalizedCheckBox(this, translator, app.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
+        addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
 
         for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem radio = addLocalizedRadioButton(this, app.ui().translationManager(), "perspective_id_" + id.name());
+            final RadioMenuItem radio = addLocalizedRadioButton(this, translator, "perspective_id_" + id.name());
             radio.setOnAction(_ -> perspectiveIDProperty.set(id));
             radio.setUserData(id);
             radio.setToggleGroup(perspectivesGroup);
@@ -67,12 +69,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             }
         }
 
-        addLocalizedTitleItem(this, app.ui().translationManager(), "context_menu.pacman");
-        addLocalizedCheckBox(this, app.ui().translationManager(), cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(this, app.ui().translationManager(), cheats.pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedTitleItem(this, translator, "context_menu.pacman");
+        addLocalizedCheckBox(this, translator, cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
         addSeparator(this);
-        addLocalizedCheckBox(this, app.ui().translationManager(), app.ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app, this, app.ui().translationManager(), app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(this, translator, app.ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(app, this, translator, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);
     }
