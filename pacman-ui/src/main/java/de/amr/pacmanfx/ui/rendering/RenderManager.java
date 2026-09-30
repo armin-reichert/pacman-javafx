@@ -24,7 +24,7 @@ public class RenderManager {
 
     private final RenderQueue renderQueue = new RenderQueue();
 
-    private Renderer renderer;
+    private Renderer variantRenderer;
     private Renderer debugRenderer;
 
     private RectShort clipRect;
@@ -60,9 +60,9 @@ public class RenderManager {
             clipRect = sceneRendering.clipRect();
             final RenderingSurface renderingSurface = sceneRendering.renderingSurface();
             if (renderingSurface != null) {
-                renderer = renderConfig.createVariantRenderer(animController, renderingSurface.canvas());
-                renderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
-                renderer.scalingProperty().bind(renderingSurface.scalingProperty());
+                variantRenderer = renderConfig.createVariantRenderer(animController, renderingSurface.canvas());
+                variantRenderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
+                variantRenderer.scalingProperty().bind(renderingSurface.scalingProperty());
 
                 debugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, renderingSurface.canvas());
                 debugRenderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
@@ -71,9 +71,9 @@ public class RenderManager {
         }
         else {
             // Assume game scene is 3D scene and mini view is active
-            renderer = renderConfig.createVariantRenderer(animController, miniView.renderingSurface().canvas());
-            renderer.backgroundColorProperty().bind(miniView.renderingSurface().backgroundColorProperty());
-            renderer.scalingProperty().bind(miniView.renderingSurface().scalingProperty());
+            variantRenderer = renderConfig.createVariantRenderer(animController, miniView.renderingSurface().canvas());
+            variantRenderer.backgroundColorProperty().bind(miniView.renderingSurface().backgroundColorProperty());
+            variantRenderer.scalingProperty().bind(miniView.renderingSurface().scalingProperty());
 
             // No debug rendering in mini view
             debugRenderer = null;
@@ -81,7 +81,7 @@ public class RenderManager {
     }
 
     public Renderer variantRenderer() {
-        return renderer;
+        return variantRenderer;
     }
 
     public void renderFrame(long tick, boolean debugMode) {
@@ -95,7 +95,7 @@ public class RenderManager {
     }
 
     private void render(Renderable r, long tick) {
-        final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? debugRenderer : this.renderer;
+        final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? debugRenderer : variantRenderer;
 
         final boolean hasOffset = !r.offset().equals(Vector2f.ZERO);
         if (hasOffset) {

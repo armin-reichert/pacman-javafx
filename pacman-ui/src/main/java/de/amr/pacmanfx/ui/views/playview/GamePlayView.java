@@ -237,7 +237,7 @@ public class GamePlayView implements GameView {
         final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
 
-        final GameSceneRendering2DComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
+        final GameSceneRendering2DComp r2d = gameScene instanceof AbstractGameScene abstractGameScene
             ? abstractGameScene.optRendering2D().orElse(null)
             : null;
 
@@ -245,13 +245,13 @@ public class GamePlayView implements GameView {
             runtime.playConfig().systems().actorSpriteAnimController(),
             runtime.uiConfig().renderConfig(),
             gameScene,
-            canvasRendering,
+            r2d,
             layers.miniViewLayer()
         );
 
         // Clear canvases
         layers.miniViewLayer().renderingSurface().clear();
-        if (canvasRendering != null && canvasRendering.autoClearCanvas()) {
+        if (r2d != null && r2d.autoClearCanvas()) {
             renderManager.variantRenderer().clearCanvas();
         }
 
