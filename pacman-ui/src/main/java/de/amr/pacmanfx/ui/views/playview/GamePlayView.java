@@ -101,14 +101,14 @@ public class GamePlayView implements GameView {
 
         rootPane = new StackPane(
             layers.gameSceneLayer(),
-            layers.miniViewLayer(),
+            layers.miniViewLayer().root(),
             layers.overlayLayer(),
             layers.helpLayer(),
             layers.iconLayer()
         );
         rootPane.setId("game-play-view");
 
-        StackPane.setAlignment(layers.miniViewLayer(), Pos.TOP_RIGHT);
+        StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
     }
 
@@ -250,7 +250,7 @@ public class GamePlayView implements GameView {
         );
 
         // Clear canvases
-        layers.miniViewLayer().clearCanvas();
+        layers.miniViewLayer().renderingSurface().clear();
         if (canvasRendering != null && canvasRendering.autoClearCanvas()) {
             renderManager.variantRenderer().clearCanvas();
         }
@@ -289,18 +289,9 @@ public class GamePlayView implements GameView {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("Current game scene is not an AbstractGameScene");
-            return;
-        }
-
-        if (abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
-            final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
-
-            decorationPane.unscaledWidthProperty().unbind();
-            decorationPane.unscaledHeightProperty().unbind();
-            decorationPane.backgroundProperty().unbind();
-        }
+        decorationPane.unscaledWidthProperty().unbind();
+        decorationPane.unscaledHeightProperty().unbind();
+        decorationPane.backgroundProperty().unbind();
 
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
     }

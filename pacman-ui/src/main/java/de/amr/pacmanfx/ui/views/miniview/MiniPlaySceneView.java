@@ -5,12 +5,15 @@
 package de.amr.pacmanfx.ui.views.miniview;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -21,17 +24,15 @@ import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderingUtil;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
@@ -42,84 +43,69 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class MiniPlaySceneView extends HBox {
+public class MiniPlaySceneView {
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
     public static final Border BORDER = Border.stroke(Color.grayRgb(66));
 
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
 
-    private final Canvas canvas = new Canvas();
-
     private TranslateTransition slidingInAnimation;
-
     private TranslateTransition slidingOutAnimation;
 
     private GameLevel level;
-
     private GameViewModel viewModel;
 
+    private final HBox root = new HBox();
+    private final RenderingSurface renderingSurface;
+
     public MiniPlaySceneView() {
-        setPadding(PADDING);
-        setBorder(BORDER);
-        getChildren().add(canvas);
-        setVisible(false);
+        root.setPadding(PADDING);
+        root.setBorder(BORDER);
+        root.setVisible(false);
+
+        renderingSurface = new RenderingSurface();
+        root.getChildren().add(renderingSurface.canvas());
+    }
+
+    public HBox root() {
+        return root;
+    }
+
+    public RenderingSurface renderingSurface() {
+        return renderingSurface;
     }
 
     public void setViewModel(GameViewModel viewModel) {
         this.viewModel = requireNonNull(viewModel);
+        configureRenderingSurface();
+        configureRoot();
+        // Move out of view
+        root.setTranslateY(outOfViewY());
+    }
 
-        backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
-        opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
-
-        canvas.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
-        canvas.widthProperty() .bind(Bindings.createDoubleBinding(
-            () -> {
-                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
-                return aspect * canvas.getHeight();
-            },
-            worldSize, canvas.heightProperty()
-        ));
-
-        scaling.bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() / worldSize.get().y(),
-            canvas.heightProperty(), worldSize
-        ));
-
-        // Canvas size determines mini view size
-        maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
-        maxHeightProperty().bind(canvas.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
-
-        setTranslateY(-canvas.getHeight());
+    private double outOfViewY() {
+        return -(renderingSurface.height() + PADDING.getBottom());
     }
 
     public void update(GameSceneManager gameSceneManager) {
         final boolean is3DPlaySceneActive = gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         final boolean shouldBeVisible = is3DPlaySceneActive && viewModel.miniViewSettings().activeProperty.get();
         if (shouldBeVisible) {
-            if (!expanded()) {
-                slideIntoView();
+            if (!isInsideView()) {
+                slideIn();
             }
         } else {
-            if (expanded()) {
-                slideOutOfView();
+            if (isInsideView()) {
+                slideOut();
             }
         }
     }
 
     public Stream<Renderable> renderables() {
-        if (!isVisible() || level == null) return Stream.empty();
-
-        return Ufx.streamOf(
-            createRenderableLevel(level),
-            level.entitySet().entities()
-                .all()
-                .map(entity ->
-                    GameEntityViewBuilder.builder().entity(entity).layer(RenderingLayer.MINI_VIEW_OVERLAY).build())
-        );
+        if (!root.isVisible() || level == null) return Stream.empty();
+        return Ufx.streamOf(createLevelView(level), createEntityViews());
     }
 
     public void setLevel(GameLevel level) {
@@ -127,66 +113,78 @@ public class MiniPlaySceneView extends HBox {
         worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
     }
 
-    public Canvas canvas() {
-        return canvas;
-    }
-
     public GameViewModel viewModel() {
         return viewModel;
     }
 
-    public DoubleProperty scalingProperty() {
-        return scaling;
-    }
-
-    public void clearCanvas() {
-        final var ctx = canvas.getGraphicsContext2D();
-        ctx.setFill(viewModel.common2DSettings().canvasBackgroundColorProperty().get());
-        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-    }
-
-    private boolean expanded() {
-        return getTranslateY() == 0;
-    }
-
-    private void slideIntoView() {
-        if (slidingInAnimation != null && slidingInAnimation.getStatus() == Animation.Status.RUNNING) {
-            return;
-        }
-        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideInSecondsProperty.get());
-        slidingInAnimation = new TranslateTransition(duration, this);
-        slidingInAnimation.setToY(0);
-        slidingInAnimation.setByY(10);
-        slidingInAnimation.setInterpolator(Interpolator.EASE_OUT);
-        slidingInAnimation.play();
-        setVisible(true);
-    }
-
-    private void slideOutOfView() {
-        if (slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING) {
-            return;
-        }
-        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideOutSecondsProperty.get());
-        slidingOutAnimation = new TranslateTransition(duration, this);
-        slidingOutAnimation.setToY(-getHeight());
-        slidingOutAnimation.setByY(10);
-        slidingOutAnimation.setInterpolator(Interpolator.EASE_IN);
-        slidingOutAnimation.setOnFinished(_ -> setVisible(false));
-        slidingOutAnimation.play();
-    }
-
-    public boolean isMoving() {
+    public boolean isSliding() {
         return slidingInAnimation != null && slidingInAnimation.getStatus() == Animation.Status.RUNNING
             || slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    private GameLevelView createRenderableLevel(GameLevel level) {
+    // --- private ---
+
+    private boolean isInsideView() {
+        return root.getTranslateY() == 0;
+    }
+
+    private void configureRoot() {
+        root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
+        root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
+
+        root.maxWidthProperty() .bind(renderingSurface.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
+        root.maxHeightProperty().bind(renderingSurface.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
+    }
+
+    private void configureRenderingSurface() {
+        renderingSurface.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
+        renderingSurface.widthProperty() .bind(Bindings.createDoubleBinding(
+            () -> {
+                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
+                return aspect * renderingSurface.height();
+            },
+            worldSize, renderingSurface.heightProperty()
+        ));
+
+        renderingSurface.scalingProperty().bind(Bindings.createDoubleBinding(
+            () -> renderingSurface.height() / worldSize.get().y(),
+            renderingSurface.heightProperty(), worldSize
+        ));
+    }
+
+    private void slideIn() {
+        if (slidingInAnimation != null && slidingInAnimation.getStatus() == Animation.Status.RUNNING) {
+            return;
+        }
+        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideInSecondsProperty.get());
+        slidingInAnimation = new TranslateTransition(duration, root);
+        slidingInAnimation.setToY(0);
+        slidingInAnimation.setByY(10);
+        slidingInAnimation.setInterpolator(Interpolator.EASE_OUT);
+        slidingInAnimation.play();
+
+        root.setVisible(true);
+    }
+
+    private void slideOut() {
+        if (slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING) {
+            return;
+        }
+        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideOutSecondsProperty.get());
+        slidingOutAnimation = new TranslateTransition(duration, root);
+        slidingOutAnimation.setToY(outOfViewY());
+        slidingOutAnimation.setByY(10);
+        slidingOutAnimation.setInterpolator(Interpolator.EASE_IN);
+        slidingOutAnimation.setOnFinished(_ -> root.setVisible(false));
+        slidingOutAnimation.play();
+    }
+
+    private GameLevelView createLevelView(GameLevel level) {
         final InfoMap renderInfo = InfoMap.create();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-
         final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(viewModel, level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
@@ -194,5 +192,20 @@ public class MiniPlaySceneView extends HBox {
         }
 
         return new GameLevelView(level, renderInfo, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
+    }
+
+    private Stream<GameEntityView> createEntityViews() {
+        final InfoMap energizerRenderInfo = InfoMap.create();
+        energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, RenderingUtil.findPelletColor(level.worldMap()));
+        return level.entitySet().entities().all()
+            .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : InfoMap.EMPTY_IMMUTABLE_MAP));
+    }
+
+    private GameEntityView createEntityView(GameEntity entity, InfoMap renderInfo) {
+        return GameEntityViewBuilder.builder()
+            .entity(entity)
+            .layer(RenderingLayer.MINI_VIEW_OVERLAY)
+            .renderInfo(renderInfo)
+            .build();
     }
 }

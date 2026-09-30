@@ -122,7 +122,7 @@ public class DS_3DSettings extends GameDashboardSection {
         // Mini view
         final MiniPlaySceneView miniView = app.ui().viewManager().gamePlayView().layers().miniViewLayer();
         cbMiniViewVisible.setSelected(vm.miniViewSettings().activeProperty.getValue());
-        sliderMiniViewHeight.setDisable(miniView.isMoving());
+        sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 
     private static SubScene currentSubSceneFX(GameApp app) {

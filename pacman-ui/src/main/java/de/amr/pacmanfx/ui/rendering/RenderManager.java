@@ -71,9 +71,9 @@ public class RenderManager {
         }
         else {
             // Assume game scene is 3D scene and mini view is active
-            renderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
+            renderer = renderConfig.createVariantRenderer(animController, miniView.renderingSurface().canvas());
             renderer.backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
-            renderer.scalingProperty().bind(miniView.scalingProperty());
+            renderer.scalingProperty().bind(miniView.renderingSurface().scalingProperty());
 
             // No debug rendering in mini view
             debugRenderer = null;
