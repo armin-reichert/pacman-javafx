@@ -153,13 +153,10 @@ public class MiniPlaySceneView {
     }
 
     private void slideIn() {
-        if (slidingInAnimation != null && slidingInAnimation.getStatus() == Animation.Status.RUNNING) {
-            return;
-        }
+        if (isSliding()) return;
         final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideInSecondsProperty.get());
         slidingInAnimation = new TranslateTransition(duration, root);
         slidingInAnimation.setToY(0);
-        slidingInAnimation.setByY(10);
         slidingInAnimation.setInterpolator(Interpolator.EASE_OUT);
         slidingInAnimation.play();
 
@@ -167,13 +164,10 @@ public class MiniPlaySceneView {
     }
 
     private void slideOut() {
-        if (slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING) {
-            return;
-        }
+        if (isSliding()) return;
         final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideOutSecondsProperty.get());
         slidingOutAnimation = new TranslateTransition(duration, root);
         slidingOutAnimation.setToY(outOfViewY());
-        slidingOutAnimation.setByY(10);
         slidingOutAnimation.setInterpolator(Interpolator.EASE_IN);
         slidingOutAnimation.setOnFinished(_ -> root.setVisible(false));
         slidingOutAnimation.play();
