@@ -22,27 +22,23 @@ import javafx.scene.canvas.Canvas;
 
 public class XXL_PacMan_VariantRenderer extends ArcadePacMan_VariantRenderer {
 
-    private final GenericLevelRenderer genericLevelRenderer;
+    private final GenericLevelRenderer levelRenderer;
 
     public XXL_PacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadePacMan_RenderConfig renderConfig, Canvas canvas) {
         super(animController, renderConfig, canvas);
 
-        genericLevelRenderer = new GenericLevelRenderer(canvas);
-        genericLevelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
-        genericLevelRenderer.scalingProperty().bind(scalingProperty());
+        levelRenderer = new GenericLevelRenderer(canvas);
+        levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        levelRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
-                -> genericLevelRenderer.render(r, tick);
-
-            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
-                -> genericLevelRenderer.render(r, tick);
-
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
-                -> genericLevelRenderer.render(r, tick);
+            case GameLevelView(GameLevel _, InfoMap _, RenderingLayer _, int _, Vector2f _),
+                 GameEntityView(House _, RenderingLayer _, int _, Vector2f _, InfoMap _),
+                 GameEntityView(Energizer _, RenderingLayer _, int _, Vector2f _, InfoMap _)
+                -> levelRenderer.render(r, tick);
 
             default -> super.render(r, tick);
         }

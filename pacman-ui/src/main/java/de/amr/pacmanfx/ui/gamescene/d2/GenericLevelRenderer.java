@@ -16,11 +16,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.uilib.view2d.ArcadeHouseRenderer;
-import de.amr.pacmanfx.uilib.view2d.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.view2d.TerrainMapVectorRenderer;
-import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.view2d.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -99,15 +95,6 @@ public class GenericLevelRenderer extends BaseRenderer {
                 .filter(level.food()::hasFoodAtTile)
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
-
-/*
-            if (renderInfo.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN)) {
-                foodRenderer.setEnergizerColor(pelletColor);
-                foodLayer.energizerTiles().stream()
-                    .filter(level.food()::hasFoodAtTile)
-                    .forEach(foodRenderer::drawEnergizer);
-            }
- */
         }
     }
 
