@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationSystem;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
@@ -64,7 +64,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
         final GameContext game = gameScene.game();
         //TODO Does not belong here
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
-        game.session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animController, level));
+        game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
     }
 
     @Override

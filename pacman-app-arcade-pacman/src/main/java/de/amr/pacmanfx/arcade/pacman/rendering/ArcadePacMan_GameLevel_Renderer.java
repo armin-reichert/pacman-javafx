@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.MapWithAccessors;
+import de.amr.basics.MapWithTypedAccessors;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
@@ -46,7 +46,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {}
 
-    public void renderGameLevel(GameLevel level, MapWithAccessors info) {
+    public void renderGameLevel(GameLevel level, MapWithTypedAccessors info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 

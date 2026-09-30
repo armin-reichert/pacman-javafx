@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
-import de.amr.basics.MapWithAccessors;
+import de.amr.basics.MapWithTypedAccessors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -75,7 +75,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
-        final MapWithAccessors energizerRenderInfo = new MapWithAccessors();
+        final MapWithTypedAccessors energizerRenderInfo = new MapWithTypedAccessors();
         if (pelletColor != null) {
             energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor);
         }
@@ -162,6 +162,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             r2d.unscaledHeightProperty().set(terrainSize.y());
         });
 
+        // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindings().registry();
         if (session.isAttractMode()) {
             final Arcade_Actions actions = app().variantManager().currentRuntime()
@@ -169,18 +170,21 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
             soundManager().setEnabled(false);
-        } else {
+        }
+        else {
             bindingsRegistry.registerAllBindings(app().commonActions().steeringActions().bindings());
             bindingsRegistry.registerAllBindings(app().commonActions().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
             soundManager().setEnabled(true);
         }
         Logger.info(bindingsRegistry);
-        ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
+
+        // TODO check this
+        ActorAnimationSystem.ensureActorAnimationsCreated(app().variantManager().currentRuntime(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
-        final var renderInfo = new MapWithAccessors();
+        final var renderInfo = new MapWithTypedAccessors();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         boolean showBrightMaze = false;

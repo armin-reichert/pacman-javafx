@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.MapWithAccessors;
+import de.amr.basics.MapWithTypedAccessors;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
@@ -87,10 +87,10 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, MapWithAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
+            case GameLevelView(GameLevel level, MapWithTypedAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> levelRenderer.renderGameLevel(level, renderInfo);
 
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithAccessors _)
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithTypedAccessors _)
                 -> levelRenderer.hideEnergizerIfOff(energizer);
 
             case GameEntityView entityView -> renderGameEntity(entityView.entity(), tick);

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.basics.MapWithAccessors;
+import de.amr.basics.MapWithTypedAccessors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -64,20 +64,20 @@ public class GenericLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, MapWithAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
+            case GameLevelView(GameLevel level, MapWithTypedAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> draw(level, renderInfo);
 
-            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, MapWithAccessors renderInfo)
+            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, MapWithTypedAccessors renderInfo)
                 -> houseRenderer.drawHouse(house, renderInfo);
 
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithAccessors renderInfo)
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, MapWithTypedAccessors renderInfo)
                 -> draw(energizer, renderInfo);
 
             default -> super.render(r, tick);
         }
     }
 
-    public void draw(GameLevel level, MapWithAccessors renderInfo) {
+    public void draw(GameLevel level, MapWithTypedAccessors renderInfo) {
         requireNonNull(level);
         requireNonNull(renderInfo);
 
@@ -111,7 +111,7 @@ public class GenericLevelRenderer extends BaseRenderer {
         }
     }
 
-    private void draw(Energizer energizer, MapWithAccessors renderInfo) {
+    private void draw(Energizer energizer, MapWithTypedAccessors renderInfo) {
         if (energizer.isVisible() && energizer.state().on()) {
             final Color pelletColor = renderInfo.get(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
             final Vector2f center = energizer.pos().asVector2f();

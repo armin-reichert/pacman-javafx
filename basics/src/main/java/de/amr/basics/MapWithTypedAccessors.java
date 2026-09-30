@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 import static java.util.Objects.requireNonNull;
 
-public class MapWithAccessors extends HashMap<Object, Object> {
+public class MapWithTypedAccessors extends HashMap<Object, Object> {
 
-    public static final MapWithAccessors EMPTY = new MapWithAccessors();
+    public static final MapWithTypedAccessors EMPTY_MAP = new MapWithTypedAccessors();
 
     public boolean getBoolean(Object key) {
         requireNonNull(key);

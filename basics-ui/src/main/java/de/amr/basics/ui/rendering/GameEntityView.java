@@ -4,15 +4,15 @@
 
 package de.amr.basics.ui.rendering;
 
-import de.amr.basics.MapWithAccessors;
+import de.amr.basics.MapWithTypedAccessors;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 
 import static java.util.Objects.requireNonNull;
 
-public record GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, MapWithAccessors renderInfo) implements Renderable {
+public record GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, MapWithTypedAccessors renderInfo) implements Renderable {
 
-    public GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, MapWithAccessors renderInfo) {
+    public GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, MapWithTypedAccessors renderInfo) {
         this.entity = requireNonNull(entity);
         this.layer = requireNonNull(layer);
         this.z = z;
