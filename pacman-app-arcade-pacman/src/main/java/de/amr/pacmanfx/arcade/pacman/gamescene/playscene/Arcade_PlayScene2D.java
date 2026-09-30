@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
-import de.amr.basics.MapWithTypedAccessors;
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -75,7 +75,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
-        final MapWithTypedAccessors energizerRenderInfo = new MapWithTypedAccessors();
+        final InfoMap energizerRenderInfo = InfoMap.create();
         if (pelletColor != null) {
             energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor);
         }
@@ -184,7 +184,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
-        final var renderInfo = new MapWithTypedAccessors();
+        final var renderInfo = InfoMap.create();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         boolean showBrightMaze = false;

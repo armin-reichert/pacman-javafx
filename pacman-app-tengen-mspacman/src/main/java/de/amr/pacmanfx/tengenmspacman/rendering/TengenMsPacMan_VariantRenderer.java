@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.MapWithTypedAccessors;
+import de.amr.basics.InfoMap;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
@@ -98,7 +98,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case  GameLevelView(GameLevel level, MapWithTypedAccessors renderInfo, RenderingLayer _, int _, Vector2f _)
+            case  GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> levelRenderer.renderGameLevel(level, renderInfo);
 
             case GameEntityView entityView

@@ -9,11 +9,34 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class MapWithTypedAccessors {
+public class InfoMap {
 
-    public static final MapWithTypedAccessors EMPTY_MAP = new MapWithTypedAccessors();
+    public static InfoMap create() {
+        return new InfoMap(new HashMap<>());
+    }
 
-    private final Map<Object, Object> map = new HashMap<Object, Object>();
+    public static final InfoMap EMPTY_IMMUTABLE_MAP = new InfoMap(Map.of()) {
+        @Override
+        public boolean getBoolean(Object key) {
+            throw new UnsupportedOperationException("Cannot get value from empty immutable map");
+        }
+
+        @Override
+        public <T> T get(Object key, Class<T> expectedValueClass) {
+            throw new UnsupportedOperationException("Cannot get value from empty immutable map");
+        }
+
+        @Override
+        public void put(Object key, Object value) {
+            throw new UnsupportedOperationException("Cannot put value into empty immutable map");
+        }
+    };
+
+    private Map<Object, Object> map = new HashMap<Object, Object>();
+
+    private InfoMap(Map<Object, Object> map) {
+        this.map = map;
+    }
 
     public boolean getBoolean(Object key) {
         requireNonNull(key);

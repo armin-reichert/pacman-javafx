@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.MapWithTypedAccessors;
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -37,12 +37,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof GameLevelView(GameLevel level, MapWithTypedAccessors renderInfo, RenderingLayer _, int _, Vector2f _)) {
+        if (r instanceof GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)) {
             renderGameLevel(level, renderInfo);
         }
     }
 
-    public void renderGameLevel(GameLevel level, MapWithTypedAccessors renderInfo) {
+    public void renderGameLevel(GameLevel level, InfoMap renderInfo) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
@@ -60,7 +60,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         ctx.restore();
     }
 
-    private void drawMaze(MapWithTypedAccessors renderInfo, int x, int y) {
+    private void drawMaze(InfoMap renderInfo, int x, int y) {
         final Image mazeImage = renderInfo.get(LevelRenderInfoKey.MAZE_IMAGE, Image.class);
         final RectShort mazeSprite = renderInfo.get(LevelRenderInfoKey.MAZE_SPRITE, RectShort.class);
         final int width = mazeSprite.width();

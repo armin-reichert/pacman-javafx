@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.MapWithTypedAccessors;
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
     }
 
-    public void renderGameLevel(GameLevel level, MapWithTypedAccessors info) {
+    public void renderGameLevel(GameLevel level, InfoMap info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
