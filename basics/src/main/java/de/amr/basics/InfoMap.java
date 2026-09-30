@@ -32,7 +32,7 @@ public class InfoMap {
         }
     };
 
-    private Map<Object, Object> map = new HashMap<Object, Object>();
+    private final Map<Object, Object> map;
 
     private InfoMap(Map<Object, Object> map) {
         this.map = map;
