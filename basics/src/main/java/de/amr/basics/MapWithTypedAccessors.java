@@ -5,12 +5,15 @@
 package de.amr.basics;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class MapWithTypedAccessors extends HashMap<Object, Object> {
+public class MapWithTypedAccessors {
 
     public static final MapWithTypedAccessors EMPTY_MAP = new MapWithTypedAccessors();
+
+    private final Map<Object, Object> map = new HashMap<Object, Object>();
 
     public boolean getBoolean(Object key) {
         requireNonNull(key);
@@ -22,7 +25,7 @@ public class MapWithTypedAccessors extends HashMap<Object, Object> {
         requireNonNull(key);
         requireNonNull(expectedValueClass);
 
-        final Object value = get(key);
+        final Object value = map.get(key);
         if (value == null) {
             return null;
         }
@@ -31,5 +34,11 @@ public class MapWithTypedAccessors extends HashMap<Object, Object> {
         }
         throw new IllegalArgumentException("Key '%s' is not mapped to a value of class '%s'"
             .formatted(key, expectedValueClass.getSimpleName()));
+    }
+
+    public void put(Object key, Object value) {
+        requireNonNull(key);
+        requireNonNull(value);
+        map.put(key, value);
     }
 }
