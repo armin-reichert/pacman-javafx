@@ -119,7 +119,7 @@ class GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
         final GameContext game = gameScene.game();
-        gameScene.acceptGameLevel(game.session(), e.level());
+        gameScene.onAcceptGameLevel(game.session(), e.level());
     }
 
     @Override

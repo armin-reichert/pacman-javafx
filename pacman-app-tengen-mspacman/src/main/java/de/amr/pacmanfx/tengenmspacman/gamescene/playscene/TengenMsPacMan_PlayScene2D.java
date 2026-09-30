@@ -43,7 +43,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
@@ -93,7 +93,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     public TengenMsPacMan_PlayScene2D() {
         // Add canvas rendering capability, no canvas assigned yet!
-        setComp(GameSceneCanvasRenderingComp.class, createCanvasRendering());
+        setComp(GameSceneRendering2DComp.class, createCanvasRendering());
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
@@ -164,7 +164,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         hud.livesCounter().show();
         session.setHudVisible(true);
 
-        session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
+        session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
     }
 
     @Override
@@ -249,13 +249,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    public void acceptGameLevel(GameSession session, GameLevel level) {
+    public void onAcceptGameLevel(GameSession session, GameLevel level) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        reqCanvasRendering().unscaledWidthProperty().set(size.x());
-        reqCanvasRendering().unscaledHeightProperty().set(size.y());
+        reqRendering2D().unscaledWidthProperty().set(size.x());
+        reqRendering2D().unscaledHeightProperty().set(size.y());
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
@@ -295,8 +295,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             oldCanvas.heightProperty().unbind();
             rootPane.getChildren().remove(oldCanvas);
         }
-        newCanvas.widthProperty() .bind(reqCanvasRendering().scalingProperty().multiply(NES_SCREEN_WIDTH));
-        newCanvas.heightProperty().bind(reqCanvasRendering().scalingProperty().multiply(canvasHeightUnscaled));
+        newCanvas.widthProperty() .bind(reqRendering2D().renderingSurface().scalingProperty().multiply(NES_SCREEN_WIDTH));
+        newCanvas.heightProperty().bind(reqRendering2D().renderingSurface().scalingProperty().multiply(canvasHeightUnscaled));
         if (!rootPane.getChildren().contains(newCanvas)) {
             rootPane.getChildren().add(newCanvas);
         } else {
@@ -305,20 +305,22 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     };
 
     private void resetRendering2D() {
-        final GameSceneCanvasRenderingComp oldComp = reqCanvasRendering();
-        final GameSceneCanvasRenderingComp newComp = createCanvasRendering();
-        newComp.setCanvas(oldComp.canvas());
-        removeComp(GameSceneCanvasRenderingComp.class);
-        setComp(GameSceneCanvasRenderingComp.class, newComp);
-        dynamicCamera.scalingProperty().bind(newComp.scalingProperty());
+        final GameSceneRendering2DComp oldComp = reqRendering2D();
+        final GameSceneRendering2DComp newComp = createCanvasRendering();
+        newComp.setRenderingSurface(oldComp.renderingSurface());
+        removeComp(GameSceneRendering2DComp.class);
+        setComp(GameSceneRendering2DComp.class, newComp);
+        dynamicCamera.scalingProperty().bind(newComp.renderingSurface().scalingProperty());
     }
 
-    private GameSceneCanvasRenderingComp createCanvasRendering() {
-        final var canvasRendering = new GameSceneCanvasRenderingComp();
+    private GameSceneRendering2DComp createCanvasRendering() {
+        final var canvasRendering = new GameSceneRendering2DComp();
         canvasRendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         canvasRendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-        canvasRendering.scalingProperty().addListener(scalingListener);
-        canvasRendering.canvasProperty().addListener(canvasListener);
+        canvasRendering.renderingSurface().scalingProperty().addListener(scalingListener);
+
+        //        canvasRendering.renderingSurface().addListener(canvasListener);
+
         // Clip 16 pixels on each side of the canvas such that actors moving through horizontal portal are not visible.
         // All maps are 28 tiles wide but NES screen is 32 tiles wide, so we have to clip 16 pixels on each side.
         // The one extra pixel clipped on the right side helps to hide a spritesheet issue (hides ugly map image border).
@@ -365,12 +367,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final var uiSettings = uiSettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
-        reqCanvasRendering().scalingProperty().set(switch (displayMode) {
+        reqRendering2D().renderingSurface().setScaling(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SCREEN_HEIGHT;
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), reqCanvasRendering().scaling());
+            subScene.getWidth(), subScene.getHeight(), reqRendering2D().renderingSurface().scaling());
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

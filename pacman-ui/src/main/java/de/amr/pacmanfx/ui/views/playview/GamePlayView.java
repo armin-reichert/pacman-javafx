@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
@@ -42,7 +42,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -238,8 +237,8 @@ public class GamePlayView implements GameView {
         final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
 
-        final GameSceneCanvasRenderingComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
-            ? abstractGameScene.optCanvasRendering().orElse(null)
+        final GameSceneRendering2DComp canvasRendering = gameScene instanceof AbstractGameScene abstractGameScene
+            ? abstractGameScene.optRendering2D().orElse(null)
             : null;
 
         renderManager.updateRenderers(
@@ -295,17 +294,12 @@ public class GamePlayView implements GameView {
             return;
         }
 
-        if (abstractGameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
-            final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
+        if (abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
+            final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
 
-            decorationPane.canvas().widthProperty().unbind();
-            decorationPane.canvas().heightProperty().unbind();
             decorationPane.unscaledWidthProperty().unbind();
             decorationPane.unscaledHeightProperty().unbind();
             decorationPane.backgroundProperty().unbind();
-
-            r2D.backgroundColorProperty().unbind();
-            r2D.scalingProperty().unbind();
         }
 
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
@@ -398,10 +392,10 @@ public class GamePlayView implements GameView {
             return;
         }
 
-        if (abstractGameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
-            final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
-            // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            r2D.setCanvas(decorationPane.canvas());
+        if (abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
+            final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
+            // Use the canvas of the decorated pane for 2D scene even though the decoration is not used
+            r2D.setRenderingSurface(decorationPane.renderingSurface());
         }
         setGameSceneContent(subSceneFX);
     }
@@ -419,37 +413,35 @@ public class GamePlayView implements GameView {
             return;
         }
 
-        final GameSceneCanvasRenderingComp canvasRendering = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
-
-        canvasRendering.backgroundColorProperty().bind(settingsViewModel.canvasBackgroundColorProperty());
+        final GameSceneRendering2DComp canvasRendering = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene);
         if (decorated) {
-            decorationPane.newCanvas(); //TODO check if creating a new canvas is needed
-            decorationPane.backgroundProperty().bind(canvasRendering.backgroundColorProperty().map(Ufx::paintBackground));
+            decorationPane.newRenderingSurface(); //TODO check if creating a new canvas is needed
+            decorationPane.backgroundProperty().bind(settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground));
 
             // Set unscaled decoration pane size to game scene (=world map) size
             decorationPane.unscaledWidthProperty().bind(canvasRendering.unscaledWidthProperty());
             decorationPane.unscaledHeightProperty().bind(canvasRendering.unscaledHeightProperty());
 
             // Limit scaling
-            canvasRendering.scalingProperty().bind(decorationPane.scalingProperty().map(
+            decorationPane.renderingSurface().scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
             decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+
             setGameSceneContent(decorationPane);
         }
         else {
-            final Canvas canvas = decorationPane.canvas();
-            // Undecorated game scene takes complete available height
-            canvas.heightProperty().bind(mainScene.heightProperty());
-            // Width adapts according to aspect ratio
-            canvas.widthProperty().bind(mainScene.heightProperty().map(h -> h.doubleValue() * canvasRendering.aspectRatio()));
-            canvasRendering.scalingProperty().bind(mainScene.heightProperty().divide(canvasRendering.unscaledHeight()));
-            setGameSceneContent(decorationPane.canvas());
+            // Undecorated game scene takes complete available height, width adapts according to main scene aspect ratio
+            decorationPane.renderingSurface().heightProperty().bind(mainScene.heightProperty());
+            decorationPane.renderingSurface().widthProperty().bind(mainScene.heightProperty().divide(mainScene.widthProperty()));
+            decorationPane.renderingSurface().scalingProperty().bind(mainScene.heightProperty().divide(canvasRendering.unscaledHeight()));
+
+            setGameSceneContent(decorationPane.renderingSurface().canvas());
         }
 
-        canvasRendering.setCanvas(decorationPane.canvas());
-        decorationPane.clearCanvas();
+        canvasRendering.setRenderingSurface(decorationPane.renderingSurface());
+        decorationPane.renderingSurface().clear();
     }
 }

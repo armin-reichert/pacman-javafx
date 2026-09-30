@@ -154,11 +154,12 @@ public class DS_3DSettings extends GameDashboardSection {
             return NO_INFO;
         }
 
-        if (abstractGameScene.optCanvasRendering().isPresent()) {
-            final var canvasRendering = abstractGameScene.optCanvasRendering().get();
+        if (abstractGameScene.optRendering2D().isPresent()) {
+            final var r2d = abstractGameScene.optRendering2D().get();
+            final double s = r2d.renderingSurface().scaling();
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
-                canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(),
-                canvasRendering.scaledWidth(),   canvasRendering.scaledHeight());
+                r2d.unscaledWidth(), r2d.unscaledHeight(),
+                r2d.unscaledWidth() * s,  r2d.unscaledHeight() * s);
         }
 
         if (level != null) {

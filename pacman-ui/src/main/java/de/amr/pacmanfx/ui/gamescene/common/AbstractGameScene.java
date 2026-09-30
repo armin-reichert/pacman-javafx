@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -44,14 +44,14 @@ public abstract class AbstractGameScene
 
     private GameApp app;
 
-    // Game scene components
+    // Typed game scene component access
 
-    public Optional<GameSceneCanvasRenderingComp> optCanvasRendering() {
-        return optComp(GameSceneCanvasRenderingComp.class);
+    public Optional<GameSceneRendering2DComp> optRendering2D() {
+        return optComp(GameSceneRendering2DComp.class);
     }
 
-    public GameSceneCanvasRenderingComp reqCanvasRendering() {
-        return reqComp(GameSceneCanvasRenderingComp.class);
+    public GameSceneRendering2DComp reqRendering2D() {
+        return reqComp(GameSceneRendering2DComp.class);
     }
 
     public ActionBindingsComp actionBindings() {
@@ -62,7 +62,7 @@ public abstract class AbstractGameScene
         return reqComp(ActionBindingsComp.class);
     }
 
-    // GameScene
+    // Events
 
     protected void onAppConnected() {}
 
@@ -80,8 +80,8 @@ public abstract class AbstractGameScene
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
      * but it gets called when the 3D->2D scene switch happens.
      */
-    public void acceptGameLevel(GameSession session, GameLevel level) {
-        optCanvasRendering().ifPresent(canvasRendering -> {
+    public void onAcceptGameLevel(GameSession session, GameLevel level) {
+        optRendering2D().ifPresent(canvasRendering -> {
             final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
             canvasRendering.unscaledWidthProperty().set(terrainSize.x());
             canvasRendering.unscaledHeightProperty().set(terrainSize.y());

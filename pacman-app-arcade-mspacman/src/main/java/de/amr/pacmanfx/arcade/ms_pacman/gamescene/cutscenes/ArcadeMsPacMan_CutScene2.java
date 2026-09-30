@@ -17,10 +17,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
@@ -49,7 +50,10 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
     public ArcadeMsPacMan_CutScene2() {
-        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+        final var r2d = new GameSceneRendering2DComp();
+        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComp(GameSceneRendering2DComp.class, r2d);
     }
 
     @Override

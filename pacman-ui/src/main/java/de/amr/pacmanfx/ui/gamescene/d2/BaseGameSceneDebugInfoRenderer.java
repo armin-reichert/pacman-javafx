@@ -37,7 +37,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -54,18 +53,8 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
     public static BaseGameSceneDebugInfoRenderer createDefaultGameSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("Current game scene is not an AbstractGameScene");
-            return null;
-        }
-
-        final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
-
-        final BaseGameSceneDebugInfoRenderer debugRenderer = new BaseGameSceneDebugInfoRenderer(animController, canvas);
-        debugRenderer.backgroundColorProperty().bind(r2D.backgroundColorProperty());
-        debugRenderer.scalingProperty().bind(r2D.scalingProperty());
-        return debugRenderer;
+        return new BaseGameSceneDebugInfoRenderer(animController, canvas);
     }
 
     protected Color debugTextFill = Color.WHITE;
@@ -90,7 +79,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     public void render(AbstractGameScene gameScene) {
         final GameSession session = gameScene.game().session();
-        final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
+        final GameSceneRendering2DComp canvasRendering = gameScene.reqComp(GameSceneRendering2DComp.class);
 
         ctx.save();
         drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);

@@ -170,7 +170,7 @@ public class GameSceneManager {
             return;
         }
 
-        if (abstractGameScene.optCanvasRendering().isPresent()) {
+        if (abstractGameScene.optRendering2D().isPresent()) {
             nextGameScene.onEnteredFrom3DScene();
             Logger.info("2D scene {} entered from 3D scene {}",
                 nextGameScene.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
@@ -187,12 +187,12 @@ public class GameSceneManager {
         if (!(currentGameScene instanceof AbstractGameScene current)) {
             throw new IllegalArgumentException("Current game scene is not an AbstractGameScene");
         }
-        final boolean currentIs2D = current.optCanvasRendering().isPresent();
+        final boolean currentIs2D = current.optRendering2D().isPresent();
 
         if (!(nextGameScene instanceof AbstractGameScene next)) {
             throw new IllegalArgumentException("Next game scene is not an AbstractGameScene");
         }
-        final boolean nextIs2D = next.optCanvasRendering().isPresent();
+        final boolean nextIs2D = next.optRendering2D().isPresent();
 
         if (currentIs2D == nextIs2D) {
             return GameSceneSwitchType.NONE;

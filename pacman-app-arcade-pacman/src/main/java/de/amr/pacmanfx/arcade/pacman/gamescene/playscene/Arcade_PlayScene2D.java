@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -43,13 +44,15 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  */
 public class Arcade_PlayScene2D extends AbstractGameScene {
 
-    private final GameEventHandler eventHandler = new GameEventHandler(this);
+    private final PlaySceneGameEventHandler eventHandler = new PlaySceneGameEventHandler(this);
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {
-        // Add 2D canvas rendering capability
-        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+        final var r2d = new GameSceneRendering2DComp();
+        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComp(GameSceneRendering2DComp.class, r2d);
     }
 
     public LevelCompletedAnimation levelCompletedAnimation() {
@@ -147,15 +150,16 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     @Override
     public void onEnteredFrom3DScene() {
         final GameSession session = game().session();
-        session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
+        session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
     }
 
     @Override
-    public void acceptGameLevel(GameSession session, GameLevel level) {
-        optCanvasRendering().ifPresent(rendering -> {
+    public void onAcceptGameLevel(GameSession session, GameLevel level) {
+        // Custom maps can have arbitrary sizes, so adapt scene size here
+        optRendering2D().ifPresent(r2d -> {
             final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-            rendering.unscaledWidthProperty().set(terrainSize.x());
-            rendering.unscaledHeightProperty().set(terrainSize.y());
+            r2d.unscaledWidthProperty().set(terrainSize.x());
+            r2d.unscaledHeightProperty().set(terrainSize.y());
         });
 
         final var bindingsRegistry = actionBindings().registry();

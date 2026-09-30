@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarVie
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
 import java.util.List;
@@ -79,9 +79,9 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     public float fadeProgress = 0;
 
     public TengenMsPacMan_CreditsScene() {
-        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
-        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        setComp(GameSceneRendering2DComp.class, new GameSceneRendering2DComp());
+        reqRendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqRendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
         topBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
         botBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));

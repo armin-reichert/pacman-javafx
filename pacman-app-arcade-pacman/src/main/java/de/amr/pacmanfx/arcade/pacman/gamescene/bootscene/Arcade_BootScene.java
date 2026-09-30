@@ -12,7 +12,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 
 import java.util.stream.Stream;
 
@@ -54,11 +54,11 @@ public class Arcade_BootScene extends AbstractGameScene {
     private Renderable currentSceneContent;
 
     public Arcade_BootScene() {
-        final var rendering = new GameSceneCanvasRenderingComp();
-        rendering.setAutoClearCanvas(false);
-        rendering.setUnscaledWidth(WIDTH_IN_TILES * TS);
-        rendering.setUnscaledHeight(HEIGHT_IN_TILES * TS);
-        setComp(GameSceneCanvasRenderingComp.class, rendering);
+        final var r2d = new GameSceneRendering2DComp();
+        r2d.setAutoClearCanvas(false);
+        r2d.setUnscaledWidth(WIDTH_IN_TILES * TS);
+        r2d.setUnscaledHeight(HEIGHT_IN_TILES * TS);
+        setComp(GameSceneRendering2DComp.class, r2d);
     }
 
     @Override

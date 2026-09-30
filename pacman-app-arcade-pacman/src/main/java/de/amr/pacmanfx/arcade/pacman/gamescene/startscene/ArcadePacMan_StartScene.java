@@ -8,8 +8,9 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.basics.ui.assets.ArcadeColor;
 
@@ -30,7 +31,10 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
     );
 
     public ArcadePacMan_StartScene() {
-        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+        final var r2d = new GameSceneRendering2DComp();
+        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComp(GameSceneRendering2DComp.class, r2d);
     }
 
     @Override

@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.uilib.widgets.decorationpane;
 
+import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -33,6 +33,8 @@ public class DecorationPane extends StackPane {
         return new Border(stroke);
     }
 
+    private RenderingSurface renderingSurface;
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     private final DoubleProperty unscaledWidth = new SimpleDoubleProperty(400);
@@ -43,8 +45,6 @@ public class DecorationPane extends StackPane {
 
     private final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
 
-    private Canvas canvas;
-
     public DecorationPane(double unscaledWidth, double unscaledHeight) {
         this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
@@ -54,7 +54,8 @@ public class DecorationPane extends StackPane {
 
         unscaledWidthProperty().set(unscaledWidth);
         unscaledHeightProperty().set(unscaledHeight);
-        newCanvas();
+
+        newRenderingSurface();
         installBindings();
     }
 
@@ -95,8 +96,8 @@ public class DecorationPane extends StackPane {
         borderProperty().unbind();
     }
 
-    public Canvas canvas() {
-        return canvas;
+    public RenderingSurface renderingSurface() {
+        return renderingSurface;
     }
 
     public double getUnscaledWidth() {
@@ -125,23 +126,20 @@ public class DecorationPane extends StackPane {
 
     // TODO: Find out why new canvas creation is currently necessary
     //       If I reuse the canvas, after switching games, rendering stops working correctly
-    public void newCanvas() {
-        canvas = new Canvas();
-        getChildren().setAll(canvas);
+    public void newRenderingSurface() {
+        renderingSurface = new RenderingSurface();
 
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+        renderingSurface.canvas().widthProperty().bind(Bindings.createDoubleBinding(
             () -> getScaling() * getUnscaledWidth(),
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
 
-        canvas.heightProperty().bind(Bindings.createDoubleBinding(
+        renderingSurface.canvas().heightProperty().bind(Bindings.createDoubleBinding(
             () -> getScaling() * getUnscaledHeight(),
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
-    }
 
-    public void clearCanvas() {
-        canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        getChildren().setAll(renderingSurface.canvas());
     }
 
     public void stretchTo(double width, double height) {

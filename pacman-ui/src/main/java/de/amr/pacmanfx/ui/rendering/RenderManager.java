@@ -12,10 +12,10 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
+import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.shape.Rectangle;
 
 import static java.util.Objects.requireNonNull;
@@ -24,8 +24,8 @@ public class RenderManager {
 
     private final RenderQueue renderQueue = new RenderQueue();
 
-    private Renderer variantRenderer;
-    private Renderer sceneDebugRenderer;
+    private Renderer renderer;
+    private Renderer debugRenderer;
 
     private RectShort clipRect;
 
@@ -47,7 +47,7 @@ public class RenderManager {
         ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        GameSceneCanvasRenderingComp sceneRendering, // can be null!
+        GameSceneRendering2DComp sceneRendering, // can be null!
         MiniPlaySceneView miniView)
     {
         requireNonNull(animController);
@@ -58,30 +58,30 @@ public class RenderManager {
         if (sceneRendering != null) {
             // A game scene that can be rendered in 2D
             clipRect = sceneRendering.clipRect();
-            final Canvas canvas = sceneRendering.canvas();
-            if (canvas != null) {
-                variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
-                variantRenderer.backgroundColorProperty().bind(sceneRendering.backgroundColorProperty());
-                variantRenderer.scalingProperty().bind(sceneRendering.scalingProperty());
+            final RenderingSurface renderingSurface = sceneRendering.renderingSurface();
+            if (renderingSurface != null) {
+                renderer = renderConfig.createVariantRenderer(animController, renderingSurface.canvas());
+                renderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
+                renderer.scalingProperty().bind(renderingSurface.scalingProperty());
 
-                sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, canvas);
-                sceneDebugRenderer.backgroundColorProperty().bind(variantRenderer.backgroundColorProperty());
-                sceneDebugRenderer.scalingProperty().bind(variantRenderer().scalingProperty());
+                debugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, renderingSurface.canvas());
+                debugRenderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
+                debugRenderer.scalingProperty().bind(renderingSurface.scalingProperty());
             }
         }
         else {
             // Assume game scene is 3D scene and mini view is active
-            variantRenderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
-            variantRenderer.backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
-            variantRenderer.scalingProperty().bind(miniView.scalingProperty());
+            renderer = renderConfig.createVariantRenderer(animController, miniView.canvas());
+            renderer.backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
+            renderer.scalingProperty().bind(miniView.scalingProperty());
 
             // No debug rendering in mini view
-            sceneDebugRenderer = null;
+            debugRenderer = null;
         }
     }
 
     public Renderer variantRenderer() {
-        return variantRenderer;
+        return renderer;
     }
 
     public void renderFrame(long tick, boolean debugMode) {
@@ -90,12 +90,12 @@ public class RenderManager {
         if (debugMode) {
             renderQueue.renderables()
                 .filter(r -> r.layer() == RenderingLayer.DEBUG)
-                .forEach(r -> sceneDebugRenderer.render(r, tick));
+                .forEach(r -> debugRenderer.render(r, tick));
         }
     }
 
     private void render(Renderable r, long tick) {
-        final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? sceneDebugRenderer : variantRenderer;
+        final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? debugRenderer : this.renderer;
 
         final boolean hasOffset = !r.offset().equals(Vector2f.ZERO);
         if (hasOffset) {
