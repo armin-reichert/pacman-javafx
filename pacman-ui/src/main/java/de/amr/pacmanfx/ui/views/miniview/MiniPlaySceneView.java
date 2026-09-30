@@ -29,9 +29,6 @@ import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -49,12 +46,11 @@ public class MiniPlaySceneView {
 
     public static final Border BORDER = Border.stroke(Color.grayRgb(66));
 
-    private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
-
     private TranslateTransition slidingInAnimation;
     private TranslateTransition slidingOutAnimation;
 
     private GameLevel level;
+    private Vector2i worldSize = WorldMap.ARCADE_MAP_SIZE_IN_PIXELS;
     private GameViewModel viewModel;
 
     private final HBox root = new HBox();
@@ -110,7 +106,8 @@ public class MiniPlaySceneView {
 
     public void setLevel(GameLevel level) {
         this.level = requireNonNull(level);
-        worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
+        worldSize = level.worldMap().terrainLayer().sizeInPixel();
+        updateViewSize();
     }
 
     public GameViewModel viewModel() {
@@ -138,18 +135,13 @@ public class MiniPlaySceneView {
 
     private void configureRenderingSurface() {
         renderingSurface.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
-        renderingSurface.widthProperty() .bind(Bindings.createDoubleBinding(
-            () -> {
-                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
-                return aspect * renderingSurface.height();
-            },
-            worldSize, renderingSurface.heightProperty()
-        ));
+        renderingSurface.heightProperty().addListener((_, _, _) -> updateViewSize());
+    }
 
-        renderingSurface.scalingProperty().bind(Bindings.createDoubleBinding(
-            () -> renderingSurface.height() / worldSize.get().y(),
-            renderingSurface.heightProperty(), worldSize
-        ));
+    private void updateViewSize() {
+        final double aspect = (double) worldSize.x() / (double) worldSize.y();
+        renderingSurface.setWidth(aspect * renderingSurface.height());
+        renderingSurface.setScaling(renderingSurface.height() / worldSize.y());
     }
 
     private void slideIn() {
