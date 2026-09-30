@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

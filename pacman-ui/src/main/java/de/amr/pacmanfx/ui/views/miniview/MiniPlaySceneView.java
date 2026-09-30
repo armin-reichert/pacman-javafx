@@ -15,7 +15,6 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
@@ -50,7 +49,6 @@ public class MiniPlaySceneView {
     private TranslateTransition slidingOutAnimation;
 
     private GameLevel level;
-    private Vector2i worldSize = WorldMap.ARCADE_MAP_SIZE_IN_PIXELS;
     private GameViewModel viewModel;
 
     private final HBox root = new HBox();
@@ -62,6 +60,8 @@ public class MiniPlaySceneView {
         root.setVisible(false);
 
         renderingSurface = new RenderingSurface();
+        renderingSurface.heightProperty().addListener((_, _, _) -> updateViewSize(level));
+
         root.getChildren().add(renderingSurface.canvas());
     }
 
@@ -75,8 +75,15 @@ public class MiniPlaySceneView {
 
     public void setViewModel(GameViewModel viewModel) {
         this.viewModel = requireNonNull(viewModel);
-        configureRenderingSurface();
-        configureRoot();
+
+        renderingSurface.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
+        renderingSurface.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
+
+        root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
+        root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
+        root.maxWidthProperty() .bind(renderingSurface.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
+        root.maxHeightProperty().bind(renderingSurface.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
+
         // Move out of view
         root.setTranslateY(outOfViewY());
     }
@@ -106,12 +113,7 @@ public class MiniPlaySceneView {
 
     public void setLevel(GameLevel level) {
         this.level = requireNonNull(level);
-        worldSize = level.worldMap().terrainLayer().sizeInPixel();
-        updateViewSize();
-    }
-
-    public GameViewModel viewModel() {
-        return viewModel;
+        updateViewSize(level);
     }
 
     public boolean isSliding() {
@@ -125,20 +127,10 @@ public class MiniPlaySceneView {
         return root.getTranslateY() == 0;
     }
 
-    private void configureRoot() {
-        root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
-        root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
+    private void updateViewSize(GameLevel level) {
+        if (level == null) return;
 
-        root.maxWidthProperty() .bind(renderingSurface.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
-        root.maxHeightProperty().bind(renderingSurface.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
-    }
-
-    private void configureRenderingSurface() {
-        renderingSurface.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
-        renderingSurface.heightProperty().addListener((_, _, _) -> updateViewSize());
-    }
-
-    private void updateViewSize() {
+        final Vector2i worldSize = level.worldMap().terrainLayer().sizeInPixel();
         final double aspect = (double) worldSize.x() / (double) worldSize.y();
         renderingSurface.setWidth(aspect * renderingSurface.height());
         renderingSurface.setScaling(renderingSurface.height() / worldSize.y());
