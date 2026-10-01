@@ -57,7 +57,7 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
     @Override
     public boolean sceneDecorationRequested(GameScene gameScene) {
         requireNonNull(gameScene);
-        return true;
+        return false;
     }
 
     @Override

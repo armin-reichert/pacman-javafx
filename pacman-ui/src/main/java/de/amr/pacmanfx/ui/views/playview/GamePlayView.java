@@ -35,10 +35,13 @@ import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
-import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPane;
+import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
+import de.amr.pacmanfx.uilib.widgets.decorationpane.FramedGameSceneContainer;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
@@ -92,7 +95,11 @@ public class GamePlayView implements GameView {
 
     private Layers layers;
 
-    private DecorationPane decorationPane;
+    private final BorderPane gameScenePane = new BorderPane();
+
+    private FramedGameSceneContainer framedContainer;
+
+    private GameSceneContainer plainContainer;
 
     private GameDashboard dashboard;
 
@@ -132,7 +139,7 @@ public class GamePlayView implements GameView {
     private void installResizeHandler() {
         final GameMainScene mainScene = app.ui().window().mainScene();
         final ChangeListener<? super Number> handler = (_, _, _) ->
-            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+            framedContainer.stretchTo(mainScene.getWidth(), mainScene.getHeight());
         mainScene.widthProperty() .addListener(handler);
         mainScene.heightProperty().addListener(handler);
     }
@@ -170,11 +177,11 @@ public class GamePlayView implements GameView {
     }
 
     public void showHelp(GameApp app) {
-        final double scaling = decorationPane.scalingProperty().get();
+        final double scaling = framedContainer.scalingProperty().get();
         layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
 
-    public void setGameSceneContent(Node gameSceneContent) {
+    public void setGameSceneContainer(Node gameSceneContent) {
         layers.gameSceneLayer().setCenter(gameSceneContent);
     }
 
@@ -206,7 +213,7 @@ public class GamePlayView implements GameView {
     public void onEnter() {
         rootPane.requestFocus();
         actionBindings.registerAllBindings(app.commonActions().bindings());
-        decorationPane.installBindings();
+        framedContainer.installBindings();
 
         Logger.info(actionBindings);
     }
@@ -217,7 +224,7 @@ public class GamePlayView implements GameView {
         app.ui().soundManager().stopAll();
         app.ui().soundManager().voice().stop();
         actionBindings.dispose();
-        decorationPane.uninstallBindings();
+        framedContainer.uninstallBindings();
     }
 
     @Override
@@ -289,9 +296,9 @@ public class GamePlayView implements GameView {
             subSceneFX.heightProperty().unbind();
         });
 
-        decorationPane.unscaledWidthProperty().unbind();
-        decorationPane.unscaledHeightProperty().unbind();
-        decorationPane.backgroundProperty().unbind();
+        framedContainer.unscaledWidthProperty().unbind();
+        framedContainer.unscaledHeightProperty().unbind();
+        framedContainer.backgroundProperty().unbind();
 
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
     }
@@ -332,7 +339,7 @@ public class GamePlayView implements GameView {
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
         } else {
-            embedGameScene2D(decorationPane, mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
+            embedGameScene2D(mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
         }
 
         contextMenuManager.hideContextMenu();
@@ -343,13 +350,13 @@ public class GamePlayView implements GameView {
 
     private void createLayers() {
         // Layer 1: Game scene with optional decoration
-        final var gameScenePane = new BorderPane();
-        decorationPane = new DecorationPane(
+        framedContainer = new FramedGameSceneContainer(
             DECORATION_PANE_CONFIG,
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
-        gameScenePane.setCenter(decorationPane);
+
+        plainContainer = new GameSceneContainer();
 
         // Layer 2: Mini view layer
         final var miniView = new MiniPlaySceneView();
@@ -385,15 +392,14 @@ public class GamePlayView implements GameView {
 
         if (abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
             final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
-            // Use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            r2D.setRenderingSurface(decorationPane.renderingSurface());
+            r2D.setRenderingSurface(plainContainer.renderingSurface());
         }
-        setGameSceneContent(subSceneFX);
+        setGameSceneContainer(subSceneFX);
+        gameScenePane.setCenter(plainContainer);
     }
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(
-        DecorationPane decorationPane,
         GameMainScene mainScene,
         GameVariantGameSceneConfig gameSceneConfig,
         GameScene gameScene,
@@ -403,36 +409,51 @@ public class GamePlayView implements GameView {
             Logger.error("Current game scene is not an AbstractGameScene");
             return;
         }
-
-        final GameSceneRendering2DComp canvasRendering = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
+        final GameSceneRendering2DComp r2d = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
+        final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene);
         if (decorated) {
-            decorationPane.newRenderingSurface(); //TODO check if creating a new canvas is needed
-            decorationPane.backgroundProperty().bind(settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground));
+            framedContainer.newRenderingSurface(); //TODO check if creating a new canvas is needed
+            framedContainer.backgroundProperty().bind(containerBackground);
 
             // Set unscaled decoration pane size to game scene (=world map) size
-            decorationPane.unscaledWidthProperty().bind(canvasRendering.unscaledWidthProperty());
-            decorationPane.unscaledHeightProperty().bind(canvasRendering.unscaledHeightProperty());
+            framedContainer.unscaledWidthProperty().bind(r2d.unscaledWidthProperty());
+            framedContainer.unscaledHeightProperty().bind(r2d.unscaledHeightProperty());
 
             // Limit scaling
-            decorationPane.renderingSurface().scalingProperty().bind(decorationPane.scalingProperty().map(
+            framedContainer.renderingSurface().scalingProperty().bind(framedContainer.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+            framedContainer.renderingSurface().clear();
+            framedContainer.stretchTo(mainScene.getWidth(), mainScene.getHeight());
 
-            setGameSceneContent(decorationPane);
+            r2d.setRenderingSurface(framedContainer.renderingSurface());
+            gameScenePane.setCenter(framedContainer);
+
+            setGameSceneContainer(framedContainer);
         }
         else {
-            // Undecorated game scene takes complete available height, width adapts according to main scene aspect ratio
-            decorationPane.renderingSurface().heightProperty().bind(mainScene.heightProperty());
-            decorationPane.renderingSurface().widthProperty().bind(mainScene.heightProperty().divide(mainScene.widthProperty()));
-            decorationPane.renderingSurface().scalingProperty().bind(mainScene.heightProperty().divide(canvasRendering.unscaledHeight()));
+            plainContainer.backgroundProperty().bind(containerBackground);
 
-            setGameSceneContent(decorationPane.renderingSurface().canvas());
+            final RenderingSurface surface = plainContainer.renderingSurface();
+
+            surface.heightProperty().bind(mainScene.heightProperty());
+
+            surface.widthProperty().bind(
+                mainScene.heightProperty()
+                    .multiply(r2d.unscaledWidthProperty())
+                    .divide(r2d.unscaledHeightProperty()));
+
+            surface.scalingProperty().bind(
+                mainScene.heightProperty()
+                    .divide(r2d.unscaledHeightProperty()));
+
+            r2d.setRenderingSurface(plainContainer.renderingSurface());
+            gameScenePane.setCenter(plainContainer);
+
+            setGameSceneContainer(plainContainer);
         }
 
-        canvasRendering.setRenderingSurface(decorationPane.renderingSurface());
-        decorationPane.renderingSurface().clear();
     }
 }

@@ -102,9 +102,12 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     private void hideEatenPellets(GameLevel level) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final FoodState foodState = level.food();
+        ctx.save();
+        ctx.setFill(backgroundColor());
         foodLayer.tiles()
             .filter(not(foodLayer::isEnergizerTile))
             .filter(foodState::hasEatenFoodAtTile)
             .forEach(tile -> fillSquareAtTileCenter(tile, 4));
+        ctx.restore();
     }
 }

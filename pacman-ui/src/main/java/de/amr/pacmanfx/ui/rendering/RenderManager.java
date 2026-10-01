@@ -58,15 +58,16 @@ public class RenderManager {
         if (sceneRendering != null) {
             // A game scene that can be rendered in 2D
             clipRect = sceneRendering.clipRect();
-            final RenderingSurface renderingSurface = sceneRendering.renderingSurface();
-            if (renderingSurface != null) {
-                variantRenderer = renderConfig.createVariantRenderer(animController, renderingSurface.canvas());
-                variantRenderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
-                variantRenderer.scalingProperty().bind(renderingSurface.scalingProperty());
+            final RenderingSurface sceneRenderingSurface = sceneRendering.renderingSurface();
+            if (sceneRenderingSurface != null) {
+                variantRenderer = renderConfig.createVariantRenderer(animController, sceneRenderingSurface.canvas());
 
-                debugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, renderingSurface.canvas());
-                debugRenderer.backgroundColorProperty().bind(renderingSurface.backgroundColorProperty());
-                debugRenderer.scalingProperty().bind(renderingSurface.scalingProperty());
+                variantRenderer.backgroundColorProperty().bind(sceneRenderingSurface.backgroundColorProperty());
+                variantRenderer.scalingProperty().bind(sceneRenderingSurface.scalingProperty());
+
+                debugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneRenderingSurface.canvas());
+                debugRenderer.backgroundColorProperty().bind(sceneRenderingSurface.backgroundColorProperty());
+                debugRenderer.scalingProperty().bind(sceneRenderingSurface.scalingProperty());
             }
         }
         else {

@@ -18,8 +18,8 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO: Still too complicated for what it does
-public class DecorationPane extends StackPane {
+//TODO: Simplify! Still much too complicated and unclear for what it does!
+public class FramedGameSceneContainer extends StackPane {
 
     public static final DecorationPaneConfig DEFAULT_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, 20, 20,
@@ -45,11 +45,11 @@ public class DecorationPane extends StackPane {
 
     private final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
 
-    public DecorationPane(double unscaledWidth, double unscaledHeight) {
+    public FramedGameSceneContainer(double unscaledWidth, double unscaledHeight) {
         this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
 
-    public DecorationPane(DecorationPaneConfig config, double unscaledWidth, double unscaledHeight) {
+    public FramedGameSceneContainer(DecorationPaneConfig config, double unscaledWidth, double unscaledHeight) {
         this.config = requireNonNull(config);
 
         unscaledWidthProperty().set(unscaledWidth);
