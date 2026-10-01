@@ -21,7 +21,8 @@ public class GameSceneContainer extends StackPane {
             renderingSurface.widthProperty(), renderingSurface.heightProperty()
         ));
         info.setFill(Color.WHITE);
-        info.setFont(Font.font(20));
+        info.setFont(Font.font(16));
+        info.setTranslateY(-48);
 
         getChildren().addAll(renderingSurface.canvas(), info);
         StackPane.setAlignment(info, Pos.BOTTOM_CENTER);

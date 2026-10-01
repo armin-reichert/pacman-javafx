@@ -434,7 +434,7 @@ public class GamePlayView implements GameView {
             setGameSceneContainer(framedContainer);
         }
         else {
-            plainContainer.backgroundProperty().bind(containerBackground);
+            plainContainer.setBackground(Background.fill(Color.rgb(10, 10, 80)));
 
             final RenderingSurface surface = plainContainer.renderingSurface();
 
