@@ -61,7 +61,8 @@ public final class GameLoop {
     }
 
     private void renderPlayView(GamePlayView view) {
-        view.render(clock.currentTick());
+        final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+        view.render(currentGameScene, clock.currentTick());
         view.updateDashboard();
         view.updateMiniView();
     }

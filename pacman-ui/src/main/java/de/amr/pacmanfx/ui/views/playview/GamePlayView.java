@@ -210,10 +210,9 @@ public class GamePlayView implements GameView {
 
     // --- Rendering
 
-    public void render(long tick) {
+    public void render(GameScene gameScene, long tick) {
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
         final RenderManager renderManager = app.renderManager();
-        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
 
         final GameSceneRendering2DComp r2d = gameScene instanceof AbstractGameScene abstractGameScene
