@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.window.GameMainScene;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
@@ -25,12 +24,9 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final GameApp app;
 
-    private final GameMainScene mainScene;
-
-    public ContextMenuManager(GameApp app, GameMainScene mainScene) {
+    public ContextMenuManager(GameApp app) {
         this.app = requireNonNull(app);
-        this.mainScene = requireNonNull(mainScene);
-        mainScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        app.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
@@ -60,7 +56,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(mainScene.rootPane(), e.getScreenX(), e.getScreenY());
+            contextMenu.show(app.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }

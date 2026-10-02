@@ -87,7 +87,7 @@ public class GameSceneManager {
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
+    public boolean gameSceneHasID(GameVariantGameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         requireNonNull(sceneID);
@@ -97,14 +97,13 @@ public class GameSceneManager {
     /**
      * Checks whether the current game scene matches the given ID.
      *
-     * @param sceneID scene identifier
+     * @param id scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(Named sceneID) {
-        requireNonNull(sceneID);
-
-        final GameScene currentGameScene = currentGameSceneProperty().get();
-        return currentGameScene != null && hasGameSceneID(gameSceneConfig, currentGameScene, sceneID);
+    public boolean currentGameSceneHasID(Named id) {
+        requireNonNull(id);
+        final GameScene gameScene = currentGameSceneProperty().get();
+        return gameScene != null && gameSceneHasID(gameSceneConfig, gameScene, id);
     }
 
     public void removeCurrentGameScene() {

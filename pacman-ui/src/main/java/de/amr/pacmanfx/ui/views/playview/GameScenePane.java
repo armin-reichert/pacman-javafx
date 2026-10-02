@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.widgets.decorationpane.FramedGameSceneContainer;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.SubScene;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -36,6 +37,9 @@ public class GameScenePane extends BorderPane {
         20, 20, // padding x,y
         new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadeColor.WHITE.color())
     );
+
+    public static final Background DEBUG_BACKGROUND = Ufx.paintBackground(Color.TEAL);
+    public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
 
     private final FramedGameSceneContainer framedContainer;
 
@@ -61,6 +65,11 @@ public class GameScenePane extends BorderPane {
 
     public void uninstallKeyBindings() {
         framedContainer.uninstallBindings();
+    }
+
+    public void setDebugMode(boolean debug) {
+        setBackground(debug ? DEBUG_BACKGROUND : null);
+        setBorder(debug ? DEBUG_BORDER : null);
     }
 
     public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, GameScene gameScene) {

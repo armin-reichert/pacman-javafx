@@ -15,8 +15,6 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
@@ -92,10 +90,9 @@ public class MiniPlaySceneView {
         return -(renderingSurface.height() + PADDING.getBottom());
     }
 
-    public void update(GameSceneManager gameSceneManager) {
-        final boolean is3DPlaySceneActive = gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
-        final boolean shouldBeVisible = is3DPlaySceneActive && viewModel.miniViewSettings().activeProperty.get();
-        if (shouldBeVisible) {
+    public void update(boolean playScene3DActive) {
+        final boolean miniViewActive = viewModel.miniViewSettings().activeProperty.get();
+        if (playScene3DActive && miniViewActive) {
             if (!isInsideView()) {
                 slideIn();
             }

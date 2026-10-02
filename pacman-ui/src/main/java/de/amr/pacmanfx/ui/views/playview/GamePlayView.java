@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRuntime;
@@ -13,6 +12,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
@@ -28,11 +28,8 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -52,54 +49,75 @@ public class GamePlayView implements GameView {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
-    public static final Background DEBUG_BACKGROUND = Ufx.paintBackground(Color.TEAL);
-    public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
-
     // non-static members
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Action Bindings for Play View");
+    private final ActionBindingsRegistry actionBindings;
+    private final StackPane root;
+    private final Layers layers;
+    private final GameDashboard dashboard;
 
     private GameApp app;
-
     private ContextMenuManager contextMenuManager;
 
-    private final StackPane rootPane;
-
-    private Layers layers;
-
-    private GameDashboard dashboard;
-
     public GamePlayView() {
-        createLayers();
+        // Layer 1: Game scene with optional decoration
+        final var gameScenePane = new GameScenePane();
 
-        rootPane = new StackPane(
+        // Layer 2: Mini view layer
+        final var miniView = new MiniPlaySceneView();
+
+        // Layer 3: Overlay layer with dashboard
+        final var overlayPane = new BorderPane();
+        dashboard = new GameDashboard();
+        dashboard.setVisible(false);
+        overlayPane.setLeft(dashboard);
+
+        // Layer 4: Help info
+        final var helpView = new HelpView(gameScenePane);
+
+        // Layer 5: "Paused" icon
+        final StackPane iconLayer = new StackPane();
+        final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
+        pausedIcon.setId("paused-icon");
+        iconLayer.getChildren().add(pausedIcon);
+
+        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, iconLayer);
+
+        root = new StackPane(
             layers.gameSceneLayer(),
             layers.miniViewLayer().root(),
             layers.overlayLayer(),
             layers.helpLayer(),
             layers.iconLayer()
         );
-        rootPane.setId("game-play-view");
+        root.setId("game-play-view");
 
         StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
+
+        actionBindings = new GameActionBindingsRegistry("Action Bindings for GamePlayView");
+    }
+
+    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
+        // current game scene may be NULL!
+        requireNonNull(nextGameScene);
+
+        if (currentGameScene != null) {
+            layers.gameSceneLayer().disembedGameScene(currentGameScene);
+        }
+
+        nextGameScene.onBeforeEmbedded();
+
+        layers.gameSceneLayer().embedGameScene(
+            app.ui(),
+            app.variantManager().currentRuntime().uiConfig(),
+            nextGameScene);
+
+        contextMenuManager.hideContextMenu();
     }
 
     public Layers layers() {
         return layers;
-    }
-
-    @Override
-    public void setApp(GameApp app) {
-        this.app = requireNonNull(app);
-
-        initLayers(app.ui().viewModel());
-        installResizeHandler(app.ui().window().mainScene());
-
-        contextMenuManager = new ContextMenuManager(app, app.ui().window().mainScene());
-        rootPane.setOnContextMenuRequested(contextMenuManager);
-
-        dashboard.setAppContext(app);
     }
 
     public GameDashboard dashboard() {
@@ -127,8 +145,28 @@ public class GamePlayView implements GameView {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // View interface implementation
+    // GameView interface
     // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void setApp(GameApp app) {
+        this.app = requireNonNull(app);
+        final GameViewModel viewModel = app.ui().viewModel();
+        final GameMainScene mainScene = app.ui().window().mainScene();
+
+        contextMenuManager = new ContextMenuManager(app);
+        root.setOnContextMenuRequested(contextMenuManager);
+
+        dashboard.setApp(app);
+
+        layers.miniViewLayer().setViewModel(viewModel);
+        layers.iconLayer().visibleProperty().bind(app.clock().updatesDisabledProperty());
+        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
+        viewModel.debugModeOnProperty().addListener(
+            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
+
+        installMainSceneResizeHandler(mainScene);
+    }
 
     @Override
     public ActionBindingsRegistry actionBindings() {
@@ -136,16 +174,8 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onInput(GameApp app) {
-        // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
-        if (actionBindings.executeMatchingAction(app).isEmpty()) {
-            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
-        }
-    }
-
-    @Override
     public void onEnter() {
-        rootPane.requestFocus();
+        root.requestFocus();
         actionBindings.registerAllBindings(app.commonActions().bindings());
         layers.gameSceneLayer().installKeyBindings();
         Logger.info(actionBindings);
@@ -167,9 +197,20 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public StackPane rootPane() {
-        return rootPane;
+    public void onInput(GameApp app) {
+        // First look for an action of the play view itself that is triggered by the input.
+        // If none is found, delegate to the current game scene.
+        if (actionBindings.executeMatchingAction(app).isEmpty()) {
+            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+        }
     }
+
+    @Override
+    public StackPane rootPane() {
+        return root;
+    }
+
+    // --- Rendering
 
     public void render(long tick) {
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
@@ -181,6 +222,7 @@ public class GamePlayView implements GameView {
             ? abstractGameScene.optRendering2D().orElse(null)
             : null;
 
+        //TODO This should not be done in each render frame
         renderManager.updateRenderers(
             runtime.playConfig().systems().actorSpriteAnimController(),
             runtime.uiConfig().renderConfig(),
@@ -191,13 +233,18 @@ public class GamePlayView implements GameView {
 
         // Clear canvases
         layers.miniViewLayer().renderingSurface().clear();
+
+        //TODO Rethink this (maybe add "clear canvas" command into queue?
         if (r2d != null && r2d.autoClearCanvas()) {
             renderManager.variantRenderer().clearCanvas();
         }
 
+        renderManager.clearRenderQueue();
         populateRenderQueue(renderManager, gameScene);
         renderManager.renderFrame(tick, debugMode);
     }
+
+    // --- Component update
 
     public void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
@@ -206,34 +253,21 @@ public class GamePlayView implements GameView {
     }
 
     public void updateMiniView() {
-        layers.miniViewLayer().update(app.gameSceneManager());
-    }
-
-    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
-        requireNonNull(nextGameScene);
-        if (currentGameScene != null) {
-            layers.gameSceneLayer().disembedGameScene(currentGameScene);
-        }
-        nextGameScene.onBeforeEmbedded();
-        layers.gameSceneLayer().embedGameScene(
-            app.ui(),
-            app.variantManager().currentRuntime().uiConfig(),
-            nextGameScene);
-        contextMenuManager.hideContextMenu();
+        final boolean playScene3DActive = app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        layers.miniViewLayer().update(playScene3DActive);
     }
 
     // Private
 
-    private void installResizeHandler(GameMainScene mainScene) {
-        final ChangeListener<? super Number> handler = (_, _, _) ->
-            layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
+    private void installMainSceneResizeHandler(GameMainScene mainScene) {
+        final ChangeListener<? super Number> handler = (_, _, _)
+            -> layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
+
         mainScene.widthProperty() .addListener(handler);
         mainScene.heightProperty().addListener(handler);
     }
 
     private void populateRenderQueue(RenderManager renderManager, GameScene gameScene) {
-        renderManager.clearRenderQueue();
-
         // HUD
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
@@ -253,43 +287,5 @@ public class GamePlayView implements GameView {
         if (app.ui().viewModel().debugModeOnProperty().get()) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
         }
-    }
-
-    private void createLayers() {
-        // Layer 1: Game scene with optional decoration
-        final var gameScenePane = new GameScenePane();
-
-        // Layer 2: Mini view layer
-        final var miniView = new MiniPlaySceneView();
-
-        // Layer 3: Overlay layer with dashboard
-        final var overlayPane = new BorderPane();
-        dashboard = new GameDashboard();
-        dashboard.setVisible(false);
-        overlayPane.setLeft(dashboard);
-
-        // Layer 4: Help info
-        final var helpView = new HelpView(gameScenePane);
-
-        // Layer 4: "Paused" icon
-        final StackPane iconLayer = new StackPane();
-        final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
-        pausedIcon.setId("paused-icon");
-        iconLayer.getChildren().add(pausedIcon);
-
-        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, iconLayer);
-    }
-
-    private void initLayers(GameViewModel viewModel) {
-        layers.miniViewLayer().setViewModel(viewModel);
-
-        layers.iconLayer().visibleProperty().bind(app.clock().updatesDisabledProperty());
-
-        viewModel.debugModeOnProperty().addListener((_, _, debug) -> {
-            layers.gameSceneLayer().setBackground(debug ? DEBUG_BACKGROUND : null);
-            layers.gameSceneLayer().setBorder(debug ? DEBUG_BORDER : null);
-        });
-
-        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
     }
 }
