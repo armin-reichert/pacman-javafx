@@ -31,6 +31,8 @@ import static java.util.Objects.requireNonNull;
 
 public class GameScenePane extends BorderPane {
 
+    public static final float MAX_GAME_SCENE_SCALING = 5;
+
     //TODO use FX controls + CSS
     public static final DecorationPaneConfig DECORATION_PANE_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
@@ -40,6 +42,8 @@ public class GameScenePane extends BorderPane {
 
     public static final Background DEBUG_BACKGROUND = Ufx.paintBackground(Color.TEAL);
     public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
+
+    public static final Background PLAIN_CONTAINER_BACKGROUND = Background.fill(Color.rgb(10, 10, 80));
 
     private final FramedGameSceneContainer framedContainer;
 
@@ -148,7 +152,7 @@ public class GameScenePane extends BorderPane {
 
             // Limit scaling
             framedContainer.renderingSurface().scalingProperty().bind(framedContainer.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
+                scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
             framedContainer.renderingSurface().clear();
             framedContainer.stretchTo(mainScene.getWidth(), mainScene.getHeight());
@@ -157,7 +161,7 @@ public class GameScenePane extends BorderPane {
             setCenter(framedContainer);
         }
         else {
-            plainContainer.setBackground(Background.fill(Color.rgb(10, 10, 80)));
+            plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
 
             final RenderingSurface surface = plainContainer.renderingSurface();
 

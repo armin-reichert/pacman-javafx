@@ -47,8 +47,6 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    public static final float MAX_GAME_SCENE_SCALING = 5;
-
     // non-static members
 
     private final ActionBindingsRegistry actionBindings;
