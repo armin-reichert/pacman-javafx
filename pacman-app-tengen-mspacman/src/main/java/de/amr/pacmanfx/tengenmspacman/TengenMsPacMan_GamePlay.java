@@ -162,10 +162,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             }
             else {
                 levelNumberDisplays.getFirst().pos().set(2 * TS, bottomPos);
-                levelNumberDisplays.getLast().pos().set(28 * TS, bottomPos);
+                levelNumberDisplays.getLast().pos().set(28 * TS - 1, bottomPos);
             }
             livesCounter.pos().set(4 * TS, bottomPos);
-            levelCounter.pos().set(26 * TS - 2, bottomPos);
+            levelCounter.pos().set(26 * TS - 2, bottomPos - 2);
         }
         else {
             // Called when session is started, initialize
