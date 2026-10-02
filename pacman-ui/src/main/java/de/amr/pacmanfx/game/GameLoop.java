@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -50,7 +51,9 @@ public final class GameLoop {
                 if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
                     final GamePlayView view = app.ui().viewManager().gamePlayView();
                     final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
-                    view.render(currentGameScene, clock.currentTick());
+                    if (currentGameScene instanceof AbstractGameScene ags) {
+                        view.render(ags, clock.currentTick());
+                    }
                     view.updateDashboard();
                     view.updateMiniView();
                 }

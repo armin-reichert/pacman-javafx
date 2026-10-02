@@ -47,8 +47,6 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    // non-static members
-
     private final ActionBindingsRegistry actionBindings;
     private final StackPane root;
     private final Layers layers;
@@ -58,7 +56,7 @@ public class GamePlayView implements GameView {
     private ContextMenuManager contextMenuManager;
 
     public GamePlayView() {
-        // Layer 1: Game scene with optional decoration
+        // Layer 1: Game scene container
         final var gameScenePane = new GameScenePane();
 
         // Layer 2: Mini view layer
@@ -96,24 +94,6 @@ public class GamePlayView implements GameView {
         actionBindings = new GameActionBindingsRegistry("Action Bindings for GamePlayView");
     }
 
-    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
-        // current game scene may be NULL!
-        requireNonNull(nextGameScene);
-
-        if (currentGameScene != null) {
-            layers.gameSceneLayer().disembedGameScene(currentGameScene);
-        }
-
-        nextGameScene.onBeforeEmbedded();
-
-        layers.gameSceneLayer().embedGameScene(
-            app.ui(),
-            app.variantManager().currentRuntime().uiConfig(),
-            nextGameScene);
-
-        contextMenuManager.hideContextMenu();
-    }
-
     public Layers layers() {
         return layers;
     }
@@ -138,6 +118,24 @@ public class GamePlayView implements GameView {
             currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
+
+        contextMenuManager.hideContextMenu();
+    }
+
+    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
+        // current game scene may be NULL!
+        requireNonNull(nextGameScene);
+
+        if (currentGameScene != null) {
+            layers.gameSceneLayer().disembedGameScene(currentGameScene);
+        }
+
+        nextGameScene.onBeforeEmbedded();
+
+        layers.gameSceneLayer().embedGameScene(
+            app.ui(),
+            app.variantManager().currentRuntime().uiConfig(),
+            nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }
@@ -210,14 +208,11 @@ public class GamePlayView implements GameView {
 
     // --- Rendering
 
-    public void render(GameScene gameScene, long tick) {
+    public void render(AbstractGameScene gameScene, long tick) {
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
         final RenderManager renderManager = app.renderManager();
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
-
-        final GameSceneRendering2DComp r2d = gameScene instanceof AbstractGameScene abstractGameScene
-            ? abstractGameScene.optRendering2D().orElse(null)
-            : null;
+        final GameSceneRendering2DComp r2d = gameScene.optRendering2D().orElse(null);
 
         //TODO This should not be done in each render frame
         renderManager.updateRenderers(
@@ -237,7 +232,7 @@ public class GamePlayView implements GameView {
         }
 
         renderManager.clearRenderQueue();
-        populateRenderQueue(renderManager, gameScene);
+        fillRenderQueue(renderManager, gameScene);
         renderManager.renderFrame(tick, debugMode);
     }
 
@@ -264,7 +259,7 @@ public class GamePlayView implements GameView {
         mainScene.heightProperty().addListener(handler);
     }
 
-    private void populateRenderQueue(RenderManager renderManager, GameScene gameScene) {
+    private void fillRenderQueue(RenderManager renderManager, GameScene gameScene) {
         // HUD
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
