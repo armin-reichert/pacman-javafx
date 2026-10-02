@@ -77,7 +77,7 @@ public final class GameViewManager {
     }
 
     public void onGameSuspended(GameScene currentGameScene) {
-        gamePlayView().disembedGameScene(currentGameScene);
+        gamePlayView().layers().gameSceneLayer().disembedGameScene(currentGameScene);
     }
 
     public ObjectProperty<GameViewID> currentViewIDProperty() {

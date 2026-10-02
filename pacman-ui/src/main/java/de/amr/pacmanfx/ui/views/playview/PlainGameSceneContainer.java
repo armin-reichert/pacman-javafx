@@ -8,11 +8,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class GameSceneContainer extends StackPane {
+public class PlainGameSceneContainer extends StackPane {
 
     private final RenderingSurface renderingSurface;
 
-    public GameSceneContainer() {
+    public PlainGameSceneContainer() {
         renderingSurface = new RenderingSurface();
 
         Text info = new Text();
