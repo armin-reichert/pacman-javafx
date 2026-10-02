@@ -4,20 +4,12 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
-import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;

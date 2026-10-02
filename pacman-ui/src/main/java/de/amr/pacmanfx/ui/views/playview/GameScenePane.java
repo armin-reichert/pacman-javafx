@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
@@ -82,8 +83,12 @@ public class GameScenePane extends BorderPane {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = ui.window().mainScene();
-        if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
+
+        if (gameScene instanceof PlayScene3D playScene3D) {
+            embedPlayScene3D(mainScene, playScene3D);
+        }
+        else if (gameScene.optSubSceneFX().isPresent()) {
+            embedGameScene2DWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
         } else {
             embedGameScene2D(mainScene, uiConfig.gameSceneConfig(), gameScene, ui.viewModel().common2DSettings());
         }
@@ -109,7 +114,7 @@ public class GameScenePane extends BorderPane {
     }
 
     // 3D scenes or 2D scenes with camera
-    public void embedGameSceneWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
@@ -128,7 +133,7 @@ public class GameScenePane extends BorderPane {
     }
 
     // 2D scenes without camera which are shown at full size
-    public void embedGameScene2D(
+    private void embedGameScene2D(
         GameMainScene mainScene,
         GameVariantGameSceneConfig gameSceneConfig,
         GameScene gameScene,
@@ -179,5 +184,12 @@ public class GameScenePane extends BorderPane {
             r2d.setRenderingSurface(plainContainer.renderingSurface());
             setCenter(plainContainer);
         }
+    }
+
+    private void embedPlayScene3D(GameMainScene mainScene, PlayScene3D playScene3D) {
+        final SubScene subSceneFX = playScene3D.subScene();
+        subSceneFX.widthProperty().bind(mainScene.widthProperty());
+        subSceneFX.heightProperty().bind(mainScene.heightProperty());
+        setCenter(subSceneFX);
     }
 }
