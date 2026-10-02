@@ -22,8 +22,6 @@ public class SubSceneGameSceneContainer {
         renderingSurface.canvas().heightProperty().bind(subScene.heightProperty());
         renderingSurface.canvas().widthProperty().bind(subScene.widthProperty());
 
-        renderingSurface.scalingProperty().bind(subScene.widthProperty().divide(32.0 * 8));
-
         root.getChildren().add(renderingSurface.canvas());
     }
 

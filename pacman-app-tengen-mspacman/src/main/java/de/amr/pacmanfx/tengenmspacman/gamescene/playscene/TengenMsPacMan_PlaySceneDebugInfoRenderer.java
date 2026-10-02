@@ -32,7 +32,7 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
         final GameSession session = game.session();
         final AbstractGameState gameState = game.state();
 
-        drawDebugGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
+//        drawDebugGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
         ctx.save();
         ctx.translate(scaled(2 * TS), 0);
@@ -43,7 +43,6 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
             drawMovingActorInfo(animController, level.entitySet().pac());
             level.entitySet().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
         });
-        ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11 * TS), scaled(15 * TS));
         ctx.restore();
     }
 }

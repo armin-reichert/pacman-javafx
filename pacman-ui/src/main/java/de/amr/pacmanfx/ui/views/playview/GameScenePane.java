@@ -191,14 +191,17 @@ public class GameScenePane extends BorderPane {
             Logger.error("Cannot embed game scene");
             return;
         }
-
-        final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
         final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
+        final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
+
+        final double aspect = (double) r2D.unscaledWidth() / r2D.unscaledHeight();
+
+        renderingSurface.scalingProperty().bind(subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
+
         r2D.setRenderingSurface(renderingSurface);
 
         subSceneContainer.subScene().heightProperty().bind(mainScene.heightProperty());
-        subSceneContainer.subScene().widthProperty().bind(
-            mainScene.heightProperty().multiply(28.0/34.0));
+        subSceneContainer.subScene().widthProperty().bind(mainScene.heightProperty().multiply(aspect));
 
         subSceneContainer.root().setBackground(Background.fill(Color.BLACK));
 

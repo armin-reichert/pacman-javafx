@@ -75,7 +75,6 @@ class GameEventHandler implements DefaultGameEventListener {
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
-            gameScene.dynamicCamera().playIntroSequence();
             level.showMessage(MessageType.READY);
         });
     }
@@ -102,12 +101,7 @@ class GameEventHandler implements DefaultGameEventListener {
             gameScene.playLevelCompleteAnimation(level, numFlashes);
         }
         else if (e.newState() == Tengen_GameState.GAME_OVER.state()) {
-            final PlayScene2DCamera camera = gameScene.dynamicCamera();
-
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-
-            camera.enterManualMode();
-            camera.setToTopPosition();
         }
     }
 
@@ -129,7 +123,6 @@ class GameEventHandler implements DefaultGameEventListener {
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
 
         session.optLevel().ifPresent(level -> resetActorAnimations(animController, session, level));
-        gameScene.dynamicCamera().playIntroSequence();
     }
 
     @Override
@@ -140,7 +133,6 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        gameScene.dynamicCamera().enterManualMode();
         optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
