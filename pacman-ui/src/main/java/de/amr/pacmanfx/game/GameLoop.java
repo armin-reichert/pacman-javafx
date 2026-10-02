@@ -10,67 +10,66 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
 public final class GameLoop {
 
-    private final GameApp app;
     private final GameClock clock;
+    private Consumer<Throwable> errorHandler;
 
-    public GameLoop(GameApp app, GameClock clock) {
-        this.app = requireNonNull(app);
+    public GameLoop(GameClock clock, GameApp app) {
         this.clock = requireNonNull(clock);
+        requireNonNull(app);
+
+        this.errorHandler = x -> Logger.error(x, "An error occurred in the game loop");
+
+        clock.setUpdateAction(() -> {
+            try {
+                final GameContext game = app.game();
+                final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+
+                game.session().newFrameState(clock.currentTick());
+                game.playConfig().systems().updateSystem().updateEntities(game);
+                game.playConfig().gameFlow().update(game);
+                if (currentGameScene != null) {
+                    currentGameScene.onTick(game);
+                }
+            }
+            catch (Exception x) {
+                errorHandler.accept(x);
+            }
+        });
+
+        clock.setPermanentAction(() -> {
+            try {
+                if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
+                    final GamePlayView view = app.ui().viewManager().gamePlayView();
+                    final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+                    view.render(currentGameScene, clock.currentTick());
+                    view.updateDashboard();
+                    view.updateMiniView();
+                }
+            } catch (Exception x) {
+                errorHandler.accept(x);
+            }
+        });
+    }
+
+    public void setErrorHandler(Consumer<Throwable> errorHandler) {
+        this.errorHandler = requireNonNull(errorHandler);
     }
 
     public void start() {
-        clock.setUpdateAction(this::simulate);
-        clock.setPermanentAction(this::render);
-        clock.setErrorHandler(this::handleFatalError);
+        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
         clock.start();
     }
 
     public void stop() {
         clock.stop();
-        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-    }
-
-    // private
-
-    private void simulate() {
-        final GameContext game = app.game();
-        game.session().newFrameState(clock.currentTick());
-        game.playConfig().systems().updateSystem().updateEntities(game);
-        game.playConfig().gameFlow().update(game);
-        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
-    }
-
-    private void render() {
-        final GameViewManager views = app.ui().viewManager();
-        try {
-            if (views.isSelected(GameViewID.GAMEPLAY)) {
-                renderPlayView(views.gamePlayView());
-            }
-        } catch (Exception x) {
-            Logger.error(x, "Rendering triggered exception");
-        }
-    }
-
-    private void renderPlayView(GamePlayView view) {
-        final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
-        view.render(currentGameScene, clock.currentTick());
-        view.updateDashboard();
-        view.updateMiniView();
-    }
-
-    private void handleFatalError(Throwable reason) {
-        app.suspendGame();
-        final String errorMessage = app.ui().translationManager().translate("error.oh_no_my_program");
-        app.ui().shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-        Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }

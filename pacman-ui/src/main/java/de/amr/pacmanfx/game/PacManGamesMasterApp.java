@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -73,8 +74,17 @@ public final class PacManGamesMasterApp implements GameApp {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager(this);
-        gameLoop = new GameLoop(this, gameBox.clock());
+        gameLoop = new GameLoop(gameBox.clock(), this);
         actions = new CommonGameActions();
+
+        gameLoop.setErrorHandler(this::handleFatalError);
+    }
+
+    private void handleFatalError(Throwable reason) {
+        suspendGame();
+        final String errorMessage = ui.translationManager().translate("error.oh_no_my_program");
+        ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+        Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 
     public void setUI(GameUI ui) {
