@@ -79,8 +79,8 @@ public class GameUI implements GameEventListener {
 
         viewManager = createViewManager();
 
-        //TODO Check this
-        viewManager.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
+        viewManager.gamePlayView().dashboard().populate(
+            dashboardFactory, settings.dashboard(), translationManager);
     }
 
     public void connectWithApp(GameApp app) {

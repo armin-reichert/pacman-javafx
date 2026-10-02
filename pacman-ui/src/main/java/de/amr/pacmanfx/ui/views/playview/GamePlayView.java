@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
@@ -19,12 +18,9 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
-import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
-import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
@@ -38,8 +34,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -110,21 +104,6 @@ public class GamePlayView implements GameView {
 
     public GameDashboard dashboard() {
         return dashboard;
-    }
-
-    public void populateDashboard(
-        DashboardFactory factory,
-        List<DashboardSectionSettings> sectionDefinitions,
-        TranslationManager translations)
-    {
-        for (var sectionDef : sectionDefinitions) {
-            factory.identify(sectionDef.id()).ifPresentOrElse(dashboardID -> {
-                final GameDashboardSection section = factory.createSection(dashboard, dashboardID, translations);
-                dashboard.addSection(section);
-                section.setDisplayedStandalone(sectionDef.standalone());
-                section.setExpanded(sectionDef.expanded());
-            }, () -> Logger.error("Unknown dashboard ID: {}", sectionDef.id()));
-        }
     }
 
     public void showHelp(GameApp app) {

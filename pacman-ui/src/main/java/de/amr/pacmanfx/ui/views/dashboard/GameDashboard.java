@@ -5,7 +5,10 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,21 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
     public void setAppContext(GameApp appContext) {
         requireNonNull(appContext);
         sections().forEach(section -> section.setGameApp(appContext));
+    }
+
+    public void populate(
+        DashboardFactory factory,
+        List<DashboardSectionSettings> sectionDefinitions,
+        TranslationManager translations)
+    {
+        for (var def : sectionDefinitions) {
+            factory.identify(def.id()).ifPresentOrElse(dashboardID -> {
+                final GameDashboardSection section = factory.createSection(this, dashboardID, translations);
+                section.setDisplayedStandalone(def.standalone());
+                section.setExpanded(def.expanded());
+                addSection(section);
+            }, () -> Logger.error("Unknown dashboard ID: {}", def.id()));
+        }
     }
 
     public void update(GameApp appContext) {
