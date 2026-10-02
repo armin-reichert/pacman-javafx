@@ -114,7 +114,6 @@ public abstract class AbstractGameScene
     @Override
     public final void deactivate() {
         onDeactivate();
-        optComp(ActionBindingsComp.class).ifPresent(comp -> comp.registry().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 

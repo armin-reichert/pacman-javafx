@@ -33,6 +33,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -42,6 +43,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
@@ -209,8 +211,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        reqRendering2D().unscaledWidthProperty().set(size.x());
-        reqRendering2D().unscaledHeightProperty().set(size.y() + 2); // 2 extra rows for HUD!
+        reqRendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqRendering2D().unscaledHeightProperty().set(size.y() + 2*TS);
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
@@ -272,16 +274,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private void acceptNormalLevel() {
         soundManager().setEnabled(true); //TODO needed?
 
-        final var actions = actions();
-
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        final var bindingsMap = actionBindings().registry();
+        actionBindings().registry().registerAllBindings(actions().steeringBindings());
 
-        bindingsMap.registerAllBindings(actions.steeringBindings());
-        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+        actionBindings().registry().registerAllBindings(app().commonActions().cheatActions().bindings());
 
-        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
-        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
+        actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
+        actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());
     }
 
     private void acceptDemoLevel() {

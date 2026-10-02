@@ -194,17 +194,20 @@ public class GameScenePane extends BorderPane {
         final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
         final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
 
-        final double aspect = (double) r2D.unscaledWidth() / r2D.unscaledHeight();
-
-        renderingSurface.scalingProperty().bind(subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
-
         r2D.setRenderingSurface(renderingSurface);
 
+        renderingSurface.scalingProperty().bind(
+            subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
+
         subSceneContainer.subScene().heightProperty().bind(mainScene.heightProperty());
-        subSceneContainer.subScene().widthProperty().bind(mainScene.heightProperty().multiply(aspect));
+
+        subSceneContainer.subScene().widthProperty().bind(
+            mainScene.heightProperty()
+                .multiply(r2D.unscaledWidthProperty())
+                .divide(r2D.unscaledHeightProperty())
+        );
 
         subSceneContainer.root().setBackground(Background.fill(Color.BLACK));
-
         setCenter(subSceneContainer.subScene());
     }
 }

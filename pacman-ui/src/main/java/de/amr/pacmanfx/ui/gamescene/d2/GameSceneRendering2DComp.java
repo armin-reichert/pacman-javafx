@@ -7,16 +7,16 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 
 public class GameSceneRendering2DComp implements Disposable {
 
     private RenderingSurface renderingSurface;
 
-    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty();
+    private final FloatProperty unscaledWidth = new SimpleFloatProperty();
 
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty();
+    private final FloatProperty unscaledHeight = new SimpleFloatProperty();
 
     private boolean autoClearCanvas = true;
 
@@ -54,26 +54,26 @@ public class GameSceneRendering2DComp implements Disposable {
     }
 
     /** @return the unscaled scene width property */
-    public IntegerProperty unscaledWidthProperty() {
+    public FloatProperty unscaledWidthProperty() {
         return unscaledWidth;
     }
 
     /** @return the unscaled scene width in pixels */
-    public int unscaledWidth() {
+    public float unscaledWidth() {
         return unscaledWidthProperty().get();
     }
 
-    public void setUnscaledHeight(int value) {
+    public void setUnscaledHeight(float value) {
         unscaledHeight.set(value);
     }
 
     /** @return the unscaled scene height property */
-    public IntegerProperty unscaledHeightProperty() {
+    public FloatProperty unscaledHeightProperty() {
         return unscaledHeight;
     }
 
     /** @return the unscaled scene height in pixels */
-    public int unscaledHeight() {
+    public float unscaledHeight() {
         return unscaledHeightProperty().get();
     }
 
