@@ -111,18 +111,19 @@ public class GamePlayView implements GameView {
 //        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
 
-    public void onLevelCreated(GameLevel level) {
+    public void acceptLevel(GameScene currentGameScene, GameLevel level) {
+        requireNonNull(currentGameScene);
+        requireNonNull(level);
+
+        // Level changed: adjust game scene size by reembedding
+        layers.gameSceneLayer().embedGameScene(
+            app.ui(),
+            app.variantManager().currentRuntime().uiConfig(),
+            currentGameScene);
+
         layers.miniViewLayer().setLevel(level);
 
-        // game scene size might have changed: re-embed
-        app.gameSceneManager().optCurrentGameScene().ifPresent(
-            gameScene -> {
-                layers.gameSceneLayer().embedGameScene(
-                    app.ui(),
-                    app.variantManager().currentRuntime().uiConfig(),
-                    gameScene);
-                contextMenuManager.hideContextMenu();
-            });
+        contextMenuManager.hideContextMenu();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -100,7 +100,10 @@ public class GameUI implements GameEventListener {
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
-            case LevelCreatedEvent e -> viewManager.gamePlayView().onLevelCreated(e.level());
+            case LevelCreatedEvent levelCreatedEvent -> {
+                final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+                viewManager.gamePlayView().acceptLevel(currentGameScene, levelCreatedEvent.level());
+            }
             case GenericChangeEvent _ -> forceGameSceneReload = true;
             case HighScoreAccessErrorEvent failure -> {
                 shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
