@@ -55,12 +55,6 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
     }
 
     @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        requireNonNull(gameScene);
-        return true;
-    }
-
-    @Override
     public final Optional<GameScene> selectGameScene(GameContext game, boolean select3D) {
         requireNonNull(game);
         final Named sceneID = computeGameSceneID(game, select3D);

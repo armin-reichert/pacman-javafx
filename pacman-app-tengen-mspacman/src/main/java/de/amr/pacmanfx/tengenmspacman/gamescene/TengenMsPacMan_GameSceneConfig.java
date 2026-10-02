@@ -22,6 +22,8 @@ import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -31,12 +33,6 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     public TengenMsPacMan_GameSceneConfig() {}
-
-    @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        requireNonNull(gameScene);
-        return false;
-    }
 
     private static final Map<Named, Supplier<GameScene>> FACTORY_MAP = Map.of(
         CommonGameSceneID.BOOT_SCENE    , TengenMsPacMan_BootScene::new,
@@ -80,5 +76,14 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return TengenSceneID.HALL_OF_FAME;
         }
         return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+    }
+
+    @Override
+    public GameSceneEmbedding embedding(GameScene gameScene) {
+        return switch (gameScene) {
+            case TengenMsPacMan_PlayScene2D _ -> GameSceneEmbedding.SUBSCENE_2D;
+            case TengenMsPacMan_PlayScene3D _ -> GameSceneEmbedding.SUBSCENE_3D;
+            default -> GameSceneEmbedding.PLAIN_2D;
+        };
     }
 }

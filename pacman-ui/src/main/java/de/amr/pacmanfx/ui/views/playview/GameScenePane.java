@@ -11,7 +11,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
@@ -25,9 +25,7 @@ import javafx.scene.SubScene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -81,25 +79,6 @@ public class GameScenePane extends BorderPane {
         setBorder(debug ? DEBUG_BORDER : null);
     }
 
-    public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, GameScene gameScene) {
-        requireNonNull(ui);
-        requireNonNull(uiConfig);
-        requireNonNull(gameScene);
-
-        final GameMainScene mainScene = ui.window().mainScene();
-
-        if (gameScene instanceof PlayScene3D playScene3D) {
-            embedPlayScene3D(mainScene, playScene3D);
-        }
-        else if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameScene2DWithSubSceneFX(mainScene, gameScene);
-        } else {
-            embedGameScene2D(mainScene, uiConfig.gameSceneConfig(), gameScene, ui.viewModel().common2DSettings());
-        }
-        gameScene.activate();
-        Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
-    }
-
     public void disembedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
 
@@ -117,12 +96,34 @@ public class GameScenePane extends BorderPane {
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
     }
 
+    public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, GameScene gameScene) {
+        requireNonNull(ui);
+        requireNonNull(uiConfig);
+        requireNonNull(gameScene);
+
+        final GameMainScene mainScene = ui.window().mainScene();
+
+        final GameSceneEmbedding embedding = uiConfig.gameSceneConfig().embedding(gameScene);
+        switch (embedding) {
+            case PLAIN_2D -> embedGameScene2D(mainScene, gameScene, ui.viewModel().common2DSettings(), embedding);
+            case DECORATED_2D -> embedGameScene2D(mainScene, gameScene, ui.viewModel().common2DSettings(), embedding);
+            case SUBSCENE_2D -> embedGameScene2DWithSubSceneFX(mainScene, gameScene);
+            case SUBSCENE_3D -> {
+                if (gameScene instanceof PlayScene3D playScene3D) {
+                    embedPlayScene3D(mainScene, playScene3D);
+                }
+            }
+        }
+        gameScene.activate();
+        Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
+    }
+
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(
         GameMainScene mainScene,
-        GameVariantGameSceneConfig gameSceneConfig,
         GameScene gameScene,
-        Game2DSettingsVM settingsViewModel)
+        Game2DSettingsVM settingsViewModel,
+        GameSceneEmbedding embedding)
     {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             Logger.error("Current game scene is not an AbstractGameScene");
@@ -131,8 +132,7 @@ public class GameScenePane extends BorderPane {
         final GameSceneRendering2DComp r2d = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
         final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);
 
-        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene);
-        if (decorated) {
+        if (embedding == GameSceneEmbedding.DECORATED_2D) {
             framedContainer.newRenderingSurface(); //TODO check if creating a new canvas is needed
             framedContainer.backgroundProperty().bind(containerBackground);
 
@@ -150,7 +150,7 @@ public class GameScenePane extends BorderPane {
             r2d.setRenderingSurface(framedContainer.renderingSurface());
             setCenter(framedContainer);
         }
-        else {
+        else if (embedding == GameSceneEmbedding.PLAIN_2D) {
             plainContainer.reset();
             plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
 
@@ -169,6 +169,9 @@ public class GameScenePane extends BorderPane {
 
             r2d.setRenderingSurface(plainContainer.renderingSurface());
             setCenter(plainContainer);
+        }
+        else {
+            Logger.error("Illegal embedding: " + embedding);
         }
     }
 

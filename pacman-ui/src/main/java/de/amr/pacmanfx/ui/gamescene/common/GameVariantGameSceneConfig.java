@@ -22,5 +22,5 @@ public interface GameVariantGameSceneConfig extends Disposable {
 
     Named resolveCutSceneID(GameContext game);
 
-    boolean sceneDecorationRequested(GameScene gameScene);
+    GameSceneEmbedding embedding(GameScene gameScene);
 }

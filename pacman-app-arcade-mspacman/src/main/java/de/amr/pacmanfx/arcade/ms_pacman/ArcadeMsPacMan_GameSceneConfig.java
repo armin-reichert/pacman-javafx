@@ -19,6 +19,8 @@ import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -64,5 +66,12 @@ public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.START_SCENE;
         }
         return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+    }
+
+    @Override
+    public GameSceneEmbedding embedding(GameScene gameScene) {
+        return gameScene instanceof PlayScene3D
+            ? GameSceneEmbedding.SUBSCENE_3D
+            : GameSceneEmbedding.DECORATED_2D;
     }
 }

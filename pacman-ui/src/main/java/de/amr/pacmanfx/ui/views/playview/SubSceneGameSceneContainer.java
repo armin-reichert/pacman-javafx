@@ -2,10 +2,8 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.SubScene;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class SubSceneGameSceneContainer {
 
