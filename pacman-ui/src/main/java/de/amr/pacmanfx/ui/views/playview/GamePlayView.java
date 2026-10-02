@@ -32,7 +32,6 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -73,8 +72,6 @@ public class GamePlayView implements GameView {
     private final StackPane rootPane;
 
     private Layers layers;
-
-    private GameScenePane gameScenePane;
 
     private GameDashboard dashboard;
 
@@ -141,7 +138,7 @@ public class GamePlayView implements GameView {
         // game scene size might have changed: re-embed
         app.gameSceneManager().optCurrentGameScene().ifPresent(
             gameScene -> {
-                gameScenePane.embedGameScene(
+                layers.gameSceneLayer().embedGameScene(
                     app.ui(),
                     app.variantManager().currentRuntime().uiConfig(),
                     gameScene);
@@ -170,7 +167,7 @@ public class GamePlayView implements GameView {
     public void onEnter() {
         rootPane.requestFocus();
         actionBindings.registerAllBindings(app.commonActions().bindings());
-        gameScenePane.installKeyBindings();
+        layers.gameSceneLayer().installKeyBindings();
         Logger.info(actionBindings);
     }
 
@@ -180,7 +177,7 @@ public class GamePlayView implements GameView {
         app.ui().soundManager().stopAll();
         app.ui().soundManager().voice().stop();
         actionBindings.dispose();
-        gameScenePane.uninstallKeyBindings();
+        layers.gameSceneLayer().uninstallKeyBindings();
     }
 
     @Override
@@ -235,10 +232,10 @@ public class GamePlayView implements GameView {
     public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(nextGameScene);
         if (currentGameScene != null) {
-            gameScenePane.disembedGameScene(currentGameScene);
+            layers.gameSceneLayer().disembedGameScene(currentGameScene);
         }
         nextGameScene.onBeforeEmbedded();
-        gameScenePane.embedGameScene(
+        layers.gameSceneLayer().embedGameScene(
             app.ui(),
             app.variantManager().currentRuntime().uiConfig(),
             nextGameScene);
@@ -249,7 +246,7 @@ public class GamePlayView implements GameView {
 
     private void installResizeHandler(GameMainScene mainScene) {
         final ChangeListener<? super Number> handler = (_, _, _) ->
-            gameScenePane.resizeTo(mainScene.getWidth(), mainScene.getHeight());
+            layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
         mainScene.widthProperty() .addListener(handler);
         mainScene.heightProperty().addListener(handler);
     }
@@ -280,7 +277,7 @@ public class GamePlayView implements GameView {
 
     private void createLayers() {
         // Layer 1: Game scene with optional decoration
-        gameScenePane = new GameScenePane();
+        final var gameScenePane = new GameScenePane();
 
         // Layer 2: Mini view layer
         final var miniView = new MiniPlaySceneView();
