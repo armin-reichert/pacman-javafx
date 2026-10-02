@@ -10,12 +10,12 @@ import javafx.scene.text.Text;
 
 public class PlainGameSceneContainer extends StackPane {
 
+    private final Text info = new Text();
     private final RenderingSurface renderingSurface;
 
     public PlainGameSceneContainer() {
         renderingSurface = new RenderingSurface();
 
-        Text info = new Text();
         info.textProperty().bind(Bindings.createStringBinding(
             () -> "Surface w=%.0f h=%.0f".formatted(renderingSurface.width(), renderingSurface.height()),
             renderingSurface.widthProperty(), renderingSurface.heightProperty()
@@ -26,6 +26,10 @@ public class PlainGameSceneContainer extends StackPane {
 
         getChildren().addAll(renderingSurface.canvas(), info);
         StackPane.setAlignment(info, Pos.BOTTOM_CENTER);
+    }
+
+    public void reset() {
+        getChildren().setAll(renderingSurface.canvas(), info);
     }
 
     public RenderingSurface renderingSurface() {

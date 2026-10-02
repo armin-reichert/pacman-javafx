@@ -25,7 +25,9 @@ import javafx.scene.SubScene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -47,8 +49,8 @@ public class GameScenePane extends BorderPane {
     public static final Background PLAIN_CONTAINER_BACKGROUND = Background.fill(Color.rgb(10, 10, 80));
 
     private final FramedGameSceneContainer framedContainer;
-
     private final PlainGameSceneContainer plainContainer;
+    private final SubSceneGameSceneContainer subSceneContainer;
 
     public GameScenePane() {
         framedContainer = new FramedGameSceneContainer(
@@ -58,6 +60,8 @@ public class GameScenePane extends BorderPane {
         );
 
         plainContainer = new PlainGameSceneContainer();
+
+        subSceneContainer = new SubSceneGameSceneContainer();
     }
 
     public void resizeTo(double width, double height) {
@@ -88,7 +92,7 @@ public class GameScenePane extends BorderPane {
             embedPlayScene3D(mainScene, playScene3D);
         }
         else if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameScene2DWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
+            embedGameScene2DWithSubSceneFX(mainScene, gameScene);
         } else {
             embedGameScene2D(mainScene, uiConfig.gameSceneConfig(), gameScene, ui.viewModel().common2DSettings());
         }
@@ -111,25 +115,6 @@ public class GameScenePane extends BorderPane {
         framedContainer.backgroundProperty().unbind();
 
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
-    }
-
-    // 3D scenes or 2D scenes with camera
-    private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
-        // stretch sub scene to available space
-        subSceneFX.widthProperty().bind(mainScene.widthProperty());
-        subSceneFX.heightProperty().bind(mainScene.heightProperty());
-
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("Current game scene is not an AbstractGameScene");
-            return;
-        }
-
-        if (abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
-            final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
-            r2D.setRenderingSurface(plainContainer.renderingSurface());
-        }
-//        setCenter(subSceneFX);
-        setCenter(plainContainer);
     }
 
     // 2D scenes without camera which are shown at full size
@@ -166,6 +151,7 @@ public class GameScenePane extends BorderPane {
             setCenter(framedContainer);
         }
         else {
+            plainContainer.reset();
             plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
 
             final RenderingSurface surface = plainContainer.renderingSurface();
@@ -191,5 +177,25 @@ public class GameScenePane extends BorderPane {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
         setCenter(subSceneFX);
+    }
+
+    private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, GameScene gameScene) {
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)
+            || !abstractGameScene.hasComp(GameSceneRendering2DComp.class)) {
+            Logger.error("Cannot embed game scene");
+            return;
+        }
+
+        final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
+        final GameSceneRendering2DComp r2D = abstractGameScene.reqComp(GameSceneRendering2DComp.class);
+        r2D.setRenderingSurface(renderingSurface);
+
+        subSceneContainer.subScene().heightProperty().bind(mainScene.heightProperty());
+        subSceneContainer.subScene().widthProperty().bind(
+            mainScene.heightProperty().multiply(28.0/34.0));
+
+        subSceneContainer.root().setBackground(Background.fill(Color.BLACK));
+
+        setCenter(subSceneContainer.subScene());
     }
 }
