@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import org.tinylog.Logger;
@@ -48,15 +49,7 @@ public final class GameLoop {
 
         clock.setPermanentAction(() -> {
             try {
-                if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
-                    final GamePlayView view = app.ui().viewManager().gamePlayView();
-                    final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
-                    if (currentGameScene instanceof AbstractGameScene ags) {
-                        view.render(ags, clock.currentTick());
-                    }
-                    view.updateDashboard();
-                    view.updateMiniView();
-                }
+                render(app);
             } catch (Exception x) {
                 errorHandler.accept(x);
             }
@@ -74,5 +67,17 @@ public final class GameLoop {
 
     public void stop() {
         clock.stop();
+    }
+
+    private void render(GameApp app) {
+        if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
+            final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+            final GamePlayView playView = app.ui().viewManager().gamePlayView();
+            if (currentGameScene instanceof AbstractGameScene abstractGameScene) {
+                GamePlayViewRenderer.render(playView, app, clock, abstractGameScene);
+            }
+            playView.updateDashboard();
+            playView.updateMiniView();
+        }
     }
 }

@@ -206,36 +206,6 @@ public class GamePlayView implements GameView {
         return root;
     }
 
-    // --- Rendering
-
-    public void render(AbstractGameScene gameScene, long tick) {
-        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
-        final RenderManager renderManager = app.renderManager();
-        final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
-        final GameSceneRendering2DComp r2d = gameScene.optRendering2D().orElse(null);
-
-        //TODO This should not be done in each render frame
-        renderManager.updateRenderers(
-            runtime.playConfig().systems().actorSpriteAnimController(),
-            runtime.uiConfig().renderConfig(),
-            gameScene,
-            r2d,
-            layers.miniViewLayer()
-        );
-
-        // Clear canvases
-        layers.miniViewLayer().renderingSurface().clear();
-
-        //TODO Rethink this (maybe add "clear canvas" command into queue?
-        if (r2d != null && r2d.autoClearCanvas()) {
-            renderManager.variantRenderer().clearCanvas();
-        }
-
-        renderManager.clearRenderQueue();
-        fillRenderQueue(renderManager, gameScene);
-        renderManager.renderFrame(tick, debugMode);
-    }
-
     // --- Component update
 
     public void updateDashboard() {
@@ -257,27 +227,5 @@ public class GamePlayView implements GameView {
 
         mainScene.widthProperty() .addListener(handler);
         mainScene.heightProperty().addListener(handler);
-    }
-
-    private void fillRenderQueue(RenderManager renderManager, GameScene gameScene) {
-        // HUD
-        final GameSession session = app.game().session();
-        if (session.isHUDVisible()) {
-            GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
-                .forEach(renderManager::addRenderable);
-        }
-
-        // Mini view
-        layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
-
-        // Game scene content
-        if (gameScene != null) {
-            gameScene.renderables().forEach(renderManager::addRenderable);
-        }
-
-        // Debug mode rendering
-        if (app.ui().viewModel().debugModeOnProperty().get()) {
-            renderManager.addRenderable(new GameSceneDebugView(gameScene));
-        }
     }
 }
