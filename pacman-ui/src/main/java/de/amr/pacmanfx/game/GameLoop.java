@@ -33,14 +33,14 @@ public final class GameLoop {
         clock.setUpdateAction(() -> {
             try {
                 final GameContext game = app.game();
-                final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
-
                 game.session().newFrameState(clock.currentTick());
                 game.playConfig().systems().updateSystem().updateEntities(game);
+
+                // This can change the current game state!
                 game.playConfig().gameFlow().update(game);
-                if (currentGameScene != null) {
-                    currentGameScene.onTick(game);
-                }
+
+                // IMPORTANT: The current game scene is up-to-date only at this point!
+                app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
             }
             catch (Exception x) {
                 errorHandler.accept(x);
