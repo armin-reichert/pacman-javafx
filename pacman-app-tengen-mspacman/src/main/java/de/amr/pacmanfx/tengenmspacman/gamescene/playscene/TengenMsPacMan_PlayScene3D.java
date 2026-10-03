@@ -130,7 +130,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
             bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
         }
-        bindActions();
+        registerActionBindings();
 
         Logger.info(actionBindings());
     }

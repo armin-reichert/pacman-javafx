@@ -48,6 +48,8 @@ public abstract class AbstractGameScene
         r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
         r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComp(GameSceneView2D.class, r2d);
+
+        setComp(ActionBindingsComp.class, new ActionBindingsComp(this));
     }
 
     // Typed game scene component access
@@ -57,10 +59,6 @@ public abstract class AbstractGameScene
     }
 
     public ActionBindingsComp actionBindings() {
-        ActionBindingsComp actionBindings = optComp(ActionBindingsComp.class).orElse(null);
-        if (actionBindings == null) {
-            setComp(ActionBindingsComp.class, new ActionBindingsComp(this));
-        }
         return reqComp(ActionBindingsComp.class);
     }
 

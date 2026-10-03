@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
-import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
@@ -53,7 +52,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
@@ -77,7 +75,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
 
-    private Set<ActionKeyBinding> actionBindings;
     private RandomTextPicker textPicker;
 
     /**
@@ -106,8 +103,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final GameViewModel viewModel = app().ui().viewModel();
 
         textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
-
-        actionBindings = app().commonActions().camera3DActions().bindings();
 
         final var comp3D = reqComp(GameScene3DComp.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
@@ -161,7 +156,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final Game3DSettingsVM settings3D = app().ui().viewModel().common3DSettings();
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
-        bindActions();
+        registerActionBindings();
         reqComp(GameScene3DComp.class).subScene().setFill(Color.BLACK);
     }
 
@@ -361,9 +356,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      */
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
-    protected void bindActions() {
-        optComp(ActionBindingsComp.class)
-            .ifPresent(comp -> comp.registry().registerAllBindings(actionBindings));
+    protected void registerActionBindings() {
+        actionBindings().registry().registerAllBindings(app().commonActions().camera3DActions().bindings());
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {
