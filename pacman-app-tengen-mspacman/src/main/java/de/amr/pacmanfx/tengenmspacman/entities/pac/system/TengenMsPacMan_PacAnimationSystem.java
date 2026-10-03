@@ -35,7 +35,7 @@ public class TengenMsPacMan_PacAnimationSystem extends PacAnimationSystem {
 
         switch (state.enumValue()) {
             case SLEEPING -> {
-                final boolean boosterEnabled = pac.reqComp(PacBoosterComp.class).boosterEnabled();
+                final boolean boosterEnabled = pac.assertComponent(PacBoosterComp.class).boosterEnabled();
                 if (boosterEnabled) {
                     animation.setAnimationID(TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER);
                 } else {
@@ -44,7 +44,7 @@ public class TengenMsPacMan_PacAnimationSystem extends PacAnimationSystem {
                 animation.setStopped(true);
             }
             case ACTIVE -> {
-                final boolean boosterEnabled = pac.reqComp(PacBoosterComp.class).boosterEnabled();
+                final boolean boosterEnabled = pac.assertComponent(PacBoosterComp.class).boosterEnabled();
                 if (boosterEnabled) {
                     animation.setAnimationID(TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER);
                 } else {

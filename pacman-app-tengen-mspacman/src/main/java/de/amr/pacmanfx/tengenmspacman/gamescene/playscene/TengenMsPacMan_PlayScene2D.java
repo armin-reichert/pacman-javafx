@@ -223,7 +223,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
             final House house = level.entitySet().entities().theOne(House.class);
-            final var doorData = house.door().reqComp(DoorDataComp.class);
+            final var doorData = house.door().assertComponent(DoorDataComp.class);
             doorData.setColor(mapImageSet.mapImage().colorScheme().door());
             Logger.info("Door color set to {}", doorData.color());
         }

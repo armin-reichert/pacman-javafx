@@ -9,15 +9,15 @@ import de.amr.basics.ecs.GameEntity;
 public final class Marquee extends GameEntity {
 
     public Marquee() {
-        setComp(MarqueeLayoutComp.class, new MarqueeLayoutComp());
-        setComp(MarqueeColorsComp.class, new MarqueeColorsComp());
+        setComponent(MarqueeLayoutComp.class, new MarqueeLayoutComp());
+        setComponent(MarqueeColorsComp.class, new MarqueeColorsComp());
     }
 
     public MarqueeLayoutComp layout() {
-        return reqComp(MarqueeLayoutComp.class);
+        return assertComponent(MarqueeLayoutComp.class);
     }
 
     public MarqueeColorsComp colors() {
-        return reqComp(MarqueeColorsComp.class);
+        return assertComponent(MarqueeColorsComp.class);
     }
 }

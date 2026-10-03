@@ -17,6 +17,6 @@ public class Heart extends GameEntity {
         final var animationComp = new SpriteAnimationComp();
         animationComp.setSpriteAnimations(
             singleSpriteAnimation(ArcadeMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART)));
-        setComp(SpriteAnimationComp.class, animationComp);
+        setComponent(SpriteAnimationComp.class, animationComp);
     }
 }

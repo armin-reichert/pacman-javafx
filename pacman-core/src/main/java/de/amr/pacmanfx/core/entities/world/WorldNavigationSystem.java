@@ -36,7 +36,7 @@ public class WorldNavigationSystem {
     public static Vector2i tilesAhead(GameEntity actor, int numTiles) {
         requireNonNull(actor);
 
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.assertComponent(WorldNavigationComp.class);
         final Vector2i translateVector = worldNavigation.moveDir().vector().scaled(numTiles);
         return actor.pos().tile().plus(translateVector);
     }
@@ -51,7 +51,7 @@ public class WorldNavigationSystem {
     public static Vector2i tilesAheadWithOverflowBug(GameEntity actor, int numTiles) {
         requireNonNull(actor);
 
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.assertComponent(WorldNavigationComp.class);
         return worldNavigation.moveDir() == UP
             ? tilesAhead(actor, numTiles).minus(numTiles, 0)
             : tilesAhead(actor, numTiles);
@@ -74,10 +74,10 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
         if (navigation.moveDir() != dir) {
             navigation.setMoveDir(dir);
-            final MovementComp movement = actor.reqComp(MovementComp.class);
+            final MovementComp movement = actor.assertComponent(MovementComp.class);
             movement.setVelocity(dir.vector().scaled(movement.speed()));
         }
     }
@@ -91,7 +91,7 @@ public class WorldNavigationSystem {
     public void setWishDir(GameEntity actor, Direction dir) {
         requireNonNull(actor);
         requireNonNull(dir);
-        actor.reqComp(WorldNavigationComp.class).setWishDir(dir);
+        actor.assertComponent(WorldNavigationComp.class).setWishDir(dir);
     }
 
     /**
@@ -103,7 +103,7 @@ public class WorldNavigationSystem {
     public void setTargetTile(GameEntity actor, Vector2i tile) {
         requireNonNull(actor);
         requireNonNull(tile);
-        actor.reqComp(WorldNavigationComp.class).setTargetTile(tile);
+        actor.assertComponent(WorldNavigationComp.class).setTargetTile(tile);
     }
 
     /**
@@ -113,7 +113,7 @@ public class WorldNavigationSystem {
      */
     public void clearTargetTile(GameEntity actor) {
         requireNonNull(actor);
-        actor.reqComp(WorldNavigationComp.class).setTargetTile(null);
+        actor.assertComponent(WorldNavigationComp.class).setTargetTile(null);
     }
 
     /**
@@ -123,7 +123,7 @@ public class WorldNavigationSystem {
      */
     public void requestTurnBack(GameEntity actor) {
         requireNonNull(actor);
-        actor.reqComp(WorldNavigationComp.class).setTurnBackRequested(true);
+        actor.assertComponent(WorldNavigationComp.class).setTurnBackRequested(true);
     }
 
     /**
@@ -140,7 +140,7 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
 
         final PositionComp position = actor.pos();
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
         final Vector2i tileBefore = actor.pos().tile();
 
         position.setX(tx * TS + ox);
@@ -181,8 +181,8 @@ public class WorldNavigationSystem {
     public void setSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
-        final MovementComp movement = actor.reqComp(MovementComp.class);
-        final Direction moveDir = actor.reqComp(WorldNavigationComp.class).moveDir();
+        final MovementComp movement = actor.assertComponent(MovementComp.class);
+        final Direction moveDir = actor.assertComponent(WorldNavigationComp.class).moveDir();
         movement.setVelocity(moveDir.vector().scaled(speed));
     }
 
@@ -199,7 +199,7 @@ public class WorldNavigationSystem {
         requireNonNull(level);
         requireNonNull(movementPolicy);
 
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
 
         if (!navigation.isNewTileEntered() && navigation.info().moved || navigation.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -246,7 +246,7 @@ public class WorldNavigationSystem {
         requireNonNull(targetTile);
         requireNonNull(movementPolicy);
 
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
 
         if (navigation.isPaused()) {
             return;
@@ -272,7 +272,7 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(level);
 
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
         navigation.info().clear();
 
         if (navigation.isPaused()) {
@@ -305,7 +305,7 @@ public class WorldNavigationSystem {
     }
 
     private boolean tryTeleporting(GameEntity actor, TerrainLayer terrain) {
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
 
         if (navigation.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
@@ -324,8 +324,8 @@ public class WorldNavigationSystem {
         Vector2i tileBeforeMoving,
         Direction dir)
     {
-        final MovementComp movement = actor.reqComp(MovementComp.class);
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final MovementComp movement = actor.assertComponent(MovementComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.speed());
         final Vector2f touchPosition = actor.pos().bodyCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);

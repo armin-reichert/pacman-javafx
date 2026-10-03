@@ -92,7 +92,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         // Show animated game over message moving horizontally over scene and wrapping around
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        messageView.optComp(MessageAnimationComp.class).ifPresent(messageAnimation -> {
+        messageView.optComponent(MessageAnimationComp.class).ifPresent(messageAnimation -> {
             final var systems = (TengenMsPacMan_GameSystems) game.playConfig().systems();
             if (messageAnimation.finished() && countdownAfter == 0) {
                 countdownAfter = COUNTDOWN_AFTER_ANIMATION;
@@ -106,7 +106,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     public void onExit(GameContext game) {
         session.level().clearMessage();
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        messageView.removeComp(MessageAnimationComp.class);
+        messageView.removeComponent(MessageAnimationComp.class);
     }
 
     private void createAndStartMessageAnimation(MessageView messageView, GameContext game) {
@@ -121,7 +121,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         messageAnimation.setWidth(width);
         messageAnimation.setWrapX(wrapX);
         messageAnimation.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
-        messageView.setComp(MessageAnimationComp.class, messageAnimation);
+        messageView.setComponent(MessageAnimationComp.class, messageAnimation);
 
         Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
 

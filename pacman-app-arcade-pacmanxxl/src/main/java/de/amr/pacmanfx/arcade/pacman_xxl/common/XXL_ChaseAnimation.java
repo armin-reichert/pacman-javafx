@@ -20,7 +20,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
@@ -212,7 +211,7 @@ class XXL_ChaseAnimation {
 
                 ghostPoints = new GhostPoints(GHOST_POINTS[collisionCount - 1]);
                 ghostPoints.pos().set(ghost.pos().asVector2f());
-                ghostPoints.setComp(MovementComp.class, new MovementComp());
+                ghostPoints.setComponent(MovementComp.class, new MovementComp());
                 ghostPoints.optMovement().ifPresent(movement -> movement.setVelocity(ghost.movement().velocity()));
                 ghostPoints.setLifetimeSec(GHOST_POINTS_DISPLAY_SEC);
                 ghostPoints.show();

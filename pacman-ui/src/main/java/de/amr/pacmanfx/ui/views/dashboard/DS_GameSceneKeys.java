@@ -32,8 +32,8 @@ public class DS_GameSceneKeys extends GameDashboardSection {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             return;
         }
-        if (abstractGameScene.hasComp(ActionBindingsComp.class)) {
-            final ActionBindingsRegistry registry = abstractGameScene.reqComp(ActionBindingsComp.class).registry();
+        if (abstractGameScene.hasComponent(ActionBindingsComp.class)) {
+            final ActionBindingsRegistry registry = abstractGameScene.assertComponent(ActionBindingsComp.class).registry();
             if (registry.actionBindings().isEmpty()) {
                 addRow(createLabel(NO_INFO, false));
             } else {

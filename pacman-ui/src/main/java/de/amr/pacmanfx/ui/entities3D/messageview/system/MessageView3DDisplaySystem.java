@@ -43,7 +43,7 @@ public class MessageView3DDisplaySystem {
         requireNonNull(messageType);
 
         MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
-        final Node root = messageView.reqComp(MessageView3DComp.class).root();
+        final Node root = messageView.assertComponent(MessageView3DComp.class).root();
         if (!parent.getChildren().contains(root)) {
             parent.getChildren().add(root);
         }

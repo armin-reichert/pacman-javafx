@@ -386,7 +386,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         float y = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
         messageView.pos().set(x, y);
 
-        messageView.setComp(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
+        messageView.setComponent(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
 
         return messageView;
     }

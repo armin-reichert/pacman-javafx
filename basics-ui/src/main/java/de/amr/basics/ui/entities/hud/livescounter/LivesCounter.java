@@ -9,10 +9,10 @@ import de.amr.basics.ecs.GameEntity;
 public class LivesCounter extends GameEntity {
 
     public LivesCounter() {
-        setComp(LivesCounterDataComp.class, new LivesCounterDataComp());
+        setComponent(LivesCounterDataComp.class, new LivesCounterDataComp());
     }
 
     public LivesCounterDataComp data() {
-        return reqComp(LivesCounterDataComp.class);
+        return assertComponent(LivesCounterDataComp.class);
     }
 }

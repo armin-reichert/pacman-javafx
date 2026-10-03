@@ -74,11 +74,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     private SceneState sceneState;
 
     public ArcadeMsPacMan_CutScene3() {
-        setComp(CutSceneTimingComp.class, new Timing(0));
+        setComponent(CutSceneTimingComp.class, new Timing(0));
     }
 
     private Timing timing() {
-        return (Timing) reqComp(CutSceneTimingComp.class);
+        return (Timing) assertComponent(CutSceneTimingComp.class);
     }
 
     @Override

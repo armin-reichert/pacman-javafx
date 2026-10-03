@@ -52,7 +52,7 @@ public class Composition<C> implements Disposable {
      * @param component the component to be registered
      * @param <T> component type
      */
-    public final <T extends C> void setComp(Class<T> type, T component) {
+    public final <T extends C> void setComponent(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (componentsByType.containsKey(type)) {
@@ -61,8 +61,8 @@ public class Composition<C> implements Disposable {
         componentsByType.put(type, component);
     }
 
-    public final <T extends C> void removeComp(Class<T> type) {
-        if (hasComp(type)) {
+    public final <T extends C> void removeComponent(Class<T> type) {
+        if (hasComponent(type)) {
             var comp = componentsByType.remove(type);
             if (comp instanceof Disposable disposable) {
                 disposable.dispose();
@@ -77,7 +77,7 @@ public class Composition<C> implements Disposable {
      * @return the entity component registered for the given type
      * @param <T> component type
      */
-    public final <T extends C> T reqComp(Class<T> type) {
+    public final <T extends C> T assertComponent(Class<T> type) {
         requireNonNull(type);
         if (!componentsByType.containsKey(type)) {
             throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
@@ -93,7 +93,7 @@ public class Composition<C> implements Disposable {
      * @return {@code true} if a component for this type is registered
      * @param <T> component type
      */
-    public final <T extends C> boolean hasComp(Class<T> type) {
+    public final <T extends C> boolean hasComponent(Class<T> type) {
         requireNonNull(type);
         return componentsByType.containsKey(type);
     }
@@ -105,7 +105,7 @@ public class Composition<C> implements Disposable {
      * @return the entity component registered for the given type
      * @param <T> component type
      */
-    public final <T extends C> Optional<T> optComp(Class<T> type) {
+    public final <T extends C> Optional<T> optComponent(Class<T> type) {
         requireNonNull(type);
         final C component = componentsByType.get(type);
         return Optional.ofNullable(component).map(type::cast);

@@ -17,7 +17,7 @@ import javafx.animation.SequentialTransition;
 public class Pac3DAnimationSystem {
 
     public void stopAnimations(Pac pac) {
-        final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
         if (animation.chewing() != null) {
             animation.chewing().stop();
         }
@@ -30,7 +30,7 @@ public class Pac3DAnimationSystem {
     }
 
     public void updateAnimations(Pac pac) {
-        final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
 
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
@@ -50,7 +50,7 @@ public class Pac3DAnimationSystem {
     }
 
     public void setPowerMode(Pac pac, boolean power) {
-        final Pac3DAnimationComp animation = pac.reqComp(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
@@ -61,7 +61,7 @@ public class Pac3DAnimationSystem {
         Pac pac,
         Runnable pacDeadSoundEffect,
         Runnable onFinishedCallback) {
-        final Pac3DAnimationComp pacAnimation = pac.reqComp(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp pacAnimation = pac.assertComponent(Pac3DAnimationComp.class);
 
         final Animation animation = new SequentialTransition(
             Ufx.pauseSecThen(1.5, pacDeadSoundEffect),
@@ -84,7 +84,7 @@ public class Pac3DAnimationSystem {
      */
     private void updatePowerLight(Pac pac) {
         final PacStateComp state = pac.state();
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
 
         final boolean lighted = state.enumValue() != PacState.DEAD;
         if (lighted) {

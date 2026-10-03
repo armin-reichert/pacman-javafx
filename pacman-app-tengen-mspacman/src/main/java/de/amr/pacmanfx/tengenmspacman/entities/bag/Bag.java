@@ -13,16 +13,16 @@ public class Bag extends GameEntity {
 
     public Bag() {
         setName("Birkin");
-        setComp(MovementComp.class, new MovementComp());
-        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
     }
 
     public MovementComp movement() {
-        return reqComp(MovementComp.class);
+        return assertComponent(MovementComp.class);
     }
 
     public SpriteAnimationComp spriteAnim() {
-        return reqComp(SpriteAnimationComp.class);
+        return assertComponent(SpriteAnimationComp.class);
     }
 
     public void setOpen(boolean open) {

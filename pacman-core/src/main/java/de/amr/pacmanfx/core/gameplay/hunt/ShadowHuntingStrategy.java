@@ -27,7 +27,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(ghost);
         requireNonNull(worldMovementPolicy);
 
-        final boolean overrideChase = ghost.hasComp(ElroyComp.class) && ghost.reqComp(ElroyComp.class).enabled();
+        final boolean overrideChase = ghost.hasComponent(ElroyComp.class) && ghost.assertComponent(ElroyComp.class).enabled();
         final boolean chase = level.huntingTimer().inChasingPhase() || overrideChase;
         final Vector2i targetTile = chase ? computeChasingTargetTile(level) : computeScatterTile(level.worldMap(), ghost);
 

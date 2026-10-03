@@ -85,7 +85,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.assertComponent(WorldNavigationComp.class);
 
         final Vector2i tile = actor.pos().tile();
         final Vector2i tileOffset = actor.pos().offset();
@@ -105,8 +105,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorMovementText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        return actor.optComp(MovementComp.class).map(movement -> {
-            final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        return actor.optComponent(MovementComp.class).map(movement -> {
+            final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
             final boolean moved = !navigation.info().moved;
             final String turnbackText = navigation.isTurnBackRequested() ? "REV!" : "";

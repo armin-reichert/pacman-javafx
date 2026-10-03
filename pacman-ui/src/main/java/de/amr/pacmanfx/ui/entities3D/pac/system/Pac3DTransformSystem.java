@@ -22,7 +22,7 @@ public class Pac3DTransformSystem {
         requireNonNull(pac);
         requireNonNull(worldMap);
 
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
@@ -37,7 +37,7 @@ public class Pac3DTransformSystem {
             return;
         }
 
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
         final Vector2f center = pac.pos().bodyCenter();
 
         updateVisibility(pac, center);
@@ -53,7 +53,7 @@ public class Pac3DTransformSystem {
     }
 
     private void updateVisibility(Pac pac, Vector2f center) {
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
         final WorldMap worldMap = pac.worldNavigation().worldMap();
         final boolean outsideWorld = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
         view3D.root().setVisible(pac.isVisible() && !outsideWorld);

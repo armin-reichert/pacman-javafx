@@ -73,7 +73,7 @@ public class GameEntityRenderer extends BaseRenderer {
     }
 
     protected void drawMessageView(MessageView messageView) {
-        messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
+        messageView.optComponent(MessageViewStyleComp.class).ifPresent(style -> {
             final MessageType messageType = messageView.type().messageType();
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
             final Color color = style.messageColor().apply(messageType);

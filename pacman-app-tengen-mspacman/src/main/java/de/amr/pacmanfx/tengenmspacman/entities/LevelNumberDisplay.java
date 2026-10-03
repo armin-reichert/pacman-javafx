@@ -6,10 +6,10 @@ import de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay.LevelNumberCom
 public class LevelNumberDisplay extends GameEntity {
 
     public LevelNumberDisplay() {
-        setComp(LevelNumberComp.class, new LevelNumberComp());
+        setComponent(LevelNumberComp.class, new LevelNumberComp());
     }
 
     public LevelNumberComp levelNumber() {
-        return reqComp(LevelNumberComp.class);
+        return assertComponent(LevelNumberComp.class);
     }
 }

@@ -12,15 +12,15 @@ import de.amr.basics.ecs.GameEntity;
 public class Clapperboard extends GameEntity {
 
     public Clapperboard(String number, String text) {
-        setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
-        setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp(number, text));
+        setComponent(ClapperboardStateComp.class, new ClapperboardStateComp());
+        setComponent(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp(number, text));
     }
 
     public ClapperboardInscriptionComp inscription() {
-        return reqComp(ClapperboardInscriptionComp.class);
+        return assertComponent(ClapperboardInscriptionComp.class);
     }
 
     public ClapperboardStateComp state() {
-        return reqComp(ClapperboardStateComp.class);
+        return assertComponent(ClapperboardStateComp.class);
     }
 }

@@ -16,7 +16,7 @@ public class Score extends GameEntity {
 
     public Score(Type type) {
         this.type = requireNonNull(type);
-        setComp(ScoreDataComp.class, new ScoreDataComp());
+        setComponent(ScoreDataComp.class, new ScoreDataComp());
     }
 
     public Type type() {
@@ -24,10 +24,10 @@ public class Score extends GameEntity {
     }
 
     public ScoreDataComp data() {
-        return reqComp(ScoreDataComp.class);
+        return assertComponent(ScoreDataComp.class);
     }
 
     public ScorePersistencyComp reqPersistency() {
-        return reqComp(ScorePersistencyComp.class);
+        return assertComponent(ScorePersistencyComp.class);
     }
 }

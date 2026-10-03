@@ -62,7 +62,7 @@ public class WorldRoamingSystem {
         WorldMovementPolicy<E> policy,
         Vector2i currentTile)
     {
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
         final Direction oppositeDir = navigation.moveDir().opposite();
 
         Direction nextDir = choosePseudoRandomDirection();

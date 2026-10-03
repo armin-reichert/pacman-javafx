@@ -41,7 +41,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     private NailDressRapturing nailDressRapturing;
 
     public ArcadePacMan_CutScene2() {
-        setComp(CutSceneTimingComp.class, new CutScene2TimingComp(120));
+        setComponent(CutSceneTimingComp.class, new CutScene2TimingComp(120));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     }
 
     private CutScene2TimingComp timing() {
-        return (CutScene2TimingComp) reqComp(CutSceneTimingComp.class);
+        return (CutScene2TimingComp) assertComponent(CutSceneTimingComp.class);
     }
 
     @Override

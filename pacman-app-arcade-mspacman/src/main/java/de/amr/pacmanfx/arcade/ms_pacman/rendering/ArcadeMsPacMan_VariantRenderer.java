@@ -192,15 +192,15 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private RectShort computeSprite(Bag bag) {
-        return bag.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
+        return bag.assertComponent(SpriteAnimationComp.class).spriteAnimations().currentSprite();
     }
 
     private RectShort computeSprite(Heart heart) {
-        return heart.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
+        return heart.assertComponent(SpriteAnimationComp.class).spriteAnimations().currentSprite();
     }
 
     private RectShort computeSprite(Stork stork) {
-        return stork.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
+        return stork.assertComponent(SpriteAnimationComp.class).spriteAnimations().currentSprite();
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
@@ -224,14 +224,14 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     // --- HUD ---
 
     private void drawGameScore(Score score) {
-        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = score.assertComponent(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
 
     }
 
     private void drawHighScore(Score score) {
-        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = score.assertComponent(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final boolean disabled = !score.data().isEnabled();
         final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
@@ -249,7 +249,7 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
-        final HUDStyleComp style = livesCounter.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
@@ -267,7 +267,7 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-        final HUDStyleComp style = levelCounter.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = levelCounter.assertComponent(HUDStyleComp.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {

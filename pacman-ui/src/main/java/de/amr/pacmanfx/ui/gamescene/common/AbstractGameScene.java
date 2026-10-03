@@ -26,22 +26,22 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     private GameApp app;
 
     public AbstractGameScene() {
-        final var r2d = new GameSceneView2D();
-        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComp(GameSceneView2D.class, r2d);
+        final var view2D = new GameSceneView2D();
+        view2D.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComponent(GameSceneView2D.class, view2D);
 
-        setComp(ActionBindingsComp.class, new ActionBindingsComp(this));
+        setComponent(ActionBindingsComp.class, new ActionBindingsComp(this));
     }
 
     // Typed game scene component access
 
     public GameSceneView2D view2D() {
-        return reqComp(GameSceneView2D.class);
+        return assertComponent(GameSceneView2D.class);
     }
 
     public ActionBindingsComp actionBindings() {
-        return reqComp(ActionBindingsComp.class);
+        return assertComponent(ActionBindingsComp.class);
     }
 
     // Events
@@ -99,7 +99,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        optComp(ActionBindingsComp.class)
+        optComponent(ActionBindingsComp.class)
             .map(ActionBindingsComp::registry)
             .ifPresent(registry -> registry.executeMatchingAction(app()));
     }

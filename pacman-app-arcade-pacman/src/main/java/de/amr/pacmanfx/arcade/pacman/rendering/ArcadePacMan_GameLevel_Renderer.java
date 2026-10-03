@@ -90,7 +90,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
     private void hideGhostHouseDoors(House house) {
         final Door door = house.door();
-        final var doorData = door.reqComp(DoorDataComp.class);
+        final var doorData = door.assertComponent(DoorDataComp.class);
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(backgroundColor());

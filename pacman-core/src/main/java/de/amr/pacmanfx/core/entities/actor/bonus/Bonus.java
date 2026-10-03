@@ -24,28 +24,28 @@ public final class Bonus extends GameEntity {
 
     public static Bonus createMovingBonus(int symbolCode) {
         final var bonus = new Bonus(symbolCode);
-        bonus.setComp(MovementComp.class, new MovementComp());
-        bonus.setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        bonus.setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+        bonus.setComponent(MovementComp.class, new MovementComp());
+        bonus.setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        bonus.setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
 
-        bonus.reqComp(WorldNavigationComp.class).setCanTeleport(false);
+        bonus.assertComponent(WorldNavigationComp.class).setCanTeleport(false);
         return bonus;
     }
 
     public Bonus(int symbolCode) {
-        setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
-        setComp(BonusStateComp.class, new BonusStateComp());
+        setComponent(BonusDataComp.class, new BonusDataComp(symbolCode));
+        setComponent(BonusStateComp.class, new BonusStateComp());
     }
 
     public BonusDataComp data() {
-        return reqComp(BonusDataComp.class);
+        return assertComponent(BonusDataComp.class);
     }
 
     public BonusStateComp state() {
-        return reqComp(BonusStateComp.class);
+        return assertComponent(BonusStateComp.class);
     }
 
     public Optional<BonusMoveAndJumpComp> optMoveAndJump() {
-        return optComp(BonusMoveAndJumpComp.class);
+        return optComponent(BonusMoveAndJumpComp.class);
     }
 }

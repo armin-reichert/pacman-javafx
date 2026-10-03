@@ -13,10 +13,10 @@ public class MessageAnimationSystem {
     }
 
     public void start(MessageView messageView, Vector2f startPosition, int delayTicks) {
-        if (!messageView.hasComp(MessageAnimationComp.class)) {
+        if (!messageView.hasComponent(MessageAnimationComp.class)) {
             return;
         }
-        final MessageAnimationComp animation = messageView.reqComp(MessageAnimationComp.class);
+        final MessageAnimationComp animation = messageView.assertComponent(MessageAnimationComp.class);
         animation.setDelayTicks(delayTicks);
         animation.setStartPosition(startPosition);
         animation.setWrapped(false);
@@ -27,10 +27,10 @@ public class MessageAnimationSystem {
     }
 
     public void update(MessageView messageView) {
-        if (!messageView.hasComp(MessageAnimationComp.class)) {
+        if (!messageView.hasComponent(MessageAnimationComp.class)) {
             return;
         }
-        final MessageAnimationComp animation = messageView.reqComp(MessageAnimationComp.class);
+        final MessageAnimationComp animation = messageView.assertComponent(MessageAnimationComp.class);
         if (!animation.running() || animation.finished()) {
             return;
         }

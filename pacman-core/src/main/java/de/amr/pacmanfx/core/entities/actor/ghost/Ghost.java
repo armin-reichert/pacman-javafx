@@ -23,13 +23,13 @@ public final class Ghost extends GameEntity {
         this.personality = requireNonNull(personality);
         setName(name);
 
-        setComp(MovementComp.class, new MovementComp());
-        setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        setComp(GhostWorldInfoComp.class, new GhostWorldInfoComp());
-        setComp(GhostHouseAccessComp.class, new GhostHouseAccessComp());
-        setComp(GhostStateComp.class, new GhostStateComp());
-        setComp(GhostAnimationComp.class, new GhostAnimationComp());
-        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        setComponent(GhostWorldInfoComp.class, new GhostWorldInfoComp());
+        setComponent(GhostHouseAccessComp.class, new GhostHouseAccessComp());
+        setComponent(GhostStateComp.class, new GhostStateComp());
+        setComponent(GhostAnimationComp.class, new GhostAnimationComp());
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
@@ -42,31 +42,31 @@ public final class Ghost extends GameEntity {
     // Typed component accessors
 
     public MovementComp movement() {
-        return reqComp(MovementComp.class);
+        return assertComponent(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return reqComp(WorldNavigationComp.class);
+        return assertComponent(WorldNavigationComp.class);
     }
 
     public GhostWorldInfoComp worldInfo() {
-        return reqComp(GhostWorldInfoComp.class);
+        return assertComponent(GhostWorldInfoComp.class);
     }
 
     public GhostHouseAccessComp houseAccess() {
-        return reqComp(GhostHouseAccessComp.class);
+        return assertComponent(GhostHouseAccessComp.class);
     }
 
     public GhostStateComp state() {
-        return reqComp(GhostStateComp.class);
+        return assertComponent(GhostStateComp.class);
     }
 
     public GhostAnimationComp animation() {
-        return reqComp(GhostAnimationComp.class);
+        return assertComponent(GhostAnimationComp.class);
     }
 
     public SpriteAnimationComp spriteAnimation() {
-        return reqComp(SpriteAnimationComp.class);
+        return assertComponent(SpriteAnimationComp.class);
     }
 
     @Override

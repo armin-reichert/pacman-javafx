@@ -29,30 +29,30 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
 
     public GameEntity() {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
-        setComp(PositionComp.class, new PositionComp());
-        setComp(VisibilityComp.class, new VisibilityComp(false));
+        setComponent(PositionComp.class, new PositionComp());
+        setComponent(VisibilityComp.class, new VisibilityComp(false));
     }
 
     // Typed access
 
     public final PositionComp pos() {
-        return reqComp(PositionComp.class);
+        return assertComponent(PositionComp.class);
     }
 
     public final VisibilityComp visibility() {
-        return reqComp(VisibilityComp.class);
+        return assertComponent(VisibilityComp.class);
     }
 
     public final Optional<MovementComp> optMovement() {
-        return optComp(MovementComp.class);
+        return optComponent(MovementComp.class);
     }
 
     public final LifetimeComp lifetime() {
-        return reqComp(LifetimeComp.class);
+        return assertComponent(LifetimeComp.class);
     }
 
     public void setLifetimeSec(float seconds) {
-        setComp(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(seconds)));
+        setComponent(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(seconds)));
     }
 
     public final void setName(String name) {

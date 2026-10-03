@@ -14,8 +14,8 @@ import static de.amr.basics.TileDimension.tilesPx;
 public class TextView extends GameEntity {
 
     public TextView() {
-        setComp(TextViewDataComp.class, new TextViewDataComp());
-        setComp(MovementComp.class, new MovementComp());
+        setComponent(TextViewDataComp.class, new TextViewDataComp());
+        setComponent(MovementComp.class, new MovementComp());
     }
 
     public static TextView createText(String text, Color color, Font font, float tileX, float tileY) {
@@ -29,10 +29,10 @@ public class TextView extends GameEntity {
     }
 
     public TextViewDataComp data() {
-        return reqComp(TextViewDataComp.class);
+        return assertComponent(TextViewDataComp.class);
     }
 
     public MovementComp movement() {
-        return reqComp(MovementComp.class);
+        return assertComponent(MovementComp.class);
     }
 }

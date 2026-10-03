@@ -82,14 +82,14 @@ public class GhostStateSystem {
 
     public void setElroyEnabled(Ghost ghost, boolean enabled) {
         requireNonNull(ghost);
-        ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(enabled));
+        ghost.optComponent(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(enabled));
     }
 
     public void updateElroyState(GameContext game) {
         final GameLevel level = game.session().level();
         final Ghost ghost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
         final GameRules rules = game.playConfig().rules();
-        ghost.optComp(ElroyComp.class).ifPresent(elroy -> {
+        ghost.optComponent(ElroyComp.class).ifPresent(elroy -> {
             if (rules.ghostBecomesElroy1(level, ghost)) {
                 elroy.setBoost(ElroyComp.Boost.MEDIUM);
             } else if (rules.ghostBecomesElroy2(level, ghost)) {

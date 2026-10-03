@@ -6,10 +6,10 @@ import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDat
 public class GameOptionsDisplay extends GameEntity {
 
     public GameOptionsDisplay() {
-        setComp(GameOptionsDataComp.class, new GameOptionsDataComp());
+        setComponent(GameOptionsDataComp.class, new GameOptionsDataComp());
     }
 
     public GameOptionsDataComp options() {
-        return reqComp(GameOptionsDataComp.class);
+        return assertComponent(GameOptionsDataComp.class);
     }
 }

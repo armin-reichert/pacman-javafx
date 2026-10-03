@@ -292,7 +292,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             case READY -> ArcadeColor.YELLOW.color();
             case GAME_OVER -> ArcadeColor.RED.color();
         });
-        messageView.setComp(MessageViewStyleComp.class, style);
+        messageView.setComponent(MessageViewStyleComp.class, style);
 
         return messageView;
     }
@@ -353,7 +353,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     protected void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
         final Ghost redGhost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
         // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
-        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
+        redGhost.optComponent(ElroyComp.class).ifPresent(elroy -> {
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
                 if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);

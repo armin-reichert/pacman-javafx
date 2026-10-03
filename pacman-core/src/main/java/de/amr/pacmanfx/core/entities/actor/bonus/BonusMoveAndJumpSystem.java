@@ -34,7 +34,7 @@ public class BonusMoveAndJumpSystem {
     public void setBonusInactive(Bonus bonus) {
         requireNonNull(bonus);
 
-        bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(moveAndJump -> {
+        bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(moveAndJump -> {
             moveAndJump.jumpPulse().stopAndReset();
             navigationSystem.setSpeed(bonus, 0);
         });
@@ -44,7 +44,7 @@ public class BonusMoveAndJumpSystem {
         requireNonNull(bonus);
         requireNonNull(routeInfo);
 
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        final BonusMoveAndJumpComp moveAndJump = bonus.assertComponent(BonusMoveAndJumpComp.class);
         setRoute(bonus, routeInfo);
         navigationSystem.clearTargetTile(bonus);
         navigationSystem.setSpeed(bonus, speed);
@@ -52,7 +52,7 @@ public class BonusMoveAndJumpSystem {
     }
 
     public void update(GameLevel level, Bonus bonus) {
-        if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+        if (bonus.hasComponent(BonusMoveAndJumpComp.class)) {
             wander(level, bonus);
             jump(bonus);
         }
@@ -62,7 +62,7 @@ public class BonusMoveAndJumpSystem {
         requireNonNull(level);
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        final BonusMoveAndJumpComp moveAndJump = bonus.assertComponent(BonusMoveAndJumpComp.class);
 
         moveAndJump.routeNavigation().steer(bonus, level);
 
@@ -80,8 +80,8 @@ public class BonusMoveAndJumpSystem {
     private void jump(Bonus bonus) {
         requireNonNull(bonus);
 
-        final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        final WorldNavigationComp worldNavigation = bonus.assertComponent(WorldNavigationComp.class);
+        final BonusMoveAndJumpComp moveAndJump = bonus.assertComponent(BonusMoveAndJumpComp.class);
 
         final Pulse pulse = moveAndJump.jumpPulse();
         pulse.triggerPulse();
@@ -105,7 +105,7 @@ public class BonusMoveAndJumpSystem {
         final var waypoints = new ArrayList<>(routeInfo.waypoints());
         navigationSystem.placeAtTile(bonus, waypoints.removeFirst());
 
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        final BonusMoveAndJumpComp moveAndJump = bonus.assertComponent(BonusMoveAndJumpComp.class);
         moveAndJump.setRouteNavigation(new RouteGuidedSteering<>(navigationSystem, movementPolicy, waypoints));
     }
 }

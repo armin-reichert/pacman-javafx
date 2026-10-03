@@ -22,7 +22,7 @@ public class Bonus3DAnimationSystem {
     }
 
     private void lookEdible(Bonus bonus) {
-        final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
+        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -31,7 +31,7 @@ public class Bonus3DAnimationSystem {
     }
 
     private void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {
-        final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
+        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -47,7 +47,7 @@ public class Bonus3DAnimationSystem {
     }
 
     public void lookExpired(Bonus bonus, AnimationRegistry animationRegistry) {
-        final Bonus3DViewComp view3D = bonus.reqComp(Bonus3DViewComp.class);
+        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(false);

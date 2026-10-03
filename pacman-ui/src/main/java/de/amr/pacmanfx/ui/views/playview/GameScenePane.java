@@ -96,10 +96,10 @@ public class GameScenePane extends BorderPane {
         final GameSceneEmbedding embedding = uiConfig.gameSceneConfig().embedding(gameScene);
         if (embedding == GameSceneEmbedding.SUBSCENE_2D) {
             if (!(gameScene instanceof AbstractGameScene absGameScene)
-                || !absGameScene.hasComp(GameSceneView2D.class)) {
+                || !absGameScene.hasComponent(GameSceneView2D.class)) {
                 return;
             }
-            final GameSceneView2D r2D = absGameScene.reqComp(GameSceneView2D.class);
+            final GameSceneView2D r2D = absGameScene.assertComponent(GameSceneView2D.class);
             subSceneContainer.renderingSurface().scalingProperty().bind(
                 subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
         }
@@ -122,7 +122,7 @@ public class GameScenePane extends BorderPane {
     }
 
     private void embedDecoratedGameScene2D(GameMainScene mainScene, AbstractGameScene gameScene, Game2DSettingsVM settingsViewModel) {
-        final GameSceneView2D r2d = gameScene.reqComp(GameSceneView2D.class);
+        final GameSceneView2D r2d = gameScene.assertComponent(GameSceneView2D.class);
         final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);
 
         framedContainer.newRenderingSurface(); //TODO check if creating a new canvas is needed
@@ -144,7 +144,7 @@ public class GameScenePane extends BorderPane {
     }
 
     private void embedPlainGameScene2D(GameMainScene mainScene, AbstractGameScene gameScene) {
-        final GameSceneView2D r2d = gameScene.reqComp(GameSceneView2D.class);
+        final GameSceneView2D r2d = gameScene.assertComponent(GameSceneView2D.class);
 
         plainContainer.reset();
         plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
@@ -175,11 +175,11 @@ public class GameScenePane extends BorderPane {
 
     private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, GameScene gameScene) {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)
-            || !abstractGameScene.hasComp(GameSceneView2D.class)) {
+            || !abstractGameScene.hasComponent(GameSceneView2D.class)) {
             Logger.error("Cannot embed game scene");
             return;
         }
-        final GameSceneView2D r2D = abstractGameScene.reqComp(GameSceneView2D.class);
+        final GameSceneView2D r2D = abstractGameScene.assertComponent(GameSceneView2D.class);
         final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
 
         r2D.setRenderingSurface(renderingSurface);

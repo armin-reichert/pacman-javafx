@@ -11,7 +11,7 @@ public class LifetimeSystem {
     public void update(QuerySet<GameEntity> entities) {
         final List<GameEntity> copy = entities.all().toList();
         for (GameEntity entity : copy) {
-            if (entity.hasComp(LifetimeComp.class)) {
+            if (entity.hasComponent(LifetimeComp.class)) {
                 entity.lifetime().becomeOlder();
                 if (entity.lifetime().ends()) {
                     entities.remove(entity);

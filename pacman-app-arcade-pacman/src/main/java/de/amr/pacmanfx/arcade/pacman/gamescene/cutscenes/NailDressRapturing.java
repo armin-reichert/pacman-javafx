@@ -12,14 +12,14 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 public class NailDressRapturing extends GameEntity {
 
     public NailDressRapturing(SpriteAnimationContainer animContainer) {
-        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
 
-        reqComp(SpriteAnimationComp.class).setSpriteAnimations(new DressRaptureAnimation(animContainer));
+        assertComponent(SpriteAnimationComp.class).setSpriteAnimations(new DressRaptureAnimation(animContainer));
         setState(NailDressRapturingState.NAIL);
     }
 
     public void setState(NailDressRapturingState state) {
         final int frame = state.ordinal();
-        reqComp(SpriteAnimationComp.class).spriteAnimations().setAnimationFrame(SpriteID.RED_GHOST_STRETCHED, frame);
+        assertComponent(SpriteAnimationComp.class).spriteAnimations().setAnimationFrame(SpriteID.RED_GHOST_STRETCHED, frame);
     }
 }

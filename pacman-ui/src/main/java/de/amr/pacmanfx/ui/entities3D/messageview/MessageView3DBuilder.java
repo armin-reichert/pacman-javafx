@@ -26,18 +26,18 @@ public class MessageView3DBuilder {
     private static final int QUALITY = 3;
 
     public static MessageView3DComp ensureView3DExists(MessageView messageView) {
-        if (!messageView.hasComp(MessageView3DComp.class)) {
-            messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
+        if (!messageView.hasComponent(MessageView3DComp.class)) {
+            messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());
         }
-        return messageView.reqComp(MessageView3DComp.class);
+        return messageView.assertComponent(MessageView3DComp.class);
     }
 
     public static void createAnim3D(MessageView messageView, AnimationRegistry registry) {
-        messageView.removeComp(MessageView3DComp.class);
-        messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
-        messageView.removeComp(MessageView3DAnimationComp.class);
-        messageView.setComp(MessageView3DAnimationComp.class,
-            new MessageView3DAnimationComp(registry, messageView.reqComp(MessageView3DComp.class)));
+        messageView.removeComponent(MessageView3DComp.class);
+        messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());
+        messageView.removeComponent(MessageView3DAnimationComp.class);
+        messageView.setComponent(MessageView3DAnimationComp.class,
+            new MessageView3DAnimationComp(registry, messageView.assertComponent(MessageView3DComp.class)));
     }
 
     private Color borderColor = Color.BLUE;

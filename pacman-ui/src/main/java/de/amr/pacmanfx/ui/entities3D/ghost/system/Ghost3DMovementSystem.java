@@ -15,7 +15,7 @@ public class Ghost3DMovementSystem {
     }
 
     public void update(Ghost ghost) {
-        final Ghost3DViewComp view3D = ghost.reqComp(Ghost3DViewComp.class);
+        final Ghost3DViewComp view3D = ghost.assertComponent(Ghost3DViewComp.class);
 
         final Vector2f center = ghost.pos().bodyCenter();
         final double height = view3D.root().getBoundsInParent().getDepth();
@@ -37,7 +37,7 @@ public class Ghost3DMovementSystem {
         view3D.facingRotate().setAngle(angle);
 
         if (ghost.worldNavigation().info().tunnelEntered) {
-            ghost.reqComp(Ghost3DAnimationComp.class).braking().playFromStart();
+            ghost.assertComponent(Ghost3DAnimationComp.class).braking().playFromStart();
         }
     }
 }

@@ -5,10 +5,10 @@ import de.amr.basics.ecs.GameEntity;
 public class BonusPoints extends GameEntity {
 
     public BonusPoints(int value) {
-        setComp(BonusPointsComp.class, new BonusPointsComp(value));
+        setComponent(BonusPointsComp.class, new BonusPointsComp(value));
     }
 
     public BonusPointsComp points() {
-        return reqComp(BonusPointsComp.class);
+        return assertComponent(BonusPointsComp.class);
     }
 }

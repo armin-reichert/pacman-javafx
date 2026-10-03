@@ -240,7 +240,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(Door door) {
-        final var data = door.reqComp(DoorDataComp.class);
+        final var data = door.assertComponent(DoorDataComp.class);
 
         final double scaledTileSize = scaled(TS);
         final Vector2i leftDoorTile = data.leftTile();
@@ -328,7 +328,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(Score score, long tick) {
-        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = score.assertComponent(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         switch (score.type()) {
             case GAME_SCORE -> {
@@ -350,7 +350,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LivesCounter livesCounter) {
-        final HUDStyleComp style = livesCounter.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 

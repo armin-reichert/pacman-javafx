@@ -19,18 +19,18 @@ public class House extends GameEntity {
 
     public House(HouseFloorplanComp floorplan) {
         requireNonNull(floorplan);
-        setComp(HouseFloorplanComp.class, floorplan);
+        setComponent(HouseFloorplanComp.class, floorplan);
 
         final Vector2f doorPos = floorplan.leftDoorTile().toVector2f().scaled(TS);
         door = new Door();
-        door.reqComp(DoorDataComp.class).setLeftTile(floorplan.leftDoorTile());
-        door.reqComp(DoorDataComp.class).setRightTile(floorplan.rightDoorTile());
+        door.assertComponent(DoorDataComp.class).setLeftTile(floorplan.leftDoorTile());
+        door.assertComponent(DoorDataComp.class).setRightTile(floorplan.rightDoorTile());
         door.pos().set(doorPos);
         door.show();
     }
 
     public HouseFloorplanComp floorplan() {
-        return reqComp(HouseFloorplanComp.class);
+        return assertComponent(HouseFloorplanComp.class);
     }
 
     public Door door() {
@@ -38,13 +38,13 @@ public class House extends GameEntity {
     }
 
     public Vector2i sizeInTiles() {
-        final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
+        final HouseFloorplanComp fp = assertComponent(HouseFloorplanComp.class);
         return fp.maxTile().minus(fp.minTile()).plus(1, 1);
     }
 
     public boolean isDoorAt(Vector2i tile) {
         requireNonNull(tile);
-        final var doorLayout = door.reqComp(DoorDataComp.class);
+        final var doorLayout = door.assertComponent(DoorDataComp.class);
         return doorLayout.leftTile().equals(tile) || doorLayout.rightTile().equals(tile);
     }
 
@@ -52,7 +52,7 @@ public class House extends GameEntity {
      * @return center position under house, used e.g. as anchor for level messages
      */
     public Vector2f centerPositionUnderHouse() {
-        final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
+        final HouseFloorplanComp fp = assertComponent(HouseFloorplanComp.class);
         Vector2i sizeTiles = sizeInTiles();
         return vec2_float(
             TS * (fp.minTile().x() + 0.5f * sizeTiles.x()),
@@ -62,7 +62,7 @@ public class House extends GameEntity {
 
     public boolean contains(Vector2i tile) {
         requireNonNull(tile);
-        final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
+        final HouseFloorplanComp fp = assertComponent(HouseFloorplanComp.class);
         return tile.x() >= fp.minTile().x() && tile.x() <= fp.maxTile().x()
             && tile.y() >= fp.minTile().y() && tile.y() <= fp.maxTile().y();
     }
@@ -78,7 +78,7 @@ public class House extends GameEntity {
     }
 
     public Vector2f center() {
-        final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
+        final HouseFloorplanComp fp = assertComponent(HouseFloorplanComp.class);
         return fp.minTile().toVector2f().scaled(TS).plus(sizeInTiles().toVector2f().scaled(HTS));
     }
 }

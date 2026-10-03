@@ -18,6 +18,6 @@ public class Heart extends GameEntity {
         animationComp.setSpriteAnimations(
             singleSpriteAnimation(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
         );
-        setComp(SpriteAnimationComp.class, animationComp);
+        setComponent(SpriteAnimationComp.class, animationComp);
     }
 }

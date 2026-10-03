@@ -10,20 +10,20 @@ import de.amr.basics.ecs.comp.MovementComp;
 public class MessageView extends GameEntity {
 
     public MessageView() {
-        setComp(MovementComp.class, new MovementComp());
-        setComp(MessageViewTypeComp.class, new MessageViewTypeComp());
-        setComp(MessageViewTextsComp.class, new MessageViewTextsComp());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(MessageViewTypeComp.class, new MessageViewTypeComp());
+        setComponent(MessageViewTextsComp.class, new MessageViewTextsComp());
     }
 
     public MovementComp movement() {
-        return reqComp(MovementComp.class);
+        return assertComponent(MovementComp.class);
     }
 
     public MessageViewTypeComp type() {
-        return reqComp(MessageViewTypeComp.class);
+        return assertComponent(MessageViewTypeComp.class);
     }
 
     public MessageViewTextsComp texts() {
-        return reqComp(MessageViewTextsComp.class);
+        return assertComponent(MessageViewTextsComp.class);
     }
 }

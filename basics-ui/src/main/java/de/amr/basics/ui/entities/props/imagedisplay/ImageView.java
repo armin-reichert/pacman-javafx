@@ -9,10 +9,10 @@ import de.amr.basics.ecs.GameEntity;
 public class ImageView extends GameEntity {
 
     public ImageView() {
-        setComp(ImageViewComp.class, new ImageViewComp());
+        setComponent(ImageViewComp.class, new ImageViewComp());
     }
 
     public ImageViewComp image() {
-        return reqComp(ImageViewComp.class);
+        return assertComponent(ImageViewComp.class);
     }
 }

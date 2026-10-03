@@ -178,7 +178,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createPacManAnimations(Pac pac) {
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
         final Pac3DAnimationComp anim3D = ensurePacAnim3DExists(pac);
 
         anim3D.setChewing(new PacChewingAnimation3D(pac));
@@ -187,7 +187,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createMsPacManAnimations(Pac pac) {
-        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
         final Pac3DAnimationComp anim3D = ensurePacAnim3DExists(pac);
 
         anim3D.setChewing(new PacChewingAnimation3D(pac));
@@ -196,11 +196,11 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private Pac3DAnimationComp ensurePacAnim3DExists(Pac pac) {
-        if (!pac.hasComp(Pac3DAnimationComp.class)) {
+        if (!pac.hasComponent(Pac3DAnimationComp.class)) {
             final var anim3D = new Pac3DAnimationComp(registry);
-            pac.setComp(Pac3DAnimationComp.class, anim3D);
+            pac.setComponent(Pac3DAnimationComp.class, anim3D);
         }
-        return pac.reqComp(Pac3DAnimationComp.class);
+        return pac.assertComponent(Pac3DAnimationComp.class);
     }
 
     private void createGhostAnimations(GameLevel level, List<GhostSettings> settingsByPersonality, int numFlashes) {
@@ -217,17 +217,17 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private Ghost3DAnimationComp ensureGhostAnim3DExists(Ghost ghost) {
-        if (!ghost.hasComp(Ghost3DAnimationComp.class)) {
-            ghost.setComp(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+        if (!ghost.hasComponent(Ghost3DAnimationComp.class)) {
+            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
         }
-        return ghost.reqComp(Ghost3DAnimationComp.class);
+        return ghost.assertComponent(Ghost3DAnimationComp.class);
     }
 
     private void createEnergizerParticlesAnimation(MapView3D maze3D, GameLevel level) {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
         final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()
-            .map(ghost -> ghost.reqComp(Ghost3DViewComp.class))
+            .map(ghost -> ghost.assertComponent(Ghost3DViewComp.class))
             .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
             .toList();
 
@@ -264,11 +264,11 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createHouseAnimations(House house) {
-        final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
+        final House3DViewComp house3D = house.assertComponent(House3DViewComp.class);
         final var animation =  new House3DAnimationComp(registry);
         animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
-        if (!house.hasComp(House3DAnimationComp.class)) {
-            house.setComp(House3DAnimationComp.class, animation);
+        if (!house.hasComponent(House3DAnimationComp.class)) {
+            house.setComponent(House3DAnimationComp.class, animation);
         }
     }
 

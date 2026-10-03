@@ -164,7 +164,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(Score score) {
-        final HUDStyleComp style = score.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = score.assertComponent(HUDStyleComp.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final boolean disabled = !score.data().isEnabled();
         final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
@@ -192,7 +192,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LivesCounter livesCounter) {
-        final HUDStyleComp style = livesCounter.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
@@ -210,7 +210,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LevelCounter levelCounter) {
-        final HUDStyleComp style = levelCounter.reqComp(HUDStyleComp.class);
+        final HUDStyleComp style = levelCounter.assertComponent(HUDStyleComp.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {

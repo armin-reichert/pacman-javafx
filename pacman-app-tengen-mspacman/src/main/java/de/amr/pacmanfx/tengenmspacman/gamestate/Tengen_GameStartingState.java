@@ -42,7 +42,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         //TODO Hack. Should be done by entity update system
         final Pac pac = level.entitySet().pac();
         pac.state().setEnumValue(PacState.SLEEPING);
-        pac.reqComp(PacBoosterComp.class).setBoosterEnabled(boosterInitiallyEnabled);
+        pac.assertComponent(PacBoosterComp.class).setBoosterEnabled(boosterInitiallyEnabled);
 
         hud.creditDisplay().hide();
         hud.livesCounter().show();

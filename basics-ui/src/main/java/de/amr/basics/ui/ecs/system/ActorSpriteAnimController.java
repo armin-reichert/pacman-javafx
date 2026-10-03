@@ -19,7 +19,7 @@ public final class ActorSpriteAnimController {
     public void setAnimations(GameEntity actor, SpriteAnimationAPI animations) {
         requireNonNull(actor);
         requireNonNull(animations);
-        actor.reqComp(SpriteAnimationComp.class).setSpriteAnimations(animations);
+        actor.assertComponent(SpriteAnimationComp.class).setSpriteAnimations(animations);
     }
 
     public boolean hasNoAnimations(GameEntity actor) {
@@ -83,6 +83,6 @@ public final class ActorSpriteAnimController {
 
     private SpriteAnimationAPI spriteAnim(GameEntity actor) {
         requireNonNull(actor);
-        return actor.reqComp(SpriteAnimationComp.class).spriteAnimations();
+        return actor.assertComponent(SpriteAnimationComp.class).spriteAnimations();
     }
 }

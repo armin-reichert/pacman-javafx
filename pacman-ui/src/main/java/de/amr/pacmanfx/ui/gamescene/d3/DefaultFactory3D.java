@@ -116,10 +116,10 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     private static Ghost3DViewComp ensureGhostHas3DView(Ghost ghost) {
-        if (!ghost.hasComp(Ghost3DViewComp.class)) {
-            ghost.setComp(Ghost3DViewComp.class, new Ghost3DViewComp());
-            ghost.setComp(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+        if (!ghost.hasComponent(Ghost3DViewComp.class)) {
+            ghost.setComponent(Ghost3DViewComp.class, new Ghost3DViewComp());
+            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
         }
-        return ghost.reqComp(Ghost3DViewComp.class);
+        return ghost.assertComponent(Ghost3DViewComp.class);
     }
 }

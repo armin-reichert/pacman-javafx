@@ -29,7 +29,7 @@ public final class TengenMsPacMan_ActorFactory {
 
     public Pac createMsPacMan() {
         final var msPacMan = new Pac("Ms. Pac-Man", false);
-        msPacMan.setComp(PacBoosterComp.class, new PacBoosterComp());
+        msPacMan.setComponent(PacBoosterComp.class, new PacBoosterComp());
         msPacMan.reset();
         return msPacMan;
     }

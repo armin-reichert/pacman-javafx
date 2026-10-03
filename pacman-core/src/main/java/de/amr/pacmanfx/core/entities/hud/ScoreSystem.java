@@ -34,7 +34,7 @@ public class ScoreSystem {
 
     private static Score createHighScore(File file) {
         final Score score = new Score(Score.Type.HIGH_SCORE);
-        score.setComp(ScorePersistencyComp.class, new ScorePersistencyComp(file));
+        score.setComponent(ScorePersistencyComp.class, new ScorePersistencyComp(file));
         return score;
     }
 
@@ -67,7 +67,7 @@ public class ScoreSystem {
     }
 
     public void load(Score score) throws IOException {
-        final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
+        final ScorePersistencyComp persistency = score.assertComponent(ScorePersistencyComp.class);
 
         if (!persistency.file().exists()) {
             save(score); // create default file
@@ -103,7 +103,7 @@ public class ScoreSystem {
      */
     public void save(Score score) throws IOException {
         final ScoreDataComp data = score.data();
-        final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
+        final ScorePersistencyComp persistency = score.assertComponent(ScorePersistencyComp.class);
 
         final File parent = persistency.file().getParentFile();
         if (parent != null && !parent.exists()) {

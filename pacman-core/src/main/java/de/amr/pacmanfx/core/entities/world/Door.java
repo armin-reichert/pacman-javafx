@@ -9,6 +9,6 @@ import de.amr.basics.ecs.GameEntity;
 public class Door extends GameEntity {
 
     public Door() {
-        setComp(DoorDataComp.class, new DoorDataComp());
+        setComponent(DoorDataComp.class, new DoorDataComp());
     }
 }

@@ -79,7 +79,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     public void render(AbstractGameScene gameScene) {
         final GameSession session = gameScene.game().session();
-        final GameSceneView2D canvasRendering = gameScene.reqComp(GameSceneView2D.class);
+        final GameSceneView2D canvasRendering = gameScene.assertComponent(GameSceneView2D.class);
 
         ctx.save();
         drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
@@ -122,13 +122,13 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
             ctx.fillText(text, scaled(pac.pos().x() - 4), scaled(pac.pos().y() + 16));
         }
 
-        actor.optComp(SpriteAnimationComp.class).ifPresent(_ -> {
+        actor.optComponent(SpriteAnimationComp.class).ifPresent(_ -> {
             if (animController.selectedAnimationID(actor) != null) {
                 drawAnimationInfo(animController, actor, bgColor(actor));
             }
         });
 
-        actor.optComp(WorldNavigationComp.class).ifPresent(navigation -> drawDirectionIndicator(actor, navigation));
+        actor.optComponent(WorldNavigationComp.class).ifPresent(navigation -> drawDirectionIndicator(actor, navigation));
 
         final Rectangle2D boundingBox = PositionSystem.boundingBox(actor.pos().asVector2f());
         ctx.save();

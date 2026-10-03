@@ -23,53 +23,53 @@ public final class Pac extends GameEntity {
     public Pac(String name, boolean male) {
         this.name = requireNonNull(name);
 
-        setComp(MovementComp.class, new MovementComp());
-        setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        setComp(SteeringComp.class, new SteeringComp<Pac>());
-        setComp(PacDigestionComp.class, new PacDigestionComp());
-        setComp(PacPowerComp.class, new PacPowerComp());
-        setComp(PacCheatsComp.class, new PacCheatsComp());
-        setComp(PacStateComp.class, new PacStateComp(male));
-        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
-        setComp(PacAnimationComp.class, new PacAnimationComp());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        setComponent(SteeringComp.class, new SteeringComp<Pac>());
+        setComponent(PacDigestionComp.class, new PacDigestionComp());
+        setComponent(PacPowerComp.class, new PacPowerComp());
+        setComponent(PacCheatsComp.class, new PacCheatsComp());
+        setComponent(PacStateComp.class, new PacStateComp(male));
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComponent(PacAnimationComp.class, new PacAnimationComp());
     }
 
     public MovementComp movement() {
-        return reqComp(MovementComp.class);
+        return assertComponent(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return reqComp(WorldNavigationComp.class);
+        return assertComponent(WorldNavigationComp.class);
     }
 
     @SuppressWarnings("unchecked")
     public SteeringComp<Pac> autoSteering() {
-        return (SteeringComp<Pac>) reqComp(SteeringComp.class);
+        return (SteeringComp<Pac>) assertComponent(SteeringComp.class);
     }
 
     public PacDigestionComp digestion() {
-        return reqComp(PacDigestionComp.class);
+        return assertComponent(PacDigestionComp.class);
     }
 
     public PacPowerComp power() {
-        return reqComp(PacPowerComp.class);
+        return assertComponent(PacPowerComp.class);
     }
 
     public PacCheatsComp cheats() {
-        return reqComp(PacCheatsComp.class);
+        return assertComponent(PacCheatsComp.class);
     }
 
     public PacStateComp state() {
-        return reqComp(PacStateComp.class);
+        return assertComponent(PacStateComp.class);
     }
 
     public PacAnimationComp animation() {
-        return reqComp(PacAnimationComp.class);
+        return assertComponent(PacAnimationComp.class);
     }
 
     //TODO integrate with Pac animation comp
     public SpriteAnimationComp spriteAnim() {
-        return reqComp(SpriteAnimationComp.class);
+        return assertComponent(SpriteAnimationComp.class);
     }
 
     @Override

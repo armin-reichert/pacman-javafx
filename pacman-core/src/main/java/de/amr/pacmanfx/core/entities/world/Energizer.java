@@ -9,10 +9,10 @@ import de.amr.basics.ecs.GameEntity;
 public class Energizer extends GameEntity {
 
     public Energizer() {
-        setComp(EnergizerStateComp.class, new EnergizerStateComp());
+        setComponent(EnergizerStateComp.class, new EnergizerStateComp());
     }
 
     public EnergizerStateComp state() {
-        return reqComp(EnergizerStateComp.class);
+        return assertComponent(EnergizerStateComp.class);
     }
 }

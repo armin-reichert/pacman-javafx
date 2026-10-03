@@ -5,10 +5,10 @@ import de.amr.basics.ecs.GameEntity;
 public class GhostPoints extends GameEntity {
 
     public GhostPoints(int value) {
-        setComp(GhostPointsComp.class, new GhostPointsComp(value));
+        setComponent(GhostPointsComp.class, new GhostPointsComp(value));
     }
 
     public GhostPointsComp points() {
-        return reqComp(GhostPointsComp.class);
+        return assertComponent(GhostPointsComp.class);
     }
 }
