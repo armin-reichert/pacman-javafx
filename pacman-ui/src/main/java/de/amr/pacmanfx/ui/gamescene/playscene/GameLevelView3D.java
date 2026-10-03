@@ -68,7 +68,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D visualization of a Pac-Man game level.
  */
-public class GameLevel3D implements DisposableGraphicsObject {
+public class GameLevelView3D implements DisposableGraphicsObject {
 
     private final Group root = new Group();
 
@@ -86,7 +86,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     private final GameViewModel viewModel;
 
-    public GameLevel3D(GameContext game, AnimationRegistry animationRegistry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
+    public GameLevelView3D(GameContext game, AnimationRegistry animationRegistry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
         requireNonNull(game);
         requireNonNull(animationRegistry);
         this.viewModel = requireNonNull(viewModel);

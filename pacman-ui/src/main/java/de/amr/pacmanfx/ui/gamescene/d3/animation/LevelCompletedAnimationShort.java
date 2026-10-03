@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -28,9 +28,9 @@ import static de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation.
  */
 public class LevelCompletedAnimationShort extends ManagedAnimation {
 
-    private final GameLevel3D level3D;
+    private final GameLevelView3D level3D;
 
-    public LevelCompletedAnimationShort(GameLevel3D level3D, int numFlashes) {
+    public LevelCompletedAnimationShort(GameLevelView3D level3D, int numFlashes) {
         super("Level Completed (Short Animation)");
         this.level3D = level3D;
         setAnimationFactory(() -> createAnimationFX(numFlashes));

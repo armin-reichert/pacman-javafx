@@ -8,7 +8,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
@@ -59,9 +59,9 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         return timeline;
     }
 
-    private final GameLevel3D level3D;
+    private final GameLevelView3D level3D;
 
-    public LevelCompletedAnimation(GameLevel3D level3D, int numFlashes) {
+    public LevelCompletedAnimation(GameLevelView3D level3D, int numFlashes) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
         setAnimationFactory(() -> createAnimationFX(numFlashes));
@@ -85,7 +85,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     private Animation mazeWallsAndHouseDisappearAnimation(
-        GameLevel3D level3D,
+        GameLevelView3D level3D,
         DoubleProperty mazeWallHeight,
         DoubleProperty houseWallHeight)
     {

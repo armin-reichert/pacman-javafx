@@ -15,7 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.scene.canvas.Canvas;
@@ -40,7 +40,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public TengenMsPacMan_PlayScene3D() {}
 
     @Override
-    protected void addAdditional3DLevelElements(GameLevel3D level3D) {
+    protected void addAdditional3DLevelElements(GameLevelView3D level3D) {
         final GameSession session = game().session();
         session.optLevel().ifPresent(_ -> {
             if (!gameOptions(session).areInitial()) {
@@ -50,7 +50,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         });
     }
 
-    private ImageView createLevelInfoView(GameLevel3D level3D) {
+    private ImageView createLevelInfoView(GameLevelView3D level3D) {
         final GameSession session = game().session();
         final GameLevel level = session.level();
 

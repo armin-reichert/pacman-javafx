@@ -10,6 +10,7 @@ import javafx.scene.*;
 public class GameSceneView3D {
 
     private final Group root;
+    private final Group level3DHolder;
     private final SubScene subScene;
     private final PerspectiveCamera camera;
     private final AmbientLight ambientLight;
@@ -20,8 +21,9 @@ public class GameSceneView3D {
         camera = new PerspectiveCamera(true);
         ambientLight = new AmbientLight();
         coordinateSystem = new CoordinateSystem();
+        level3DHolder = new Group();
 
-        root.getChildren().addAll(coordinateSystem, ambientLight);
+        root.getChildren().addAll(level3DHolder, coordinateSystem, ambientLight);
 
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
@@ -37,6 +39,10 @@ public class GameSceneView3D {
 
     public Group root() {
         return root;
+    }
+
+    public Group level3DHolder() {
+        return level3DHolder;
     }
 
     public AmbientLight ambientLight() {

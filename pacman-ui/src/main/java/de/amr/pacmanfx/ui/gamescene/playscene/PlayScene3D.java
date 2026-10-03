@@ -48,8 +48,8 @@ import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
-import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.*;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -67,7 +67,6 @@ import javafx.animation.ScaleTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
@@ -97,19 +96,20 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     private PerspectiveManager perspectiveManager;
 
     private ChangeListener<DrawMode> drawModeChangeListener;
+
     private PlayScene3D_GameEventHandler gameEventHandler;
 
-    private final Group level3DHolder;
+    private GameLevelView3D level3D;
 
-    private GameLevel3D level3D;
     private ScoresView scoresView;
+
     private PlaySceneContextMenu contextMenu;
 
     private RandomTextPicker textPicker;
 
     private final PlayScene3DAnimationSystem animationSystem = new  PlayScene3DAnimationSystem();
 
-    final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;
+    private final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;
 
     // The particle pool is only created when the animations are created
     private Pool<EnergizerParticle3D> particlePool;
@@ -121,8 +121,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         setComponent(GameSceneView3D.class, new GameSceneView3D());
         setComponent(GameSceneAnimations3DComp.class, new GameSceneAnimations3DComp());
 
-        level3DHolder = new Group();
-        view3D().root().getChildren().addAll(level3DHolder);
 
         perspectiveManager = new PerspectiveManager(view3D().camera());
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
@@ -316,7 +314,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         return perspectiveManager;
     }
 
-    public Optional<GameLevel3D> optGameLevel3D() {
+    public Optional<GameLevelView3D> optGameLevel3D() {
         return Optional.ofNullable(level3D);
     }
 
@@ -382,10 +380,11 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(game, animations3D().registry(), viewModel, uiConfig);
+        level3D = new GameLevelView3D(game, animations3D().registry(), viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
-        level3DHolder.getChildren().setAll(level3D.root());
+
+        view3D().level3DHolder().getChildren().setAll(level3D.root());
 
         createAnimations(level3D);
 
@@ -403,7 +402,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
      * Tengen Ms. Pac-Man game that displays the level number, game difficulty, map category, booster mode etc.
      */
-    protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
+    protected void addAdditional3DLevelElements(GameLevelView3D level3D) {}
 
     protected void registerActionBindings() {
         actionBindings().registry().registerAllBindings(app().commonActions().camera3DActions().bindings());
@@ -444,9 +443,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         root.rotateProperty().bind(comp3D.camera().rotateProperty());
 
         // Scores are shown slightly "behind" and over game level from viewer's perspective
-        root.translateXProperty().bind(level3DHolder.translateXProperty().add(TS));
-        root.translateYProperty().bind(level3DHolder.translateYProperty().subtract(4.5 * TS));
-        root.translateZProperty().bind(level3DHolder.translateZProperty().subtract(4.5 * TS));
+        root.translateXProperty().bind(view3D().level3DHolder().translateXProperty().add(TS));
+        root.translateYProperty().bind(view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
+        root.translateZProperty().bind(view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
     }
 
     private void disposeContextMenu() {
@@ -462,7 +461,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
     }
 
-    private void createAnimations(GameLevel3D level3D) {
+    private void createAnimations(GameLevelView3D level3D) {
         final GameVariantPlayConfig config = app().variantManager().currentRuntime().playConfig();
         final GameVariantUIConfig uiConfig = app().variantManager().currentRuntime().uiConfig();
 
