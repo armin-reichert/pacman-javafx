@@ -26,13 +26,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
-import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
-import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
-import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
@@ -41,12 +34,19 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
-import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
+import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
+import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
+import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.image.Image;
@@ -83,8 +83,6 @@ public class GameLevel3D implements DisposableGraphicsObject {
     private final Map<Vector2i, Pellet3D> pelletViews3D = new HashMap<>();
 
     private WorldMapView3D mapView3D;
-
-    private PlayScene3DAnimationSystem animationManager;
 
     private final GameViewModel viewModel;
 
@@ -126,10 +124,6 @@ public class GameLevel3D implements DisposableGraphicsObject {
         return root;
     }
 
-    public void setAnimationManager(PlayScene3DAnimationSystem animationManager) {
-        this.animationManager = requireNonNull(animationManager);
-    }
-
     @Override
     public void dispose() {
         if (mapView3D != null) {
@@ -139,10 +133,6 @@ public class GameLevel3D implements DisposableGraphicsObject {
     }
 
     // Public accessors
-
-    public PlayScene3DAnimationSystem animationManager() {
-        return animationManager;
-    }
 
     public WorldMapView3D maze3D() {
         return mapView3D;
@@ -190,9 +180,9 @@ public class GameLevel3D implements DisposableGraphicsObject {
         Ufx.setDrawMode(mapView3D.root(), drawMode);
     }
 
-    public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus) {
+    public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus, AnimationRegistry animationRegistry) {
         if (!bonus.hasComponent(Bonus3DViewComp.class)) {
-            final var view3D = createBonusView3D(bonus);
+            final var view3D = createBonusView3D(bonus, animationRegistry);
             root.getChildren().add(view3D.root());
         }
     }
@@ -265,7 +255,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         return energizer3D;
     }
 
-    private Bonus3DViewComp createBonusView3D(Bonus bonus) {
+    private Bonus3DViewComp createBonusView3D(Bonus bonus, AnimationRegistry animationRegistry) {
         final Bonus3DSettings config = uiConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
         final Bonus3DViewComp view3D = new Bonus3DViewComp(
@@ -277,7 +267,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         bonus.setComponent(Bonus3DViewComp.class, view3D);
 
         //TODO move elsewhere
-        animationManager.registry().register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
+        animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
 
         return view3D;
     }

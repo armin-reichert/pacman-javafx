@@ -7,8 +7,6 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3DAnimationSystem;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -56,7 +54,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
 
-    private final ObjectProperty<AnimationRegistry> currentAnimationSet = new SimpleObjectProperty<>();
+    private final ObjectProperty<AnimationRegistry> currentAnimationRegistry = new SimpleObjectProperty<>();
 
     public DS_3DAnimationMonitor() {
         super(DashboardID.ANIMATION_INFO);
@@ -90,7 +88,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
             }));
         refreshTimer.setCycleCount(Animation.INDEFINITE);
 
-        currentAnimationSet.addListener((_,_, animationSet) -> {
+        currentAnimationRegistry.addListener((_, _, animationSet) -> {
             if (animationSet == null) {
                 tableRows.clear();
                 refreshTimer.pause();
@@ -110,22 +108,16 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     public void update(GameApp app) {
         super.update(app);
 
-        final AnimationRegistry animationSet =
-            app.gameSceneManager().optCurrentGameScene()
-                .filter(PlayScene3D.class::isInstance)
-                .map(PlayScene3D.class::cast)
-                .flatMap(PlayScene3D::optGameLevel3D)
-                .map(GameLevel3D::animationManager)
-                .map(PlayScene3DAnimationSystem::registry)
-                .orElse(null);
-
-        currentAnimationSet.set(animationSet);
+        if (app.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {
+            final AnimationRegistry animationRegistry = playScene3D.animations3D().registry();
+            currentAnimationRegistry.set(animationRegistry);
+        }
     }
 
     private void updateTableData() {
         tableRows.clear();
-        if (currentAnimationSet.get() != null) {
-            final Collection<ManagedAnimation> animations = currentAnimationSet.get().animations();
+        if (currentAnimationRegistry.get() != null) {
+            final Collection<ManagedAnimation> animations = currentAnimationRegistry.get().animations();
             tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.RUNNING));
             tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.PAUSED));
             tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.STOPPED));
