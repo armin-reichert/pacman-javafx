@@ -179,18 +179,16 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Keyboard keyboard = app().input().keyboard();
-        optComponent(ActionBindingsComp.class).ifPresent(comp -> {
-            final Optional<GameAction> matchingAction = comp.registry().executeMatchingAction(app());
-            if (matchingAction.isEmpty()) {
-                // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
-                perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
-                    if (perspective instanceof DronePerspective dronePerspective) {
-                        dronePerspective.handleKeyPressed(keyboard);
-                    }
-                });
-            }
-        });
+        final Optional<GameAction> executedAction = actionBindings().registry().executeMatchingAction(app());
+        if (executedAction.isEmpty()) {
+            // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
+            perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
+                if (perspective instanceof DronePerspective dronePerspective) {
+                    final Keyboard keyboard = app().input().keyboard();
+                    dronePerspective.handleKeyPressed(keyboard);
+                }
+            });
+        }
     }
 
     @Override
@@ -372,39 +370,36 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {
-            assertComponent(GameSceneView3D.class).root().getChildren().remove(oldScoresView.root());
+            view3D().root().getChildren().remove(oldScoresView.root());
         }
 
-        final Score leftScore = session.hud().gameScore();
-        if (!leftScore.hasComponent(ScoreViewComp.class)) {
-            leftScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
+        final Score gameScore = session.hud().gameScore();
+        if (!gameScore.hasComponent(ScoreViewComp.class)) {
+            gameScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
         }
-        leftScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(leftTitle);
+        gameScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(leftTitle);
 
-        final Score rightScore = session.hud().highScore();
-        if (!rightScore.hasComponent(ScoreViewComp.class)) {
-            rightScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
+        final Score highScore = session.hud().highScore();
+        if (!highScore.hasComponent(ScoreViewComp.class)) {
+            highScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
         }
-        rightScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(rightTitle);
+        highScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
-        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), 8);
-        scoresView = new ScoresView(leftScore, rightScore);
-        scoresView.setFont(arcade8);
+        scoresView = new ScoresView(gameScore, highScore);
+        scoresView.setFont(GlobalFonts.ARCADE.font(8));
 
-        assertComponent(GameSceneView3D.class).root().getChildren().add(scoresView.root());
+        view3D().root().getChildren().add(scoresView.root());
 
         //scoresView.textOpacity.bind(scoreOpacity);
 
         // Scores must always face towards viewer, independent of current perspective:
-        final var comp3D = assertComponent(GameSceneView3D.class);
-        final Node root = scoresView.root();
-        root.rotationAxisProperty().bind(comp3D.camera().rotationAxisProperty());
-        root.rotateProperty().bind(comp3D.camera().rotateProperty());
+        scoresView.root().rotationAxisProperty().bind(view3D().camera().rotationAxisProperty());
+        scoresView.root().rotateProperty().bind(view3D().camera().rotateProperty());
 
         // Scores are shown slightly "behind" and over game level from viewer's perspective
-        root.translateXProperty().bind(view3D().level3DHolder().translateXProperty().add(TS));
-        root.translateYProperty().bind(view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
-        root.translateZProperty().bind(view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
+        scoresView.root().translateXProperty().bind(view3D().level3DHolder().translateXProperty().add(TS));
+        scoresView.root().translateYProperty().bind(view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
+        scoresView.root().translateZProperty().bind(view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
     }
 
     private void disposeContextMenu() {
