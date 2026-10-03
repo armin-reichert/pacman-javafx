@@ -201,7 +201,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         playScene3D.replaceActionBindings(game().session(), level);
 
         playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
-            .ifPresent(ManagedAnimation::playFromStart);
+            .ifPresent(ManagedAnimation::replay);
     }
 
     @Override

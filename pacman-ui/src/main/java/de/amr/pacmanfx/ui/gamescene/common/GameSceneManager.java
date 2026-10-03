@@ -160,7 +160,7 @@ public class GameSceneManager {
         }
 
         playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
-            .ifPresent(ManagedAnimation::playFromStart);
+            .ifPresent(ManagedAnimation::replay);
 
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }

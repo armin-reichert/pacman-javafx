@@ -35,7 +35,7 @@ public class LevelCounter3DViewSystem {
 
         levelCounter.optComponent(LevelCounter3DAnimationComp.class).ifPresent(animation -> {
             animation.spinningAnimation().invalidate(); // stops animation if present
-            animation.spinningAnimation().playFromStart();
+            animation.spinningAnimation().replay();
 
         });
     }

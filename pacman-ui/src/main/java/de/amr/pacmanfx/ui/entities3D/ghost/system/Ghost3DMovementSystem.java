@@ -37,7 +37,7 @@ public class Ghost3DMovementSystem {
         view3D.facingRotate().setAngle(angle);
 
         if (ghost.worldNavigation().info().tunnelEntered) {
-            ghost.assertComponent(Ghost3DAnimationComp.class).braking().playFromStart();
+            ghost.assertComponent(Ghost3DAnimationComp.class).braking().replay();
         }
     }
 }

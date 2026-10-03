@@ -191,7 +191,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         final double risingHeight = (killIndex + 1) * 12;
         final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox, risingHeight);
         animation.delegate().setOnFinished(_ -> root.getChildren().remove(numberBox));
-        animation.playFromStart();
+        animation.replay();
     }
 
     // Private area, no trespassing!

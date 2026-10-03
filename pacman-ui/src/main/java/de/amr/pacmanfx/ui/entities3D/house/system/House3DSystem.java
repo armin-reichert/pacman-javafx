@@ -53,6 +53,6 @@ public class House3DSystem {
 
     private void playDoorsMeltingAnimation(House house) {
         final House3DAnimationComp animation = house.assertComponent(House3DAnimationComp.class);
-        animation.doorsMeltingAnimation().playFromStart();
+        animation.doorsMeltingAnimation().replay();
     }
 }

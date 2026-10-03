@@ -23,7 +23,7 @@ public class MessageView3DAnimationSystem {
         view3D.root().setTranslateZ(MessageView3DAnimationComp.hiddenZPosition(view3D));
 
         final MessageView3DAnimationComp anim3D = messageView.assertComponent(MessageView3DAnimationComp.class);
-        anim3D.moveInOut().playFromStart();
+        anim3D.moveInOut().replay();
     }
 
     public static void hideMessageView(MessageView messageView) {

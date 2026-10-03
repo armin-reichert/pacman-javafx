@@ -142,7 +142,7 @@ public class ManagedAnimation implements Disposable {
      * Plays the animation from the beginning, creating it if necessary.
      * Does nothing if the animation is already running.
      */
-    public void playFromStart() {
+    public void replay() {
         final Animation animationFX = delegate();
         if (animationFX.getStatus() != Animation.Status.RUNNING) {
             animationFX.playFromStart();

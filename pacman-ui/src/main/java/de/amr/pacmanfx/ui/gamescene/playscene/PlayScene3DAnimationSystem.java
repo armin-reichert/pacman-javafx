@@ -62,14 +62,14 @@ import static de.amr.basics.math.RandomNumbers.randomInt;
 
 public class PlayScene3DAnimationSystem implements Disposable {
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationRegistry registry;
     
     public PlayScene3DAnimationSystem(GameSceneAnimations3DComp animations3D) {
-        this.animationRegistry = animations3D.registry();
+        this.registry = animations3D.registry();
     }
 
     public void stopAllAnimations() {
-        animationRegistry.stopAllAnimations();
+        registry.stopAllAnimations();
     }
 
     public void startEnergizerPumping(GameLevelView3D level3D) {
@@ -85,47 +85,38 @@ public class PlayScene3DAnimationSystem implements Disposable {
     }
 
     public void stopWallFlashing() {
-        animationRegistry
-            .optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING)
-            .ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
     }
 
     public void startWallFlashing() {
-        animationRegistry
-            .optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING)
-            .ifPresent(ManagedAnimation::playFromStart);
+        registry.optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::replay);
     }
 
     public void startParticlesAnimation() {
-        animationRegistry.optAnimation(PlayScene3DAnimationID.PARTICLES)
-            .ifPresent(ManagedAnimation::playFromStart);
+        registry.optAnimation(PlayScene3DAnimationID.PARTICLES).ifPresent(ManagedAnimation::replay);
     }
 
     public void stopParticlesAnimation() {
-        animationRegistry.optAnimation(PlayScene3DAnimationID.PARTICLES)
-            .ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationID.PARTICLES).ifPresent(ManagedAnimation::stop);
     }
 
     public void startGhostLightAnimation() {
-        animationRegistry.optAnimation(PlayScene3DAnimationID.GHOST_LIGHT)
-            .ifPresent(ManagedAnimation::playFromStart);
+        registry.optAnimation(PlayScene3DAnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::replay);
     }
 
     public void stopAnimationsBeforePacManDies() {
-        animationRegistry.optAnimation(PlayScene3DAnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
-        animationRegistry.optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
     }
 
     public void startPumping(Energizer3D energizer3D) {
         final Vector2i tile = energizer3D.tile();
-        animationRegistry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
-            .ifPresent(ManagedAnimation::playOrContinue);
+        registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::playOrContinue);
     }
 
     public void stopPumping(Energizer3D energizer3D) {
         final Vector2i tile = energizer3D.tile();
-        animationRegistry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
-            .ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::stop);
     }
 
     @Override
@@ -152,19 +143,19 @@ public class PlayScene3DAnimationSystem implements Disposable {
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
         final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), uiConfig.worldSettings());
 
-        animationRegistry.register(PlayScene3DAnimationID.WALL_COLOR_FLASHING,
+        registry.register(PlayScene3DAnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
 
-        animationRegistry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_FULL,
+        registry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_FULL,
             new LevelCompletedAnimation(level3D, numFlashes, uiConfig.optSoundEffects().orElseThrow()));
 
-        animationRegistry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
+        registry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
         final House house = level.entitySet().entities().theOne(House.class);
         createHouseAnimations(house);
 
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
+        MessageView3DBuilder.createAnim3D(messageView, registry);
 
         createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
         createEnergizerParticlesAnimation(level3D.maze3D(), level);
@@ -183,7 +174,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         levelCounter.setComponent(LevelCounter3DAnimationComp.class,
             new LevelCounter3DAnimationComp(
                 levelCounter.assertComponent(LevelCounter3DViewComp.class),
-                animationRegistry
+                registry
             )
         );
     }
@@ -208,7 +199,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
     private Pac3DAnimationComp ensurePacAnim3DExists(Pac pac) {
         if (!pac.hasComponent(Pac3DAnimationComp.class)) {
-            final var anim3D = new Pac3DAnimationComp(animationRegistry);
+            final var anim3D = new Pac3DAnimationComp(registry);
             pac.setComponent(Pac3DAnimationComp.class, anim3D);
         }
         return pac.assertComponent(Pac3DAnimationComp.class);
@@ -223,7 +214,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
         final Ghost3DAnimationComp anim3D = ensureGhostAnim3DExists(ghost);
-        anim3D.build(animationRegistry, ghost, settings, numFlashes);
+        anim3D.build(registry, ghost, settings, numFlashes);
     }
 
     private Ghost3DAnimationComp ensureGhostAnim3DExists(Ghost ghost) {
@@ -241,7 +232,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         level3D.energizers3D().forEach(energizer3D -> {
             final Vector2i tile = energizer3D.tile();
             final String animationID = Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile);
-            animationRegistry.optAnimation(animationID).ifPresent(ManagedAnimation::dispose);
+            registry.optAnimation(animationID).ifPresent(ManagedAnimation::dispose);
             final var pumping = createEnergizerPumpingAnimation(
                 "Energizer Pumping, Tile %s".formatted(tile),
                 energizer3D.root(),
@@ -249,7 +240,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
                 inflatedSize,
                 expandedSize
             );
-            animationRegistry.register(animationID, pumping);
+            registry.register(animationID, pumping);
         });
     }
 
@@ -301,7 +292,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
         final House house = level.entitySet().entities().theOne(House.class);
 
-        animationRegistry.register(PlayScene3DAnimationID.PARTICLES, new ParticlesAnimation3D(
+        registry.register(PlayScene3DAnimationID.PARTICLES, new ParticlesAnimation3D(
             house,
             ghostDressMaterials,
             particlePool,
@@ -315,14 +306,14 @@ public class PlayScene3DAnimationSystem implements Disposable {
     private void disposeEnergizerAnimations(GameLevelView3D level3D) {
         level3D.energizers3D().forEach(energizer3D -> {
             final Vector2i tile = energizer3D.tile();
-            animationRegistry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
+            registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
                 .ifPresent(ManagedAnimation::dispose);
         });
     }
 
     private void createHouseAnimations(House house) {
         final House3DViewComp house3D = house.assertComponent(House3DViewComp.class);
-        final var animation =  new House3DAnimationComp(animationRegistry);
+        final var animation =  new House3DAnimationComp(registry);
         animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
         if (!house.hasComponent(House3DAnimationComp.class)) {
             house.setComponent(House3DAnimationComp.class, animation);
@@ -332,6 +323,6 @@ public class PlayScene3DAnimationSystem implements Disposable {
     private void createGhostLightAnimation(GameVariantUIConfig config, GameLevel level, PointLight ghostHunterLight) {
         final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entitySet().ghosts().toList(),
             config.worldSettings().ghosts());
-        animationRegistry.register(PlayScene3DAnimationID.GHOST_LIGHT, animation);
+        registry.register(PlayScene3DAnimationID.GHOST_LIGHT, animation);
     }
 }

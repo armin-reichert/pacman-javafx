@@ -38,7 +38,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     }
 
     @Override
-    public void playFromStart() {
+    public void replay() {
         var rotateTransition = delegate();
         rotateTransition.stop();
         adjustAngle(rotateTransition);
