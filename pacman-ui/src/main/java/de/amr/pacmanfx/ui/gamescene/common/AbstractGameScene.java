@@ -10,15 +10,14 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
@@ -44,14 +43,17 @@ public abstract class AbstractGameScene
 
     private GameApp app;
 
-    // Typed game scene component access
-
-    public Optional<GameSceneRendering2DComp> optRendering2D() {
-        return optComp(GameSceneRendering2DComp.class);
+    public AbstractGameScene() {
+        final var r2d = new GameSceneView2D();
+        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComp(GameSceneView2D.class, r2d);
     }
 
-    public GameSceneRendering2DComp reqRendering2D() {
-        return reqComp(GameSceneRendering2DComp.class);
+    // Typed game scene component access
+
+    public GameSceneView2D view2D() {
+        return reqComp(GameSceneView2D.class);
     }
 
     public ActionBindingsComp actionBindings() {
@@ -81,11 +83,9 @@ public abstract class AbstractGameScene
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void onAcceptGameLevel(GameSession session, GameLevel level) {
-        optRendering2D().ifPresent(canvasRendering -> {
-            final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-            canvasRendering.unscaledWidthProperty().set(terrainSize.x());
-            canvasRendering.unscaledHeightProperty().set(terrainSize.y());
-        });
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        view2D().unscaledWidthProperty().set(terrainSize.x());
+        view2D().unscaledHeightProperty().set(terrainSize.y());
     }
 
     // Interface GameScene

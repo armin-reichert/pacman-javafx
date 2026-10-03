@@ -27,7 +27,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -68,9 +67,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     private Clapperboard clapperboard;
 
     public TengenMsPacMan_CutScene4() {
-        setComp(GameSceneRendering2DComp.class, new GameSceneRendering2DComp());
-        reqRendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        reqRendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
@@ -234,7 +232,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.pos().set((float) randomX, reqRendering2D().unscaledHeight() - 4 * TS);
+        junior.pos().set((float) randomX, view2D().unscaledHeight() - 4 * TS);
         junior.show();
 
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
@@ -272,11 +270,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             computeNewMoveDir(navigator, junior);
         }
         motor.move(junior);
-        if (junior.pos().x() > reqRendering2D().unscaledWidth()) {
+        if (junior.pos().x() > view2D().unscaledWidth()) {
             junior.pos().setX(0);
         }
         if (junior.pos().x() < 0) {
-            junior.pos().setX(reqRendering2D().unscaledWidth());
+            junior.pos().setX(view2D().unscaledWidth());
         }
     }
 
@@ -296,7 +294,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         Vector2i tile = junior.pos().tile();
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = new Vector2f(0.5f * reqRendering2D().unscaledWidth(), 0.5f * reqRendering2D().unscaledHeight());
+        Vector2f center = new Vector2f(0.5f * view2D().unscaledWidth(), 0.5f * view2D().unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 }

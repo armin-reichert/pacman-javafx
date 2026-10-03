@@ -12,11 +12,8 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 
 import java.util.stream.Stream;
-
-import static de.amr.basics.TileDimension.TS;
 
 /**
  * The boot screen displays some strange hex codes, garbage from the graphics memory
@@ -54,11 +51,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     private Renderable currentSceneContent;
 
     public Arcade_BootScene() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setAutoClearCanvas(false);
-        r2d.setUnscaledWidth(WIDTH_IN_TILES * TS);
-        r2d.setUnscaledHeight(HEIGHT_IN_TILES * TS);
-        setComp(GameSceneRendering2DComp.class, r2d);
+        view2D().setAutoClearCanvas(false);
     }
 
     @Override

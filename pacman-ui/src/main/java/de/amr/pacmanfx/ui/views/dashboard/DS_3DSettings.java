@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -17,8 +16,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
-
-import static de.amr.basics.TileDimension.TS;
 
 /**
  * Infobox with 3D related settings.
@@ -154,19 +151,9 @@ public class DS_3DSettings extends GameDashboardSection {
             return NO_INFO;
         }
 
-        if (abstractGameScene.optRendering2D().isPresent()) {
-            final var r2d = abstractGameScene.optRendering2D().get();
-            final double s = r2d.renderingSurface().scaling();
-            return "%dx%d (scaled: %.0fx%.0f)".formatted(
-                r2d.unscaledWidth(), r2d.unscaledHeight(),
-                r2d.unscaledWidth() * s,  r2d.unscaledHeight() * s);
-        }
-
-        if (level != null) {
-            final WorldMap worldMap = level.worldMap();
-            return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        }
-
-        return NO_INFO;
+        final double s = abstractGameScene.view2D().renderingSurface().scaling();
+        return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
+            abstractGameScene.view2D().unscaledWidth(), abstractGameScene.view2D().unscaledHeight(),
+            abstractGameScene.view2D().unscaledWidth() * s,  abstractGameScene.view2D().unscaledHeight() * s);
     }
 }

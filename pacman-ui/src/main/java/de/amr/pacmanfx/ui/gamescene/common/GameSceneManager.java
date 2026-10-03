@@ -165,38 +165,23 @@ public class GameSceneManager {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 
-        if (!(nextGameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("Current game scene is not an AbstractGameScene");
-            return;
-        }
-
-        if (abstractGameScene.optRendering2D().isPresent()) {
-            nextGameScene.onEnteredFrom3DScene();
-            Logger.info("2D scene {} entered from 3D scene {}",
-                nextGameScene.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
-        }
-        else {
-            Logger.error("Scene {} has no canvas rendering support?", nextGameScene.getClass().getSimpleName());
-        }
+        nextGameScene.onEnteredFrom3DScene();
+        Logger.info("2D scene {} entered from 3D scene {}", nextGameScene.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }
 
     private GameSceneSwitchType identifySwitchType(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 
-        if (!(currentGameScene instanceof AbstractGameScene current)) {
-            throw new IllegalArgumentException("Current game scene is not an AbstractGameScene");
-        }
-        final boolean currentIs2D = current.optRendering2D().isPresent();
-
-        if (!(nextGameScene instanceof AbstractGameScene next)) {
-            throw new IllegalArgumentException("Next game scene is not an AbstractGameScene");
-        }
-        final boolean nextIs2D = next.optRendering2D().isPresent();
-
+        final boolean currentIs2D = isGameScene2D(currentGameScene);
+        final boolean nextIs2D = isGameScene2D(nextGameScene);
         if (currentIs2D == nextIs2D) {
             return GameSceneSwitchType.NONE;
         }
         return currentIs2D ? GameSceneSwitchType.FROM_2D_TO_3D : GameSceneSwitchType.FROM_3D_TO_2D;
+    }
+
+    private boolean isGameScene2D(GameScene gameScene) {
+        return app.variantManager().currentRuntime().uiConfig().gameSceneConfig().embedding(gameScene) != GameSceneEmbedding.SUBSCENE_3D;
     }
 }

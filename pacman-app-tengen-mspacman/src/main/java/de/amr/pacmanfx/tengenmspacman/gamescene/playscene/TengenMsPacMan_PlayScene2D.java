@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
 import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -33,7 +32,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -43,10 +41,8 @@ import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
@@ -83,7 +79,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private final GameEventHandler eventHandler = new GameEventHandler(this);
 
     public TengenMsPacMan_PlayScene2D() {
-        setComp(GameSceneRendering2DComp.class, createCanvasRendering());
+        view2D().setRenderingSurface(new RenderingSurface());
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        // Clip 16 pixels on each side of the canvas such that actors moving through horizontal portal are not visible.
+        // All maps are 28 tiles wide but NES screen is 32 tiles wide, so we have to clip 16 pixels on each side.
+        // The one extra pixel clipped on the right side helps to hide a spritesheet issue (hides ugly map image border).
+        view2D().setClipRect(RectShort.sprite(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE));
     }
 
     @Override
@@ -149,7 +151,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         hud.livesCounter().show();
         session.setHudVisible(true);
 
-        resetRendering2D();
         updateScaling();
     }
 
@@ -211,8 +212,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        reqRendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        reqRendering2D().unscaledHeightProperty().set(size.y() + 2*TS);
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(size.y() + 2*TS);
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
@@ -238,26 +239,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     // private area, do NOT enter!
-
-    private void resetRendering2D() {
-        final GameSceneRendering2DComp oldComp = reqRendering2D();
-        final GameSceneRendering2DComp newComp = createCanvasRendering();
-        newComp.setRenderingSurface(oldComp.renderingSurface());
-        removeComp(GameSceneRendering2DComp.class);
-        setComp(GameSceneRendering2DComp.class, newComp);
-    }
-
-    private GameSceneRendering2DComp createCanvasRendering() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setRenderingSurface(new RenderingSurface());
-        r2d.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        r2d.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-        // Clip 16 pixels on each side of the canvas such that actors moving through horizontal portal are not visible.
-        // All maps are 28 tiles wide but NES screen is 32 tiles wide, so we have to clip 16 pixels on each side.
-        // The one extra pixel clipped on the right side helps to hide a spritesheet issue (hides ugly map image border).
-        r2d.setClipRect(RectShort.sprite(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE));
-        return r2d;
-    }
 
     private TengenMsPacMan_Actions actions() {
         return app().variantManager().currentRuntime()
@@ -294,7 +275,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private void updateScaling() {
         final var uiSettings = uiSettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
-        final RenderingSurface renderingSurface = reqRendering2D().renderingSurface();
+        final RenderingSurface renderingSurface = view2D().renderingSurface();
 /*
         renderingSurface.setScaling(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();

@@ -3,16 +3,14 @@
  */
 package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.basics.ui.assets.ArcadeColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,12 +28,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
         createText("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   8,  4, 29)
     );
 
-    public ArcadePacMan_StartScene() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComp(GameSceneRendering2DComp.class, r2d);
-    }
+    public ArcadePacMan_StartScene() {}
 
     @Override
     public Stream<Renderable> renderables() {

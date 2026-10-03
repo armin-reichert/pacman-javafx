@@ -79,7 +79,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     public void render(AbstractGameScene gameScene) {
         final GameSession session = gameScene.game().session();
-        final GameSceneRendering2DComp canvasRendering = gameScene.reqComp(GameSceneRendering2DComp.class);
+        final GameSceneView2D canvasRendering = gameScene.reqComp(GameSceneView2D.class);
 
         ctx.save();
         drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);

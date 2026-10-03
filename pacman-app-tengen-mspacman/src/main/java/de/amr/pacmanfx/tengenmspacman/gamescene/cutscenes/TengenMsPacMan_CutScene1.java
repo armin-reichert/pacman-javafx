@@ -23,7 +23,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -68,9 +67,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     private boolean collided;
 
     public TengenMsPacMan_CutScene1() {
-        setComp(GameSceneRendering2DComp.class, new GameSceneRendering2DComp());
-        reqRendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        reqRendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override

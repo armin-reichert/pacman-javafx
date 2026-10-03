@@ -24,7 +24,10 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.*;
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationSystem;
+import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
+import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderingUtil;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
@@ -49,10 +52,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComp(GameSceneRendering2DComp.class, r2d);
+        view2D().setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        view2D().setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
 
     public LevelCompletedAnimation levelCompletedAnimation() {
@@ -156,11 +157,9 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     @Override
     public void onAcceptGameLevel(GameSession session, GameLevel level) {
         // Custom maps can have arbitrary sizes, so adapt scene size here
-        optRendering2D().ifPresent(r2d -> {
-            final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-            r2d.unscaledWidthProperty().set(terrainSize.x());
-            r2d.unscaledHeightProperty().set(terrainSize.y());
-        });
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        view2D().unscaledWidthProperty().set(terrainSize.x());
+        view2D().unscaledHeightProperty().set(terrainSize.y());
 
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindings().registry();

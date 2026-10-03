@@ -18,7 +18,6 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
@@ -46,10 +45,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     private Ghost ghost;
 
     public TengenMsPacMan_BootScene() {
-        final var rendering = new GameSceneRendering2DComp();
-        setComp(GameSceneRendering2DComp.class, rendering);
-        rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        rendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
         grayCanvasFill = new CanvasFill(NES_Palette.color(0x10));
 
@@ -90,13 +87,13 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case   7 -> fillCanvasGray(true);
             case  12 -> fillCanvasGray(false);
             case  21 -> {
-                tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, reqRendering2D().unscaledHeight()); // lower border of screen
+                tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, view2D().unscaledHeight()); // lower border of screen
                 tengenPresentsTextView.show();
                 systems.motor().setVelocity(tengenPresentsTextView, 0, -HTS);
             }
             case  55 -> systems.motor().setVelocity(tengenPresentsTextView, 0, 0);
             case 113 -> {
-                ghost.pos().set(reqRendering2D().unscaledWidth() - TS, GHOST_Y);
+                ghost.pos().set(view2D().unscaledWidth() - TS, GHOST_Y);
                 ghost.show();
                 systems.navigator().setMoveDir(ghost, Direction.LEFT);
                 systems.navigator().setWishDir(ghost, Direction.LEFT);

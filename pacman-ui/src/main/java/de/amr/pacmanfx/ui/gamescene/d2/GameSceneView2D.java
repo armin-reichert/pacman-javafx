@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
-public class GameSceneRendering2DComp implements Disposable {
+public class GameSceneView2D implements Disposable {
 
     private RenderingSurface renderingSurface;
 
@@ -22,7 +22,7 @@ public class GameSceneRendering2DComp implements Disposable {
 
     private RectShort clipRect;
 
-    public GameSceneRendering2DComp() {
+    public GameSceneView2D() {
         setUnscaledWidth(300);
         setUnscaledHeight(400);
     }

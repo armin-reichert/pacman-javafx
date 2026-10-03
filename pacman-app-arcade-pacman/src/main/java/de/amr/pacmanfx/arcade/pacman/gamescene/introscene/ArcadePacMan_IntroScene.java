@@ -19,12 +19,10 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -48,11 +46,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     long lastGhostEatenTick;
 
     public ArcadePacMan_IntroScene() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComp(GameSceneRendering2DComp.class, r2d);
-
         flow = new IntroSceneController();
         view = new IntroSceneView();
     }

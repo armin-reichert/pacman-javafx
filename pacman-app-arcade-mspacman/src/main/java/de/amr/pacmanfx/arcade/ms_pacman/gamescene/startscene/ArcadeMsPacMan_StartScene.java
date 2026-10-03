@@ -14,9 +14,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.basics.ui.assets.ArcadeColor;
 
@@ -42,11 +40,6 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     private final List<TextView> copyrightTexts = new ArrayList<>();
 
     public ArcadeMsPacMan_StartScene() {
-        final var r2d = new GameSceneRendering2DComp();
-        r2d.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        r2d.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComp(GameSceneRendering2DComp.class, r2d);
-
         msPacManImageView = new ImageView();
         msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
         msPacManImageView.pos().set(13 * TS, 23.5 * TS);

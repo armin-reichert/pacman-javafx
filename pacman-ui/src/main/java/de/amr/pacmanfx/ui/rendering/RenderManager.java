@@ -12,7 +12,7 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.Node;
@@ -47,7 +47,7 @@ public class RenderManager {
         ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        GameSceneRendering2DComp sceneRendering, // can be null!
+        GameSceneView2D sceneRendering, // can be null!
         MiniPlaySceneView miniView)
     {
         requireNonNull(animController);

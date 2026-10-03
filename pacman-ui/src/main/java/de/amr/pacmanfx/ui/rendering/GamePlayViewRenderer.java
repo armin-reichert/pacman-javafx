@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneRendering2DComp;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 
 public class GamePlayViewRenderer {
@@ -25,14 +24,12 @@ public class GamePlayViewRenderer {
 
         fillRenderQueue(playView, renderManager, app.game(), gameScene, debugMode);
 
-        final GameSceneRendering2DComp r2d = gameScene.optRendering2D().orElse(null);
-
         //TODO This should not be done in each render frame
         renderManager.updateRenderers(
             runtime.playConfig().systems().actorSpriteAnimController(),
             runtime.uiConfig().renderConfig(),
             gameScene,
-            r2d,
+            gameScene.view2D(),
             playView.layers().miniViewLayer()
         );
 
@@ -40,7 +37,7 @@ public class GamePlayViewRenderer {
         playView.layers().miniViewLayer().renderingSurface().clear();
 
         //TODO Rethink this (maybe add "clear canvas" command into queue?
-        if (r2d != null && r2d.autoClearCanvas()) {
+        if (gameScene.view2D() != null && gameScene.view2D().autoClearCanvas()) {
             renderManager.variantRenderer().clearCanvas();
         }
 
