@@ -41,6 +41,7 @@ import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSy
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -123,7 +124,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
 //        updateSystem3D.view3D().lookEdible(bonus);
-        updateSystem3D.update(bonus, gameScene.animationRegistry());
+        updateSystem3D.update(bonus, gameScene.animations3D().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
@@ -133,9 +134,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = e.bonus();
         final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
 
-        updateSystem3D.update(bonus, gameScene.animationRegistry());
+        updateSystem3D.update(bonus, gameScene.animations3D().registry());
         //TODO integrate into update, set flag at animation component
-        updateSystem3D.animation3D().lookExpired(bonus, playScene3D().animationRegistry());
+        updateSystem3D.animation3D().lookExpired(bonus, playScene3D().animations3D().registry());
 
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
@@ -145,7 +146,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = e.bonus();
         final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
 
-        updateSystem3D.update(bonus, gameScene.animationRegistry());
+        updateSystem3D.update(bonus, gameScene.animations3D().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -203,7 +204,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level.entitySet().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
         playScene3D().replaceActionBindings(game().session(), level);
-        playScene3D().fadeIn();
+
+        playScene3D().animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
+            .ifPresent(ManagedAnimation::playFromStart);
     }
 
     @Override
@@ -313,7 +316,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animationRegistry());
+            updateSystem3D.update(bonus, gameScene.animations3D().registry());
         }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
@@ -355,7 +358,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animationRegistry());
+            updateSystem3D.update(bonus, gameScene.animations3D().registry());
         }
 
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
@@ -422,7 +425,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animationRegistry());
+            updateSystem3D.update(bonus, gameScene.animations3D().registry());
         }
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }

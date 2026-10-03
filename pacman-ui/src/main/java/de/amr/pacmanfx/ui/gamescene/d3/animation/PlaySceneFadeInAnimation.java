@@ -21,6 +21,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlaySceneFadeInAnimation extends ManagedAnimation {
 
+    public static final String NAME = "PlaySceneFadeInAnimation";
+
     /**
      * Creates a new fade-in animation with the specified duration.
      *
@@ -28,7 +30,7 @@ public class PlaySceneFadeInAnimation extends ManagedAnimation {
      * @param playScene3D    the 3D play scene
      */
     public PlaySceneFadeInAnimation(Duration fadeInDuration, PlayScene3D playScene3D) {
-        super("Play Scene Fade-In");
+        super(NAME);
 
         requireNonNull(fadeInDuration);
         requireNonNull(playScene3D);

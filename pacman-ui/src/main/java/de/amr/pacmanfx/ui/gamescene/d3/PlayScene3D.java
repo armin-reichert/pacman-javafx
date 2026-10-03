@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.basics.ui.animation.AnimationRegistry;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
@@ -63,9 +61,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     private PerspectiveManager perspectiveManager;
 
-    private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
-
     private ChangeListener<DrawMode> drawModeChangeListener;
     private PlayScene3D_GameEventHandler gameEventHandler;
 
@@ -81,14 +76,13 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
     public PlayScene3D() {
-        final var gameScene3DComp = new GameScene3DComp();
-        setComp(GameScene3DComp.class, gameScene3DComp);
+        setComp(GameScene3DComp.class, new GameScene3DComp());
+        setComp(GameSceneAnimations3DComp.class, new GameSceneAnimations3DComp());
 
         level3DHolder = new Group();
+        view3D().root().getChildren().addAll(level3DHolder);
 
-        gameScene3DComp.root().getChildren().addAll(level3DHolder);
-
-        perspectiveManager = new PerspectiveManager(gameScene3DComp.camera());
+        perspectiveManager = new PerspectiveManager(view3D().camera());
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
@@ -96,6 +90,17 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
                 level3D.setDrawMode(drawMode);
             }
         };
+
+        final var fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
+        animations3D().registry().register(fadeInAnimation.name(), fadeInAnimation);
+    }
+
+    public GameScene3DComp view3D() {
+        return reqComp(GameScene3DComp.class);
+    }
+
+    public GameSceneAnimations3DComp animations3D() {
+        return reqComp(GameSceneAnimations3DComp.class);
     }
 
     @Override
@@ -203,7 +208,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = GameSystems3D.reqSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, animationRegistry);
+        updateSystem.updateEntities(game, animations3D().registry());
 
         updateHUD3D(game);
 
@@ -250,10 +255,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         return reqComp(GameScene3DComp.class).subScene();
     }
 
-    public AnimationRegistry animationRegistry() {
-        return animationRegistry;
-    }
-
     public DoubleProperty opacityProperty() {
         return opacity;
     }
@@ -268,10 +269,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     public Optional<ScoresView> optScoresView() {
         return Optional.ofNullable(scoresView);
-    }
-
-    public void fadeIn() {
-        fadeInAnimation.playFromStart();
     }
 
     public void replaceActionBindings(GameSession session, GameLevel level) {
@@ -333,10 +330,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(game, animationRegistry, viewModel, uiConfig);
+        level3D = new GameLevel3D(game, animations3D().registry(), viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
-        level3D.setAnimationManager(new GameLevel3DAnimationManager(animationRegistry, level3D, config, uiConfig));
+        level3D.setAnimationManager(new GameLevel3DAnimationManager(animations3D().registry(), level3D, config, uiConfig));
 
         level3DHolder.getChildren().setAll(level3D.root());
 
