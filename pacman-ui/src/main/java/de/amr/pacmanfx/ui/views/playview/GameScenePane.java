@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -35,7 +34,7 @@ public class GameScenePane extends BorderPane {
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
     //TODO use FX controls + CSS
-    public static final DecorationPaneConfig DECORATION_PANE_CONFIG = new DecorationPaneConfig(
+    public static final DecorationPaneConfig FRAMED_CONTAINER_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
         new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadeColor.WHITE.color())
@@ -51,7 +50,7 @@ public class GameScenePane extends BorderPane {
     private final SubSceneGameSceneContainer subSceneContainer;
 
     public GameScenePane() {
-        framedContainer = new FramedGameSceneContainer(DECORATION_PANE_CONFIG);
+        framedContainer = new FramedGameSceneContainer(FRAMED_CONTAINER_CONFIG);
         plainContainer = new PlainGameSceneContainer();
         subSceneContainer = new SubSceneGameSceneContainer();
     }
