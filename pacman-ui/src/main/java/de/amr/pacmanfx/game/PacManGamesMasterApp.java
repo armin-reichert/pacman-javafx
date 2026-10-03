@@ -48,6 +48,7 @@ public final class PacManGamesMasterApp implements GameApp {
 
         @Override
         public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
+            Logger.info("Game state changed from {} to {}", oldState, newState);
             eventManager.publishEvent(new GameStateChangeEvent(oldState, newState));
         }
     }

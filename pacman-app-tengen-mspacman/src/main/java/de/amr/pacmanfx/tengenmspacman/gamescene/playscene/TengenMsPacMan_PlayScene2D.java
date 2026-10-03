@@ -235,8 +235,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
         Logger.info(actionBindings().registry());
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
-
-        game().eventManager().publishEvent(new GenericChangeEvent("Re-embed"));
     }
 
     // private area, do NOT enter!

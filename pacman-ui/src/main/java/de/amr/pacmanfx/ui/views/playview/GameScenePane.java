@@ -79,23 +79,6 @@ public class GameScenePane extends BorderPane {
         setBorder(debug ? DEBUG_BORDER : null);
     }
 
-    public void disembedGameScene(GameScene gameScene) {
-        requireNonNull(gameScene);
-
-        gameScene.deactivate();
-
-        gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
-            subSceneFX.widthProperty().unbind();
-            subSceneFX.heightProperty().unbind();
-        });
-
-        framedContainer.unscaledWidthProperty().unbind();
-        framedContainer.unscaledHeightProperty().unbind();
-        framedContainer.backgroundProperty().unbind();
-
-        Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
-    }
-
     public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, GameScene gameScene) {
         requireNonNull(ui);
         requireNonNull(uiConfig);
@@ -113,8 +96,20 @@ public class GameScenePane extends BorderPane {
                 }
             }
         }
-        gameScene.activate();
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
+    }
+
+    public void updateScaling(GameScene gameScene, GameVariantUIConfig uiConfig) {
+        final GameSceneEmbedding embedding = uiConfig.gameSceneConfig().embedding(gameScene);
+        if (embedding == GameSceneEmbedding.SUBSCENE_2D) {
+            if (!(gameScene instanceof AbstractGameScene absGameScene)
+                || !absGameScene.hasComp(GameSceneRendering2DComp.class)) {
+                return;
+            }
+            final GameSceneRendering2DComp r2D = absGameScene.reqComp(GameSceneRendering2DComp.class);
+            subSceneContainer.renderingSurface().scalingProperty().bind(
+                subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
+        }
     }
 
     private void embedGameScene2D(GameMainScene mainScene, GameScene gameScene, Game2DSettingsVM settingsViewModel, GameSceneEmbedding embedding) {

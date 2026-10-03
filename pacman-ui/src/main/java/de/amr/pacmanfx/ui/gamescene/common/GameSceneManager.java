@@ -75,6 +75,7 @@ public class GameSceneManager {
             }
             Logger.info("No game scene change but reload requested");
         }
+        nextGameScene.activate();
         ui.viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
         //TODO rethink this

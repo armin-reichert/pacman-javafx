@@ -119,7 +119,7 @@ public class GamePlayView implements GameView {
         requireNonNull(nextGameScene);
 
         if (currentGameScene != null) {
-            layers.gameSceneLayer().disembedGameScene(currentGameScene);
+            currentGameScene.deactivate();
         }
 
         nextGameScene.onBeforeEmbedded();
@@ -166,7 +166,7 @@ public class GamePlayView implements GameView {
         root.requestFocus();
         actionBindings.registerAllBindings(app.commonActions().bindings());
         layers.gameSceneLayer().installKeyBindings();
-        Logger.info(actionBindings);
+        Logger.debug(actionBindings);
     }
 
     @Override
@@ -200,13 +200,20 @@ public class GamePlayView implements GameView {
 
     // --- Component update
 
-    public void updateDashboard() {
+    public void update(GameScene currentGameScene) {
+        //TODO This is an attempt to keep the scaling of the rendering surface up-to-date
+        layers.gameSceneLayer().updateScaling(currentGameScene, app.variantManager().currentRuntime().uiConfig());
+        updateDashboard();
+        updateMiniView();
+    }
+
+    private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
             dashboard.update(app);
         }
     }
 
-    public void updateMiniView() {
+    private void updateMiniView() {
         final boolean playScene3DActive = app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         layers.miniViewLayer().update(playScene3DActive);
     }
