@@ -65,22 +65,18 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
-    private final PlayScene3D gameScene;
+    private final PlayScene3D playScene3D;
 
-    public PlayScene3D_GameEventHandler(PlayScene3D gameScene) {
-        this.gameScene = gameScene;
-    }
-
-    public PlayScene3D playScene3D() {
-        return gameScene;
+    public PlayScene3D_GameEventHandler(PlayScene3D playScene3D) {
+        this.playScene3D = playScene3D;
     }
 
     private GameApp app() {
-        return playScene3D().app();
+        return playScene3D.app();
     }
 
     private GameContext game() {
-        return gameScene.game();
+        return playScene3D.game();
     }
 
     private Optional<GameSoundEffects> optSoundEffects() {
@@ -124,7 +120,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
 //        updateSystem3D.view3D().lookEdible(bonus);
-        updateSystem3D.update(bonus, gameScene.animations3D().registry());
+        updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
@@ -134,9 +130,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = e.bonus();
         final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
 
-        updateSystem3D.update(bonus, gameScene.animations3D().registry());
+        updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         //TODO integrate into update, set flag at animation component
-        updateSystem3D.animation3D().lookExpired(bonus, playScene3D().animations3D().registry());
+        updateSystem3D.animation3D().lookExpired(bonus, playScene3D.animations3D().registry());
 
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
@@ -146,7 +142,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = e.bonus();
         final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
 
-        updateSystem3D.update(bonus, gameScene.animations3D().registry());
+        updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -181,7 +177,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D().replaceGameLevel3D(game(), event.level());
+        playScene3D.replaceGameLevel3D(game(), event.level());
     }
 
     @Override
@@ -194,7 +190,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
-            playScene3D().replaceGameLevel3D(game(), level);
+            playScene3D.replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
             final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
@@ -203,9 +199,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entitySet().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
-        playScene3D().replaceActionBindings(game().session(), level);
+        playScene3D.replaceActionBindings(game().session(), level);
 
-        playScene3D().animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
+        playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
@@ -298,7 +294,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        playScene3D().initPac3DProperties(level, level.entitySet().pac());
+        playScene3D.initPac3DProperties(level, level.entitySet().pac());
 
         level3D.animationManager().startEnergizerPumping();
         level3D.animationManager().startParticlesAnimation();
@@ -316,7 +312,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animations3D().registry());
+            updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
@@ -346,7 +342,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
-        playScene3D().opacityProperty().set(0);
+        playScene3D.opacityProperty().set(0);
 
         houseSystem3D.hideDoors(house);
 
@@ -358,7 +354,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animations3D().registry());
+            updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
 
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
@@ -417,7 +413,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            app().ui().shortMessage(Duration.seconds(2.5), gameScene.textPicker().selectNextText());
+            app().ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
         level3D.animationManager().stopAll();
@@ -425,21 +421,21 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
-            updateSystem3D.update(bonus, gameScene.animations3D().registry());
+            updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        playScene3D().optGameLevel3D().ifPresent(level3D -> {
-            playScene3D().replaceGameLevel3D(game(), level);
+        playScene3D.optGameLevel3D().ifPresent(level3D -> {
+            playScene3D.replaceGameLevel3D(game(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIDProperty().set(PerspectiveID.TOTAL);
         });
     }
 
     private GameLevel3D assertLevel3D() {
-        return playScene3D().optGameLevel3D().orElseThrow();
+        return playScene3D.optGameLevel3D().orElseThrow();
     }
 }
