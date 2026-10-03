@@ -190,7 +190,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             playScene3D.replaceGameLevel3D(game(), level);
-            playScene3D.animationSystem().startEnergizerPumping(playScene3D);
+            playScene3D.animationSystem().startEnergizerPumping(level3D);
             final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
@@ -216,7 +216,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Vector2i tile = event.pac().pos().tile();
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
-                    playScene3D.animationSystem().stopPumping(playScene3D, energizer3D);
+                    playScene3D.animationSystem().stopPumping(energizer3D);
                     energizer3D.hide();
                     triggerEnergizerExplosion(energizer3D.root().localToScene(Point3D.ZERO));
                 });
@@ -248,7 +248,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         if (!game().playConfig().rules().isLevelCompleted(level)) {
             final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
             systems3D.animation().setPowerMode(pac, true);
-            playScene3D.animationSystem().startWallFlashing(playScene3D);
+            playScene3D.animationSystem().startWallFlashing();
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
@@ -259,7 +259,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
 
         systems3D.animation().setPowerMode(pac, false);
-        playScene3D.animationSystem().stopWallFlashing(playScene3D);
+        playScene3D.animationSystem().stopWallFlashing();
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
@@ -294,9 +294,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = level3D.level();
         playScene3D.initPac3DProperties(level, level.entitySet().pac());
 
-        playScene3D.animationSystem().startEnergizerPumping(playScene3D);
-        playScene3D.animationSystem().startParticlesAnimation(playScene3D);
-        playScene3D.animationSystem().startGhostLightAnimation(playScene3D);
+        playScene3D.animationSystem().startEnergizerPumping(level3D);
+        playScene3D.animationSystem().startParticlesAnimation();
+        playScene3D.animationSystem().startGhostLightAnimation();
     }
 
     private void onPacManDying() {
@@ -312,7 +312,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
 
-        playScene3D.animationSystem().stopAnimationsBeforePacManDies(playScene3D);
+        playScene3D.animationSystem().stopAnimationsBeforePacManDies();
 
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
         pacSystems3D.animation().playDyingAnimation(
@@ -346,7 +346,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         final GameLevelView3D level3D = assertLevel3D();
-        playScene3D.animationSystem().stopAllAnimations(playScene3D);
+        playScene3D.animationSystem().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
@@ -412,7 +412,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             app().ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
-        playScene3D.animationSystem().stopAllAnimations(playScene3D);
+        playScene3D.animationSystem().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
