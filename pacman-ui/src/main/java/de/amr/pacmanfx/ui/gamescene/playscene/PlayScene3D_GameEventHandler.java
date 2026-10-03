@@ -419,7 +419,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+        app().variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

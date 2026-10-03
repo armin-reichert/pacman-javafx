@@ -10,7 +10,6 @@ import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -32,11 +31,9 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
-import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
@@ -44,7 +41,6 @@ import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.Group;
@@ -86,9 +82,8 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     private final GameViewModel viewModel;
 
-    public GameLevelView3D(GameContext game, AnimationRegistry animationRegistry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
+    public GameLevelView3D(GameContext game, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
         requireNonNull(game);
-        requireNonNull(animationRegistry);
         this.viewModel = requireNonNull(viewModel);
         this.uiConfig = requireNonNull(uiConfig);
 
@@ -102,7 +97,6 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
         final LevelCounter levelCounter = session.hud().levelCounter();
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final MessageView messageView   = level.entitySet().entities().theOne(MessageView.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 
@@ -111,9 +105,9 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
         createPac3DView(pac, uiConfig.worldSettings().pac());
         createGhost3DViews(ghosts, uiConfig.worldSettings().ghosts());
-        createLevelCounter3DView(levelCounter, animationRegistry);
+        createLevelCounter3DView(levelCounter);
         createLivesCounter3DView(livesCounter);
-        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
+
 
         composeLevel3D(pac, ghosts, livesCounter, house);
 
@@ -136,10 +130,6 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     public WorldMapView3D maze3D() {
         return mapView3D;
-    }
-
-    public Optional<GameSoundEffects> optSoundEffects() {
-        return uiConfig.optSoundEffects();
     }
 
     public GameLevel level() {
@@ -294,18 +284,14 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         }
     }
 
-    private void createLevelCounter3DView(LevelCounter levelCounter, AnimationRegistry registry) {
+    private void createLevelCounter3DView(LevelCounter levelCounter) {
         if (!levelCounter.hasComponent(LevelCounter3DViewComp.class)) {
             final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
             levelCounter.setComponent(LevelCounter3DViewComp.class, view3D);
-            levelCounter.setComponent(LevelCounter3DAnimationComp.class,
-                new LevelCounter3DAnimationComp(view3D, registry));
-            Logger.info("Level counter now has a 3D view and animation component");
         }
         else {
             Logger.info("Level counter already had a 3D view!");
         }
-
         replaceLevelCounter3D(levelCounter);
     }
 

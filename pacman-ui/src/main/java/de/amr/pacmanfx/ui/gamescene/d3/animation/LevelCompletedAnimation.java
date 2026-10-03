@@ -7,11 +7,11 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;
@@ -39,15 +39,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private static final float SPINNING_SECONDS = 1.5f;
 
-    /**
-     * Creates an animation that briefly lowers and raises the maze wall base height,
-     * producing a “swinging” or “bouncing” effect. Used during level completion.
-     *
-     * @param maze3D     the 3D maze whose walls are animated
-     * @param numFlashes number of up/down cycles; if zero, a simple pause is returned
-     * @return the animation
-     */
-    public static Animation createMazeWallsSwingingAnimation(WorldMapView3D maze3D, int numFlashes) {
+    static Animation createMazeWallsSwingingAnimation(WorldMapView3D maze3D, int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
@@ -61,27 +53,34 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private final GameLevelView3D level3D;
 
-    public LevelCompletedAnimation(GameLevelView3D level3D, int numFlashes) {
+    public LevelCompletedAnimation(GameLevelView3D level3D, int numFlashes, GameSoundEffects soundEffects) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
-        setAnimationFactory(() -> createAnimationFX(numFlashes));
-    }
+        setAnimationFactory(() -> {
+            final GameLevelEntitySet entitySet = level3D.level().entitySet();
+            final House house = entitySet.entities().theOne(House.class);
+            final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
+            return new SequentialTransition(
+                pauseSecThen(0.5, () -> entitySet.ghosts().forEach(GameEntity::hide)),
 
-    private Animation createAnimationFX(int numFlashes) {
-        final GameLevel level = level3D.level();
-        final WorldMapView3D maze3D = level3D.maze3D();
-        final House house = level.entitySet().entities().theOne(House.class);
-        final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
-        return new SequentialTransition(
-            pauseSecThen(0.5, () -> level.entitySet().ghosts().forEach(GameEntity::hide)),
-            createMazeWallsSwingingAnimation(maze3D, numFlashes),
-            pauseSecThen(0.5, () -> level.entitySet().pac().hide()),
-            pauseSec(0.5),
-            levelRotation(rotationAxis),
-            pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
-            mazeWallsAndHouseDisappearAnimation(level3D, house.assertComponent(House3DViewComp.class).wallBaseHeightProperty(), maze3D.wallBaseHeightProperty()),
-            pauseSecThen(1.0, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
-        );
+                createMazeWallsSwingingAnimation(level3D.maze3D(), numFlashes),
+
+                pauseSecThen(0.5, () -> entitySet.pac().hide()),
+
+                pauseSec(0.5),
+
+                levelRotation(rotationAxis),
+
+                pauseSecThen(0.5, soundEffects::playLevelCompleteSound),
+
+                mazeWallsAndHouseDisappearAnimation(
+                    level3D,
+                    house.assertComponent(House3DViewComp.class).wallBaseHeightProperty(),
+                    level3D.maze3D().wallBaseHeightProperty()),
+
+                pauseSecThen(1.0, soundEffects::playLevelChangedSound)
+            );
+        });
     }
 
     private Animation mazeWallsAndHouseDisappearAnimation(
@@ -96,12 +95,6 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         );
     }
 
-    /**
-     * Rotates the entire level around the given axis.
-     *
-     * @param axis rotation axis
-     * @return the animation
-     */
     private Animation levelRotation(Point3D axis) {
         final var rotation = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D.root());
         rotation.setAxis(axis);

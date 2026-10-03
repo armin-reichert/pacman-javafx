@@ -33,8 +33,10 @@ public class LevelCounter3DViewSystem {
         final LevelCounter3DViewComp view3D = levelCounter.assertComponent(LevelCounter3DViewComp.class);
         view3D.setRoot(root);
 
-        final LevelCounter3DAnimationComp anim3D = levelCounter.assertComponent(LevelCounter3DAnimationComp.class);
-        anim3D.spinningAnimation().invalidate(); // stops animation if present
-        anim3D.spinningAnimation().playFromStart();
+        levelCounter.optComponent(LevelCounter3DAnimationComp.class).ifPresent(animation -> {
+            animation.spinningAnimation().invalidate(); // stops animation if present
+            animation.spinningAnimation().playFromStart();
+
+        });
     }
 }

@@ -10,8 +10,10 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.assets.RandomTextPicker;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -37,7 +39,10 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
@@ -380,7 +385,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevelView3D(game, animations3D().registry(), viewModel, uiConfig);
+        level3D = new GameLevelView3D(game, viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
 
@@ -474,12 +479,15 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
 
         animations3D().registry().register(PlayScene3DAnimationID.LEVEL_COMPLETED_FULL,
-            new LevelCompletedAnimation(level3D, config.rules().numLevelFlashes(level.number())));
+            new LevelCompletedAnimation(level3D, numFlashes, uiConfig.optSoundEffects().orElseThrow()));
 
         animations3D().registry().register(PlayScene3DAnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
         final House house = level.entitySet().entities().theOne(House.class);
         createHouseAnimations(house);
+
+        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        MessageView3DBuilder.createAnim3D(messageView, animations3D().registry());
 
         createEnergizerAnimations(uiConfig.worldSettings().energizer());
         createEnergizerParticlesAnimation(level3D.maze3D(), level);
@@ -490,10 +498,17 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final Pac pac = level.entitySet().pac();
         if (pac.state().isMale()) {
             createPacManAnimations(pac);
-        }
-        else {
+        } else {
             createMsPacManAnimations(pac);
         }
+
+        final LevelCounter levelCounter = game().session().hud().levelCounter();
+        levelCounter.setComponent(LevelCounter3DAnimationComp.class,
+            new LevelCounter3DAnimationComp(
+                levelCounter.assertComponent(LevelCounter3DViewComp.class),
+                animations3D().registry()
+            )
+        );
     }
 
     private void createPacManAnimations(Pac pac) {
