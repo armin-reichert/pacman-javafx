@@ -9,7 +9,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 

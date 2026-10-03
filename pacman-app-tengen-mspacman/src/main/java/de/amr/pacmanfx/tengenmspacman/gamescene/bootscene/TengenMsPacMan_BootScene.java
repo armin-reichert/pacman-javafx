@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.CanvasFill;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;

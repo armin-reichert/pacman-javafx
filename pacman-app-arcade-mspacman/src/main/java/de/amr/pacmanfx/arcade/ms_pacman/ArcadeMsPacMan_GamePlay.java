@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterBehavior;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;

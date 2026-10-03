@@ -13,7 +13,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;

@@ -9,7 +9,7 @@ import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.util.Ufx;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

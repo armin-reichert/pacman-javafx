@@ -9,7 +9,7 @@ import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
-import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
+import static de.amr.basics.ui.entities.props.textview.TextView.createText;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 public class IntroSceneView {
@@ -133,9 +133,9 @@ public class IntroSceneView {
         copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
         copyrightImageView.image().setImage(assets.image("logo.midway"));
 
-        copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
-        copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
-        copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
+        copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 14, 32));
         copyrightTexts.forEach(TextView::show);
     }
 

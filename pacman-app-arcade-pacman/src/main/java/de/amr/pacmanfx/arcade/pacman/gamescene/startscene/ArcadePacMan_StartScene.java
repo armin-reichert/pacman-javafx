@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 
 import de.amr.basics.ui.assets.ArcadeColor;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
@@ -21,11 +22,11 @@ import java.util.stream.Stream;
 public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     private final List<TextView> texts = List.of(
-        createText("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), 8,  6, 17),
-        createText("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   8,  8, 21),
-        createText("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   8,  1, 25),
-        createText("PTS",                     ArcadeColor.ROSE.color(),   6, 25, 25),
-        createText("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   8,  4, 29)
+        TextView.createText("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  6, 17),
+        TextView.createText("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   GlobalFonts.ARCADE.font(8),  8, 21),
+        TextView.createText("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(8),  1, 25),
+        TextView.createText("PTS",                     ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(6), 25, 25),
+        TextView.createText("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   GlobalFonts.ARCADE.font(8),  4, 29)
     );
 
     public ArcadePacMan_StartScene() {}

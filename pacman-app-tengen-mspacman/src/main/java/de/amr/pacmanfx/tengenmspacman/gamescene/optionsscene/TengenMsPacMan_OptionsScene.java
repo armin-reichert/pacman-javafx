@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;

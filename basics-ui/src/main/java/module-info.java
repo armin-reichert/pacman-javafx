@@ -24,7 +24,7 @@ module de.amr.basics.ui {
     exports de.amr.basics.ui.entities.props.marquee;
     exports de.amr.basics.ui.entities.props.messageview;
     exports de.amr.basics.ui.entities.props.stork;
-    exports de.amr.basics.ui.entities.props.textdisplay;
+    exports de.amr.basics.ui.entities.props.textview;
     exports de.amr.basics.ui.rendering;
     exports de.amr.basics.ui.spriteanim;
 }

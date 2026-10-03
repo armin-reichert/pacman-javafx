@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -14,6 +14,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -29,10 +30,10 @@ import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     private final List<TextView> texts = List.of(
-        createText("PUSH START BUTTON",      ArcadeColor.ORANGE.color(), 8,  6, 16),
-        createText("1 PLAYER ONLY",          ArcadeColor.ORANGE.color(), 8,  8, 18),
-        createText("ADDITIONAL    AT 10000", ArcadeColor.ORANGE.color(), 8,  2, 25),
-        createText("PTS",                    ArcadeColor.ORANGE.color(), 6, 25, 25)
+        TextView.createText("PUSH START BUTTON",      ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  6, 16),
+        TextView.createText("1 PLAYER ONLY",          ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  8, 18),
+        TextView.createText("ADDITIONAL    AT 10000", ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  2, 25),
+        TextView.createText("PTS",                    ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(6), 25, 25)
     );
 
     private final ImageView msPacManImageView;
@@ -49,9 +50,9 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         copyrightImageView.show();
         copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
 
-        copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
-        copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
-        copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
+        copyrightTexts.add(TextView.createText("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
+        copyrightTexts.add(TextView.createText("MIDWAY MFG CO", ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 13, 30));
+        copyrightTexts.add(TextView.createText("1980/1981",     ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 14, 32));
         copyrightTexts.forEach(TextView::show);
     }
 

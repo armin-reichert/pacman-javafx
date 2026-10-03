@@ -7,39 +7,21 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
-
-//TODO Should a game scene really be a renderable itself or only produce renderables?
 
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene
-    extends Composition<Object>
-    implements GameScene, QuitHandler, Disposable
-{
-    public static TextView createText(String text, Color color, int fontSize, float tileX, float tileY) {
-        final var textDisplay = new TextView();
-        textDisplay.data().setFillColor(color);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(fontSize));
-        textDisplay.data().setText(text);
-        textDisplay.pos().set(tilesPx(tileX), tilesPx(tileY));
-        textDisplay.show();
-        return textDisplay;
-    }
+public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
     private GameApp app;
 
