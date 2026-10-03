@@ -51,14 +51,8 @@ public class GameScenePane extends BorderPane {
     private final SubSceneGameSceneContainer subSceneContainer;
 
     public GameScenePane() {
-        framedContainer = new FramedGameSceneContainer(
-            DECORATION_PANE_CONFIG,
-            WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
-            WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
-        );
-
+        framedContainer = new FramedGameSceneContainer(DECORATION_PANE_CONFIG);
         plainContainer = new PlainGameSceneContainer();
-
         subSceneContainer = new SubSceneGameSceneContainer();
     }
 

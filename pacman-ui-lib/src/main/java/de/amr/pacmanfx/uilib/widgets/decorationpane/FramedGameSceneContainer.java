@@ -45,16 +45,8 @@ public class FramedGameSceneContainer extends StackPane {
 
     private final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
 
-    public FramedGameSceneContainer(double unscaledWidth, double unscaledHeight) {
-        this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
-    }
-
-    public FramedGameSceneContainer(DecorationPaneConfig config, double unscaledWidth, double unscaledHeight) {
+    public FramedGameSceneContainer(DecorationPaneConfig config) {
         this.config = requireNonNull(config);
-
-        unscaledWidthProperty().set(unscaledWidth);
-        unscaledHeightProperty().set(unscaledHeight);
-
         newRenderingSurface();
         installBindings();
     }
