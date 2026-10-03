@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.assets.RandomTextPicker;
@@ -18,6 +18,8 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -28,7 +30,12 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSyste
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
+import de.amr.pacmanfx.ui.gamescene.d3.GameScene3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimationShort;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
@@ -333,7 +340,11 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         level3D = new GameLevel3D(game, animations3D().registry(), viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
-        level3D.setAnimationManager(new GameLevel3DAnimationManager(animations3D().registry(), level3D, config, uiConfig));
+
+
+        level3D.setAnimationManager(new PlayScene3DAnimationSystem(animations3D().registry(), level3D, config, uiConfig));
+        createAnimations(level3D);
+
 
         level3DHolder.getChildren().setAll(level3D.root());
 
@@ -345,6 +356,24 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final LivesCounter livesCounter = session.hud().livesCounter();
         final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
         livesCounter3DViewSystem.startTrackingPac(livesCounter, pac);
+    }
+
+    private void createAnimations(GameLevel3D level3D) {
+        final GameVariantPlayConfig config = app().variantManager().currentRuntime().playConfig();
+        final GameVariantUIConfig uiConfig = app().variantManager().currentRuntime().uiConfig();
+
+        final GameLevel level = level3D.level();
+        final int numFlashes = config.rules().numLevelFlashes(level.number());
+        final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
+        final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), uiConfig.worldSettings());
+
+        animations3D().registry().register(PlayScene3DAnimationSystem.AnimationID.WALL_COLOR_FLASHING,
+            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
+
+        animations3D().registry().register(PlayScene3DAnimationSystem.AnimationID.LEVEL_COMPLETED_FULL,
+            new LevelCompletedAnimation(level3D, config.rules().numLevelFlashes(level.number())));
+
+        animations3D().registry().register(PlayScene3DAnimationSystem.AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
     }
 
     /**

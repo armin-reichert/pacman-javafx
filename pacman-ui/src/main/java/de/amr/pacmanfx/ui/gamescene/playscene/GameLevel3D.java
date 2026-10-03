@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Vector2i;
@@ -82,9 +82,9 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     private final Map<Vector2i, Pellet3D> pelletViews3D = new HashMap<>();
 
-    private MapView3D mapView3D;
+    private WorldMapView3D mapView3D;
 
-    private GameLevel3DAnimationManager animationManager;
+    private PlayScene3DAnimationSystem animationManager;
 
     private final GameViewModel viewModel;
 
@@ -126,7 +126,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         return root;
     }
 
-    public void setAnimationManager(GameLevel3DAnimationManager animationManager) {
+    public void setAnimationManager(PlayScene3DAnimationSystem animationManager) {
         this.animationManager = requireNonNull(animationManager);
     }
 
@@ -140,11 +140,11 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     // Public accessors
 
-    public GameLevel3DAnimationManager animationManager() {
+    public PlayScene3DAnimationSystem animationManager() {
         return animationManager;
     }
 
-    public MapView3D maze3D() {
+    public WorldMapView3D maze3D() {
         return mapView3D;
     }
 
@@ -217,7 +217,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
     // Private area, no trespassing!
 
     private void createMaze3DView(WorldMap worldMap, House house, WorldMapColorScheme colorScheme) {
-        mapView3D = new MapView3DFactory().createMapView3D(
+        mapView3D = new WorldMapView3DFactory().createMapView3D(
             p -> house.contains(PositionSystem.computeTileAt(p)),
             worldMap.terrainLayer(),
             uiConfig.worldSettings(),

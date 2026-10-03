@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.MapView3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 
@@ -37,7 +37,7 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
     }
 
     private Animation createAnimationFX(int numFlashes) {
-        final MapView3D maze3D = level3D.maze3D();
+        final WorldMapView3D maze3D = level3D.maze3D();
         final GameLevel level = level3D.level();
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.entitySet().ghosts().forEach(GameEntity::hide)),

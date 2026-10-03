@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
-import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 
 import java.util.Map;
 import java.util.function.Supplier;

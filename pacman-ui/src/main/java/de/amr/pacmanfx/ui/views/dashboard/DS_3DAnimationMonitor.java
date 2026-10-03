@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3DAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3DAnimationSystem;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -116,7 +116,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
                 .map(PlayScene3D.class::cast)
                 .flatMap(PlayScene3D::optGameLevel3D)
                 .map(GameLevel3D::animationManager)
-                .map(GameLevel3DAnimationManager::registry)
+                .map(PlayScene3DAnimationSystem::registry)
                 .orElse(null);
 
         currentAnimationSet.set(animationSet);

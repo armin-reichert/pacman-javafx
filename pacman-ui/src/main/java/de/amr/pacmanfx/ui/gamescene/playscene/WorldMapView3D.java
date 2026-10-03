@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
  */
-public class MapView3D implements DisposableGraphicsObject {
+public class WorldMapView3D implements DisposableGraphicsObject {
 
     public record Materials(
         PhongMaterial floorMaterial,
@@ -47,7 +47,7 @@ public class MapView3D implements DisposableGraphicsObject {
 
     private final Materials materials;
 
-    public MapView3D(TerrainLayer terrain, Materials materials) {
+    public WorldMapView3D(TerrainLayer terrain, Materials materials) {
         this.terrain = requireNonNull(terrain);
         this.materials = requireNonNull(materials);
     }

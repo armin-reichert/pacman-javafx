@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
@@ -16,18 +16,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimationShort;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
-import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
@@ -40,6 +29,12 @@ import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
+import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
+import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -54,7 +49,7 @@ import static de.amr.basics.math.RandomNumbers.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class GameLevel3DAnimationManager implements Disposable {
+public class PlayScene3DAnimationSystem implements Disposable {
 
     public enum AnimationID implements Named {
         GHOST_LIGHT,
@@ -73,7 +68,7 @@ public class GameLevel3DAnimationManager implements Disposable {
 
     private final GameLevel3D level3D;
 
-    public GameLevel3DAnimationManager(
+    public PlayScene3DAnimationSystem(
         AnimationRegistry registry,
         GameLevel3D level3D,
         GameVariantPlayConfig variantConfig,
@@ -86,16 +81,6 @@ public class GameLevel3DAnimationManager implements Disposable {
 
         final GameLevel level = level3D.level();
         final int numFlashes = variantConfig.rules().numLevelFlashes(level.number());
-        final GameVariantRenderConfig renderConfig = variantUIConfig.renderConfig();
-        final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), variantUIConfig.worldSettings());
-
-        registry.register(AnimationID.WALL_COLOR_FLASHING,
-            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
-
-        registry.register(AnimationID.LEVEL_COMPLETED_FULL,
-            new LevelCompletedAnimation(level3D, variantConfig.rules().numLevelFlashes(level.number())));
-
-        registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
         final House house = level.entitySet().entities().theOne(House.class);
         createHouseAnimations(house);
@@ -134,34 +119,34 @@ public class GameLevel3DAnimationManager implements Disposable {
 
     public void stopWallFlashing() {
         registry
-            .optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING)
+            .optAnimation(PlayScene3DAnimationSystem.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
     }
 
     public void startWallFlashing() {
         registry
-            .optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING)
+            .optAnimation(PlayScene3DAnimationSystem.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void startParticlesAnimation() {
-        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES)
+        registry.optAnimation(PlayScene3DAnimationSystem.AnimationID.PARTICLES)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void stopParticlesAnimation() {
-        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES)
+        registry.optAnimation(PlayScene3DAnimationSystem.AnimationID.PARTICLES)
             .ifPresent(ManagedAnimation::stop);
     }
 
     public void startGhostLightAnimation() {
-        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT)
+        registry.optAnimation(PlayScene3DAnimationSystem.AnimationID.GHOST_LIGHT)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void stopAnimationsBeforePacManDies() {
-        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
-        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationSystem.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(PlayScene3DAnimationSystem.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
     }
 
     @Override
@@ -223,7 +208,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         return ghost.assertComponent(Ghost3DAnimationComp.class);
     }
 
-    private void createEnergizerParticlesAnimation(MapView3D maze3D, GameLevel level) {
+    private void createEnergizerParticlesAnimation(WorldMapView3D maze3D, GameLevel level) {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
         final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()

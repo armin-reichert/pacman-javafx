@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
@@ -24,13 +24,13 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-public class MapView3DFactory {
+public class WorldMapView3DFactory {
 
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
-    public MapView3D createMapView3D(
+    public WorldMapView3D createMapView3D(
         Predicate<Vector2f> obstacleStartPointIgnored,
         TerrainLayer terrain,
         WorldSettings worldSettings,
@@ -41,7 +41,7 @@ public class MapView3DFactory {
         requireNonNull(worldSettings);
         requireNonNull(colorScheme);
 
-        final var mapView3D = new MapView3D(terrain, createMazeMaterials(colorScheme));
+        final var mapView3D = new WorldMapView3D(terrain, createMazeMaterials(colorScheme));
         buildFloor(mapView3D, terrain, worldSettings.floor());
         addObstacles(mapView3D, terrain, worldSettings.maze(), obstacleStartPointIgnored);
         bindWallBaseMaterialColor(mapView3D, mapView3D.materials().wallBaseMaterial(), Color.valueOf(colorScheme.wallStroke()));
@@ -49,7 +49,7 @@ public class MapView3DFactory {
         return mapView3D;
     }
 
-    private void buildFloor(MapView3D mapView3D, TerrainLayer terrain, Floor3DSettings floorConfig) {
+    private void buildFloor(WorldMapView3D mapView3D, TerrainLayer terrain, Floor3DSettings floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
@@ -71,7 +71,7 @@ public class MapView3DFactory {
     }
 
     private void addObstacles(
-        MapView3D mapView3D, TerrainLayer terrain, Maze3DSettings maze3DSettings,
+        WorldMapView3D mapView3D, TerrainLayer terrain, Maze3DSettings maze3DSettings,
         Predicate<Vector2f> obstacleStartPointIgnored) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
@@ -108,7 +108,7 @@ public class MapView3DFactory {
         }
     }
 
-    private MapView3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
+    private WorldMapView3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 
@@ -118,10 +118,10 @@ public class MapView3DFactory {
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
         wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
 
-        return new MapView3D.Materials(floorMaterial, wallBaseMaterial, wallTopMaterial);
+        return new WorldMapView3D.Materials(floorMaterial, wallBaseMaterial, wallTopMaterial);
     }
 
-    private void bindWallBaseMaterialColor(MapView3D mapView3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
+    private void bindWallBaseMaterialColor(WorldMapView3D mapView3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
         wallBaseMaterial.diffuseColorProperty().bind(mapView3D.wallOpacityProperty()
             .map(opacity -> Ufx.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
         );

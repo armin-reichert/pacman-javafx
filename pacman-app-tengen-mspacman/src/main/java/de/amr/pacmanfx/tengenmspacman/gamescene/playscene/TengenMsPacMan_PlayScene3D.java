@@ -15,9 +15,9 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.MapView3D;
-import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,7 +64,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         );
 
         // Display the level info at front side of floor just over the surface
-        final MapView3D maze3D = level3D.maze3D();
+        final WorldMapView3D maze3D = level3D.maze3D();
         levelInfo.setTranslateY(maze3D.floor3D().getHeight() - levelInfo.getFitHeight());
         levelInfo.setTranslateZ(-maze3D.floor3D().getDepth());
 

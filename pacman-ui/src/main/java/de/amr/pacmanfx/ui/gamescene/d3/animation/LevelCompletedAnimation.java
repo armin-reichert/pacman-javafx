@@ -8,8 +8,8 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.MapView3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import javafx.animation.*;
@@ -47,7 +47,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
      * @param numFlashes number of up/down cycles; if zero, a simple pause is returned
      * @return the animation
      */
-    public static Animation createMazeWallsSwingingAnimation(MapView3D maze3D, int numFlashes) {
+    public static Animation createMazeWallsSwingingAnimation(WorldMapView3D maze3D, int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
@@ -69,7 +69,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private Animation createAnimationFX(int numFlashes) {
         final GameLevel level = level3D.level();
-        final MapView3D maze3D = level3D.maze3D();
+        final WorldMapView3D maze3D = level3D.maze3D();
         final House house = level.entitySet().entities().theOne(House.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(

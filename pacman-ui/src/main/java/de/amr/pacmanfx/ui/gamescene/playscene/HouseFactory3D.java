@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;

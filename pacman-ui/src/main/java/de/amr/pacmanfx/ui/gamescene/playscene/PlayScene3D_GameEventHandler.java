@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumbers;
@@ -231,7 +231,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
-        level3D.animationManager().registry().optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES, ParticlesAnimation3D.class)
+        level3D.animationManager().registry().optAnimation(PlayScene3DAnimationSystem.AnimationID.PARTICLES, ParticlesAnimation3D.class)
             .ifPresent(animation -> animation.triggerExplosion(center));
     }
 
@@ -370,12 +370,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         AnimationRegistry animationRegistry,
         Game3DSettingsVM settings3D,
         Maze3DSettingsVM maze3DSettings,
-        MapView3D maze3D,
+        WorldMapView3D maze3D,
         boolean cutSceneFollows)
     {
-        final GameLevel3DAnimationManager.AnimationID animationID = cutSceneFollows
-            ? GameLevel3DAnimationManager.AnimationID.LEVEL_COMPLETED_SHORT
-            : GameLevel3DAnimationManager.AnimationID.LEVEL_COMPLETED_FULL;
+        final PlayScene3DAnimationSystem.AnimationID animationID = cutSceneFollows
+            ? PlayScene3DAnimationSystem.AnimationID.LEVEL_COMPLETED_SHORT
+            : PlayScene3DAnimationSystem.AnimationID.LEVEL_COMPLETED_FULL;
 
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
