@@ -48,7 +48,7 @@ import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
-import de.amr.pacmanfx.ui.gamescene.d3.GameScene3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.*;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
@@ -118,7 +118,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
     public PlayScene3D() {
-        setComponent(GameScene3DComp.class, new GameScene3DComp());
+        setComponent(GameSceneView3D.class, new GameSceneView3D());
         setComponent(GameSceneAnimations3DComp.class, new GameSceneAnimations3DComp());
 
         level3DHolder = new Group();
@@ -137,8 +137,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         animations3D().registry().register(fadeInAnimation.name(), fadeInAnimation);
     }
 
-    public GameScene3DComp view3D() {
-        return assertComponent(GameScene3DComp.class);
+    public GameSceneView3D view3D() {
+        return assertComponent(GameSceneView3D.class);
     }
 
     public GameSceneAnimations3DComp animations3D() {
@@ -151,7 +151,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
 
-        final var comp3D = assertComponent(GameScene3DComp.class);
+        final var comp3D = assertComponent(GameSceneView3D.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
         comp3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
     }
@@ -210,7 +210,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
         registerActionBindings();
-        assertComponent(GameScene3DComp.class).subScene().setFill(Color.BLACK);
+        assertComponent(GameSceneView3D.class).subScene().setFill(Color.BLACK);
     }
 
     @Override
@@ -282,7 +282,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public Optional<SubScene> optSubSceneFX() {
-        return Optional.of(assertComponent(GameScene3DComp.class).subScene());
+        return Optional.of(assertComponent(GameSceneView3D.class).subScene());
     }
 
     @Override
@@ -305,7 +305,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     public SubScene subScene() {
-        return assertComponent(GameScene3DComp.class).subScene();
+        return assertComponent(GameSceneView3D.class).subScene();
     }
 
     public DoubleProperty opacityProperty() {
@@ -414,7 +414,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {
-            assertComponent(GameScene3DComp.class).root().getChildren().remove(oldScoresView.root());
+            assertComponent(GameSceneView3D.class).root().getChildren().remove(oldScoresView.root());
         }
 
         final Score leftScore = session.hud().gameScore();
@@ -433,12 +433,12 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         scoresView = new ScoresView(leftScore, rightScore);
         scoresView.setFont(arcade8);
 
-        assertComponent(GameScene3DComp.class).root().getChildren().add(scoresView.root());
+        assertComponent(GameSceneView3D.class).root().getChildren().add(scoresView.root());
 
         //scoresView.textOpacity.bind(scoreOpacity);
 
         // Scores must always face towards viewer, independent of current perspective:
-        final var comp3D = assertComponent(GameScene3DComp.class);
+        final var comp3D = assertComponent(GameSceneView3D.class);
         final Node root = scoresView.root();
         root.rotationAxisProperty().bind(comp3D.camera().rotationAxisProperty());
         root.rotateProperty().bind(comp3D.camera().rotateProperty());

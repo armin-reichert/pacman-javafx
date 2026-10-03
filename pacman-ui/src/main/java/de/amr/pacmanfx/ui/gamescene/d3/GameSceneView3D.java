@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.scene.*;
 
-public class GameScene3DComp {
+public class GameSceneView3D {
 
     private final Group root;
     private final SubScene subScene;
@@ -15,7 +15,7 @@ public class GameScene3DComp {
     private final AmbientLight ambientLight;
     private final CoordinateSystem coordinateSystem;
 
-    public GameScene3DComp() {
+    public GameSceneView3D() {
         root = new Group();
         camera = new PerspectiveCamera(true);
         ambientLight = new AmbientLight();
