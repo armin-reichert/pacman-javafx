@@ -345,7 +345,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(app().variantManager().currentRuntime(), this, level3D);
+        animationSystem.createAnimations(app().variantManager().currentRuntime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();

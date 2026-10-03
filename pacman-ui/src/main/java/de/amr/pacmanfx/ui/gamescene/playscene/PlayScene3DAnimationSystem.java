@@ -12,6 +12,7 @@ import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -142,7 +143,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
     private Pool<EnergizerParticle3D> particlePool;
 
 
-    public void createAnimations(GameVariantRuntime runtime, PlayScene3D playScene3D, GameLevelView3D level3D) {
+    public void createAnimations(GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
         final GameVariantPlayConfig config = runtime.playConfig();
         final GameVariantUIConfig uiConfig = runtime.uiConfig();
 
@@ -163,7 +164,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         createHouseAnimations(house);
 
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
-        MessageView3DBuilder.createAnim3D(messageView, playScene3D.animations3D().registry());
+        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
 
         createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
         createEnergizerParticlesAnimation(level3D.maze3D(), level);
@@ -178,7 +179,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
             createMsPacManAnimations(pac);
         }
 
-        final LevelCounter levelCounter = playScene3D.game().session().hud().levelCounter();
+        final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounter.setComponent(LevelCounter3DAnimationComp.class,
             new LevelCounter3DAnimationComp(
                 levelCounter.assertComponent(LevelCounter3DViewComp.class),
