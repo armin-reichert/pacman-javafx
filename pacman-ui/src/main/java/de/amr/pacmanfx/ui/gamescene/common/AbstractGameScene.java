@@ -63,9 +63,9 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void onAcceptGameLevel(GameSession session, GameLevel level) {
-        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-        view2D().unscaledWidthProperty().set(terrainSize.x());
-        view2D().unscaledHeightProperty().set(terrainSize.y());
+        final Vector2i terrainSizeInPixel = level.worldMap().terrainLayer().sizeInPixel();
+        view2D().unscaledWidthProperty().set(terrainSizeInPixel.x());
+        view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
     }
 
     // Interface GameScene
@@ -99,9 +99,9 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        optComponent(ActionBindingsComp.class)
-            .map(ActionBindingsComp::registry)
-            .ifPresent(registry -> registry.executeMatchingAction(app()));
+        if (app != null) {
+            actionBindings().registry().executeMatchingAction(app);
+        }
     }
 
     // --- QuitHandler
