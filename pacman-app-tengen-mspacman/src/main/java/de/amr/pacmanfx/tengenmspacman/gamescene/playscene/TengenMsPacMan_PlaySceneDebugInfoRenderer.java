@@ -42,10 +42,13 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
         final GameSession session = game.session();
         final AbstractGameState gameState = game.state();
 
+        ctx.save();
+        ctx.getCanvas().setClip(null);
         drawDebugGrid(NES_SCREEN_WIDTH, playScene.view2D().unscaledHeight(), Color.LIGHTGRAY);
+        ctx.restore();
 
         ctx.save();
-        ctx.translate(scaled(2 * TS), 0);
+        ctx.translate(scaled(TengenMsPacMan_PlayScene2D.OFFSET.x()), 0);
         ctx.setFill(debugTextFill);
         ctx.setFont(debugTextFont);
         ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * TS));
