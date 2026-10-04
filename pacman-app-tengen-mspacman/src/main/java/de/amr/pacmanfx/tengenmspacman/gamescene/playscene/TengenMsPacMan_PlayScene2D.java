@@ -96,8 +96,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onAppConnected() {
-        final Game2DSettingsVM viewModel = app().ui().viewModel().common2DSettings();
-        rootPane.backgroundProperty().bind(viewModel.canvasBackgroundColorProperty().map(Background::fill));
+        final Game2DSettingsVM settings = viewModel().common2DSettings();
+        rootPane.backgroundProperty().bind(settings.canvasBackgroundColorProperty().map(Background::fill));
     }
 
     @Override
@@ -107,13 +107,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameLevel level = game().session().optLevel().orElse(null);
-        if (level == null) return Stream.empty();
-
-        return Ufx.streamOf(
-            createGameLevelView(level, game().session().thisFrame().tick()),
-            createEntityViews(level)
-        );
+        return game().session().optLevel()
+            .map(level -> Ufx.<Renderable>streamOf(
+                createGameLevelView(level, game().session().thisFrame().tick()),
+                createEntityViews(level))
+            )
+            .orElse(Stream.empty());
     }
 
     @Override
