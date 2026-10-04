@@ -312,43 +312,46 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private MenuOptionView createPlayModeOptionView() {
-        return new MenuOptionView(selectedOption.get() == PlayOption.PLAY_MODE,
-            "TYPE", "1 PLAYER", 8, new Vector2f(0, 4.5f * TS)
-        );
+        final var option = new MenuOptionView("TYPE", 8, new Vector2f(0, 4.5f * TS));
+        option.setSelected(selectedOption.get() == PlayOption.PLAY_MODE);
+        option.setValue("1 PLAYER");
+        return option;
     }
 
     private MenuOptionView createBoosterModeOptionView() {
         final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
-        return new MenuOptionView(selectedOption.get() == PlayOption.PAC_BOOSTER,
-            "PAC BOOSTER",
-            switch (boosterMode) {
-                case BOOSTER_OFF -> "OFF";
-                case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
-                case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
-            },
-            19, new Vector2f(0, 6 * TS)
-        );
+        final var option = new MenuOptionView("PAC BOOSTER", 19, new Vector2f(0, 6 * TS));
+        option.setSelected(selectedOption.get() == PlayOption.PAC_BOOSTER);
+        option.setValue(switch (boosterMode) {
+            case BOOSTER_OFF -> "OFF";
+            case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
+            case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
+        });
+        return option;
     }
 
     private MenuOptionView createGameDifficultyOptionView() {
         final Difficulty difficulty = gameOptions(game().session()).difficulty();
-        return new MenuOptionView(selectedOption.get() == PlayOption.DIFFICULTY,
-            "GAME DIFFICULTY", difficulty.name(), 19, new Vector2f(0, 7.5f * TS)
-        );
+        final var option = new MenuOptionView("GAME DIFFICULTY", 19, new Vector2f(0, 7.5f * TS));
+        option.setSelected(selectedOption.get() == PlayOption.DIFFICULTY);
+        option.setValue(difficulty.name());
+        return option;
     }
 
     private MenuOptionView createMapCategoryOptionView() {
         final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
-        return new MenuOptionView(selectedOption.get() == PlayOption.MAP_CATEGORY,
-            "MAZE SELECTION", mapCategory.name(), 19, new Vector2f(0, 9f * TS)
-        );
+        final var option = new MenuOptionView("MAZE SELECTION", 19, new Vector2f(0, 9f * TS));
+        option.setSelected(selectedOption.get() == PlayOption.MAP_CATEGORY);
+        option.setValue(mapCategory.name());
+        return option;
     }
 
     private MenuOptionView createStartingLevelOptionView() {
         final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
-        return new MenuOptionView(selectedOption.get() == PlayOption.STARTING_LEVEL,
-            "STARTING LEVEL", String.valueOf(startLevelNumber), 19, new Vector2f(0, 10.5f * TS)
-        );
+        final var option = new MenuOptionView("STARTING LEVEL", 19, new Vector2f(0, 10.5f * TS));
+        option.setSelected(selectedOption.get() == PlayOption.STARTING_LEVEL);
+        option.setValue(String.valueOf(startLevelNumber));
+        return option;
     }
 
     private GameEntityView createNumContinuesImageView() {
