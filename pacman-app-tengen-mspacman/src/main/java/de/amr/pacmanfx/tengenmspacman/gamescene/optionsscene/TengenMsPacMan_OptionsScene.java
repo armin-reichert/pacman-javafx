@@ -49,8 +49,8 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 /**
  * Options scene for Ms. Pac-Man Tengen.
  *
- * <p></p>The high-score is cleared if player type (1 player, 2 players etc.), map category or difficulty are
- * changed.
+ * <p>The high-score is cleared if player type (1 player, 2 players etc.), map category or difficulty are
+ * changed.</p>
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">Disassembly</a>.
  */
@@ -80,7 +80,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     };
 
     private int idleTicks;
-    public int initialDelay;
+    private int initialDelay;
 
     private final GameEntityView titleTextView;
     private final GameEntityView moveArrowTextView;
@@ -92,6 +92,11 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final MenuOptionView playModeOptionView;
     private final MenuOptionView boosterModeOptionView;
     private final MenuOptionView difficultyOptionView;
+    private final MenuOptionView mapCategoryOptionView;
+    private final MenuOptionView startingLevelOptionView;
+
+    private final ImageView numContinuesImageView;
+    private final GameEntityView numContinuesView;
 
     public TengenMsPacMan_OptionsScene() {
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
@@ -102,9 +107,15 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             RenderingLayer.PROPS, 0,
             Vector2f.ZERO);
 
-        playModeOptionView    = new MenuOptionView("TYPE", 8, new Vector2f(0, 4.5f * TS));
-        boosterModeOptionView = new MenuOptionView("PAC BOOSTER", 19, new Vector2f(0, 6 * TS));
-        difficultyOptionView  = new MenuOptionView("GAME DIFFICULTY", 19, new Vector2f(0, 7.5f * TS));
+        playModeOptionView      = new MenuOptionView("TYPE", 8, new Vector2f(0, 4.5f * TS));
+        boosterModeOptionView   = new MenuOptionView("PAC BOOSTER", 19, new Vector2f(0, 6 * TS));
+        difficultyOptionView    = new MenuOptionView("GAME DIFFICULTY", 19, new Vector2f(0, 7.5f * TS));
+        mapCategoryOptionView   = new MenuOptionView("MAZE SELECTION", 19, new Vector2f(0, 9f * TS));
+        startingLevelOptionView = new MenuOptionView("STARTING LEVEL", 19, new Vector2f(0, 10.5f * TS));
+
+        numContinuesImageView = new ImageView();
+        numContinuesImageView.pos().set(24 * TS, 20 * TS);
+        numContinuesView = new GameEntityView(numContinuesImageView, RenderingLayer.PROPS, 0, Vector2f.ZERO);
 
         moveArrowTextView = new GameEntityView(
             TextView.create("MOVE ARROW WITH JOYPAD", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 4, 24),
@@ -129,39 +140,21 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         if (initialDelay > 0) return Stream.empty();
 
-        updateOptions();
-
         return Ufx.streamOf(
-            createJoypadKeyBindingsView(), // dynamic, depends on current bindings an if set to visible
+            createJoypadKeyBindingsView(), // dynamic, depends on current bindings and visibility
             playModeOptionView,
             boosterModeOptionView,
             difficultyOptionView,
-            createMapCategoryOptionView(selectedOption.get() == PlayOption.MAP_CATEGORY),
-            createStartingLevelOptionView(selectedOption.get() == PlayOption.STARTING_LEVEL),
+            mapCategoryOptionView,
+            numContinuesView,
+            startingLevelOptionView,
             titleTextView,
             moveArrowTextView,
-            chooseOptionsTextView, pressStartTextView,
-            createNumContinuesImageView(),
+            chooseOptionsTextView,
+            pressStartTextView,
             topBarView,
             botBarView
         );
-    }
-
-    private void updateOptions() {
-        playModeOptionView.setSelected(selectedOption.get() == PlayOption.PLAY_MODE);
-        playModeOptionView.setValue("1 PLAYER");
-
-        boosterModeOptionView.setSelected(selectedOption.get() == PlayOption.PAC_BOOSTER);
-        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
-        boosterModeOptionView.setValue(switch (boosterMode) {
-            case BOOSTER_OFF -> "OFF";
-            case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
-            case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
-        });
-
-        final Difficulty difficulty = gameOptions(game().session()).difficulty();
-        difficultyOptionView.setSelected(selectedOption.get() == PlayOption.DIFFICULTY);
-        difficultyOptionView.setValue(difficulty.name());
     }
 
     @Override
@@ -196,6 +189,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         } else {
             gameFlow().enterGameState(game(), CommonGameStateID.GAME_INTRO);
         }
+        updateOptions();
     }
 
     @Override
@@ -232,6 +226,49 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
+    private void updateOptions() {
+        // This is not strictly necessary because play mode cannot be changed, but...
+        playModeOptionView.setSelected(selectedOption.get() == PlayOption.PLAY_MODE);
+        playModeOptionView.setValue("1 PLAYER");
+
+        boosterModeOptionView.setSelected(selectedOption.get() == PlayOption.PAC_BOOSTER);
+        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
+        boosterModeOptionView.setValue(switch (boosterMode) {
+            case BOOSTER_OFF -> "OFF";
+            case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
+            case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
+        });
+
+        final Difficulty difficulty = gameOptions(game().session()).difficulty();
+        difficultyOptionView.setSelected(selectedOption.get() == PlayOption.DIFFICULTY);
+        difficultyOptionView.setValue(difficulty.name());
+
+        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
+        mapCategoryOptionView.setSelected(selectedOption.get() == PlayOption.MAP_CATEGORY);
+        mapCategoryOptionView.setValue(mapCategory.name());
+
+        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
+        startingLevelOptionView.setSelected(selectedOption.get() == PlayOption.STARTING_LEVEL);
+        startingLevelOptionView.setValue(String.valueOf(startLevelNumber));
+
+        final int numContinues = gameOptions(game().session()).numContinues();
+        if (numContinues < 4) {
+            final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
+            final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
+                case 0 -> SpriteID.CONTINUES_0;
+                case 1 -> SpriteID.CONTINUES_1;
+                case 2 -> SpriteID.CONTINUES_2;
+                case 3 -> SpriteID.CONTINUES_3;
+                default -> throw new IllegalStateException("Unexpected value: " + numContinues);
+            });
+            numContinuesImageView.image().setImage(spriteSheet.createImage(sprite));
+            numContinuesImageView.show();
+        }
+        else {
+            numContinuesImageView.hide();
+        }
+    }
+
     private void setPrevStartLevelValue() {
         final GameSession session = game().session();
 
@@ -254,59 +291,41 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     private void setPrevMapCategoryValue(GameSession session) {
         final MapCategory category = gameOptions(session).mapCategory();
-        final var values = MapCategory.values();
-        final int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
-        gameOptions(session).setMapCategory(values[prev]);
-
+        gameOptions(session).setMapCategory(category.pred());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue(GameSession session) {
         final MapCategory category = gameOptions(session).mapCategory();
-        var values = MapCategory.values();
-        int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gameOptions(session).setMapCategory(values[next]);
-
+        gameOptions(session).setMapCategory(category.succ());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue(GameSession session) {
         final Difficulty difficulty = gameOptions(session).difficulty();
-        final var values = Difficulty.values();
-        final int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        gameOptions(session).setDifficulty(values[prev]);
-
+        gameOptions(session).setDifficulty(difficulty.pred());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextDifficultyValue(GameSession session) {
         final Difficulty difficulty = gameOptions(session).difficulty();
-        final var values = Difficulty.values();
-        final int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gameOptions(session).setDifficulty(values[next]);
-
+        gameOptions(session).setDifficulty(difficulty.succ());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevPacBoosterValue(GameSession session) {
         final BoosterMode boosterMode = gameOptions(session).boosterMode();
-        final var values = BoosterMode.values();
-        final int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        gameOptions(session).setBoosterMode(values[prev]);
-
+        gameOptions(session).setBoosterMode(boosterMode.pred());
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue(GameSession session) {
         final BoosterMode boosterMode = gameOptions(session).boosterMode();
-        final var values = BoosterMode.values();
-        final int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gameOptions(session).setBoosterMode(values[next]);
-
+        gameOptions(session).setBoosterMode(boosterMode.succ());
         optionValueChanged();
     }
 
@@ -323,44 +342,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         } catch (IOException x) {
             game().eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
         }
-    }
-
-    private MenuOptionView createMapCategoryOptionView(boolean selected) {
-        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
-        final var option = new MenuOptionView("MAZE SELECTION", 19, new Vector2f(0, 9f * TS));
-        option.setSelected(selected);
-        option.setValue(mapCategory.name());
-        return option;
-    }
-
-    private MenuOptionView createStartingLevelOptionView(boolean selected) {
-        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
-        final var option = new MenuOptionView("STARTING LEVEL", 19, new Vector2f(0, 10.5f * TS));
-        option.setSelected(selected);
-        option.setValue(String.valueOf(startLevelNumber));
-        return option;
-    }
-
-    private GameEntityView createNumContinuesImageView() {
-        final int numContinues = gameOptions(game().session()).numContinues();
-        final ImageView imageView = new ImageView();
-        imageView.pos().set(24 * TS, 20 * TS);
-        if (numContinues < 4) {
-            final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
-            final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
-                case 0 -> SpriteID.CONTINUES_0;
-                case 1 -> SpriteID.CONTINUES_1;
-                case 2 -> SpriteID.CONTINUES_2;
-                case 3 -> SpriteID.CONTINUES_3;
-                default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
-            });
-            imageView.image().setImage(spriteSheet.createImage(sprite));
-            imageView.show();
-        }
-        else {
-            imageView.hide();
-        }
-        return new GameEntityView(imageView, RenderingLayer.PROPS, 0, Vector2f.ZERO);
     }
 
     private JoypadKeyBindingsView createJoypadKeyBindingsView() {

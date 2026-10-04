@@ -4,4 +4,13 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-public enum BoosterMode { BOOSTER_OFF, ACTIVATE_WITH_A_OR_B, BOOSTER_ALWAYS_ON }
+import de.amr.basics.EnumMethods;
+
+public enum BoosterMode implements EnumMethods<BoosterMode> {
+    BOOSTER_OFF, ACTIVATE_WITH_A_OR_B, BOOSTER_ALWAYS_ON;
+
+    @Override
+    public Class<BoosterMode> enumClass() {
+        return BoosterMode.class;
+    }
+}
