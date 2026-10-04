@@ -71,7 +71,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     // The indent such that the scene content appears horizontally centered
-    public static final Vector2f OFFSET = new Vector2f(2 * TS, 0);
+    public static int OFFSET_X = 2 * TS;
 
     // Additional 2 tiles below world map for HUD display
     public static final int EXTRA_SPACE_BELOW_MAP = 2 * TS;
@@ -79,7 +79,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     // In Tengen Ms.Pac-Man, all maps are 28 tiles wide. The NES screen width however is 32 tiles,
     // so 16 pixels on each side are clipped and the map is horizontally centered inside the available space.
     // (One additional pixel is clipped on the right side to hide noise caused by the spritesheet image.)
-    public static final RectShort CLIP_RECT = new RectShort(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE);
+    public static final RectShort CLIP_RECT = new RectShort(
+        OFFSET_X, 0,
+        NES_SCREEN_WIDTH - 2 * OFFSET_X - 1, Short.MAX_VALUE
+    );
 
     private final StackPane rootPane = new StackPane();
 
@@ -107,10 +110,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
+        final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return game().session().optLevel()
             .map(level -> Ufx.<Renderable>streamOf(
-                createGameLevelView(level, game().session().thisFrame().tick()),
-                createEntityViews(level))
+                createGameLevelView(level, offset, game().session().thisFrame().tick()),
+                createEntityViews(level,offset))
             )
             .orElse(Stream.empty());
     }
@@ -227,13 +231,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     // private area, do NOT enter!
 
     private TengenMsPacMan_Actions actions() {
-        return app().variantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return app().variantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {
@@ -299,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         });
     }
 
-    private GameLevelView createGameLevelView(GameLevel level, long tick) {
+    private GameLevelView createGameLevelView(GameLevel level, Vector2f offset, long tick) {
         final InfoMap renderInfo = InfoMap.create();
         final WorldMap worldMap = level.worldMap();
 
@@ -335,28 +337,25 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             }
         }
 
-        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, OFFSET);
+        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, offset);
     }
 
-    private Stream<GameEntityView> createEntityViews(GameLevel level) {
+    private Stream<GameEntityView> createEntityViews(GameLevel level, Vector2f offset) {
         final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
         final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
             level.entitySet().all()
                 .filter(entity -> entity != door)
                 .map(renderConfig::createEntityView)
-                .map(entityView -> entityView.newOffset(OFFSET)),
+                .map(entityView -> entityView.newOffset(offset)),
 
             // Ghosts are drawn under the door, so lift door z index up!
-            new GameEntityView(door, RenderingLayer.ACTORS, 100, OFFSET)
+            new GameEntityView(door, RenderingLayer.ACTORS, 100, offset)
         );
     }
 
     private FlashingState flashingState() {
-        if (levelCompletedAnimation == null || levelCompletedAnimation.optFlashingState().isEmpty()) {
-            return null;
-        }
-        return levelCompletedAnimation.optFlashingState().get();
+        return levelCompletedAnimation == null ? null : levelCompletedAnimation.optFlashingState().orElse(null);
     }
 
     /**
