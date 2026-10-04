@@ -10,7 +10,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textview.TextView;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -81,10 +83,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private int idleTicks;
     public int initialDelay;
 
-    private final TextView titleTextView;
-    private final TextView moveArrowTextView;
-    private final TextView chooseOptionsTextView;
-    private final TextView pressStartTextView;
+    private final GameEntityView titleTextView;
+    private final GameEntityView moveArrowTextView;
+    private final GameEntityView chooseOptionsTextView;
+    private final GameEntityView pressStartTextView;
     private final MenuSeparatorBarView topBarView;
     private final MenuSeparatorBarView botBarView;
 
@@ -112,7 +114,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             createGameDifficultyOptionView(),
             createMapCategoryOptionView(),
             createStartingLevelOptionView(),
-            streamOfPropViews(titleTextView, createNumContinuesImageView(), moveArrowTextView, chooseOptionsTextView, pressStartTextView),
+            titleTextView,
+            moveArrowTextView,
+            chooseOptionsTextView, pressStartTextView,
+            streamOfPropViews(createNumContinuesImageView()),
             topBarView,
             botBarView
         );
@@ -279,20 +284,32 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
-    private TextView createTitleTextDisplay() {
-        return TextView.create("MS PAC-MAN OPTIONS", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 7, 6);
+    private GameEntityView createTitleTextDisplay() {
+        return new GameEntityView(
+            TextView.create("MS PAC-MAN OPTIONS", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 7, 6),
+            RenderingLayer.PROPS, 0,
+            Vector2f.ZERO);
     }
 
-    private TextView createMoveArrowTextDisplay() {
-        return TextView.create("MOVE ARROW WITH JOYPAD", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 4, 24);
+    private GameEntityView createMoveArrowTextDisplay() {
+        return new GameEntityView(
+            TextView.create("MOVE ARROW WITH JOYPAD", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 4, 24),
+            RenderingLayer.PROPS, 0,
+            Vector2f.ZERO);
     }
 
-    private TextView createChooseOptionsTextDisplay() {
-        return TextView.create("CHOOSE OPTIONS WITH A AND B", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 2, 25);
+    private GameEntityView createChooseOptionsTextDisplay() {
+        return new GameEntityView(
+            TextView.create("CHOOSE OPTIONS WITH A AND B", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 2, 25),
+            RenderingLayer.PROPS, 0,
+            Vector2f.ZERO);
     }
 
-    private TextView createPressStartTextDisplay() {
-        return TextView.create("PRESS START TO START GAME", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 3, 26);
+    private GameEntityView createPressStartTextDisplay() {
+        return new GameEntityView(
+            TextView.create("PRESS START TO START GAME", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 3, 26),
+            RenderingLayer.PROPS, 0,
+            Vector2f.ZERO);
     }
 
     private MenuOptionView createPlayModeOptionView() {
