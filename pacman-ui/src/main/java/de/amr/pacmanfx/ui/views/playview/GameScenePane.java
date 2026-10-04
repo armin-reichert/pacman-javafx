@@ -72,7 +72,7 @@ public class GameScenePane extends BorderPane {
         setBorder(debug ? DEBUG_BORDER : null);
     }
 
-    public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, GameScene gameScene) {
+    public void embedGameScene(GameUI ui, GameVariantUIConfig uiConfig, AbstractGameScene gameScene) {
         requireNonNull(ui);
         requireNonNull(uiConfig);
         requireNonNull(gameScene);
@@ -105,16 +105,12 @@ public class GameScenePane extends BorderPane {
         }
     }
 
-    private void embedGameScene2D(GameMainScene mainScene, GameScene gameScene, Game2DSettingsVM settingsViewModel, GameSceneEmbedding embedding) {
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("Current game scene is not an AbstractGameScene");
-            return;
-        }
+    private void embedGameScene2D(GameMainScene mainScene, AbstractGameScene gameScene, Game2DSettingsVM settingsViewModel, GameSceneEmbedding embedding) {
         if (embedding == GameSceneEmbedding.DECORATED_2D) {
-            embedDecoratedGameScene2D(mainScene, abstractGameScene, settingsViewModel);
+            embedDecoratedGameScene2D(mainScene, gameScene, settingsViewModel);
         }
         else if (embedding == GameSceneEmbedding.PLAIN_2D) {
-            embedPlainGameScene2D(mainScene, abstractGameScene);
+            embedPlainGameScene2D(mainScene, gameScene);
         }
         else {
             Logger.error("Illegal embedding: " + embedding);
@@ -158,9 +154,7 @@ public class GameScenePane extends BorderPane {
                 .multiply(r2d.unscaledWidthProperty())
                 .divide(r2d.unscaledHeightProperty()));
 
-        surface.scalingProperty().bind(
-            mainScene.heightProperty()
-                .divide(r2d.unscaledHeightProperty()));
+        surface.scalingProperty().bind(mainScene.heightProperty().divide(r2d.unscaledHeightProperty()));
 
         r2d.setRenderingSurface(plainContainer.renderingSurface());
         setCenter(plainContainer);
@@ -173,36 +167,28 @@ public class GameScenePane extends BorderPane {
         setCenter(subSceneFX);
     }
 
-    private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, GameScene gameScene) {
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)
-            || !abstractGameScene.hasComponent(GameSceneView2D.class)) {
-            Logger.error("Cannot embed game scene");
-            return;
-        }
-        final GameSceneView2D view2D = abstractGameScene.assertComponent(GameSceneView2D.class);
+    private void embedGameScene2DWithSubSceneFX(GameMainScene mainScene, AbstractGameScene gameScene) {
+        final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
 
-        view2D.setRenderingSurface(subSceneContainer.renderingSurface());
+        final GameSceneView2D view2D = gameScene.assertComponent(GameSceneView2D.class);
+        final double aspect = view2D.unscaledWidth() / view2D.unscaledHeight();
+
+        final SubScene subScene = subSceneContainer.subScene();
+        subScene.widthProperty().bind(mainScene.heightProperty().multiply(aspect));
+        subScene.heightProperty().bind(mainScene.heightProperty());
 
         //TODO make configurable if camera is active
-        final boolean cameraActive = false;
+        final boolean cameraActive = true;
         if (cameraActive) {
+            view2D.setRenderingSurface(renderingSurface);
             view2D.setCamera(subSceneContainer.camera());
-            subSceneContainer.renderingSurface().scalingProperty().bind(
-                subSceneContainer.subScene().heightProperty().divide(30*8));
+            renderingSurface.scalingProperty().bind(mainScene.heightProperty().divide(240));
         } else {
-            subSceneContainer.renderingSurface().scalingProperty().bind(
-                subSceneContainer.subScene().heightProperty().divide(view2D.unscaledHeight()));
+            view2D.setCamera(null);
+            renderingSurface.scalingProperty().bind(subScene.heightProperty().divide(view2D.unscaledHeight()));
         }
 
-        subSceneContainer.subScene().heightProperty().bind(mainScene.heightProperty());
-
-        subSceneContainer.subScene().widthProperty().bind(
-            mainScene.heightProperty()
-                .multiply(view2D.unscaledWidthProperty())
-                .divide(view2D.unscaledHeightProperty())
-        );
-
         subSceneContainer.root().setBackground(Background.fill(Color.BLACK));
-        setCenter(subSceneContainer.subScene());
+        setCenter(subScene);
     }
 }

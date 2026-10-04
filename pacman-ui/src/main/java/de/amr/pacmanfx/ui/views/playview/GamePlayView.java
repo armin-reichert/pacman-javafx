@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -107,7 +108,7 @@ public class GamePlayView implements GameView {
         layers.gameSceneLayer().embedGameScene(
             app.ui(),
             app.variantManager().currentRuntime().uiConfig(),
-            currentGameScene);
+            (AbstractGameScene) currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
 
@@ -127,7 +128,7 @@ public class GamePlayView implements GameView {
         layers.gameSceneLayer().embedGameScene(
             app.ui(),
             app.variantManager().currentRuntime().uiConfig(),
-            nextGameScene);
+            (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }

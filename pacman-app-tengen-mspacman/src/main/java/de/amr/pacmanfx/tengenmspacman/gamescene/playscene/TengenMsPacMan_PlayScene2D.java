@@ -93,7 +93,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private final PerspectiveCamera cam = new PerspectiveCamera(true);
 
-
     public TengenMsPacMan_PlayScene2D() {
         view2D().setRenderingSurface(new RenderingSurface());
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
