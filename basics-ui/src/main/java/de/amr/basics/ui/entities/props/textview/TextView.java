@@ -18,7 +18,7 @@ public class TextView extends GameEntity {
         setComponent(MovementComp.class, new MovementComp());
     }
 
-    public static TextView createText(String text, Color color, Font font, float tileX, float tileY) {
+    public static TextView create(String text, Color color, Font font, float tileX, float tileY) {
         final var textDisplay = new TextView();
         textDisplay.data().setFillColor(color);
         textDisplay.data().setFont(font);

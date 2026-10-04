@@ -22,11 +22,11 @@ import java.util.stream.Stream;
 public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     private final List<TextView> texts = List.of(
-        TextView.createText("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  6, 17),
-        TextView.createText("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   GlobalFonts.ARCADE.font(8),  8, 21),
-        TextView.createText("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(8),  1, 25),
-        TextView.createText("PTS",                     ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(6), 25, 25),
-        TextView.createText("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   GlobalFonts.ARCADE.font(8),  4, 29)
+        TextView.create("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(8),  6, 17),
+        TextView.create("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   GlobalFonts.ARCADE.font(8),  8, 21),
+        TextView.create("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(8),  1, 25),
+        TextView.create("PTS",                     ArcadeColor.ROSE.color(),   GlobalFonts.ARCADE.font(6), 25, 25),
+        TextView.create("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   GlobalFonts.ARCADE.font(8),  4, 29)
     );
 
     public ArcadePacMan_StartScene() {}

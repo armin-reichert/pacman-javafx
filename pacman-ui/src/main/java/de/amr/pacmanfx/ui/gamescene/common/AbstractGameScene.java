@@ -87,7 +87,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     @Override
-    public void activate() {
+    public final void activate() {
         onActivate();
     }
 

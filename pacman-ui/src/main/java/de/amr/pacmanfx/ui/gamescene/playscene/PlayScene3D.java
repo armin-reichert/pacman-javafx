@@ -180,6 +180,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onInput() {
         final Optional<GameAction> executedAction = actionBindings().registry().executeMatchingAction(app());
+
+        //TODO Rethink this
         if (executedAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {

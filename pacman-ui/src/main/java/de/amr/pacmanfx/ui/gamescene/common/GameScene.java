@@ -24,14 +24,13 @@ import java.util.stream.Stream;
 
 public interface GameScene extends Disposable, QuitHandler {
 
-    /**
-     * @return the renderables produced by this game scene
-     */
-    Stream<Renderable> renderables();
+    default GameContext game() {
+        return app().game();
+    }
 
-    void setApp(GameApp app);
-
-    GameApp app();
+    default GameFlow gameFlow() {
+        return game().playConfig().gameFlow();
+    }
 
     default GameVariantRuntime runtime() {
         return app().variantManager().currentRuntime();
@@ -41,31 +40,44 @@ public interface GameScene extends Disposable, QuitHandler {
         return app().ui().viewModel();
     }
 
-    default GameContext game() {
-        return app().game();
-    }
-
-    default GameFlow gameFlow() {
-        return game().playConfig().gameFlow();
+    default Optional<ContextMenu> optContextMenu() {
+        return Optional.empty();
     }
 
     default Optional<GameEventListener> optGameEventHandler() {
         return Optional.empty();
     }
 
+    default Optional<SubScene> optSubSceneFX() {
+        return Optional.empty();
+    }
+
+    default SoundManager soundManager() {
+        return app().ui().soundManager();
+    }
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return runtime().uiConfig().optSoundEffects();
+    }
+
+    /**
+     * @return the renderables produced by this game scene
+     */
+    Stream<Renderable> renderables();
+
+    void setApp(GameApp app);
+
+    GameApp app();
+
     /**
      * Hook called when entering this 2D scene from a 3D scene.
      * Subclasses may override to adjust state or transitions.
      */
-    default void onEnteredFrom3DScene() {
-    }
+    default void onEnteredFrom3DScene() {}
 
-    //TODO remove this hook method
     default void onBeforeEmbedded() {}
 
-    default void onScroll(ScrollEvent scrollEvent) {
-        // Used only by very few subclasses
-    }
+    default void onScroll(ScrollEvent scrollEvent) {}
 
     /**
      * Activates the scene and assigns keyboard bindings.
@@ -91,23 +103,6 @@ public interface GameScene extends Disposable, QuitHandler {
 
     /**
      * Called when a key combination is pressed inside this scene.
-     * Executes the first matching action.
      */
     void onInput();
-
-    default Optional<ContextMenu> optContextMenu() {
-        return Optional.empty();
-    }
-
-    default Optional<SubScene> optSubSceneFX() {
-        return Optional.empty();
-    }
-
-    default SoundManager soundManager() {
-        return app().ui().soundManager();
-    }
-
-    default Optional<GameSoundEffects> optSoundEffects() {
-        return app().variantManager().currentRuntime().uiConfig().optSoundEffects();
-    }
 }

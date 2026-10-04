@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -30,6 +29,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -106,7 +106,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
-            renderableJoyPadKeyBindings(),
+            createJoypadKeyBindingsView(),
             createPlayModeOptionView(),
             createBoosterModeOptionView(),
             createGameDifficultyOptionView(),
@@ -155,15 +155,16 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     @Override
     public void onInput() {
         final GameSession session = game().session();
+        final Joypad joypad = app().input().joypad();
 
-        if (app().input().joypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption.get().succ());
         }
-        else if (app().input().joypad().isButtonPressed(JoypadButton.UP)) {
+        else if (joypad.isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption.get().pred());
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (app().input().joypad().isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (joypad.isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case DIFFICULTY     -> setNextDifficultyValue(session);
@@ -172,7 +173,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (app().input().joypad().isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (joypad.isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case DIFFICULTY     -> setPrevDifficultyValue(session);
@@ -279,43 +280,19 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private TextView createTitleTextDisplay() {
-        final TextView textView = new TextView();
-        textView.pos().set(7 * TS, 6 * TS);
-        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textView.data().setText("MS PAC-MAN OPTIONS");
-        textView.data().setFillColor(NES_Palette.color(0x28));
-        textView.show();
-        return textView;
+        return TextView.create("MS PAC-MAN OPTIONS", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 7, 6);
     }
 
     private TextView createMoveArrowTextDisplay() {
-        final TextView textView = new TextView();
-        textView.pos().set(4 * TS, 24 * TS);
-        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textView.data().setText("MOVE ARROW WITH JOYPAD");
-        textView.data().setFillColor(NES_Palette.color(0x28));
-        textView.show();
-        return textView;
+        return TextView.create("MOVE ARROW WITH JOYPAD", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 4, 24);
     }
 
     private TextView createChooseOptionsTextDisplay() {
-        final TextView textView = new TextView();
-        textView.pos().set(2 * TS, 25 * TS);
-        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textView.data().setText("CHOOSE OPTIONS WITH A AND B");
-        textView.data().setFillColor(NES_Palette.color(0x28));
-        textView.show();
-        return textView;
+        return TextView.create("CHOOSE OPTIONS WITH A AND B", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 2, 25);
     }
 
     private TextView createPressStartTextDisplay() {
-        final TextView textView = new TextView();
-        textView.pos().set(3 * TS, 26 * TS);
-        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textView.data().setText("PRESS START TO START GAME");
-        textView.data().setFillColor(NES_Palette.color(0x28));
-        textView.show();
-        return textView;
+        return TextView.create("PRESS START TO START GAME", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 3, 26);
     }
 
     private MenuOptionView createPlayModeOptionView() {
@@ -380,11 +357,11 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         return imageView;
     }
 
-    private JoypadKeyBindingsView renderableJoyPadKeyBindings() {
-        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
-        final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+    private JoypadKeyBindingsView createJoypadKeyBindingsView() {
+        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final Joypad joypad = app().input().joypad();
         return uiSettings.joypadBindingsDisplayed.get()
-            ? new JoypadKeyBindingsView(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
+            ? new JoypadKeyBindingsView(joypad.currentKeyBinding(), new Vector2f(0,0))
             : null;
     }
 }
