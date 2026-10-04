@@ -179,20 +179,27 @@ public class GameScenePane extends BorderPane {
             Logger.error("Cannot embed game scene");
             return;
         }
-        final GameSceneView2D r2D = abstractGameScene.assertComponent(GameSceneView2D.class);
-        final RenderingSurface renderingSurface = subSceneContainer.renderingSurface();
+        final GameSceneView2D view2D = abstractGameScene.assertComponent(GameSceneView2D.class);
 
-        r2D.setRenderingSurface(renderingSurface);
+        view2D.setRenderingSurface(subSceneContainer.renderingSurface());
 
-        renderingSurface.scalingProperty().bind(
-            subSceneContainer.subScene().heightProperty().divide(r2D.unscaledHeight()));
+        //TODO make configurable if camera is active
+        final boolean cameraActive = false;
+        if (cameraActive) {
+            view2D.setCamera(subSceneContainer.camera());
+            subSceneContainer.renderingSurface().scalingProperty().bind(
+                subSceneContainer.subScene().heightProperty().divide(30*8));
+        } else {
+            subSceneContainer.renderingSurface().scalingProperty().bind(
+                subSceneContainer.subScene().heightProperty().divide(view2D.unscaledHeight()));
+        }
 
         subSceneContainer.subScene().heightProperty().bind(mainScene.heightProperty());
 
         subSceneContainer.subScene().widthProperty().bind(
             mainScene.heightProperty()
-                .multiply(r2D.unscaledWidthProperty())
-                .divide(r2D.unscaledHeightProperty())
+                .multiply(view2D.unscaledWidthProperty())
+                .divide(view2D.unscaledHeightProperty())
         );
 
         subSceneContainer.root().setBackground(Background.fill(Color.BLACK));

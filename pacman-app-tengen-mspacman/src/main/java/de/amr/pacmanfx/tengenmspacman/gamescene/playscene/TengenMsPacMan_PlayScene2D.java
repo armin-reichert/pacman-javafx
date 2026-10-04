@@ -47,6 +47,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -89,6 +90,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private LevelCompletedAnimation levelCompletedAnimation;
 
     private final GameEventHandler eventHandler = new GameEventHandler(this);
+
+    private final PerspectiveCamera cam = new PerspectiveCamera(true);
+
 
     public TengenMsPacMan_PlayScene2D() {
         view2D().setRenderingSurface(new RenderingSurface());
@@ -142,6 +146,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         session.setHudVisible(true);
 
         updateScaling();
+
     }
 
     @Override
@@ -157,7 +162,26 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
             });
+            updateCamera(level);
         });
+    }
+
+    private void updateCamera(GameLevel level) {
+        if (view2D().camera() == null) {
+            return;
+        }
+
+        final Pac pac = level.entitySet().pac();
+
+        final double minY = 0;
+        final double maxY = 6;
+        double y = pac.pos().y() - 10 * TS;
+        y = Math.clamp(y, minY, maxY);
+        view2D().camera().setTranslateY(y);
+
+        Logger.info("Camera: x={} y={} z={}",
+            view2D().camera().getTranslateX(), view2D().camera().getTranslateY(), view2D().camera().getTranslateZ());
+
     }
 
     @Override

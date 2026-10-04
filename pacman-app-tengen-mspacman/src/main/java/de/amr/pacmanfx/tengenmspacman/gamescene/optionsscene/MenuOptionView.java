@@ -27,17 +27,17 @@ public class MenuOptionView implements Renderable {
         return RenderingLayer.PROPS;
     }
 
+    @Override
+    public Vector2f offset() {
+        return offset;
+    }
+
     public String label() {
         return label;
     }
 
     public int separatorTileX() {
         return separatorTileX;
-    }
-
-    @Override
-    public Vector2f offset() {
-        return offset;
     }
 
     public boolean selected() {

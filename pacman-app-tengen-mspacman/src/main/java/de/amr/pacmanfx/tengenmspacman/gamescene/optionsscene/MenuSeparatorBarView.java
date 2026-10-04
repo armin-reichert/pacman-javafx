@@ -8,11 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 
-public record MenuSeparatorBarView(
-    float width,
-    float height,
-    Vector2f offset
-) implements Renderable {
+public record MenuSeparatorBarView(float width, float height, Vector2f offset) implements Renderable {
     @Override
     public RenderingLayer layer() {
         return RenderingLayer.PROPS;
