@@ -70,7 +70,16 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  */
 public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
-    static final Vector2f RENDER_OFFSET = new Vector2f(2 * TS, 0);
+    // The indent such that the scene content appears horizontally centered
+    public static final Vector2f OFFSET = new Vector2f(2 * TS, 0);
+
+    // Additional 2 tiles below world map for HUD display
+    public static final int EXTRA_SPACE_BELOW_MAP = 2 * TS;
+
+    // In Tengen Ms.Pac-Man, all maps are 28 tiles wide. The NES screen width however is 32 tiles,
+    // so 16 pixels on each side are clipped and the map is horizontally centered inside the available space.
+    // (One additional pixel is clipped on the right side to hide noise caused by the spritesheet image.)
+    public static final RectShort CLIP_RECT = new RectShort(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE);
 
     private final StackPane rootPane = new StackPane();
 
@@ -82,10 +91,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         view2D().setRenderingSurface(new RenderingSurface());
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-        // Clip 16 pixels on each side of the canvas such that actors moving through horizontal portal are not visible.
-        // All maps are 28 tiles wide but NES screen is 32 tiles wide, so we have to clip 16 pixels on each side.
-        // The one extra pixel clipped on the right side helps to hide a spritesheet issue (hides ugly map image border).
-        view2D().setClipRect(RectShort.sprite(2 * TS, 0, NES_SCREEN_WIDTH - 4 * TS - 1, Short.MAX_VALUE));
+        view2D().setClipRect(CLIP_RECT);
     }
 
     @Override
@@ -104,29 +110,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final GameLevel level = game().session().optLevel().orElse(null);
         if (level == null) return Stream.empty();
 
-        final long tick = game().session().thisFrame().tick();
-        final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
-
-        final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
-            createRenderableLevel(level, tick),
-
-            //TODO simplify!
-            level.entitySet().all()
-                .filter(gameEntity -> gameEntity != door)
-                .map(renderConfig::createEntityView)
-                .map(entityView -> entityView.newOffset(RENDER_OFFSET)),
-
-            // Ghosts entering/leaving the house are drawn under the house door!
-            new GameEntityView(door, RenderingLayer.ACTORS, 100, RENDER_OFFSET)
+            createGameLevelView(level, game().session().thisFrame().tick()),
+            createEntityViews(level)
         );
-    }
-
-    public FlashingState flashingState() {
-        if (levelCompletedAnimation == null || levelCompletedAnimation.optFlashingState().isEmpty()) {
-            return null;
-        }
-        return levelCompletedAnimation.optFlashingState().get();
     }
 
     @Override
@@ -213,7 +200,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final Vector2i size = terrain.sizeInPixel();
 
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(size.y() + 2*TS);
+        view2D().unscaledHeightProperty().set(size.y() + EXTRA_SPACE_BELOW_MAP);
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
@@ -313,7 +300,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         });
     }
 
-    private GameLevelView createRenderableLevel(GameLevel level, long tick) {
+    private GameLevelView createGameLevelView(GameLevel level, long tick) {
         final InfoMap renderInfo = InfoMap.create();
         final WorldMap worldMap = level.worldMap();
 
@@ -349,7 +336,28 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             }
         }
 
-        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, RENDER_OFFSET);
+        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, OFFSET);
+    }
+
+    private Stream<GameEntityView> createEntityViews(GameLevel level) {
+        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
+        final Door door = level.entitySet().entities().theOne(House.class).door();
+        return Ufx.streamOf(
+            level.entitySet().all()
+                .filter(entity -> entity != door)
+                .map(renderConfig::createEntityView)
+                .map(entityView -> entityView.newOffset(OFFSET)),
+
+            // Ghosts are drawn under the door, so lift door z index up!
+            new GameEntityView(door, RenderingLayer.ACTORS, 100, OFFSET)
+        );
+    }
+
+    private FlashingState flashingState() {
+        if (levelCompletedAnimation == null || levelCompletedAnimation.optFlashingState().isEmpty()) {
+            return null;
+        }
+        return levelCompletedAnimation.optFlashingState().get();
     }
 
     /**

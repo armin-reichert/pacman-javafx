@@ -9,6 +9,9 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -24,15 +27,22 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
-            return;
+        switch (r) {
+            case GameSceneDebugView(GameScene gameScene) -> {
+                if (gameScene instanceof AbstractGameScene abstractGameScene) {
+                    draw(abstractGameScene);
+                }
+            }
+            default -> {}
         }
+    }
 
+    public void draw(AbstractGameScene playScene) {
         final GameContext game = playScene.game();
         final GameSession session = game.session();
         final AbstractGameState gameState = game.state();
 
-//        drawDebugGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
+        drawDebugGrid(NES_SCREEN_WIDTH, playScene.view2D().unscaledHeight(), Color.LIGHTGRAY);
 
         ctx.save();
         ctx.translate(scaled(2 * TS), 0);

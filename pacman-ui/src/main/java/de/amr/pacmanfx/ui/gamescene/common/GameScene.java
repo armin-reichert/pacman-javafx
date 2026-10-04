@@ -9,6 +9,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -23,9 +24,18 @@ import java.util.stream.Stream;
 
 public interface GameScene extends Disposable, QuitHandler {
 
+    /**
+     * @return the renderables produced by this game scene
+     */
+    Stream<Renderable> renderables();
+
     void setApp(GameApp app);
 
     GameApp app();
+
+    default GameVariantRuntime runtime() {
+        return app().variantManager().currentRuntime();
+    }
 
     default GameViewModel viewModel() {
         return app().ui().viewModel();
@@ -42,11 +52,6 @@ public interface GameScene extends Disposable, QuitHandler {
     default Optional<GameEventListener> optGameEventHandler() {
         return Optional.empty();
     }
-
-    /**
-     * @return the renderables produced by this game scene
-     */
-    Stream<Renderable> renderables();
 
     /**
      * Hook called when entering this 2D scene from a 3D scene.
