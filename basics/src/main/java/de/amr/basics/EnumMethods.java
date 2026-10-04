@@ -6,21 +6,21 @@ package de.amr.basics;
 
 public interface EnumMethods<T extends Enum<T>> {
 
+    Class<T> enumClass();
+
     int ordinal();
 
-    T[] enumValues();
-
     default int count() {
-        return enumValues().length;
+        return enumClass().getEnumConstants().length;
     }
 
     default T pred() {
         final int pred = ordinal() == 0 ? count() - 1 : ordinal() - 1;
-        return enumValues()[pred];
+        return enumClass().getEnumConstants()[pred];
     }
 
     default T succ() {
         final int succ = ordinal() + 1 == count() ? 0 : ordinal() + 1;
-        return enumValues()[succ];
+        return enumClass().getEnumConstants()[succ];
     }
 }

@@ -45,7 +45,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
-import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
@@ -61,8 +60,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         PLAY_MODE, PAC_BOOSTER, DIFFICULTY, MAP_CATEGORY, STARTING_LEVEL;
 
         @Override
-        public PlayOption[] enumValues() {
-            return values();
+        public Class<PlayOption> enumClass() {
+            return PlayOption.class;
         }
     }
 
@@ -108,7 +107,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
-            createJoypadKeyBindingsView(),
+            createJoypadKeyBindingsView(), // dynamic, depends on current bindings an if set to visible
             createPlayModeOptionView(),
             createBoosterModeOptionView(),
             createGameDifficultyOptionView(),
@@ -117,7 +116,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             titleTextView,
             moveArrowTextView,
             chooseOptionsTextView, pressStartTextView,
-            streamOfPropViews(createNumContinuesImageView()),
+            createNumContinuesImageView(),
             topBarView,
             botBarView
         );
@@ -352,7 +351,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
-    private ImageView createNumContinuesImageView() {
+    private GameEntityView createNumContinuesImageView() {
         final int numContinues = gameOptions(game().session()).numContinues();
         final ImageView imageView = new ImageView();
         imageView.pos().set(24 * TS, 20 * TS);
@@ -371,14 +370,15 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         else {
             imageView.hide();
         }
-        return imageView;
+        return new GameEntityView(imageView, RenderingLayer.PROPS, 0, Vector2f.ZERO);
     }
 
     private JoypadKeyBindingsView createJoypadKeyBindingsView() {
-        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
         final Joypad joypad = app().input().joypad();
-        return uiSettings.joypadBindingsDisplayed.get()
-            ? new JoypadKeyBindingsView(joypad.currentKeyBinding(), new Vector2f(0,0))
+        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final boolean visible = uiSettings.joypadBindingsDisplayed.get();
+        return visible ?
+            new JoypadKeyBindingsView(joypad.currentKeyBinding(), new Vector2f(0,0))
             : null;
     }
 }
