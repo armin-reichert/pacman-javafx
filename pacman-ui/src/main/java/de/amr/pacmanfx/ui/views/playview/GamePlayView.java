@@ -201,9 +201,7 @@ public class GamePlayView implements GameView {
 
     // --- Component update
 
-    public void update(GameScene currentGameScene) {
-        //TODO This is an attempt to keep the scaling of the rendering surface up-to-date
-        layers.gameSceneLayer().updateScaling(currentGameScene, app.variantManager().currentRuntime().uiConfig());
+    public void update() {
         updateDashboard();
         updateMiniView();
     }

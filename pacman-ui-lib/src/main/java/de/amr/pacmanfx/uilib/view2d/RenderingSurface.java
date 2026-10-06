@@ -14,16 +14,9 @@ public class RenderingSurface {
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
-    private final DoubleProperty width = new SimpleDoubleProperty(300);
+    private final Canvas canvas = new Canvas(300, 400);
 
-    private final DoubleProperty height = new SimpleDoubleProperty(300);
-
-    private final Canvas canvas = new Canvas();
-
-    public RenderingSurface() {
-        canvas.widthProperty().bind(width);
-        canvas.heightProperty().bind(height);
-    }
+    public RenderingSurface() {}
 
     public GraphicsContext ctx() {
         return canvas.getGraphicsContext2D();
@@ -31,30 +24,6 @@ public class RenderingSurface {
 
     public Canvas canvas() {
         return canvas;
-    }
-
-    public double width() {
-        return width.get();
-    }
-
-    public DoubleProperty widthProperty() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width.set(width);
-    }
-
-    public double height() {
-        return height.get();
-    }
-
-    public DoubleProperty heightProperty() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height.set(height);
     }
 
     public Color backgroundColor() {

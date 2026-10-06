@@ -76,7 +76,7 @@ public final class GameLoop {
             if (currentGameScene instanceof AbstractGameScene abstractGameScene) {
                 GamePlayViewRenderer.render(playView, app, clock, abstractGameScene);
             }
-            playView.update(currentGameScene);
+            playView.update();
         }
     }
 }

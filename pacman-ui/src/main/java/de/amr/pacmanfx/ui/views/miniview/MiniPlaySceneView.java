@@ -58,7 +58,7 @@ public class MiniPlaySceneView {
         root.setVisible(false);
 
         renderingSurface = new RenderingSurface();
-        renderingSurface.heightProperty().addListener((_, _, _) -> updateViewSize(level));
+        renderingSurface.canvas().heightProperty().addListener((_, _, _) -> updateViewSize(level));
 
         root.getChildren().add(renderingSurface.canvas());
     }
@@ -74,20 +74,20 @@ public class MiniPlaySceneView {
     public void setViewModel(GameViewModel viewModel) {
         this.viewModel = requireNonNull(viewModel);
 
-        renderingSurface.heightProperty().bind(viewModel.miniViewSettings().heightProperty);
+        renderingSurface.canvas().heightProperty().bind(viewModel.miniViewSettings().heightProperty);
         renderingSurface.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
 
         root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
         root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
-        root.maxWidthProperty() .bind(renderingSurface.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
-        root.maxHeightProperty().bind(renderingSurface.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
+        root.maxWidthProperty() .bind(renderingSurface.canvas().widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
+        root.maxHeightProperty().bind(renderingSurface.canvas().heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
 
         // Move out of view
         root.setTranslateY(outOfViewY());
     }
 
     private double outOfViewY() {
-        return -(renderingSurface.height() + PADDING.getBottom());
+        return -(renderingSurface.canvas().getHeight() + PADDING.getBottom());
     }
 
     public void update(boolean playScene3DActive) {
@@ -129,8 +129,8 @@ public class MiniPlaySceneView {
 
         final Vector2i worldSize = level.worldMap().terrainLayer().sizeInPixel();
         final double aspect = (double) worldSize.x() / (double) worldSize.y();
-        renderingSurface.setWidth(aspect * renderingSurface.height());
-        renderingSurface.setScaling(renderingSurface.height() / worldSize.y());
+        renderingSurface.canvas().setWidth(aspect * renderingSurface.canvas().getHeight());
+        renderingSurface.setScaling(renderingSurface.canvas().getHeight() / worldSize.y());
     }
 
     private void slideIn() {

@@ -47,7 +47,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -90,8 +89,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private LevelCompletedAnimation levelCompletedAnimation;
 
     private final GameEventHandler eventHandler = new GameEventHandler(this);
-
-    private final PerspectiveCamera cam = new PerspectiveCamera(true);
 
     public TengenMsPacMan_PlayScene2D() {
         view2D().setRenderingSurface(new RenderingSurface());
@@ -143,9 +140,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         hud.levelCounter().show();
         hud.livesCounter().show();
         session.setHudVisible(true);
-
-        updateScaling();
-
     }
 
     @Override
@@ -161,26 +155,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
             });
-            updateCamera(level);
         });
-    }
-
-    private void updateCamera(GameLevel level) {
-        if (view2D().camera() == null) {
-            return;
-        }
-
-        final Pac pac = level.entitySet().pac();
-
-        final double minY = 0;
-        final double maxY = 6;
-        double y = pac.pos().y() - 10 * TS;
-        y = Math.clamp(y, minY, maxY);
-        view2D().camera().setTranslateY(y);
-
-        Logger.info("Camera: x={} y={} z={}",
-            view2D().camera().getTranslateX(), view2D().camera().getTranslateY(), view2D().camera().getTranslateZ());
-
     }
 
     @Override
@@ -225,7 +200,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        // Adapt scene size to map height
         view2D().unscaledHeightProperty().set(size.y() + EXTRA_SPACE_BELOW_MAP);
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
@@ -281,21 +256,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final var bindingsMap = actionBindings().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
-    }
-
-    private void updateScaling() {
-        final var uiSettings = uiSettings();
-        final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
-        final RenderingSurface renderingSurface = view2D().renderingSurface();
-/*
-        renderingSurface.setScaling(switch (displayMode) {
-            case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
-            case SCROLLING -> subScene.getHeight() / NES_SCREEN_HEIGHT;
-        });
-        Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), reqRendering2D().renderingSurface().scaling());
-
- */
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

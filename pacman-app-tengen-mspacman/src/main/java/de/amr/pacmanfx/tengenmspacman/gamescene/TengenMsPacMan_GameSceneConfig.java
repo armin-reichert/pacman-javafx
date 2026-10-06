@@ -27,8 +27,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static java.util.Objects.requireNonNull;
-
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     public TengenMsPacMan_GameSceneConfig() {}
@@ -80,8 +78,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     public GameSceneEmbedding embedding(GameScene gameScene) {
         return switch (gameScene) {
-            case TengenMsPacMan_PlayScene2D _ -> GameSceneEmbedding.SUBSCENE_2D;
-            case TengenMsPacMan_PlayScene3D _ -> GameSceneEmbedding.SUBSCENE_3D;
+            case TengenMsPacMan_PlayScene3D _ -> GameSceneEmbedding.SUBSCENE;
             default -> GameSceneEmbedding.PLAIN_2D;
         };
     }

@@ -9,8 +9,6 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.scene.ParallelCamera;
-import javafx.scene.PerspectiveCamera;
 
 public class GameSceneView2D implements Disposable {
 
@@ -23,8 +21,6 @@ public class GameSceneView2D implements Disposable {
     private boolean autoClearCanvas = true;
 
     private RectShort clipRect;
-
-    private ParallelCamera camera;
 
     public GameSceneView2D() {
         setUnscaledWidth(300);
@@ -87,13 +83,5 @@ public class GameSceneView2D implements Disposable {
 
     public void setClipRect(RectShort clipRect) {
         this.clipRect = clipRect;
-    }
-
-    public ParallelCamera camera() {
-        return camera;
-    }
-
-    public void setCamera(ParallelCamera camera) {
-        this.camera = camera;
     }
 }

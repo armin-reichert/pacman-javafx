@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     public GameSceneEmbedding embedding(GameScene gameScene) {
         return gameScene instanceof PlayScene3D
-            ? GameSceneEmbedding.SUBSCENE_3D
+            ? GameSceneEmbedding.SUBSCENE
             : GameSceneEmbedding.DECORATED_2D;
     }
 }

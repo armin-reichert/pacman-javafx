@@ -186,6 +186,6 @@ public class GameSceneManager {
     }
 
     private boolean isGameScene2D(GameScene gameScene) {
-        return app.variantManager().currentRuntime().uiConfig().gameSceneConfig().embedding(gameScene) != GameSceneEmbedding.SUBSCENE_3D;
+        return !(gameScene instanceof PlayScene3D);
     }
 }
