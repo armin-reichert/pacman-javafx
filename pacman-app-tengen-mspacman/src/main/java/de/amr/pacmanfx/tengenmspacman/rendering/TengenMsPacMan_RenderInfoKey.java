@@ -4,11 +4,10 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-
 /**
  * Additional property keys used inside world map files. Values are set at runtime by the map selector.
  */
-public enum TengenMsPacMan_LevelRenderInfoKey {
+public enum TengenMsPacMan_RenderInfoKey {
     /**
      * Map category. One of ARCADE, MINI, BIG, STRANGE.
      */

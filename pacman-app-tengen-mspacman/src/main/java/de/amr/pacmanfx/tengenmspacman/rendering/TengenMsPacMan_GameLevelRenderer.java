@@ -72,7 +72,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
     }
 
     private void drawFood(WorldMap worldMap, FoodLayer foodLayer, FoodState foodState, boolean blinkingOn) {
-        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET);
         final NES_WorldMapColorScheme colorScheme = mapImageSet.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
 

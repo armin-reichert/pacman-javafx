@@ -35,7 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.ColorSchemedMapSprite;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
@@ -204,10 +204,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         view2D().unscaledHeightProperty().set(size.y() + EXTRA_SPACE_BELOW_MAP);
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
+        if (!worldMap.hasConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET)) {
             final int numFlashes = 3;
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+            worldMap.setConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
             final House house = level.entitySet().entities().theOne(House.class);
@@ -289,16 +289,16 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final WorldMap worldMap = level.worldMap();
 
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
-        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY);
-        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
-        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET);
+        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET);
 
         final var flashing = flashingState();
         final boolean highlighted = flashing != null && flashing.isHighlighted();
         final int flashingIndex = flashing != null ? flashing.flashingIndex() : -1;
 
-        renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, mapCategory);
-        renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+        renderInfo.put(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY, mapCategory);
+        renderInfo.put(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
 
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
         renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
