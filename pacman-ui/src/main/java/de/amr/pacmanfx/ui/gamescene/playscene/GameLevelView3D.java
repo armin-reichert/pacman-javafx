@@ -33,7 +33,8 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
-import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounterView3D;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
@@ -276,9 +277,10 @@ public class GameLevelView3D implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3DView(LivesCounter livesCounter) {
-        if (!livesCounter.hasComponent(LivesCounter3DViewComp.class)) {
-            final LivesCounter3DViewComp view3D = new LivesCounter3DViewComp(uiConfig.factory3D(), uiConfig.worldSettings());
-            livesCounter.setComponent(LivesCounter3DViewComp.class, view3D);
+        if (!livesCounter.hasComponent(LivesCounterView3D.class)) {
+            final LivesCounterView3D view3D = GameSystems3D.reqSystem(LivesCounterView3DSystem.class)
+                .createView(uiConfig.factory3D(), uiConfig.worldSettings());
+            livesCounter.setComponent(LivesCounterView3D.class, view3D);
             view3D.root().setTranslateX(2 * TS);
             view3D.root().setTranslateY(2 * TS);
         }
@@ -312,7 +314,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
         // Adding-order matters for correct transparency!
 
-        final LivesCounter3DViewComp livesCounterView3D = livesCounter.assertComponent(LivesCounter3DViewComp.class);
+        final LivesCounterView3D livesCounterView3D = livesCounter.assertComponent(LivesCounterView3D.class);
         root.getChildren().add(livesCounterView3D.root());
 
         final Pac3DViewComp pacView3D = pac.assertComponent(Pac3DViewComp.class);

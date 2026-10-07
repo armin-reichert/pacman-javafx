@@ -15,7 +15,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -152,8 +152,8 @@ public class GameSceneManager {
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
-        livesCounter3DViewSystem.startTrackingPac(livesCounter, pac);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

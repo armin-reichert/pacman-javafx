@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 
 public class World3DUpdateSystem {
 
@@ -34,8 +34,8 @@ public class World3DUpdateSystem {
 
     private void updateLivesCounter3D(LivesCounter livesCounter) {
         // Lives counter shapes follow Pac location
-        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
-        livesCounter3DViewSystem.update(livesCounter);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        livesCounterView3DSystem.update(livesCounter);
     }
 
     private void updateGhosts3D(GameLevelEntitySet entitySet) {

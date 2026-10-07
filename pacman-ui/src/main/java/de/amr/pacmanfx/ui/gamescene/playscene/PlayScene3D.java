@@ -9,7 +9,6 @@ import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -23,10 +22,9 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -39,13 +37,11 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -353,8 +349,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounter3DViewSystem livesCounter3DViewSystem = GameSystems3D.reqSystem(LivesCounter3DViewSystem.class);
-        livesCounter3DViewSystem.startTrackingPac(livesCounter, pac);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
     }
 
     /**
