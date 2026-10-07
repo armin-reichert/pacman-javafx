@@ -3,13 +3,12 @@
  */
 package de.amr.pacmanfx.ui.entities3D.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
 import javafx.scene.text.Text;
 
 /**
  * Displays score and high score in 3D play scene.
  */
-public class ScoreViewComp implements GameEntityComp {
+public class ScoreViewComp {
 
     private final Text titleDisplay = new Text();
 

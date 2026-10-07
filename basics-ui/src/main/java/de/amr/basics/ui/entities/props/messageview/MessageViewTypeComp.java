@@ -4,11 +4,9 @@
 
 package de.amr.basics.ui.entities.props.messageview;
 
-import de.amr.basics.ecs.GameEntityComp;
-
 import java.util.Objects;
 
-public class MessageViewTypeComp implements GameEntityComp {
+public class MessageViewTypeComp {
 
     private MessageType messageType = MessageType.NO_MESSAGE;
 

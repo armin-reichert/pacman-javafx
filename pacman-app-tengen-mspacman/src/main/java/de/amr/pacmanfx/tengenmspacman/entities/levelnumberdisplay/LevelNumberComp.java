@@ -1,8 +1,6 @@
 package de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public class LevelNumberComp implements GameEntityComp {
+public class LevelNumberComp {
 
     private int number;
 

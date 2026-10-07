@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -25,7 +24,7 @@ import java.util.List;
 import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class LivesCounter3DViewComp implements GameEntityComp, DisposableGraphicsObject {
+public class LivesCounter3DViewComp implements DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());

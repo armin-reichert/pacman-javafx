@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
 import java.util.Objects;
 
-public class PacStateComp implements GameEntityComp {
+public class PacStateComp implements Resettable {
 
     private PacState enumValue;
 

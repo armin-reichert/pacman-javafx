@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.basics.Named;
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
-public class GhostAnimationComp implements GameEntityComp {
+public class GhostAnimationComp implements Resettable {
 
     private Named animationID;
 

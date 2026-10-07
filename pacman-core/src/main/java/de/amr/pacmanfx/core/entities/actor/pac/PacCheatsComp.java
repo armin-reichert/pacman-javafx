@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class PacCheatsComp implements GameEntityComp {
+public class PacCheatsComp implements Resettable {
 
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
 

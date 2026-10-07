@@ -4,10 +4,10 @@
 
 package de.amr.basics.ecs.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.basics.math.Vector2f;
 
-public class MovementComp implements GameEntityComp {
+public class MovementComp implements Resettable {
 
     private float vx;
     private float vy;

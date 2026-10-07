@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.pac.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public class PacBoosterComp implements GameEntityComp {
+public class PacBoosterComp {
 
     private boolean boosterEnabled;
 

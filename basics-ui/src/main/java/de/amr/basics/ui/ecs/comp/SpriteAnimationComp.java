@@ -4,10 +4,9 @@
 
 package de.amr.basics.ui.ecs.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
 
-public class SpriteAnimationComp implements GameEntityComp {
+public class SpriteAnimationComp {
 
     public SpriteAnimationComp() {}
 

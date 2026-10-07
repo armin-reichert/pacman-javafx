@@ -3,14 +3,13 @@
  */
 package de.amr.pacmanfx.tengenmspacman.entities.messageview;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2f;
 
 /**
  * The "game over" message in Tengen Ms. Pac-Man (in non-Arcade maps) moves (after some delay) from the center of the
  * scene to the right border, wraps around and moves from the left border back to the center.
  */
-public class MessageAnimationComp implements GameEntityComp {
+public class MessageAnimationComp {
 
     private int delayTicks;
 

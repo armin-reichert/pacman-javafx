@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
-public class PacDigestionComp implements GameEntityComp {
+public class PacDigestionComp implements Resettable {
 
     public static final byte REST_FOREVER = -1;
 

@@ -4,6 +4,6 @@
 
 package de.amr.basics.ecs;
 
-public interface GameEntityComp {
-    default void reset() {}
+public interface Resettable {
+    void reset();
 }

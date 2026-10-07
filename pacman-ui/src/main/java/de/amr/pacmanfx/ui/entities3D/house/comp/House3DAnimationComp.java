@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.ui.entities3D.house.comp;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import javafx.animation.KeyFrame;
@@ -10,7 +9,7 @@ import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Duration;
 
-public class House3DAnimationComp implements GameEntityComp, Disposable {
+public class House3DAnimationComp implements Disposable {
 
     private final ManagedAnimation doorsMeltingAnimation;
 

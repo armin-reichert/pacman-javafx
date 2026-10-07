@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.basics.timer.TickTimer;
 
 import java.util.Objects;
 
-public class BonusStateComp implements GameEntityComp {
+public class BonusStateComp implements Resettable {
 
     private boolean edibleStateExpired;
 

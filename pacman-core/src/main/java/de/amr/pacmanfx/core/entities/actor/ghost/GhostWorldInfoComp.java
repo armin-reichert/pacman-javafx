@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -15,7 +14,7 @@ import java.util.Set;
 import static de.amr.basics.TileDimension.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldInfoComp implements GameEntityComp {
+public class GhostWorldInfoComp {
 
     private House house;
 

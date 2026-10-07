@@ -4,12 +4,12 @@
 
 package de.amr.basics.ui.entities.hud.levelCounter;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelCounterDataComp implements GameEntityComp {
+public class LevelCounterDataComp implements Resettable {
 
     private final List<Integer> symbolCodes = new ArrayList<>();
 

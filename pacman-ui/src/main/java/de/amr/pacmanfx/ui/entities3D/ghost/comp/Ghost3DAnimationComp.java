@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostDressAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostFlashingAnimation3D;
 
-public class Ghost3DAnimationComp implements GameEntityComp {
+public class Ghost3DAnimationComp implements Resettable {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;

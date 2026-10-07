@@ -4,14 +4,14 @@
 
 package de.amr.basics.ecs.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 
 import static java.util.Objects.requireNonNull;
 
-public final class PositionComp implements GameEntityComp {
+public final class PositionComp implements Resettable {
 
     private float x;
     private float y;

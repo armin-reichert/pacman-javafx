@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.entities.actor;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.pacmanfx.core.steering.Steering;
 
-public class SteeringComp<E extends GameEntity> implements GameEntityComp {
+public class SteeringComp<E extends GameEntity> implements Resettable {
 
     private Steering<E> steering;
 

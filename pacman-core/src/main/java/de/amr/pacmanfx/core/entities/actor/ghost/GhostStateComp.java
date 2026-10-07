@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
 import static java.util.Objects.requireNonNull;
 
-public class GhostStateComp implements GameEntityComp {
+public class GhostStateComp implements Resettable {
 
     private GhostState enumValue;
 

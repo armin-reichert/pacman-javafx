@@ -4,9 +4,9 @@
 
 package de.amr.basics.ui.entities.hud.livescounter;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
-public class LivesCounterDataComp implements GameEntityComp {
+public class LivesCounterDataComp implements Resettable {
 
     private int maxLivesShown;
 

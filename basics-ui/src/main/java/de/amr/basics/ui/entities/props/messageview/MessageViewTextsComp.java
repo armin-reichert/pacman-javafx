@@ -1,10 +1,8 @@
 package de.amr.basics.ui.entities.props.messageview;
 
-import de.amr.basics.ecs.GameEntityComp;
-
 import java.util.Map;
 
-public class MessageViewTextsComp implements GameEntityComp {
+public class MessageViewTextsComp {
 
     private Map<MessageType, String> texts;
 

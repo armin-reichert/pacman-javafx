@@ -4,13 +4,12 @@
 
 package de.amr.pacmanfx.ui.entities3D.pac.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
 
-public class Pac3DAnimationComp implements GameEntityComp {
+public class Pac3DAnimationComp {
 
     private final AnimationRegistry registry;
 

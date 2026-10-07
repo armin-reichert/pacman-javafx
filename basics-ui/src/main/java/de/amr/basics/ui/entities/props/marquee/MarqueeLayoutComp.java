@@ -4,11 +4,9 @@
 
 package de.amr.basics.ui.entities.props.marquee;
 
-
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ecs.comp.PositionComp;
 
-public class MarqueeLayoutComp implements GameEntityComp {
+public class MarqueeLayoutComp {
 
     private int numBulbsHorizontally;
     private int numBulbsVertically;

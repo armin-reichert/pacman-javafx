@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.world;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public class EnergizerStateComp implements GameEntityComp {
+public class EnergizerStateComp {
 
     private boolean on;
 

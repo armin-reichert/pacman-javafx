@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * Each entity by default contains the components "position" and "visibility".
  * </p>
  */
-public class GameEntity extends Composition<GameEntityComp> implements Disposable {
+public class GameEntity extends Composition<Object> implements Disposable {
 
     protected String name;
 
@@ -70,7 +70,11 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
      * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
-        componentsNoCopy().forEach(GameEntityComp::reset);
+        componentsNoCopy().forEach(c -> {
+            if (c instanceof Resettable resettable) {
+                resettable.reset();
+            }
+        });
     }
 
     public final void show() {

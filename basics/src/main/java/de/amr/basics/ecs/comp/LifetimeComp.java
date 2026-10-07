@@ -1,8 +1,6 @@
 package de.amr.basics.ecs.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public class LifetimeComp implements GameEntityComp {
+public class LifetimeComp {
 
     private long ticksRemaining;
 

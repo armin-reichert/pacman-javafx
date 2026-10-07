@@ -4,6 +4,4 @@
 
 package de.amr.basics.ui.entities.props.clapperboard;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public record ClapperboardInscriptionComp(String number, String text) implements GameEntityComp { }
+public record ClapperboardInscriptionComp(String number, String text) {}

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.world;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 
-public class WorldNavigationComp implements GameEntityComp {
+public class WorldNavigationComp implements Resettable {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;

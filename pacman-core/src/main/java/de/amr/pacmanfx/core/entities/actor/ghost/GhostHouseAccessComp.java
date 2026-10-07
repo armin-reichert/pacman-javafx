@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
-public class GhostHouseAccessComp implements GameEntityComp {
+public class GhostHouseAccessComp implements Resettable {
 
     private boolean unlockRequested;
 

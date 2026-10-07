@@ -4,10 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.world;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2i;
 
-public class DoorDataComp implements GameEntityComp {
+public class DoorDataComp {
 
     private Vector2i leftTile;
 

@@ -4,13 +4,12 @@
 
 package de.amr.basics.ui.entities.props.messageview;
 
-import de.amr.basics.ecs.GameEntityComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.function.Function;
 
-public class MessageViewStyleComp implements GameEntityComp {
+public class MessageViewStyleComp {
 
     private Font messageFont;
 

@@ -4,9 +4,9 @@
 
 package de.amr.basics.ecs.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
-public class VisibilityComp implements GameEntityComp {
+public class VisibilityComp implements Resettable {
 
     private final boolean defaultVisibility;
 

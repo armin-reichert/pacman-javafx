@@ -1,13 +1,11 @@
 package de.amr.basics.ui.entities.hud.score;
 
-import de.amr.basics.ecs.GameEntityComp;
-
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.requireNonNull;
 
-public record ScorePersistencyComp(File file) implements GameEntityComp {
+public record ScorePersistencyComp(File file) {
 
     public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 

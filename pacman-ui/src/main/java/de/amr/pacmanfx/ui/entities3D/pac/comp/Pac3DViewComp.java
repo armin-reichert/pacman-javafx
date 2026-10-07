@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.entities3D.pac.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -13,7 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 
-public class Pac3DViewComp implements GameEntityComp {
+public class Pac3DViewComp {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 

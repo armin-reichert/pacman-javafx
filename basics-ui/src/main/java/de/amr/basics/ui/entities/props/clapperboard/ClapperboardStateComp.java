@@ -4,9 +4,7 @@
 
 package de.amr.basics.ui.entities.props.clapperboard;
 
-import de.amr.basics.ecs.GameEntityComp;
-
-public class ClapperboardStateComp implements GameEntityComp {
+public class ClapperboardStateComp {
 
     private ClapperboardState enumValue;
 

@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.ui.entities3D.house.comp;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
@@ -23,7 +22,7 @@ import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject {
+public class House3DViewComp implements DisposableGraphicsObject {
 
     public static final int DOOR_VERTICAL_BAR_COUNT = 4;
 

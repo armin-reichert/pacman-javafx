@@ -1,10 +1,10 @@
 package de.amr.basics.ui.entities.hud.score;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
 import java.time.LocalDate;
 
-public class ScoreDataComp implements GameEntityComp {
+public class ScoreDataComp implements Resettable {
 
     private boolean enabled;
 

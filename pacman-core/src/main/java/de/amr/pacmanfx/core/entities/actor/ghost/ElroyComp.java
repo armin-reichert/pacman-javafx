@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.Resettable;
 
 import static java.util.Objects.requireNonNull;
 
-public class ElroyComp implements GameEntityComp {
+public class ElroyComp implements Resettable {
 
     public enum Boost { NONE, MEDIUM, LARGE }
 

@@ -4,7 +4,6 @@
 
 package de.amr.basics.ui.entities.hud;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.paint.Color;
@@ -20,5 +19,4 @@ public record HUDStyleComp(
     Color scoreTextColorDisabled,
     Font scoreTextFont,
     String creditTextFormat)
-    implements GameEntityComp
 {}

@@ -1,11 +1,10 @@
 package de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay;
 
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-public class GameOptionsDataComp implements GameEntityComp {
+public class GameOptionsDataComp {
 
     private MapCategory mapCategory;
 
