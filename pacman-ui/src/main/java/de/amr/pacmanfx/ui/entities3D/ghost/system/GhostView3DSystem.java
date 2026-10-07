@@ -8,9 +8,9 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DMaterialSet;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostAppearance;
 
-public class Ghost3DAppearanceSystem {
+public class GhostView3DSystem {
 
-    public Ghost3DAppearanceSystem() {}
+    public GhostView3DSystem() {}
 
     public void update(Ghost ghost) {
         final GhostStateComp state = ghost.state();

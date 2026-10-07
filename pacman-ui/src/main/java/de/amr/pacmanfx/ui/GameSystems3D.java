@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DAppearanceSystem;
+import de.amr.pacmanfx.ui.entities3D.ghost.system.GhostView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
@@ -37,9 +37,9 @@ public class GameSystems3D {
         }
     }
 
-    public record GhostSystems3D(Ghost3DMovementSystem movement, Ghost3DAppearanceSystem appearance) {
+    public record GhostSystems3D(Ghost3DMovementSystem movementSystem, GhostView3DSystem viewSystem) {
         public GhostSystems3D() {
-            this(new Ghost3DMovementSystem(), new Ghost3DAppearanceSystem());
+            this(new Ghost3DMovementSystem(), new GhostView3DSystem());
         }
     }
 

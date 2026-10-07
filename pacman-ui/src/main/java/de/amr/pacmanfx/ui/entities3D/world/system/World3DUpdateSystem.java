@@ -41,8 +41,8 @@ public class World3DUpdateSystem {
     private void updateGhosts3D(GameLevelEntitySet entitySet) {
         final var ghostSystems3D = GameSystems3D.reqSystem(GameSystems3D.GhostSystems3D.class);
         entitySet.ghosts().forEach(ghost -> {
-            ghostSystems3D.movement().update(ghost);
-            ghostSystems3D.appearance().update(ghost);
+            ghostSystems3D.movementSystem().update(ghost);
+            ghostSystems3D.viewSystem().update(ghost);
         });
     }
 
