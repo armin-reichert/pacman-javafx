@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;
@@ -24,7 +24,7 @@ public class GhostDressAnimation3D extends ManagedAnimation {
     public GhostDressAnimation3D(Ghost ghost) {
         super("Ghost Dress Animation (%s)".formatted(ghost.name()));
         setAnimationFactory(() -> {
-            final Ghost3DViewComp view3D = ghost.assertComponent(Ghost3DViewComp.class);
+            final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
             final var dressRotation = new RotateTransition(Duration.seconds(FULL_CYCLE_SEC / 2), view3D.dressGroup());
             dressRotation.setAxis(Rotate.Y_AXIS); // TODO: Check which Y axis
             dressRotation.setFromAngle(-DRESS_MOVEMENT_ANGLE);

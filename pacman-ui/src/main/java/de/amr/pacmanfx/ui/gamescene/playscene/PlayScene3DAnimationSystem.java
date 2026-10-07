@@ -23,7 +23,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
@@ -273,7 +273,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
         final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()
-            .map(ghost -> ghost.assertComponent(Ghost3DViewComp.class))
+            .map(ghost -> ghost.assertComponent(GhostView3D.class))
             .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
             .toList();
 

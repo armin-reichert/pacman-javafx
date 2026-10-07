@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -26,7 +26,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
-        final Ghost3DViewComp view3D = ghost.assertComponent(Ghost3DViewComp.class);
+        final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
         var rotateTransition = new RotateTransition(Duration.seconds(0.5), view3D.root());
         rotateTransition.setAxis(Rotate.Y_AXIS);
@@ -62,7 +62,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        final Node root = ghost.assertComponent(Ghost3DViewComp.class).root();
+        final Node root = ghost.assertComponent(GhostView3D.class).root();
         root.setRotationAxis(Rotate.Y_AXIS);
         root.setRotate(0);
     }

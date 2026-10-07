@@ -8,7 +8,7 @@ import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -70,7 +70,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     private void illuminateGhost(GhostPersonality personality) {
         final int p = personality.ordinal();
         final Ghost ghost = ghosts.get(p);
-        final Ghost3DViewComp ghost3DView = ghost.assertComponent(Ghost3DViewComp.class);
+        final GhostView3D ghost3DView = ghost.assertComponent(GhostView3D.class);
 
         light.setColor(ghostSettings.get(p).colors().normal().dressColor());
         light.translateXProperty().bind(ghost3DView.root().translateXProperty());

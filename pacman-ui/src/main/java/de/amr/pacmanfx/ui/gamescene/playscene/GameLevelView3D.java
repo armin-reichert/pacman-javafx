@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
@@ -167,7 +167,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
         Ufx.setDrawMode(level.entitySet().pac().assertComponent(Pac3DViewComp.class).root(), drawMode);
-        level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.assertComponent(Ghost3DViewComp.class).root(), drawMode));
+        level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.assertComponent(GhostView3D.class).root(), drawMode));
         Ufx.setDrawMode(mapView3D.root(), drawMode);
     }
 
@@ -182,7 +182,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         final Image numberImage = uiConfig.renderConfig().createGhostPointsImage(killIndex);
         final NumberBox3D numberBox = new NumberBox3D(numberImage);
 
-        final Ghost3DViewComp ghost3DView = ghost.assertComponent(Ghost3DViewComp.class);
+        final GhostView3D ghost3DView = ghost.assertComponent(GhostView3D.class);
         numberBox.setTranslateX(ghost3DView.root().getTranslateX());
         numberBox.setTranslateY(ghost3DView.root().getTranslateY());
         numberBox.setTranslateZ(ghost3DView.root().getTranslateZ());
@@ -272,7 +272,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(ghost, ghostSettings);
-            ghost.assertComponent(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
+            ghost.assertComponent(GhostView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
         });
     }
 
@@ -322,7 +322,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         root.getChildren().add(pacView3D.powerLight());
 
         for (Ghost ghost: ghosts) {
-            final Ghost3DViewComp ghostView3D = ghost.assertComponent(Ghost3DViewComp.class);
+            final GhostView3D ghostView3D = ghost.assertComponent(GhostView3D.class);
             root.getChildren().add(ghostView3D.root());
         }
 

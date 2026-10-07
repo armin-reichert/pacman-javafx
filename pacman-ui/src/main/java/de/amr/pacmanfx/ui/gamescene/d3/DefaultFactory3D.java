@@ -51,7 +51,7 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public void createGhost3D(Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model = PacManMeshes3D.instance();
-        final Ghost3DViewComp view3D = ensureGhostHas3DView(ghost);
+        final GhostView3D view3D = ensureGhostHas3DView(ghost);
         final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
 
         view3D.build(settings, model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
@@ -115,11 +115,11 @@ public class DefaultFactory3D implements Factory3D {
         return new GhostAppearanceMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
-    private static Ghost3DViewComp ensureGhostHas3DView(Ghost ghost) {
-        if (!ghost.hasComponent(Ghost3DViewComp.class)) {
-            ghost.setComponent(Ghost3DViewComp.class, new Ghost3DViewComp());
+    private static GhostView3D ensureGhostHas3DView(Ghost ghost) {
+        if (!ghost.hasComponent(GhostView3D.class)) {
+            ghost.setComponent(GhostView3D.class, new GhostView3D());
             ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
         }
-        return ghost.assertComponent(Ghost3DViewComp.class);
+        return ghost.assertComponent(GhostView3D.class);
     }
 }

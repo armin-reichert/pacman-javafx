@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.entities3D.ghost.system;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 
 public class Ghost3DMovementSystem {
 
@@ -15,7 +15,7 @@ public class Ghost3DMovementSystem {
     }
 
     public void update(Ghost ghost) {
-        final Ghost3DViewComp view3D = ghost.assertComponent(Ghost3DViewComp.class);
+        final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
         final Vector2f center = ghost.pos().bodyCenter();
         final double height = view3D.root().getBoundsInParent().getDepth();

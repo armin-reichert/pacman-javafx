@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostComponentColors;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import javafx.animation.*;
@@ -40,7 +40,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final GhostComponentColors brightColors     = settings.colors().flashing();
         final GhostComponentColors frightenedColors = settings.colors().frightened();
 
-        final Ghost3DViewComp view3D = ghost.assertComponent(Ghost3DViewComp.class);
+        final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
         final var dressDiffuseColorProperty  = view3D.dressMaterial().diffuseColorProperty();
         final var dressSpecularColorProperty = view3D.dressMaterial().specularColorProperty();

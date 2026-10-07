@@ -15,7 +15,7 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class Ghost3DViewComp {
+public class GhostView3D {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -35,7 +35,7 @@ public class Ghost3DViewComp {
 
     private GhostAppearance appearance;
 
-    public Ghost3DViewComp() {}
+    public GhostView3D() {}
 
     public void build(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
         buildTree(settings, dressMesh, pupilsMesh, eyeballsMesh);
@@ -140,33 +140,4 @@ public class Ghost3DViewComp {
         eyeballsMeshView.drawModeProperty().bind(drawMode);
     }
 
-    public void lookNormal() {
-        dressMeshView   .setVisible(true);
-        eyeballsMeshView.setVisible(true);
-        pupilsMeshView  .setVisible(true);
-
-        applyMaterials(appearanceMaterialSet.normal());
-    }
-
-    public void lookFrightened() {
-        dressMeshView   .setVisible(true);
-        eyeballsMeshView.setVisible(true);
-        pupilsMeshView  .setVisible(true);
-
-        applyMaterials(appearanceMaterialSet.frightened());
-    }
-
-    public void lookEyesOnly() {
-        dressMeshView   .setVisible(false);
-        eyeballsMeshView.setVisible(true);
-        pupilsMeshView  .setVisible(true);
-
-        applyMaterials(appearanceMaterialSet.normal());
-    }
-
-    private void applyMaterials(Ghost3DMaterialSet materials) {
-        dressMeshView   .setMaterial(materials.dress());
-        pupilsMeshView  .setMaterial(materials.pupils());
-        eyeballsMeshView.setMaterial(materials.eyeballs());
-    }
 }
