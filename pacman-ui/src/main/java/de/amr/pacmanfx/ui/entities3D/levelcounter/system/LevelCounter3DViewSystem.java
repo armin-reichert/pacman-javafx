@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounter3DFactory;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import javafx.scene.Group;
 
 import static de.amr.basics.TileDimension.tilesPx;
@@ -30,7 +30,7 @@ public class LevelCounter3DViewSystem {
         root.setTranslateY(tilesPx(2));
         root.setTranslateZ(-uiConfig.worldSettings().levelCounter().elevation());
 
-        final LevelCounter3DViewComp view3D = levelCounter.assertComponent(LevelCounter3DViewComp.class);
+        final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
         view3D.setRoot(root);
 
         levelCounter.optComponent(LevelCounter3DAnimationComp.class).ifPresent(animation -> {

@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -287,9 +287,9 @@ public class GameLevelView3D implements DisposableGraphicsObject {
     }
 
     private void createLevelCounter3DView(LevelCounter levelCounter) {
-        if (!levelCounter.hasComponent(LevelCounter3DViewComp.class)) {
-            final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
-            levelCounter.setComponent(LevelCounter3DViewComp.class, view3D);
+        if (!levelCounter.hasComponent(LevelCounterView3D.class)) {
+            final LevelCounterView3D view3D = new LevelCounterView3D();
+            levelCounter.setComponent(LevelCounterView3D.class, view3D);
         }
         else {
             Logger.info("Level counter already had a 3D view!");
@@ -299,7 +299,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     public void replaceLevelCounter3D(LevelCounter levelCounter) {
         final LevelCounter3DViewSystem viewSystem = GameSystems3D.reqSystem(LevelCounter3DViewSystem.class);
-        final LevelCounter3DViewComp view3D = levelCounter.assertComponent(LevelCounter3DViewComp.class);
+        final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
 
         final Group oldRoot = view3D.root();
         if (oldRoot != null) {

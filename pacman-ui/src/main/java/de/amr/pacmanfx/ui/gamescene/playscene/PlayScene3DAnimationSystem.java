@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
@@ -173,7 +173,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounter.setComponent(LevelCounter3DAnimationComp.class,
             new LevelCounter3DAnimationComp(
-                levelCounter.assertComponent(LevelCounter3DViewComp.class),
+                levelCounter.assertComponent(LevelCounterView3D.class),
                 registry
             )
         );

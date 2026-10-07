@@ -7,11 +7,11 @@ package de.amr.pacmanfx.ui.entities3D.levelcounter.comp;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.Group;
 
-public class LevelCounter3DViewComp implements DisposableGraphicsObject {
+public class LevelCounterView3D implements DisposableGraphicsObject {
 
     private Group root;
 
-    public LevelCounter3DViewComp() {}
+    public LevelCounterView3D() {}
 
     public void setRoot(Group root) {
         this.root = root;

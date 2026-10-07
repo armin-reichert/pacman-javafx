@@ -19,7 +19,7 @@ public class LevelCounter3DAnimationComp implements Disposable {
 
     private ManagedAnimation spinningAnimation;
 
-    public LevelCounter3DAnimationComp(LevelCounter3DViewComp view3D, AnimationRegistry registry) {
+    public LevelCounter3DAnimationComp(LevelCounterView3D view3D, AnimationRegistry registry) {
         createSpinningAnimation(view3D);
         registry.register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, spinningAnimation);
     }
@@ -36,7 +36,7 @@ public class LevelCounter3DAnimationComp implements Disposable {
         }
     }
 
-    private void createSpinningAnimation(LevelCounter3DViewComp view3D) {
+    private void createSpinningAnimation(LevelCounterView3D view3D) {
         spinningAnimation = new ManagedAnimation("Level Counter Spinning");
 
         spinningAnimation.setAnimationFactory(() -> {
