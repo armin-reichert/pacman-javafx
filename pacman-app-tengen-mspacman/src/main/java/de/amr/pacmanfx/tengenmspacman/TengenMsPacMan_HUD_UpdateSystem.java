@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
@@ -9,15 +13,17 @@ import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
-import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
+import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsComp;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
 
     public void update(HUD hud, GameContext game) {
         final GameSession session = game.session();
+
+        // Lives counter
 
         final LivesCounter livesCounter = hud.livesCounter();
         livesCounter.data().setNumLives(session.numLives());
@@ -38,25 +44,20 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         numLivesShown = Math.clamp(numLivesShown, 0, livesCounter.data().maxLivesShown());
         livesCounter.data().setNumLivesShown(numLivesShown);
 
+        // Game options
+
         final GameOptionsDisplay optionsDisplay = hud.additionalEntities().theOne(GameOptionsDisplay.class);
-        if (gameOptions(session).areInitial()) {
-            optionsDisplay.hide();
-        } else {
-            optionsDisplay.show();
-        }
+        optionsDisplay.visibility().setVisible(!gameOptionValues(session).areInitial());
 
-        final GameOptionsDataComp options = optionsDisplay.options();
-        options.setBoosterMode(gameOptions(session).boosterMode());
-        options.setDifficulty(gameOptions(session).difficulty());
-        options.setMapCategory(gameOptions(session).mapCategory());
+        final GameOptionsComp options = optionsDisplay.options();
+        options.setBoosterMode(gameOptionValues(session).boosterMode());
+        options.setDifficulty(gameOptionValues(session).difficulty());
+        options.setMapCategory(gameOptionValues(session).mapCategory());
 
-        final boolean showLevelNumber = gameOptions(session).mapCategory() != MapCategory.ARCADE;
-        session.hud().additionalEntities().ofType(LevelNumberDisplay.class).forEach(display -> {
-            if (showLevelNumber) {
-                display.show();
-            } else {
-                display.hide();
-            }
-        });
+        // Level numbers left and right
+
+        final boolean levelNumbersVisible = gameOptionValues(session).mapCategory() != MapCategory.ARCADE;
+        session.hud().additionalEntities().ofType(LevelNumberDisplay.class)
+            .forEach(levelNumberDisplay -> levelNumberDisplay.visibility().setVisible(levelNumbersVisible));
     }
 }

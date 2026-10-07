@@ -39,7 +39,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
-import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
+import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsComp;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.JoypadKeyBindingsView;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuOptionView;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarView;
@@ -290,7 +290,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(GameOptionsDisplay display) {
-        final GameOptionsDataComp options = display.options();
+        final GameOptionsComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {
             case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);

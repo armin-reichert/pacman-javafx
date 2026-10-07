@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 class GameEventHandler implements DefaultGameEventListener {
 
@@ -159,7 +159,7 @@ class GameEventHandler implements DefaultGameEventListener {
     //TODO This belongs into an animation system class
 
     public void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
-        resetPacAnimation(animSystem, gameOptions(session).boosterEnabled(), level.entitySet().pac());
+        resetPacAnimation(animSystem, gameOptionValues(session).boosterEnabled(), level.entitySet().pac());
         level.entitySet().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 

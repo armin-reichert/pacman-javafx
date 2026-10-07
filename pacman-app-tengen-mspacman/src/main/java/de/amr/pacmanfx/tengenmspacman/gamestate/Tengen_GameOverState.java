@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 
 import static de.amr.basics.TileDimension.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public class Tengen_GameOverState extends AbstractGameState {
 
@@ -60,7 +60,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         level.showMessage(MessageType.GAME_OVER);
 
-        final MapCategory mapCategory = gameOptions(session).mapCategory();
+        final MapCategory mapCategory = gameOptionValues(session).mapCategory();
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
             final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             createAndStartMessageAnimation(messageView, game);

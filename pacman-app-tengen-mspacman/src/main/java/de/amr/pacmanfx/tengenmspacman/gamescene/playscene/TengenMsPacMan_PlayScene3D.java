@@ -26,7 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.TileDimension.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfViews;
 
 /**
@@ -43,7 +43,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {
         final GameSession session = game().session();
         session.optLevel().ifPresent(_ -> {
-            if (!gameOptions(session).areInitial()) {
+            if (!gameOptionValues(session).areInitial()) {
                 final ImageView levelInfo = createLevelInfoView(level3D);
                 level3D.root().getChildren().add(levelInfo);
             }
@@ -85,9 +85,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final HUD hud = new HUD();
 
         final GameOptionsDisplay optionsDisplay = new GameOptionsDisplay();
-        optionsDisplay.options().setBoosterMode(gameOptions(session).boosterMode());
-        optionsDisplay.options().setDifficulty(gameOptions(session).difficulty());
-        optionsDisplay.options().setMapCategory(gameOptions(session).mapCategory());
+        optionsDisplay.options().setBoosterMode(gameOptionValues(session).boosterMode());
+        optionsDisplay.options().setDifficulty(gameOptionValues(session).difficulty());
+        optionsDisplay.options().setMapCategory(gameOptionValues(session).mapCategory());
         optionsDisplay.pos().set(0.5 * width, 1.5f * TS);
         optionsDisplay.show();
 

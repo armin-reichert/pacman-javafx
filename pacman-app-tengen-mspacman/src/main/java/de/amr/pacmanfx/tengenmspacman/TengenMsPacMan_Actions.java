@@ -25,7 +25,7 @@ import javafx.scene.input.KeyCodeCombination;
 import java.util.Set;
 
 import static de.amr.basics.util.Ufx.toggleBooleanProperty;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
@@ -103,8 +103,8 @@ public final class TengenMsPacMan_Actions {
             public void execute(GameApp app) {
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(level -> {
-                    final boolean nextEnabledState = !gameOptions(session).boosterEnabled();
-                    gameOptions(session).setBoosterEnabled(nextEnabledState);
+                    final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
+                    gameOptionValues(session).setBoosterEnabled(nextEnabledState);
                     if (nextEnabledState) {
                         app.ui().shortMessage("Booster ON!"); //TODO localize
                     }
@@ -116,7 +116,7 @@ public final class TengenMsPacMan_Actions {
             @Override
             public boolean isEnabled(GameApp app) {
                 final GameSession session = app.game().session();
-                return gameOptions(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
+                return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }
         };
 

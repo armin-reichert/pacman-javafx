@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Validations.inClosedRange;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
@@ -46,12 +46,12 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
             return 0;
         }
         final GameSession session = game.session();
-        final BoosterMode boosterMode = gameOptions(session).boosterMode();
+        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
 
         float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(difficulty);
         if (boosterMode == BoosterMode.BOOSTER_ALWAYS_ON
-            || boosterMode == BoosterMode.ACTIVATE_WITH_A_OR_B && gameOptions(session).boosterEnabled()) {
+            || boosterMode == BoosterMode.ACTIVATE_WITH_A_OR_B && gameOptionValues(session).boosterEnabled()) {
             speed += pacBoosterSpeedDelta();
         }
         return speed;

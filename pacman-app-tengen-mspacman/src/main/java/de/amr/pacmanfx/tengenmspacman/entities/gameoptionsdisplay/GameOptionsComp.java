@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay;
 
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-public class GameOptionsDataComp {
+public class GameOptionsComp {
 
     private MapCategory mapCategory;
 
@@ -12,8 +16,7 @@ public class GameOptionsDataComp {
 
     private BoosterMode boosterMode;
 
-    public GameOptionsDataComp() {
-    }
+    public GameOptionsComp() {}
 
     public MapCategory mapCategory() {
         return mapCategory;

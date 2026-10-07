@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public class Tengen_GameStartingState extends AbstractGameState {
 
@@ -33,11 +33,11 @@ public class Tengen_GameStartingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         final GameSession session = game.session();
-        final int startLevelNumber = gameOptions(session).startLevelNumber();
+        final int startLevelNumber = gameOptionValues(session).startLevelNumber();
         level = gamePlay.buildNormalLevel(game, startLevelNumber);
 
-        final boolean boosterInitiallyEnabled = gameOptions(session).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
-        gameOptions(session).setBoosterEnabled(boosterInitiallyEnabled);
+        final boolean boosterInitiallyEnabled = gameOptionValues(session).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
+        gameOptionValues(session).setBoosterEnabled(boosterInitiallyEnabled);
 
         //TODO Hack. Should be done by entity update system
         final Pac pac = level.entitySet().pac();

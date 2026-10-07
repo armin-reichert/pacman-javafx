@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.OptionalInt;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public class Tengen_LevelIntermissionState extends AbstractGameState {
 
@@ -49,7 +49,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        if (gameOptions(session).mapCategory() == MapCategory.ARCADE) {
+        if (gameOptionValues(session).mapCategory() == MapCategory.ARCADE) {
             session.setHudVisible(false);
         } else {
             hud.additionalEntities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);

@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
@@ -168,7 +168,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(PlayOption.PAC_BOOSTER);
-        gameOptions(session).setCanStartNewGame(true);
+        gameOptionValues(session).setCanStartNewGame(true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;
@@ -228,26 +228,26 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         playModeOptionView.setValue("1 PLAYER");
 
         boosterModeOptionView.setSelected(selectedOption.get() == PlayOption.PAC_BOOSTER);
-        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
+        final BoosterMode boosterMode = gameOptionValues(game().session()).boosterMode();
         boosterModeOptionView.setValue(switch (boosterMode) {
             case BOOSTER_OFF -> "OFF";
             case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
             case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
         });
 
-        final Difficulty difficulty = gameOptions(game().session()).difficulty();
+        final Difficulty difficulty = gameOptionValues(game().session()).difficulty();
         difficultyOptionView.setSelected(selectedOption.get() == PlayOption.DIFFICULTY);
         difficultyOptionView.setValue(difficulty.name());
 
-        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
+        final MapCategory mapCategory = gameOptionValues(game().session()).mapCategory();
         mapCategoryOptionView.setSelected(selectedOption.get() == PlayOption.MAP_CATEGORY);
         mapCategoryOptionView.setValue(mapCategory.name());
 
-        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
+        final int startLevelNumber = gameOptionValues(game().session()).startLevelNumber();
         startingLevelOptionView.setSelected(selectedOption.get() == PlayOption.STARTING_LEVEL);
         startingLevelOptionView.setValue(String.valueOf(startLevelNumber));
 
-        final int numContinues = gameOptions(game().session()).numContinues();
+        final int numContinues = gameOptionValues(game().session()).numContinues();
         if (numContinues < 4) {
             final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
             final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
@@ -268,9 +268,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private void setPrevStartLevelValue() {
         final GameSession session = game().session();
 
-        int current = gameOptions(session).startLevelNumber();
+        int current = gameOptionValues(session).startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
-        gameOptions(session).setStartLevelNumber(prev);
+        gameOptionValues(session).setStartLevelNumber(prev);
 
         optionValueChanged();
     }
@@ -278,50 +278,50 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private void setNextStartLevelValue() {
         final GameSession session = game().session();
 
-        int current = gameOptions(session).startLevelNumber();
+        int current = gameOptionValues(session).startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
-        gameOptions(session).setStartLevelNumber(next);
+        gameOptionValues(session).setStartLevelNumber(next);
 
         optionValueChanged();
     }
 
     private void setPrevMapCategoryValue(GameSession session) {
-        final MapCategory category = gameOptions(session).mapCategory();
-        gameOptions(session).setMapCategory(category.pred());
+        final MapCategory category = gameOptionValues(session).mapCategory();
+        gameOptionValues(session).setMapCategory(category.pred());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue(GameSession session) {
-        final MapCategory category = gameOptions(session).mapCategory();
-        gameOptions(session).setMapCategory(category.succ());
+        final MapCategory category = gameOptionValues(session).mapCategory();
+        gameOptionValues(session).setMapCategory(category.succ());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue(GameSession session) {
-        final Difficulty difficulty = gameOptions(session).difficulty();
-        gameOptions(session).setDifficulty(difficulty.pred());
+        final Difficulty difficulty = gameOptionValues(session).difficulty();
+        gameOptionValues(session).setDifficulty(difficulty.pred());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextDifficultyValue(GameSession session) {
-        final Difficulty difficulty = gameOptions(session).difficulty();
-        gameOptions(session).setDifficulty(difficulty.succ());
+        final Difficulty difficulty = gameOptionValues(session).difficulty();
+        gameOptionValues(session).setDifficulty(difficulty.succ());
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = gameOptions(session).boosterMode();
-        gameOptions(session).setBoosterMode(boosterMode.pred());
+        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
+        gameOptionValues(session).setBoosterMode(boosterMode.pred());
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = gameOptions(session).boosterMode();
-        gameOptions(session).setBoosterMode(boosterMode.succ());
+        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
+        gameOptionValues(session).setBoosterMode(boosterMode.succ());
         optionValueChanged();
     }
 

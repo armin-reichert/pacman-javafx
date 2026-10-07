@@ -1,15 +1,19 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.tengenmspacman.entities;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
+import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsComp;
 
 public class GameOptionsDisplay extends GameEntity {
 
     public GameOptionsDisplay() {
-        setComponent(GameOptionsDataComp.class, new GameOptionsDataComp());
+        setComponent(GameOptionsComp.class, new GameOptionsComp());
     }
 
-    public GameOptionsDataComp options() {
-        return assertComponent(GameOptionsDataComp.class);
+    public GameOptionsComp options() {
+        return assertComponent(GameOptionsComp.class);
     }
 }

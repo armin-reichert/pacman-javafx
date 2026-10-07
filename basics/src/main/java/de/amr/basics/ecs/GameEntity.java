@@ -78,11 +78,11 @@ public class GameEntity extends Composition<Object> implements Disposable {
     }
 
     public final void show() {
-        visibility().set(true);
+        visibility().setVisible(true);
     }
 
     public final void hide() {
-        visibility().set(false);
+        visibility().setVisible(false);
     }
 
     public final boolean isVisible() {

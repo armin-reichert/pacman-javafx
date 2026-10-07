@@ -76,13 +76,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // Tengen Ms. Pac-Man specific methods
 
-    public static GamePlayOptions gameOptions(GameSession session) {
+    public static GamePlayOptions gameOptionValues(GameSession session) {
         return session.value(GamePlayOptions.Key.GAME_PLAY_OPTIONS, GamePlayOptions.class);
     }
 
     public static boolean checkGameContinuesOnGameOver(GameSession session) {
         requireNonNull(session);
-        final GamePlayOptions options = gameOptions(session);
+        final GamePlayOptions options = gameOptionValues(session);
 
         if (options.startLevelNumber() < 10) {
             return false; // No continues for games started before 10th start level
@@ -105,7 +105,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public boolean canStart(GameContext game) {
         requireNonNull(game);
-        return gameOptions(game.session()).canStartNewGame();
+        return gameOptionValues(game.session()).canStartNewGame();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final MapCategory mapCategory = gameOptions(session).mapCategory();
+        final MapCategory mapCategory = gameOptionValues(session).mapCategory();
 
         final var rules = (TengenMsPacMan_GameRules) game.playConfig().rules();
         final GameSystems systems = game.playConfig().systems();
@@ -228,7 +228,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(level);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
-        session.setGameOverStateTicks(gameOptions(session).mapCategory() == MapCategory.ARCADE
+        session.setGameOverStateTicks(gameOptionValues(session).mapCategory() == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         return level;

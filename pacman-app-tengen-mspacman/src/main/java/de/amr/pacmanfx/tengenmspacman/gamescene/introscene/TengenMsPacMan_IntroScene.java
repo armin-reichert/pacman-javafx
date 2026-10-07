@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
@@ -451,8 +451,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    if (gameOptions(game.session()).areInitial()) {
-                        gameOptions(game.session()).setCanStartNewGame(false); // TODO check this
+                    if (gameOptionValues(game.session()).areInitial()) {
+                        gameOptionValues(game.session()).setCanStartNewGame(false); // TODO check this
                         flow.restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
                         flow.enterState(game, Tengen_GameState.GAME_PREPARATION.state());

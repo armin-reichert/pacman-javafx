@@ -58,7 +58,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
@@ -150,7 +150,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public void onTick(GameContext game) {
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
-            ensureActorAnimationsCreated(level, gameOptions(session).boosterEnabled());
+            ensureActorAnimationsCreated(level, gameOptionValues(session).boosterEnabled());
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);

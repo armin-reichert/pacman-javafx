@@ -25,7 +25,7 @@ public class VisibilityComp implements Resettable {
         return visible;
     }
 
-    public final void set(boolean value) {
+    public final void setVisible(boolean value) {
         visible = value;
     }
 
