@@ -159,7 +159,7 @@ public final class PacManGameEngine implements PacManGameEngineContext {
     }
 
     @Override
-    public GameContext game() {
+    public GameContext currentGame() {
         return game;
     }
 

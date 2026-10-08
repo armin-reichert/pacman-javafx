@@ -51,7 +51,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacStateAndName(PacManGameEngineContext app) {
-        return () -> app.game().session().optLevel()
+        return () -> app.currentGame().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
@@ -59,7 +59,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<?> supplyLivesCount(PacManGameEngineContext appContext) {
         return fnLevelInfo(appContext, _ -> {
-            final GameSession session = appContext.game().session();
+            final GameSession session = appContext.currentGame().session();
             return session.numLives();
         });
     }
@@ -69,7 +69,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
         addDynamicInfo("Animation", supplyGhostText(appContext,
-            (_, ghost) -> ghostAnimationText(appContext.game().playConfig().systems().actorSpriteAnimController(), ghost),
+            (_, ghost) -> ghostAnimationText(appContext.currentGame().playConfig().systems().actorSpriteAnimController(), ghost),
             personality));
     }
 
@@ -117,7 +117,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(PacManGameEngineContext appContext) {
-        return () -> appContext.game().session().optLevel()
+        return () -> appContext.currentGame().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -150,8 +150,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(PacManGameEngineContext app) {
-        return () -> app.game().session().optLevel().map(level -> {
-            final ActorSpriteAnimController animSystem = app.game().playConfig().systems().actorSpriteAnimController();
+        return () -> app.currentGame().session().optLevel().map(level -> {
+            final ActorSpriteAnimController animSystem = app.currentGame().playConfig().systems().actorSpriteAnimController();
             final Pac pac = level.entitySet().pac();
             final boolean stopped = pac.animation().isStopped();
             final boolean locked = pac.animation().isLocked();

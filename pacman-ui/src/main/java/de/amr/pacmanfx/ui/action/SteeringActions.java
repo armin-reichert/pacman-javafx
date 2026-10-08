@@ -37,14 +37,14 @@ public class SteeringActions {
 
         @Override
         public void execute(PacManGameEngineContext app) {
-            final GameContext game = app.game();
+            final GameContext game = app.currentGame();
             final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
             game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
         }
 
         @Override
         public boolean isEnabled(PacManGameEngineContext app) {
-            final GameSession session = app.game().session();
+            final GameSession session = app.currentGame().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()
                 && !session.level().entitySet().pac().cheats().isUsingAutopilot();

@@ -22,7 +22,7 @@ public class GamePlayViewRenderer {
         final RenderManager renderManager = app.renderManager();
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
 
-        fillRenderQueue(playView, renderManager, app.game(), gameScene, debugMode);
+        fillRenderQueue(playView, renderManager, app.currentGame(), gameScene, debugMode);
 
         //TODO This should not be done in each render frame
         renderManager.updateRenderers(

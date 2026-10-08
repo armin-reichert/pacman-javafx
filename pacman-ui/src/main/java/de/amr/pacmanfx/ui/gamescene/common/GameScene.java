@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public interface GameScene extends Disposable, QuitHandler {
 
     default GameContext game() {
-        return engine().game();
+        return engine().currentGame();
     }
 
     default GameFlow gameFlow() {

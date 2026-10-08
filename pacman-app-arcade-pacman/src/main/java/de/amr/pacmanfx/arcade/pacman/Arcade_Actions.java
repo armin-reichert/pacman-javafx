@@ -33,17 +33,17 @@ public final class Arcade_Actions {
             public void execute(PacManGameEngineContext app) {
                 app.soundManager().voice().stop();
                 app.soundManager().setEnabled(true);
-                app.game().coinMechanism().insertCoin();
+                app.currentGame().coinMechanism().insertCoin();
                 app.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
-                app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
-                app.game().eventManager().publishEvent(new CreditAddedEvent(1));
+                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_PREPARATION);
+                app.currentGame().eventManager().publishEvent(new CreditAddedEvent(1));
             }
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                final GameSession session = app.game().session();
-                final AbstractGameState gameState = app.game().state();
-                if (app.game().coinMechanism().isFull()) {
+                final GameSession session = app.currentGame().session();
+                final AbstractGameState gameState = app.currentGame().state();
+                if (app.currentGame().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
@@ -59,15 +59,15 @@ public final class Arcade_Actions {
             @Override
             public void execute(PacManGameEngineContext app) {
                 app.soundManager().voice().stop();
-                app.game().playConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                app.currentGame().playConfig().gameFlow().enterState(app.currentGame(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                if (app.game().coinMechanism().isEmpty()) {
+                if (app.currentGame().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final AbstractGameState state = app.game().state();
+                final AbstractGameState state = app.currentGame().state();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

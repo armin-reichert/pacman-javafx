@@ -73,18 +73,18 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            app.game().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            app.currentGame().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> app.game().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> app.currentGame().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
     public void update(PacManGameEngineContext app) {
         super.update(app);
 
-        final GameContext game = app.game();
+        final GameContext game = app.currentGame();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
@@ -93,7 +93,7 @@ public class DS_GameControl extends GameDashboardSection {
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
-        credit.set(app.game().coinMechanism().numCoins());
+        credit.set(app.currentGame().coinMechanism().numCoins());
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         //buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));
@@ -109,7 +109,7 @@ public class DS_GameControl extends GameDashboardSection {
     private boolean canStartLevel(PacManGameEngineContext appContext, AbstractGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !appContext.game().coinMechanism().isEmpty()
+        return !appContext.currentGame().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

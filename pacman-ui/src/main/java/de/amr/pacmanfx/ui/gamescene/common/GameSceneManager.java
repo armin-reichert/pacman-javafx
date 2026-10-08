@@ -58,7 +58,7 @@ public class GameSceneManager {
     public void updateGameSceneAndForceReload(PacManGameEngineContext engine, boolean forceReload) {
         final GameUI ui = engine.ui();
         final GameVariantUIConfig uiConfig = engine.gameVariantManager().currentRuntime().uiConfig();
-        final GameContext game = engine.game();
+        final GameContext game = engine.currentGame();
         final GameSession session = game.session();
         final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
 

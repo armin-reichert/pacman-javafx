@@ -32,7 +32,7 @@ public final class GameLoop {
 
         clock.setUpdateAction(() -> {
             try {
-                final GameContext game = app.game();
+                final GameContext game = app.currentGame();
                 game.session().newFrameState(clock.currentTick());
                 game.playConfig().systems().updateSystem().updateEntities(game);
 

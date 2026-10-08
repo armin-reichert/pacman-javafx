@@ -51,7 +51,7 @@ public interface PacManGameEngineContext {
 
     GameVariantManager gameVariantManager();
 
-    GameContext game();
+    GameContext currentGame();
 
     GameUI ui();
 

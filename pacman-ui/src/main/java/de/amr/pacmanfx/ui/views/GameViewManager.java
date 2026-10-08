@@ -151,7 +151,7 @@ public final class GameViewManager {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !appContext.game().session().isGameRunning();
+            return !appContext.currentGame().session().isGameRunning();
         }
         return false;
     }

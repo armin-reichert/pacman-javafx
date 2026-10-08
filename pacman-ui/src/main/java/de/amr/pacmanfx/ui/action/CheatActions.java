@@ -47,7 +47,7 @@ public final class CheatActions {
         actionAddLives = new GameAction("cheat_add_lives") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameSession session = app.game().session();
+                final GameSession session = app.currentGame().session();
                 session.setNumLives(session.numLives() + 3);
                 session.cheats().notifyCheatUsed();
                 final String msg = app.translationManager().translate("flash.cheat_add_lives", session.numLives());
@@ -63,17 +63,17 @@ public final class CheatActions {
         actionEatAllPellets = new GameAction("cheat_eat_all_pellets") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameSession session = app.game().session();
+                final GameSession session = app.currentGame().session();
                 final GameLevel level = session.level();
                 level.food().eatPellets();
                 session.cheats().notifyCheatUsed();
-                app.game().eventManager().publishEvent(
+                app.currentGame().eventManager().publishEvent(
                     new PacEatsFoodEvent(level.entitySet().pac(), false, true, app.clock().currentTick()));
             }
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                final AbstractGameState gameState = app.game().state();
+                final AbstractGameState gameState = app.currentGame().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -81,7 +81,7 @@ public final class CheatActions {
         actionKillGhosts = new GameAction("cheat_kill_ghosts") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameContext game = app.game();
+                final GameContext game = app.currentGame();
                 final GameSession session = game.session();
                 final GameLevel level = session.level();
                 
@@ -101,7 +101,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                final AbstractGameState gameState = app.game().state();
+                final AbstractGameState gameState = app.currentGame().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -109,24 +109,24 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction("cheat_enter_next_level") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                app.game().session().cheats().notifyCheatUsed();
-                app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
+                app.currentGame().session().cheats().notifyCheatUsed();
+                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                final AbstractGameState state = app.game().state();
+                final AbstractGameState state = app.currentGame().state();
                 final GameLevel level = normalLevel(app).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
-                    && level.number() < app.game().playConfig().rules().lastLevelNumber();
+                    && level.number() < app.currentGame().playConfig().rules().lastLevelNumber();
             }
         };
 
         actionToggleAutopilot = new GameAction("toggle_autopilot") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameCheats cheats = app.game().session().cheats();
+                final GameCheats cheats = app.currentGame().session().cheats();
                 setAutopilot(app, !cheats.isPacUsingAutopilot());
             }
 
@@ -187,7 +187,7 @@ public final class CheatActions {
         actionToggleImmunity = new GameAction("toggle_immunity") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameCheats cheats = app.game().session().cheats();
+                final GameCheats cheats = app.currentGame().session().cheats();
                 setPacImmune(app, !cheats.isPacImmune());
             }
 
@@ -254,7 +254,7 @@ public final class CheatActions {
     // Helpers
 
     private void setAutopilot(PacManGameEngineContext app, boolean auto) {
-        final GameCheats cheats = app.game().session().cheats();
+        final GameCheats cheats = app.currentGame().session().cheats();
         final GameUI ui = app.ui();
 
         cheats.pacUsingAutopilotProperty().set(auto);
@@ -267,7 +267,7 @@ public final class CheatActions {
     }
 
     private void setPacImmune(PacManGameEngineContext app, boolean immune) {
-        final GameCheats cheats = app.game().session().cheats();
+        final GameCheats cheats = app.currentGame().session().cheats();
         final GameUI ui = app.ui();
 
         cheats.pacImmuneProperty().set(immune);
@@ -280,7 +280,7 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(PacManGameEngineContext app) {
-        final GameSession session = app.game().session();
+        final GameSession session = app.currentGame().session();
         return session.optLevel().filter(_ -> !session.isAttractMode());
     }
 }

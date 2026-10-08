@@ -54,7 +54,7 @@ public final class CommonGameActions {
         actionToggleCollisionStrategy = new GameAction("toggle_collision_strategy") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameContext game = app.game();
+                final GameContext game = app.currentGame();
                 final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);

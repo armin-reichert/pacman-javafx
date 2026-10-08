@@ -43,11 +43,11 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<?> fnLevelInfo(PacManGameEngineContext app, Function<GameLevel, Object> fnInfo) {
-        return () -> app.game().session().optLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> app.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> fnRulesInfo(PacManGameEngineContext app, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(app.game().playConfig().rules());
+        return () -> fnInfo.apply(app.currentGame().playConfig().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

@@ -104,7 +104,7 @@ public class UISettingsActions {
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameContext game = app.game();
+                final GameContext game = app.currentGame();
                 final BooleanProperty view3DEnabledProperty = app.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();

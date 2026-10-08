@@ -47,14 +47,14 @@ public class GameFlowActions {
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                app.game().state().triggerTimeout();
+                app.currentGame().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction("restart_intro") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameContext game = app.game();
+                final GameContext game = app.currentGame();
                 final AbstractGameState gameState = game.state();
 
                 if (gameState.id() instanceof TestStateID) {

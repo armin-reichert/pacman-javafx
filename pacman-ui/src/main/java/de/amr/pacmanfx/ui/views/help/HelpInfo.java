@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(PacManGameEngineContext app) {
-        final GameContext game = app.game();
+        final GameContext game = app.currentGame();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
@@ -82,7 +82,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext game = appContext.game();
+        final GameContext game = appContext.currentGame();
         final GameCheats cheats = game.session().cheats();
 
         // add default entries:

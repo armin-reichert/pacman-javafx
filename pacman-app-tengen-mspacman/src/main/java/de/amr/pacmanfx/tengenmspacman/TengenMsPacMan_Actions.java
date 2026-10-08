@@ -47,26 +47,26 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                return app.game().session().isAttractMode();
+                return app.currentGame().session().isAttractMode();
             }
         };
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
@@ -101,7 +101,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
             public void execute(PacManGameEngineContext app) {
-                final GameSession session = app.game().session();
+                final GameSession session = app.currentGame().session();
                 session.optLevel().ifPresent(level -> {
                     final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
                     gameOptionValues(session).setBoosterEnabled(nextEnabledState);
@@ -115,7 +115,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled(PacManGameEngineContext app) {
-                final GameSession session = app.game().session();
+                final GameSession session = app.currentGame().session();
                 return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }
         };
