@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 
+//TODO Create game variant specific systems and access the via game variant runtime
 public class GameSystems3D {
 
     private static class SingletonHolder {

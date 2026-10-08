@@ -28,6 +28,7 @@ import java.util.Map;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
+//TODO Remove factory classes and integrate into 3d systems
 public class DefaultFactory3D implements Factory3D {
 
     protected Pac3DShapeFactory pac3DShapeFactory = new Pac3DShapeFactory();
