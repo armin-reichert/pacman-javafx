@@ -112,11 +112,7 @@ public class UISettingsActions {
                     app.ui().shortMessage(app.ui().translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
-                    app.gameSceneManager().forceGameSceneUpdate(
-                        app.ui(),
-                        app.variantManager().currentRuntime().uiConfig(),
-                        app.game()
-                    );
+                    app.gameSceneManager().forceGameSceneUpdate(app);
                 }
             }
 

@@ -116,12 +116,7 @@ public class GameUI implements GameEventListener {
         }
 
         if (app != null) {
-            app.gameSceneManager().updateGameSceneAndForceReload(
-                this,
-                app.variantManager().currentRuntime().uiConfig(),
-                app.game(),
-                forceGameSceneReload);
-
+            app.gameSceneManager().updateGameSceneAndForceReload(app, forceGameSceneReload);
             app.gameSceneManager().optCurrentGameScene()
                 .flatMap(GameScene::optGameEventHandler)
                 .ifPresent(handler -> handler.onGameEvent(gameEvent));

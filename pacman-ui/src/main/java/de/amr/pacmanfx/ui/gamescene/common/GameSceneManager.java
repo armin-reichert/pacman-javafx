@@ -33,11 +33,7 @@ public class GameSceneManager {
 
     private GameSceneConfig gameSceneConfig;
 
-    private final GameApp app;
-
-    public GameSceneManager(GameApp app) {
-        this.app = requireNonNull(app);
-    }
+    public GameSceneManager() {}
 
     public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
@@ -55,15 +51,18 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(GameUI ui, GameVariantUIConfig variantUIConfig, GameContext game) {
-        updateGameSceneAndForceReload(ui, variantUIConfig, game, true);
+    public void forceGameSceneUpdate(GameApp app) {
+        updateGameSceneAndForceReload(app, true);
     }
 
-    public void updateGameSceneAndForceReload(GameUI ui, GameVariantUIConfig variantUIConfig, GameContext game, boolean forceReload) {
-        final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
+    public void updateGameSceneAndForceReload(GameApp app, boolean forceReload) {
+        final GameUI ui = app.ui();
+        final GameVariantUIConfig uiConfig = app.variantManager().currentRuntime().uiConfig();
+        final GameContext game = app.game();
         final GameSession session = game.session();
+        final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
 
-        final GameScene nextGameScene = variantUIConfig.gameSceneConfig().selectGameScene(game, select3D).orElse(null);
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(game, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -85,7 +84,7 @@ public class GameSceneManager {
             Logger.error("Next game scene is not an AbstractGameScene");
             return;
         }
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantUIConfig, game, currentGameScene(), nextScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
@@ -116,14 +115,14 @@ public class GameSceneManager {
     // 2D-3D scene switch
 
     private void handle2D3DSwitch(
-        GameVariantUIConfig variantConfig,
+        GameVariantUIConfig uiConfig,
         GameContext game,
         GameScene currentGameScene,
         GameScene nextGameScene)
     {
         final GameSceneSwitchType switchType = identifySwitchType(currentGameScene, nextGameScene);
         switch (switchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(variantConfig, game, currentGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, game, currentGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(currentGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + switchType);
@@ -131,7 +130,7 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo3D(
-        GameVariantUIConfig variantConfig,
+        GameVariantUIConfig uiConfig,
         GameContext game,
         GameScene currentGameScene,
         GameScene nextGameScene)
@@ -156,7 +155,7 @@ public class GameSceneManager {
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {
-            variantConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
+            uiConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
 
         playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)

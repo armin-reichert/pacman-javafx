@@ -74,7 +74,7 @@ public final class PacManGamesMasterApp implements GameApp {
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
-        gameSceneManager = new GameSceneManager(this);
+        gameSceneManager = new GameSceneManager();
         gameLoop = new GameLoop(gameBox.clock(), this);
         actions = new CommonGameActions();
 
