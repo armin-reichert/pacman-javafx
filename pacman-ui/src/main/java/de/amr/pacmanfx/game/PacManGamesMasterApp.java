@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -59,6 +60,8 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private final RenderManager renderManager;
 
+    private final SoundManager soundManager;
+
     private final GameSceneManager gameSceneManager;
 
     private final CommonGameActions actions;
@@ -75,9 +78,9 @@ public final class PacManGamesMasterApp implements GameApp {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
+        soundManager = new SoundManager();
         gameLoop = new GameLoop(gameBox.clock(), this);
         actions = new CommonGameActions();
-
         gameLoop.setErrorHandler(this::handleFatalError);
     }
 
@@ -119,6 +122,11 @@ public final class PacManGamesMasterApp implements GameApp {
     @Override
     public RenderManager renderManager() {
         return renderManager;
+    }
+
+    @Override
+    public SoundManager soundManager() {
+        return soundManager;
     }
 
     @Override
@@ -224,7 +232,7 @@ public final class PacManGamesMasterApp implements GameApp {
         variantRuntime.spriteAnimContainer().clear();
 
         ui.spriteAnimTimer().detachAnimationContainer();
-        ui.soundManager().dispose();
+        soundManager.dispose();
 
         game.eventManager().removeAllSubscribers();
         game = null;
@@ -246,7 +254,7 @@ public final class PacManGamesMasterApp implements GameApp {
 
     @Override
     public void suspendGame() {
-        ui.soundManager().stopAll();
+        soundManager.stopAll();
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> ui.viewManager().onGameSuspended(gameScene));
         gameSceneManager.removeCurrentGameScene();
         gameLoop.stop();

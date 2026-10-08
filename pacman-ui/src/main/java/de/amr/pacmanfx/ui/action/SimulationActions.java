@@ -122,7 +122,7 @@ public class SimulationActions {
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {
-                    app.ui().soundManager().stopAll();
+                    app.soundManager().stopAll();
                     app.variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
                 }
             }

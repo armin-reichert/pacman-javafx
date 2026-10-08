@@ -78,7 +78,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
-        loadSounds(app.ui().soundManager());
+        loadSounds(app.soundManager());
         renderConfig = new XXL_PacMan_RenderConfig(assets);
     }
 
@@ -89,7 +89,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void unload(GameApp app) {
-        unloadSounds(app.ui().soundManager());
+        unloadSounds(app.soundManager());
         dispose();
     }
 

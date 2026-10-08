@@ -96,13 +96,13 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         assets.addAsset("maze.bright", createBrightEmptyMap());
         assets.freeze();
 
-        loadSounds(app.ui().soundManager());
+        loadSounds(app.soundManager());
         renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
 
     @Override
     public void unload(GameApp app) {
-        unloadSounds(app.ui().soundManager());
+        unloadSounds(app.soundManager());
         dispose();
     }
 

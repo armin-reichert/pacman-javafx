@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 
 /**
  * The game application context.
@@ -37,6 +38,8 @@ public interface GameApp {
     CommonGameActions commonActions();
 
     RenderManager renderManager();
+
+    SoundManager soundManager();
 
     GameClock clock();
 

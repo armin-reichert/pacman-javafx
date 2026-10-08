@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -58,7 +57,6 @@ public class GameUI implements GameEventListener {
     private final GameWindow window;
     private final GameViewManager viewManager;
     private final TranslationManager translationManager;
-    private final SoundManager soundManager;
     private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
@@ -71,10 +69,6 @@ public class GameUI implements GameEventListener {
 
         spriteAnimationTimer = new SpriteAnimationTimer();
         window = new GameWindow(stage, width, height);
-
-        soundManager = new SoundManager();
-        soundManager.muteProperty().bind(viewModel.muteProperty());
-
         translationManager = new CommonTranslationManager();
 
         viewManager = createViewManager();
@@ -88,6 +82,8 @@ public class GameUI implements GameEventListener {
 
         viewManager.setGameApp(app);
         window.setGameApp(app);
+
+        app.soundManager().muteProperty().bind(viewModel.muteProperty());
 
         connectKeyboard(app.input().keyboard());
         bindCommonActions(app.commonActions());
@@ -127,10 +123,6 @@ public class GameUI implements GameEventListener {
     }
 
     // --- Accessors ---
-
-    public SoundManager soundManager() {
-        return soundManager;
-    }
 
     public SpriteAnimationTimer spriteAnimTimer() {
         return spriteAnimationTimer;

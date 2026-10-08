@@ -140,10 +140,10 @@ public class XXL_StartPage implements StartPage {
     }
 
     private void startTalking() {
-        app.ui().soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
+        app.soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
     }
 
     private void stopTalking() {
-        app.ui().soundManager().voice().stop();
+        app.soundManager().voice().stop();
     }
 }

@@ -173,8 +173,8 @@ public class GamePlayView implements GameView {
     @Override
     public void onExit() {
         app.suspendGame();
-        app.ui().soundManager().stopAll();
-        app.ui().soundManager().voice().stop();
+        app.soundManager().stopAll();
+        app.soundManager().voice().stop();
         actionBindings.dispose();
         layers.gameSceneLayer().uninstallKeyBindings();
     }

@@ -86,13 +86,13 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
-        loadSounds(app.ui().soundManager());
+        loadSounds(app.soundManager());
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
     }
 
     @Override
     public void unload(GameApp app) {
-        unloadSounds(app.ui().soundManager());
+        unloadSounds(app.soundManager());
         dispose();
     }
 

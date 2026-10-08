@@ -135,7 +135,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         logMenuState();
 
-        soundEnabledProperty().bind(ui.soundManager().muteProperty().not());
+        soundEnabledProperty().bind(app.soundManager().muteProperty().not());
 
         scaling = computeScalingValue(ui.window().stage().heightProperty());
 

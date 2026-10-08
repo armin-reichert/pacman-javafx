@@ -31,8 +31,8 @@ public final class Arcade_Actions {
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
             public void execute(GameApp app) {
-                app.ui().soundManager().voice().stop();
-                app.ui().soundManager().setEnabled(true);
+                app.soundManager().voice().stop();
+                app.soundManager().setEnabled(true);
                 app.game().coinMechanism().insertCoin();
                 app.variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
@@ -58,7 +58,7 @@ public final class Arcade_Actions {
         actionStartPlaying = new GameAction("start_playing") {
             @Override
             public void execute(GameApp app) {
-                app.ui().soundManager().voice().stop();
+                app.soundManager().voice().stop();
                 app.game().playConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 

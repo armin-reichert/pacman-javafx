@@ -53,7 +53,7 @@ public interface GameScene extends Disposable, QuitHandler {
     }
 
     default SoundManager soundManager() {
-        return app().ui().soundManager();
+        return app().soundManager();
     }
 
     default Optional<PacManGameSoundEffects> optSoundEffects() {

@@ -109,7 +109,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         }
         assets.freeze();
 
-        loadSounds(app.ui().soundManager());
+        loadSounds(app.soundManager());
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
     }
 
@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void unload(GameApp app) {
-        unloadSounds(app.ui().soundManager());
+        unloadSounds(app.soundManager());
         dispose();
     }
 
