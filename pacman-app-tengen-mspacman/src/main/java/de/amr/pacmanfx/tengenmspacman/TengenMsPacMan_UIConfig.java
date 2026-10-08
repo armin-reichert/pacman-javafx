@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import javafx.scene.media.MediaPlayer;
@@ -83,7 +83,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private TengenMsPacMan_RenderConfig renderConfig;
     private AssetMap assets;
-    private GameSoundEffects soundEffects;
+    private PacManGameSoundEffects soundEffects;
 
     public TengenMsPacMan_UIConfig() {
         assets = new AssetMap();
@@ -148,7 +148,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Optional<GameSoundEffects> optSoundEffects() {
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 
@@ -178,7 +178,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
             bounceSound.setRate(0.25);
         }
 
-        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects = new PacManGameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.registerSirens(
             RM.url("sound/ms-siren1.wav"),

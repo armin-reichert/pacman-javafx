@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -94,7 +94,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public final void deactivate() {
         onDeactivate();
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
     }
 
     @Override

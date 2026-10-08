@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.SubScene;
@@ -56,7 +56,7 @@ public interface GameScene extends Disposable, QuitHandler {
         return app().ui().soundManager();
     }
 
-    default Optional<GameSoundEffects> optSoundEffects() {
+    default Optional<PacManGameSoundEffects> optSoundEffects() {
         return runtime().uiConfig().optSoundEffects();
     }
 

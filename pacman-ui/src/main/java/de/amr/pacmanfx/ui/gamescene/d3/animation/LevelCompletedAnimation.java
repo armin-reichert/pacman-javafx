@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;
@@ -53,7 +53,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private final GameLevelView3D level3D;
 
-    public LevelCompletedAnimation(GameLevelView3D level3D, int numFlashes, GameSoundEffects soundEffects) {
+    public LevelCompletedAnimation(GameLevelView3D level3D, int numFlashes, PacManGameSoundEffects soundEffects) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
         setAnimationFactory(() -> {

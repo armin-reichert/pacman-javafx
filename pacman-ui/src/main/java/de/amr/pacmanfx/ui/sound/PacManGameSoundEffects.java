@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * All sound decisions are centralized here for easier maintenance and debugging.
  * </p>
  */
-public class GameSoundEffects implements Disposable {
+public class PacManGameSoundEffects implements Disposable {
 
     private static final int NO_SIREN = 0;
 
@@ -57,7 +57,7 @@ public class GameSoundEffects implements Disposable {
      *
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public GameSoundEffects(SoundManager soundManager) {
+    public PacManGameSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 

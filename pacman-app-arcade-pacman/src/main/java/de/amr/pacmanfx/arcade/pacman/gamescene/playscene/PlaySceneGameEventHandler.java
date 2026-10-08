@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationSystem;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -36,27 +36,27 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onStopAllSounds(StopAllSoundsEvent event) {
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
     }
 
-    public Optional<GameSoundEffects> optSoundEffects() {
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
         return gameScene.app().variantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -73,7 +73,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
         final GameSession session = game.session();
         final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
-            optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
         }
     }
 
@@ -85,20 +85,20 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
         final GameContext game = gameScene.game();
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
-            optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
             final GameLevel level = game.session().level();
             final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
             gameScene.levelCompletedAnimation().play(level, numFlashes);
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
-            optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -116,7 +116,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound);
     }
 
     @Override
@@ -127,17 +127,17 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacPowerStarts(PacPowerStartsEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacPowerEnds(PacPowerEndsEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playExtraLifeSound);
     }
 
     @Override

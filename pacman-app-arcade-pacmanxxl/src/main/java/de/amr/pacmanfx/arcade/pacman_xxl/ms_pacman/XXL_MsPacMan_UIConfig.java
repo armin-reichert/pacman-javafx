@@ -18,7 +18,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -64,7 +64,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
     private XXL_MsPacMan_RenderConfig renderConfig;
     private AssetMap assets;
-    private GameSoundEffects soundEffects;
+    private PacManGameSoundEffects soundEffects;
 
     public XXL_MsPacMan_UIConfig() {
         assets = new AssetMap();
@@ -126,7 +126,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Optional<GameSoundEffects> optSoundEffects() {
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 
@@ -151,7 +151,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         for (SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
-        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects = new PacManGameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.registerSirens(
             ARCADE_RM.url("sound/GhostNoise1.wav"),

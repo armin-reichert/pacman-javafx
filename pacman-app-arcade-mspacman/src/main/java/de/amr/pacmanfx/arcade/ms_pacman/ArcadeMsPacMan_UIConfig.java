@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
     private AssetMap assets;
-    private GameSoundEffects soundEffects;
+    private PacManGameSoundEffects soundEffects;
 
     public ArcadeMsPacMan_UIConfig() {
         assets = new AssetMap();
@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Optional<GameSoundEffects> optSoundEffects() {
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 
@@ -193,7 +193,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         soundManager.addAudioClip(PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav"));
         soundManager.addMediaPlayer(PacManGameSoundID.PAC_MAN_POWER, RM.url("sound/ScaredGhost.mp3"));
 
-        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects = new PacManGameSoundEffects(soundManager);
 
         soundEffects.registerSirens(
             RM.url("sound/GhostNoise1.wav"),

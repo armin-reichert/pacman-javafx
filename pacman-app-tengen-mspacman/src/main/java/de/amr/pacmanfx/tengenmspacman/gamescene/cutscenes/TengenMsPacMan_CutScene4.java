@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
 
@@ -217,7 +217,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             spawnJunior(tick);
         }
         else if (tick == 1500) {
-            optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
         }
     }
 

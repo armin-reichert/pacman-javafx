@@ -43,7 +43,7 @@ import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsVM;
@@ -78,7 +78,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         return playScene3D.game();
     }
 
-    private Optional<GameSoundEffects> optSoundEffects() {
+    private Optional<PacManGameSoundEffects> optSoundEffects() {
         return app().variantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
@@ -120,7 +120,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level3D.ensureBonus3DViewAddedToSceneGraph(bonus, playScene3D.animations3D().registry());
 //        updateSystem3D.view3D().lookEdible(bonus);
         updateSystem3D.update(bonus, playScene3D.animations3D().registry());
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusActiveSound);
     }
 
 
@@ -133,7 +133,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         //TODO integrate into update, set flag at animation component
         updateSystem3D.animation3D().lookExpired(bonus, playScene3D.animations3D().registry());
 
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusEatenSound);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
 
         updateSystem3D.update(bonus, playScene3D.animations3D().registry());
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
         if (!silent) {
-            optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
         }
 
         final GameLevelView3D level3D = assertLevel3D();
@@ -171,7 +171,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGhostEaten(GhostEatenEvent ignoredEvent) {
-        optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
                     energizer3D.hide();
                     triggerEnergizerExplosion(energizer3D.root().localToScene(Point3D.ZERO));
                 });
-                optSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
+                optSoundEffects().ifPresent(PacManGameSoundEffects::playEnergizerExplosion);
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
@@ -244,12 +244,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Pac pac = e.pac();
         final GameLevel level = game().session().level();
 
-        optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
         if (!game().playConfig().rules().isLevelCompleted(level)) {
             final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
             systems3D.animationSystem().setPowerMode(pac, true);
             playScene3D.animationSystem().startWallFlashing();
-            optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
     }
 
@@ -260,12 +260,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         systems3D.animationSystem().setPowerMode(pac, false);
         playScene3D.animationSystem().stopWallFlashing();
-        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent ignoredEvent) {
-        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::playExtraLifeSound);
     }
 
     // Private state-specific handlers
@@ -304,7 +304,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         game().state().timer().resetToIndefiniteDuration();
 
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
@@ -317,7 +317,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
         pacSystems3D.animationSystem().playDyingAnimation(
             level.entitySet().pac(),
-            () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
+            () -> optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound),
             game().state()::triggerTimeout
         );
     }
@@ -343,7 +343,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         houseSystem3D.hideDoors(house);
 
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
         final GameLevelView3D level3D = assertLevel3D();
         playScene3D.animationSystem().stopAllAnimations();
@@ -419,7 +419,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        app().variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+        app().variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -75,7 +75,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     private ArcadePacMan_RenderConfig renderConfig;
     private AssetMap assets;
-    private GameSoundEffects soundEffects;
+    private PacManGameSoundEffects soundEffects;
 
     public ArcadePacMan_UIConfig() {
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
@@ -136,7 +136,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Optional<GameSoundEffects> optSoundEffects() {
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 
@@ -161,7 +161,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
-        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects = new PacManGameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 9);
         soundEffects.registerSirens(
             RM.url("sound/siren_1.mp3"),

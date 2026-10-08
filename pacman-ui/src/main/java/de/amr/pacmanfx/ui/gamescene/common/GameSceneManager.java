@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -156,7 +156,7 @@ public class GameSceneManager {
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {
-            variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            variantConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
 
         playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)

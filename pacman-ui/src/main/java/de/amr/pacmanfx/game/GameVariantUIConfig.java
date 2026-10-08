@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 
 import java.util.Map;
 import java.util.Optional;
@@ -55,7 +55,7 @@ public interface GameVariantUIConfig extends Disposable {
     /**
      * @return the sound effects for this game variant
      */
-    Optional<GameSoundEffects> optSoundEffects();
+    Optional<PacManGameSoundEffects> optSoundEffects();
 
     /**
      * @return the game level map ("world") settings
