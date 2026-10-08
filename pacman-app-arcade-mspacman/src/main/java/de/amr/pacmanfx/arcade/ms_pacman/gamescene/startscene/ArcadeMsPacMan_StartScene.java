@@ -36,25 +36,11 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         TextView.create("PTS",                    ArcadeColor.ORANGE.color(), GlobalFonts.ARCADE.font(6), 25, 25)
     );
 
-    private final ImageView msPacManImageView;
-    private final ImageView copyrightImageView;
+    private ImageView msPacManImageView;
+    private ImageView copyrightImageView;
     private final List<TextView> copyrightTexts = new ArrayList<>();
 
-    public ArcadeMsPacMan_StartScene() {
-        msPacManImageView = new ImageView();
-        msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
-        msPacManImageView.pos().set(13 * TS, 23.5 * TS);
-        msPacManImageView.show();
-
-        copyrightImageView = new ImageView();
-        copyrightImageView.show();
-        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
-
-        copyrightTexts.add(TextView.create("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
-        copyrightTexts.add(TextView.create("MIDWAY MFG CO", ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 13, 30));
-        copyrightTexts.add(TextView.create("1980/1981",     ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 14, 32));
-        copyrightTexts.forEach(TextView::show);
-    }
+    public ArcadeMsPacMan_StartScene() {}
 
     @Override
     public Stream<Renderable> renderables() {
@@ -69,7 +55,21 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     protected void onEngineConnected() {
         final AssetMap assets = engine().gameVariantManager().currentRuntime().uiConfig().assets();
+
+        msPacManImageView = new ImageView();
+        msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
+        msPacManImageView.pos().set(13 * TS, 23.5 * TS);
+        msPacManImageView.show();
+
+        copyrightImageView = new ImageView();
         copyrightImageView.image().setImage(assets.image("logo.midway"));
+        copyrightImageView.show();
+        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
+
+        copyrightTexts.add(TextView.create("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
+        copyrightTexts.add(TextView.create("MIDWAY MFG CO", ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 13, 30));
+        copyrightTexts.add(TextView.create("1980/1981",     ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 14, 32));
+        copyrightTexts.forEach(TextView::show);
     }
 
     @Override
