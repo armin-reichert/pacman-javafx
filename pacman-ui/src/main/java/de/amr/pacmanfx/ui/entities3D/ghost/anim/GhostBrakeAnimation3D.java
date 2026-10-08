@@ -62,8 +62,10 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        final Node root = ghost.assertComponent(GhostView3D.class).root();
-        root.setRotationAxis(Rotate.Y_AXIS);
-        root.setRotate(0);
+        ghost.optComponent(GhostView3D.class).ifPresent(view3D -> {
+            final Node root = view3D.root();
+            root.setRotationAxis(Rotate.Y_AXIS);
+            root.setRotate(0);
+        });
     }
 }

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 
 public class World3DUpdateSystem {
 
@@ -27,9 +28,11 @@ public class World3DUpdateSystem {
     }
 
     private void updatePac3D(Pac pac) {
-        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        pacSystems3D.transformSystem().update(pac);
-        pacSystems3D.animationSystem().updateAnimations(pac);
+        if (pac.hasComponent(PacView3D.class)) {
+            final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+            pacSystems3D.transformSystem().update(pac);
+            pacSystems3D.animationSystem().updateAnimations(pac);
+        }
     }
 
     private void updateLivesCounter3D(LivesCounter livesCounter) {
