@@ -70,7 +70,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         this.playScene3D = playScene3D;
     }
 
-    private PacManGameEngineContext app() {
+    private PacManGameEngineContext engine() {
         return playScene3D.engine();
     }
 
@@ -79,7 +79,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private Optional<PacManGameSoundEffects> optSoundEffects() {
-        return app().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return engine().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(app().ui().viewModel().common3DSettings(), game().session().level());
+            handleTestState(engine().ui().viewModel().common3DSettings(), game().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -207,7 +207,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevelView3D level3D = assertLevel3D();
-        final long tick = app().clock().currentTick();
+        final long tick = engine().clock().currentTick();
 
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
@@ -324,7 +324,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevelView3D level3D) {
         final GameSession session = game().session();
-        final GameVariantUIConfig uiConfig = app().gameVariantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = engine().gameVariantManager().currentRuntime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, uiConfig, index);
@@ -332,7 +332,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameViewModel viewModel = app().ui().viewModel();
+        final GameViewModel viewModel = engine().ui().viewModel();
         final GameLevel level = game().session().level();
         final House house = level.entitySet().entities().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
@@ -409,7 +409,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevelView3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            app().ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
+            engine().ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
         playScene3D.animationSystem().stopAllAnimations();
@@ -419,7 +419,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        app().gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
+        engine().gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

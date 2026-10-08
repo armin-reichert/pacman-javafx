@@ -37,7 +37,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void setApp(PacManGameEngineContext app) {}
+    public void setEngine(PacManGameEngineContext engine) {}
 
     public TileMapEditor editor() {
         return editor;

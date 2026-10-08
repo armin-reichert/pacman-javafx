@@ -43,7 +43,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected PacManGameEngineContext app;
+    protected PacManGameEngineContext engine;
 
     protected AbstractGameScene gameScene;
 
@@ -92,34 +92,34 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (app != null) {
-                app.soundManager().voice().stop();
-                app.ui().shortMessage(app.translationManager().translate("flash.shut_up"));
+            if (engine != null) {
+                engine.soundManager().voice().stop();
+                engine.ui().shortMessage(engine.translationManager().translate("flash.shut_up"));
             }
         }
     }
 
     @Override
     public PacManGameEngineContext engine() {
-        return app;
+        return engine;
     }
 
     @Override
     public void setEngine(PacManGameEngineContext engine) {
-        this.app = requireNonNull(engine);
+        this.engine = requireNonNull(engine);
     }
 
     @Override
     public void onEnter() {
-        app.gameVariantManager().selectVariant(gameVariantName);
+        engine.gameVariantManager().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        app.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        engine.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        app.soundManager().voice().stop();
+        engine.soundManager().voice().stop();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class FlyerStartPage implements StartPage {
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            app.runAction(app.commonActions().gameFlowActions().actionStartGame());
+            engine.runAction(engine.commonActions().gameFlowActions().actionStartGame());
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);

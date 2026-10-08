@@ -16,7 +16,7 @@ public class ArcadePacMan_App extends Application {
 
     private GameBox gameBox;
 
-    private PacManGameEngine app;
+    private PacManGameEngine engine;
 
     @Override
     public void init() {
@@ -25,7 +25,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        app = new PacManGameEngineBuilder()
+        engine = new PacManGameEngineBuilder()
             .cartridges(ArcadePacMan_Cartridge.CARTRIDGE)
             .uiSettings(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"))
             .startPage(ArcadePacMan_StartPage::new)
@@ -34,13 +34,13 @@ public class ArcadePacMan_App extends Application {
             .buildEngine(gameBox)
             .orElse(null);
 
-        if (app != null) {
-            app.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        if (engine != null) {
+            engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
         }
     }
 
     @Override
     public void stop() {
-        if (app != null) app.terminate();
+        if (engine != null) engine.terminate();
     }
 }

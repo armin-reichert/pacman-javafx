@@ -44,7 +44,7 @@ public class XXL_OptionMenu extends OptionMenu {
     private Renderer chaseAnimationRenderer;
     private boolean animationDirty;
 
-    private PacManGameEngineContext app;
+    private PacManGameEngineContext engine;
 
     private ObservableValue<Double> scaling;
 
@@ -71,7 +71,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
             if (animationDirty) {
-                final var runtime = app.gameVariantManager().currentRuntime();
+                final var runtime = engine.gameVariantManager().currentRuntime();
                 stopChaseAnimation();
                 createNewChaseAnimation(runtime, canvas);
                 animationDirty = false;
@@ -111,7 +111,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     public void init(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
+        this.engine = requireNonNull(app);
 
         final GameUI ui = app.ui();
         final String variantName = app.gameVariantManager().currentVariantName();
@@ -205,15 +205,15 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
-        app.gameVariantManager().selectVariant(newID.name());
+        engine.gameVariantManager().selectVariant(newID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        app.ui().viewModel().common3DSettings().view3DEnabledProperty().set(newValue);
+        engine.ui().viewModel().common3DSettings().view3DEnabledProperty().set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        app.currentGame().session().setCutScenesEnabled(newValue);
+        engine.currentGame().session().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

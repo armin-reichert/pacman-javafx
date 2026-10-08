@@ -53,17 +53,17 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final PacManGameEngineContext app;
+    private final PacManGameEngineContext engine;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
+    public HelpInfo(PacManGameEngineContext engine) {
+        this.engine = requireNonNull(engine);
     }
 
     private String translate(String key, Object... args) {
-        return app.translationManager().translate(key, args);
+        return engine.translationManager().translate(key, args);
     }
 
     public Pane createPane(PacManGameEngineContext appContext, Color backgroundColor, Font font) {

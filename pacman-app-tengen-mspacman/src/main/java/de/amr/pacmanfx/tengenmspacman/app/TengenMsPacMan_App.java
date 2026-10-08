@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 public class TengenMsPacMan_App extends Application {
 
     private GameBox gameBox;
-    private PacManGameEngine app;
+    private PacManGameEngine engine;
 
     @Override
     public void init() {
@@ -27,7 +27,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        app = new PacManGameEngineBuilder()
+        engine = new PacManGameEngineBuilder()
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
@@ -36,15 +36,15 @@ public class TengenMsPacMan_App extends Application {
             .buildEngine(gameBox)
             .orElse(null);
 
-        if (app != null) {
-            app.showGameVariant(TENGEN_MS_PACMAN);
+        if (engine != null) {
+            engine.showGameVariant(TENGEN_MS_PACMAN);
         }
     }
 
     @Override
     public void stop() {
-        if (app != null) {
-            app.terminate();
+        if (engine != null) {
+            engine.terminate();
         }
     }
 }

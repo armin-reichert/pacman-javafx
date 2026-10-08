@@ -42,7 +42,7 @@ public final class GameViewManager {
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.setApp(app));
+        views.values().forEach(gameView -> gameView.setEngine(app));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {

@@ -22,11 +22,11 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final PacManGameEngineContext app;
+    private final PacManGameEngineContext engine;
 
-    public ContextMenuManager(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
-        app.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+    public ContextMenuManager(PacManGameEngineContext engine) {
+        this.engine = requireNonNull(engine);
+        engine.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
@@ -39,16 +39,16 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
         contextMenu.getItems().clear();
 
-        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = app.translationManager();
+        engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
+            final TranslationManager translations = engine.translationManager();
             // Add 2D play scene-specific entries
-            if (app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(
-                    app,
+                    engine,
                     contextMenu,
                     translations,
-                    app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                    engine.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
             // Add game scene provided menu entries
@@ -56,7 +56,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(app.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
+            contextMenu.show(engine.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }

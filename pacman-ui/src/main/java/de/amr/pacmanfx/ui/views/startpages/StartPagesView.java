@@ -27,7 +27,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private PacManGameEngineContext app;
+    private PacManGameEngineContext engine;
 
     private final Carousel carousel;
 
@@ -59,8 +59,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setApp(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
+    public void setEngine(PacManGameEngineContext engine) {
+        this.engine = requireNonNull(engine);
     }
 
     @Override
@@ -125,6 +125,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return app != null ? app.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return engine != null ? engine.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

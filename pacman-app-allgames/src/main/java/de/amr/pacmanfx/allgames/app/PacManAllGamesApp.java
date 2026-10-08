@@ -25,7 +25,8 @@ import javafx.stage.Stage;
 public class PacManAllGamesApp extends Application {
 
     private GameBox gameBox;
-    private PacManGameEngine app;
+    private PacManGameEngine engine;
+
     private boolean includeTests;
 
     @Override
@@ -36,7 +37,7 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        app = new PacManGameEngineBuilder()
+        engine = new PacManGameEngineBuilder()
             .cartridges(
                 ArcadePacMan_Cartridge.CARTRIDGE,
                 ArcadeMsPacMan_Cartridge.CARTRIDGE,
@@ -54,16 +55,16 @@ public class PacManAllGamesApp extends Application {
             .buildEngine(gameBox)
             .orElse(null);
 
-        if (app != null) {
-            app.watchdog().addEventListener(XXL_WorldMapManager.instance());
-            app.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        if (engine != null) {
+            engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
+            engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
         }
     }
 
     @Override
     public void stop() {
-        if (app != null) {
-            app.terminate();
+        if (engine != null) {
+            engine.terminate();
         }
     }
 }

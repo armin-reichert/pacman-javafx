@@ -24,7 +24,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameBox gameBox;
 
-    private final PacManGameEngineContext app;
+    private final PacManGameEngineContext engine;
 
     private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
 
@@ -32,9 +32,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(GameBox gameBox, PacManGameEngineContext app, GameViewModel viewModel) {
+    public DefaultGameVariantManager(GameBox gameBox, PacManGameEngineContext engine, GameViewModel viewModel) {
         this.gameBox = requireNonNull(gameBox);
-        this.app = requireNonNull(app);
+        this.engine = requireNonNull(engine);
         this.viewModel = requireNonNull(viewModel);
     }
 
@@ -42,7 +42,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, app, variantName, includeInteractiveTests);
+        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, engine, variantName, includeInteractiveTests);
         configsByName.put(variantName, gameVariantRuntime);
     }
 

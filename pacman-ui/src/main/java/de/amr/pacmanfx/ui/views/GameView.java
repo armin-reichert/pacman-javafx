@@ -26,7 +26,7 @@ public interface GameView extends QuitHandler {
         return Optional.empty();
     }
 
-    void setApp(PacManGameEngineContext app);
+    void setEngine(PacManGameEngineContext engine);
 
     void onEnter();
 
