@@ -14,9 +14,9 @@ public interface StartPage {
 
     Pane rootPane();
 
-    PacManGameEngineContext app();
+    PacManGameEngineContext engine();
 
-    void setGameApp(PacManGameEngineContext app);
+    void setEngine(PacManGameEngineContext engine);
 
     void onEnter();
 

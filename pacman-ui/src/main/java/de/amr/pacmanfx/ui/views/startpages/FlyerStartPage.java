@@ -84,7 +84,7 @@ public class FlyerStartPage implements StartPage {
 
     @Override
     public void onInput() {
-        final Keyboard keyboard = app().input().keyboard();
+        final Keyboard keyboard = engine().input().keyboard();
         if (keyboard.isKeyPressed(KeyCode.DOWN)) {
             flyer.nextFlyerPage();
         }
@@ -100,13 +100,13 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public PacManGameEngineContext app() {
+    public PacManGameEngineContext engine() {
         return app;
     }
 
     @Override
-    public void setGameApp(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
+    public void setEngine(PacManGameEngineContext engine) {
+        this.app = requireNonNull(engine);
     }
 
     @Override

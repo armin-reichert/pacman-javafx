@@ -66,16 +66,16 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public PacManGameEngineContext app() {
+    public PacManGameEngineContext engine() {
         return app;
     }
 
     @Override
-    public void setGameApp(PacManGameEngineContext app) {
-        this.app = requireNonNull(app);
+    public void setEngine(PacManGameEngineContext engine) {
+        this.app = requireNonNull(engine);
         // Ensure both game variants are available
-        app.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
-        app.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
+        engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
+        engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
     }
 
     @Override
