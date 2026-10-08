@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -51,11 +51,11 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(PacManGameEngineContext engine) {
+    public void forceGameSceneUpdate(PacManGamesEngine engine) {
         updateGameSceneAndForceReload(engine, true);
     }
 
-    public void updateGameSceneAndForceReload(PacManGameEngineContext engine, boolean forceReload) {
+    public void updateGameSceneAndForceReload(PacManGamesEngine engine, boolean forceReload) {
         final GameUI ui = engine.ui();
         final GameVariantUIConfig uiConfig = engine.gameVariantManager().currentRuntime().uiConfig();
         final GameContext game = engine.currentGame();

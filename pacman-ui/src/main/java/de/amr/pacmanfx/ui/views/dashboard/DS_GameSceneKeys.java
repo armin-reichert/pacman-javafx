@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -21,12 +21,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGameEngineContext app) {
+    public void update(PacManGamesEngine app) {
         super.update(app);
         app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
     }
 
-    private void updateInfo(PacManGameEngineContext app, GameScene gameScene) {
+    private void updateInfo(PacManGamesEngine app, GameScene gameScene) {
         clearSection();
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {

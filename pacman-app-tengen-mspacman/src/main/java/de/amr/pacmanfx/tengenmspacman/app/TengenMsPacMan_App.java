@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGameEngineBuilder;
-import de.amr.pacmanfx.game.PacManGameEngine;
+import de.amr.pacmanfx.game.PacManGamesEngineImpl;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import javafx.application.Application;
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 public class TengenMsPacMan_App extends Application {
 
     private GameBox gameBox;
-    private PacManGameEngine engine;
+    private PacManGamesEngineImpl engine;
 
     @Override
     public void init() {

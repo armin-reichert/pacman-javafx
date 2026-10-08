@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
 
@@ -30,7 +30,7 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 app.soundManager().voice().stop();
                 app.soundManager().setEnabled(true);
                 app.currentGame().coinMechanism().insertCoin();
@@ -40,7 +40,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(PacManGameEngineContext app) {
+            public boolean isEnabled(PacManGamesEngine app) {
                 final GameSession session = app.currentGame().session();
                 final AbstractGameState gameState = app.currentGame().state();
                 if (app.currentGame().coinMechanism().isFull()) {
@@ -57,13 +57,13 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 app.soundManager().voice().stop();
                 app.currentGame().playConfig().gameFlow().enterState(app.currentGame(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
-            public boolean isEnabled(PacManGameEngineContext app) {
+            public boolean isEnabled(PacManGamesEngine app) {
                 if (app.currentGame().coinMechanism().isEmpty()) {
                     return false;
                 }

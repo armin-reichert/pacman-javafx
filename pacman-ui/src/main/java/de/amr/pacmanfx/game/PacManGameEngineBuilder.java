@@ -7,7 +7,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -94,12 +94,12 @@ public class PacManGameEngineBuilder {
         return this;
     }
 
-    public Optional<PacManGameEngine> buildEngine(GameBox gameBox) {
+    public Optional<PacManGamesEngineImpl> buildEngine(GameBox gameBox) {
         try {
             validateConfigurationData();
             gameBox.insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var engine = new PacManGameEngine(gameBox);
+            final var engine = new PacManGamesEngineImpl(gameBox);
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
             engine.setUI(ui, dashboardFactory);
@@ -115,7 +115,7 @@ public class PacManGameEngineBuilder {
         }
     }
 
-    private void addStartPages(PacManGameEngineContext appContext) {
+    private void addStartPages(PacManGamesEngine appContext) {
         final StartPagesView startPagesView = appContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();

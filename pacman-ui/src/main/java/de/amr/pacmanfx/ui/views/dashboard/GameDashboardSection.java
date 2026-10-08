@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.control.Button;
 
@@ -32,21 +32,21 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setGameApp(PacManGameEngineContext app) {}
+    public void setGameApp(PacManGamesEngine app) {}
 
-    public void update(PacManGameEngineContext app) {
+    public void update(PacManGamesEngine app) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(PacManGameEngineContext app, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(PacManGamesEngine app, Function<GameScene, String> fnInfo) {
         return () -> app.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(PacManGameEngineContext app, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(PacManGamesEngine app, Function<GameLevel, Object> fnInfo) {
         return () -> app.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(PacManGameEngineContext app, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(PacManGamesEngine app, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(app.currentGame().playConfig().rules());
     }
 
@@ -56,7 +56,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(PacManGameEngineContext app, Button button, GameAction gameAction) {
+    protected void setGameAction(PacManGamesEngine app, Button button, GameAction gameAction) {
         button.setOnAction(_ -> app.runAction(gameAction));
     }
 }

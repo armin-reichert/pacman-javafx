@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -74,12 +74,12 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(PacManGameEngineContext app) {
+    public Map<Named, Object> createExtensions(PacManGamesEngine app) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void load(PacManGameEngineContext app) {
+    public void load(PacManGamesEngine app) {
         assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
@@ -91,7 +91,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(PacManGameEngineContext app) {
+    public void unload(PacManGamesEngine app) {
         unloadSounds(app.soundManager());
         dispose();
     }

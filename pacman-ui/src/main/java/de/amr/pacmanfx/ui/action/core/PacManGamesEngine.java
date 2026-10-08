@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Input;
@@ -21,7 +20,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 /**
  * The game "engine".
  */
-public interface PacManGameEngineContext {
+public interface PacManGamesEngine {
 
     void exitGameVariant(GameVariantRuntime runtime);
 

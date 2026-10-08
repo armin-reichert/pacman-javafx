@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -99,13 +99,13 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGameEngineContext appContext) {
+    public void setGameApp(PacManGamesEngine appContext) {
         tableView.prefHeightProperty().bind(appContext.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(PacManGameEngineContext app) {
+    public void update(PacManGamesEngine app) {
         super.update(app);
 
         if (app.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {

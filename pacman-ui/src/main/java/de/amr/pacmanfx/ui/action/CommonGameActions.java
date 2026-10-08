@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -62,7 +62,7 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction("toggle_collision_strategy") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 final GameContext game = app.currentGame();
                 final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();

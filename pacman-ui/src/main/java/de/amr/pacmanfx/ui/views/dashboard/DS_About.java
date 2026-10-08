@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -24,7 +24,7 @@ public class DS_About extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGameEngineContext appContext) {
+    public void setGameApp(PacManGamesEngine appContext) {
         final var myImage = new ImageView(ARMIN_1970);
         myImage.setFitWidth(250);
         myImage.setPreserveRatio(true);

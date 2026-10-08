@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
@@ -43,7 +43,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private PacManGameEngineContext engine;
+    private PacManGamesEngine engine;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
@@ -67,12 +67,12 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public PacManGameEngineContext engine() {
+    public PacManGamesEngine engine() {
         return engine;
     }
 
     @Override
-    public void setEngine(PacManGameEngineContext engine) {
+    public void setEngine(PacManGamesEngine engine) {
         this.engine = requireNonNull(engine);
         // Ensure both game variants are available
         engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());

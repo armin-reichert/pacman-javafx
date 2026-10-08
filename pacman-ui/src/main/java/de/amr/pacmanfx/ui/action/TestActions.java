@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -27,39 +27,39 @@ public class TestActions {
 
         actionTestCutScenes = new GameAction("test_cut_scenes") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), TestStateID.CUT_SCENE_TEST);
                 app.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
             @Override
-            public boolean isEnabled(PacManGameEngineContext app) {
+            public boolean isEnabled(PacManGamesEngine app) {
                 return app.currentGame().playConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction("short_level_test") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 app.currentGame().playConfig().gameFlow().restartGameState(app.currentGame(), TestStateID.LEVEL_TEST_S);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
             @Override
-            public boolean isEnabled(PacManGameEngineContext app) {
+            public boolean isEnabled(PacManGamesEngine app) {
                 return app.currentGame().playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction("medium_level_test") {
             @Override
-            public void execute(PacManGameEngineContext app) {
+            public void execute(PacManGamesEngine app) {
                 app.currentGame().playConfig().gameFlow().restartGameState(app.currentGame(), TestStateID.LEVEL_TEST_M);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 
             @Override
-            public boolean isEnabled(PacManGameEngineContext app) {
+            public boolean isEnabled(PacManGamesEngine app) {
                 return app.currentGame().playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };

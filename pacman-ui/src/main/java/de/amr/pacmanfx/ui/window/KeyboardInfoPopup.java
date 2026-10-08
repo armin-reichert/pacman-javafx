@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -62,7 +62,7 @@ public class KeyboardInfoPopup {
         rootPane.getChildren().add(keyInfoBox);
     }
 
-    public void setGameApp(PacManGameEngineContext app) {
+    public void setGameApp(PacManGamesEngine app) {
         rootPane.visibleProperty().bind(app.ui().viewModel().keyboardMonitorOnProperty());
 
         app.input().keyboard().addStateListener(state -> {

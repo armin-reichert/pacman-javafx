@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,7 +24,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameBox gameBox;
 
-    private final PacManGameEngineContext engine;
+    private final PacManGamesEngine engine;
 
     private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
 
@@ -32,7 +32,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(GameBox gameBox, PacManGameEngineContext engine, GameViewModel viewModel) {
+    public DefaultGameVariantManager(GameBox gameBox, PacManGamesEngine engine, GameViewModel viewModel) {
         this.gameBox = requireNonNull(gameBox);
         this.engine = requireNonNull(engine);
         this.viewModel = requireNonNull(viewModel);
@@ -91,7 +91,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, PacManGameEngineContext app, String variantName, boolean includeInteractiveTests) {
+    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, PacManGamesEngine app, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
         final var variantRuntime = new GameVariantRuntime(gameBox, cartridge, app);
         if (includeInteractiveTests) {

@@ -10,7 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private PacManGameEngineContext engine;
+    private PacManGamesEngine engine;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -71,7 +71,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     // Interface GameScene
 
     @Override
-    public final void setEngine(PacManGameEngineContext engine) {
+    public final void setEngine(PacManGamesEngine engine) {
         requireNonNull(engine);
         if (this.engine != null) {
             return;
@@ -82,7 +82,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     @Override
-    public PacManGameEngineContext engine() {
+    public PacManGamesEngine engine() {
         return requireNonNull(engine);
     }
 
