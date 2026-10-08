@@ -158,14 +158,14 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         final GameSession session = game().session();
         session.setHudVisible(false);
 
-        final var actions = app().gameVariantManager().currentRuntime()
+        final var actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
         bindingsMap.bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
+        bindingsMap.registerAllBindings(engine().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(PlayOption.PAC_BOOSTER);
         gameOptionValues(session).setCanStartNewGame(true);
@@ -191,7 +191,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     @Override
     public void onInput() {
         final GameSession session = game().session();
-        final Joypad joypad = app().input().joypad();
+        final Joypad joypad = engine().input().joypad();
 
         if (joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption.get().succ());
@@ -200,7 +200,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             selectedOption.set(selectedOption.get().pred());
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (joypad.isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (joypad.isButtonPressed(JoypadButton.A) || engine().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case DIFFICULTY     -> setNextDifficultyValue(session);
@@ -209,7 +209,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (joypad.isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (joypad.isButtonPressed(JoypadButton.B) || engine().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case DIFFICULTY     -> setPrevDifficultyValue(session);
@@ -341,7 +341,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private JoypadKeyBindingsView createJoypadKeyBindingsView() {
-        final Joypad joypad = app().input().joypad();
+        final Joypad joypad = engine().input().joypad();
         final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
         final boolean visible = uiSettings.joypadBindingsDisplayed.get();
         return visible ?

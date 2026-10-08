@@ -71,18 +71,18 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     // Interface GameScene
 
     @Override
-    public final void setApp(PacManGameEngineContext app) {
-        requireNonNull(app);
+    public final void setEngine(PacManGameEngineContext engine) {
+        requireNonNull(engine);
         if (this.app != null) {
             return;
         }
-        this.app = app;
+        this.app = engine;
         onAppConnected();
         Logger.info("Game scene {} connected with app", getClass().getSimpleName());
     }
 
     @Override
-    public PacManGameEngineContext app() {
+    public PacManGameEngineContext engine() {
         return requireNonNull(app);
     }
 

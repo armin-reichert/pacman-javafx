@@ -71,7 +71,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private PacManGameEngineContext app() {
-        return playScene3D.app();
+        return playScene3D.engine();
     }
 
     private GameContext game() {

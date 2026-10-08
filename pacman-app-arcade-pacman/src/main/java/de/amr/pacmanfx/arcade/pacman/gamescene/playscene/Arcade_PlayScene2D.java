@@ -72,7 +72,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             return Stream.empty();
         }
 
-        final GameVariantRenderConfig renderConfig = app().gameVariantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig();
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
@@ -120,30 +120,30 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = app().translationManager();
-        final CheatActions cheatActions = app().commonActions().cheatActions();
+        final TranslationManager translations = engine().translationManager();
+        final CheatActions cheatActions = engine().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app().runAction(cheatActions.actionActivateAutopilot());
+                engine().runAction(cheatActions.actionActivateAutopilot());
             } else {
-                app().runAction(cheatActions.actionDeactivateAutopilot());
+                engine().runAction(cheatActions.actionDeactivateAutopilot());
             }
         });
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app().runAction(cheatActions.actionActivateImmunity());
+                engine().runAction(cheatActions.actionActivateImmunity());
             } else {
-                app().runAction(cheatActions.actionDeactivateImmunity());
+                engine().runAction(cheatActions.actionDeactivateImmunity());
             }
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(engine(), contextMenu, translations, engine().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -164,22 +164,22 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindings().registry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = app().gameVariantManager().currentRuntime()
+            final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
             soundManager().setEnabled(false);
         }
         else {
-            bindingsRegistry.registerAllBindings(app().commonActions().steeringActions().bindings());
-            bindingsRegistry.registerAllBindings(app().commonActions().cheatActions().bindings());
+            bindingsRegistry.registerAllBindings(engine().commonActions().steeringActions().bindings());
+            bindingsRegistry.registerAllBindings(engine().commonActions().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
             soundManager().setEnabled(true);
         }
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(app().gameVariantManager().currentRuntime(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(engine().gameVariantManager().currentRuntime(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
@@ -198,7 +198,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
         renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
 
-        final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(app().ui().viewModel(), level.worldMap());
+        final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(engine().ui().viewModel(), level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
             renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);

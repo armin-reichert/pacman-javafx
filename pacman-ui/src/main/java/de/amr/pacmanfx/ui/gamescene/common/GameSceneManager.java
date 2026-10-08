@@ -51,14 +51,14 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(PacManGameEngineContext app) {
-        updateGameSceneAndForceReload(app, true);
+    public void forceGameSceneUpdate(PacManGameEngineContext engine) {
+        updateGameSceneAndForceReload(engine, true);
     }
 
-    public void updateGameSceneAndForceReload(PacManGameEngineContext app, boolean forceReload) {
-        final GameUI ui = app.ui();
-        final GameVariantUIConfig uiConfig = app.gameVariantManager().currentRuntime().uiConfig();
-        final GameContext game = app.game();
+    public void updateGameSceneAndForceReload(PacManGameEngineContext engine, boolean forceReload) {
+        final GameUI ui = engine.ui();
+        final GameVariantUIConfig uiConfig = engine.gameVariantManager().currentRuntime().uiConfig();
+        final GameContext game = engine.game();
         final GameSession session = game.session();
         final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
 
@@ -68,7 +68,7 @@ public class GameSceneManager {
             throw new IllegalStateException("Could not determine next game scene");
         }
 
-        nextGameScene.setApp(app);
+        nextGameScene.setEngine(engine);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {

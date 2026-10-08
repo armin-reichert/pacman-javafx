@@ -168,7 +168,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = app().translationManager();
+        final TranslationManager translations = engine().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -188,8 +188,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, engine().ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(engine(), contextMenu, translations, engine().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -242,7 +242,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registry().registerAllBindings(actions().steeringBindings());
 
-        actionBindings().registry().registerAllBindings(app().commonActions().cheatActions().bindings());
+        actionBindings().registry().registerAllBindings(engine().commonActions().cheatActions().bindings());
 
         actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
         actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());
@@ -265,7 +265,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = app().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variantConfig = engine().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();

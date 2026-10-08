@@ -68,14 +68,14 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     protected void onAppConnected() {
-        final AssetMap assets = app().gameVariantManager().currentRuntime().uiConfig().assets();
+        final AssetMap assets = engine().gameVariantManager().currentRuntime().uiConfig().assets();
         copyrightImageView.image().setImage(assets.image("logo.midway"));
     }
 
     @Override
     public void onActivate() {
         // Bind "insert coin" + "start game" actions
-        final Arcade_Actions actions = app().gameVariantManager().currentRuntime()
+        final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registry().registerAllBindings(actions.gameStartActionBindings());

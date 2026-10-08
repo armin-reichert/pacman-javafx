@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public interface GameScene extends Disposable, QuitHandler {
 
     default GameContext game() {
-        return app().game();
+        return engine().game();
     }
 
     default GameFlow gameFlow() {
@@ -33,11 +33,11 @@ public interface GameScene extends Disposable, QuitHandler {
     }
 
     default GameVariantRuntime runtime() {
-        return app().gameVariantManager().currentRuntime();
+        return engine().gameVariantManager().currentRuntime();
     }
 
     default GameViewModel viewModel() {
-        return app().ui().viewModel();
+        return engine().ui().viewModel();
     }
 
     default Optional<ContextMenu> optContextMenu() {
@@ -53,7 +53,7 @@ public interface GameScene extends Disposable, QuitHandler {
     }
 
     default SoundManager soundManager() {
-        return app().soundManager();
+        return engine().soundManager();
     }
 
     default Optional<PacManGameSoundEffects> optSoundEffects() {
@@ -65,9 +65,9 @@ public interface GameScene extends Disposable, QuitHandler {
      */
     Stream<Renderable> renderables();
 
-    void setApp(PacManGameEngineContext app);
+    void setEngine(PacManGameEngineContext engine);
 
-    PacManGameEngineContext app();
+    PacManGameEngineContext engine();
 
     /**
      * Hook called when entering this 2D scene from a 3D scene.

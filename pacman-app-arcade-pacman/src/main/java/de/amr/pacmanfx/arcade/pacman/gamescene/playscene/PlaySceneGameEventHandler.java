@@ -40,7 +40,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return gameScene.app().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return gameScene.engine().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
@@ -121,7 +121,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = gameScene.app().clock().currentTick();
+        final long tick = gameScene.engine().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
@@ -142,6 +142,6 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onTestStarted(TestStartedEvent e) {
-        gameScene.app().ui().shortMessage("Testing level %d".formatted(e.level().number()));
+        gameScene.engine().ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

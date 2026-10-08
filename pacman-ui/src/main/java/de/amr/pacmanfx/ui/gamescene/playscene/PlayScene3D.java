@@ -106,9 +106,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     protected void onAppConnected() {
-        final GameViewModel viewModel = app().ui().viewModel();
+        final GameViewModel viewModel = engine().ui().viewModel();
 
-        textPicker = new RandomTextPicker(app().translationManager().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
         final var comp3D = assertComponent(GameSceneView3D.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
@@ -155,14 +155,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        final String scoreTitle = app().translationManager().translate("score.score");
-        final String highScoreTitle = app().translationManager().translate("score.high_score");
+        final String scoreTitle = engine().translationManager().translate("score.score");
+        final String highScoreTitle = engine().translationManager().translate("score.high_score");
         replaceScoresView(scoreTitle, highScoreTitle);
     }
 
     @Override
     public void onActivate() {
-        final Game3DSettingsVM settings3D = app().ui().viewModel().common3DSettings();
+        final Game3DSettingsVM settings3D = engine().ui().viewModel().common3DSettings();
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
         registerActionBindings();
@@ -172,7 +172,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        app().ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
+        engine().ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         // Remove actor 3D view components
         game().session().optLevel().ifPresent(level -> {
@@ -184,14 +184,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction> executedAction = actionBindings().registry().executeMatchingAction(app());
+        final Optional<GameAction> executedAction = actionBindings().registry().executeMatchingAction(engine());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
                 if (perspective instanceof DronePerspective dronePerspective) {
-                    final Keyboard keyboard = app().input().keyboard();
+                    final Keyboard keyboard = engine().input().keyboard();
                     dronePerspective.handleKeyPressed(keyboard);
                 }
             });
@@ -301,8 +301,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                app().translationManager().translate("score.game_over"),
-                app().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
+                engine().translationManager().translate("score.game_over"),
+                engine().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -334,8 +334,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig uiConfig = app().gameVariantManager().currentRuntime().uiConfig();
-        final GameViewModel viewModel      = app().ui().viewModel();
+        final GameVariantUIConfig uiConfig = engine().gameVariantManager().currentRuntime().uiConfig();
+        final GameViewModel viewModel      = engine().ui().viewModel();
         final GameSession session          = game.session();
 
         if (level3D != null) {
@@ -350,7 +350,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(app().gameVariantManager().currentRuntime(), game.session(), level3D);
+        animationSystem.createAnimations(engine().gameVariantManager().currentRuntime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();
@@ -369,7 +369,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {}
 
     protected void registerActionBindings() {
-        actionBindings().registry().registerAllBindings(app().commonActions().camera3DActions().bindings());
+        actionBindings().registry().registerAllBindings(engine().commonActions().camera3DActions().bindings());
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {

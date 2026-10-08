@@ -64,7 +64,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime gameVariantRuntime = app().gameVariantManager().currentRuntime();
+        final GameVariantRuntime gameVariantRuntime = engine().gameVariantManager().currentRuntime();
         ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
             gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
             gameVariantRuntime.spriteAnimContainer(),
@@ -123,7 +123,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUDStyleComp hudStyle = app().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUDStyleComp hudStyle = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.livesCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.gameScore().setComponent(HUDStyleComp.class, hudStyle);

@@ -21,14 +21,14 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
         bindingsMap.dispose();
 
-        final Arcade_Actions actions = app().gameVariantManager().currentRuntime()
+        final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {
             bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         } else {
-            bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
-            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(engine().commonActions().steeringActions().bindings());
+            bindingsMap.registerAllBindings(engine().commonActions().cheatActions().bindings());
         }
         registerActionBindings();
         Logger.info(actionBindings());

@@ -59,7 +59,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final double infoHeight = tilesPx(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
-        levelInfo.imageProperty().bind(app().ui().viewModel().maze3DSettings().floorColorProperty().map(
+        levelInfo.imageProperty().bind(engine().ui().viewModel().maze3DSettings().floorColorProperty().map(
             color -> createLevelInfoImage(level.number(), session, infoWidth, infoHeight, color))
         );
 
@@ -103,8 +103,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final ActorSpriteAnimController animController = app().game().playConfig().systems().actorSpriteAnimController();
-        final var renderer = app().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
+        final ActorSpriteAnimController animController = engine().game().playConfig().systems().actorSpriteAnimController();
+        final var renderer = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var bindingsMap = actionBindings().registry();
         bindingsMap.dispose();
 
-        final var actions = app().gameVariantManager().currentRuntime()
+        final var actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
@@ -128,7 +128,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             bindingsMap.registerAllBindings(actions.steeringBindings());
             bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(engine().commonActions().cheatActions().bindings());
         }
         registerActionBindings();
 
@@ -143,7 +143,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {
-                scores3D.showTextForScore(app().translationManager().translate("score.game_over"),
+                scores3D.showTextForScore(engine().translationManager().translate("score.game_over"),
                     Color.valueOf(NES_Palette.rgb(0x16)));
             }
             // Always show high score

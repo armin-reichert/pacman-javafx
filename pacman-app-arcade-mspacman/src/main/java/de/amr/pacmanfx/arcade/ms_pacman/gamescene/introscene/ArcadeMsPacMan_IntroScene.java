@@ -68,15 +68,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime runtime = app().gameVariantManager().currentRuntime();
+        final GameVariantRuntime runtime = engine().gameVariantManager().currentRuntime();
 
         final Arcade_Actions arcadeActions = runtime.extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
         actionBindings().registry().registerAllBindings(arcadeActions.gameStartActionBindings());
-        actionBindings().registry().registerAllBindings(app().commonActions().sceneTestActions().bindings());
+        actionBindings().registry().registerAllBindings(engine().commonActions().sceneTestActions().bindings());
 
         view = new IntroSceneView(runtime);
 
-        final ActorSpriteAnimController animController = app().gameVariantManager().currentRuntime()
+        final ActorSpriteAnimController animController = engine().gameVariantManager().currentRuntime()
             .playConfig().systems().actorSpriteAnimController();
 
         ghostInSpotlight = 0;
