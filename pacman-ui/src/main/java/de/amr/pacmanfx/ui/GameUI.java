@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -54,11 +53,15 @@ public class GameUI implements GameEventListener {
     public static final GameUISettings DEFAULT_UI_SETTINGS = loadDefaultSettings();
 
     private final GameWindow window;
+
     private final GameViewManager viewManager;
-    private final SpriteAnimationTimer spriteAnimationTimer;
+
     private final GameViewModel viewModel;
+
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
+
     private final GameUISettings settings;
+
     private final DashboardFactory dashboardFactory;
 
     private GameApp app;
@@ -72,7 +75,6 @@ public class GameUI implements GameEventListener {
 
         viewModel = new GameViewModel();
         viewModel.init(settings);
-        spriteAnimationTimer = new SpriteAnimationTimer();
         viewManager = createViewManager();
     }
 
@@ -125,10 +127,6 @@ public class GameUI implements GameEventListener {
 
     // --- Accessors ---
 
-    public SpriteAnimationTimer spriteAnimTimer() {
-        return spriteAnimationTimer;
-    }
-
     public GameViewManager viewManager() {
         return viewManager;
     }
@@ -139,13 +137,6 @@ public class GameUI implements GameEventListener {
 
     public GameWindow window() {
         return window;
-    }
-
-    // --- Events
-
-    public void terminate() {
-        spriteAnimationTimer.stop();
-        window.mainScene().flashMessageManager().stopAnimationTimer();
     }
 
     // --- General commands ---

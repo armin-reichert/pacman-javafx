@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -68,6 +69,8 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private final GameSceneManager gameSceneManager;
 
+    private final SpriteAnimationTimer spriteAnimationTimer;
+
     private final CommonGameActions actions;
 
     private GameUI ui;
@@ -83,6 +86,7 @@ public final class PacManGamesMasterApp implements GameApp {
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
+        spriteAnimationTimer = new SpriteAnimationTimer();
         translationManager = new CommonTranslationManager();
         gameLoop = new GameLoop(gameBox.clock(), this);
         actions = new CommonGameActions();
@@ -132,6 +136,11 @@ public final class PacManGamesMasterApp implements GameApp {
     @Override
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    @Override
+    public SpriteAnimationTimer spriteAnimationTimer() {
+        return spriteAnimationTimer;
     }
 
     @Override
@@ -228,8 +237,9 @@ public final class PacManGamesMasterApp implements GameApp {
         // Init UI for new runtime (game variant)
         runtime.uiConfig().load(this);
 
-        ui.spriteAnimTimer().attachAnimContainer(runtime.spriteAnimContainer());
-        ui.spriteAnimTimer().start();
+        spriteAnimationTimer.attachAnimContainer(runtime.spriteAnimContainer());
+        spriteAnimationTimer.start();
+
         ui.viewModel().maze3DSettings().init(runtime.uiConfig().worldSettings().maze());
     }
 
@@ -241,7 +251,7 @@ public final class PacManGamesMasterApp implements GameApp {
         variantRuntime.uiConfig().unload(this);
         variantRuntime.spriteAnimContainer().clear();
 
-        ui.spriteAnimTimer().detachAnimationContainer();
+        spriteAnimationTimer.detachAnimationContainer();
         soundManager.dispose();
 
         game.eventManager().removeAllSubscribers();
@@ -272,7 +282,8 @@ public final class PacManGamesMasterApp implements GameApp {
 
     public void terminate() {
         suspendGame();
-        ui.terminate();
+        spriteAnimationTimer.stop();
+        ui.window().mainScene().flashMessageManager().stopAnimationTimer();
         gameBox.dispose();
         Logger.info("Application terminated. There is no way back!");
     }
@@ -299,7 +310,7 @@ public final class PacManGamesMasterApp implements GameApp {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
-        ui.spriteAnimTimer().start();
+        spriteAnimationTimer.start();
 
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
