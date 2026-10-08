@@ -31,7 +31,6 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -250,7 +249,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void playRandomJuniorSound() {
-        final SoundID soundID = switch (randomInt(1, 3)) {
+        final var soundID = switch (randomInt(1, 3)) {
             case 1 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_1;
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();

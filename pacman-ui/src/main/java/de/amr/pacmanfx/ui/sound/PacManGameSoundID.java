@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.ui.sound;
 
-public enum PacManGameSoundID implements SoundID {
+import de.amr.basics.Named;
+
+public enum PacManGameSoundID implements Named {
     BONUS_ACTIVE,
     BONUS_EATEN,
     COIN_INSERTED,

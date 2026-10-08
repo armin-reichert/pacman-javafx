@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.basics.Named;
 
-public enum TengenMsPacManSoundID implements SoundID {
+public enum TengenMsPacManSoundID implements Named {
     OPTION_SELECTION_CHANGE,
     OPTION_VALUE_CHANGE,
     INTERMISSION_4_JUNIOR_1,

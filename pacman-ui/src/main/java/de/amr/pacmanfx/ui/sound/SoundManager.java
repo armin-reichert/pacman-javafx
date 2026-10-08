@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.uilib.widgets.Voice;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -29,13 +30,13 @@ public class SoundManager implements Disposable {
 
     public record MediaPlayerResource(MediaPlayer player) implements SoundResource {}
 
-    public record SoundEntry(Class<? extends SoundResource> type, SoundID id, URL url) {
+    public record SoundEntry(Class<? extends SoundResource> type, Named id, URL url) {
 
-        public static SoundEntry audioClip(SoundID id, URL url) {
+        public static SoundEntry audioClip(Named id, URL url) {
             return new SoundEntry(AudioClipResource.class, id, url);
         }
 
-        public static SoundEntry mediaPlayer(SoundID id, URL url) {
+        public static SoundEntry mediaPlayer(Named id, URL url) {
             return new SoundEntry(MediaPlayerResource.class, id, url);
         }
     }
@@ -44,7 +45,7 @@ public class SoundManager implements Disposable {
 
     private final BooleanProperty mute = new SimpleBooleanProperty(false);
 
-    private final Map<SoundID, SoundResource> soundMap = new HashMap<>();
+    private final Map<Named, SoundResource> soundMap = new HashMap<>();
 
     private final Voice voice = new Voice();
 
@@ -80,14 +81,14 @@ public class SoundManager implements Disposable {
         unregister(entry.id());
     }
 
-    public void addAudioClip(SoundID soundID, URL url) {
+    public void addAudioClip(Named soundID, URL url) {
         requireNonNull(soundID);
         requireNonNull(url);
 
         register(soundID, new AudioClipResource(new AudioClip(url.toExternalForm())));
     }
 
-    public void addMediaPlayer(SoundID soundID, URL url) {
+    public void addMediaPlayer(Named soundID, URL url) {
         requireNonNull(soundID);
         requireNonNull(url);
 
@@ -100,7 +101,7 @@ public class SoundManager implements Disposable {
         register(soundID, new MediaPlayerResource(player));
     }
 
-    public void unregister(SoundID soundID) {
+    public void unregister(Named soundID) {
         requireNonNull(soundID);
         soundMap.remove(soundID);
     }
@@ -125,7 +126,7 @@ public class SoundManager implements Disposable {
         return mute.get();
     }
 
-    public void playLoop(SoundID soundID) {
+    public void playLoop(Named soundID) {
         requireNonNull(soundID);
 
         final SoundResource value = soundMap.get(soundID);
@@ -139,11 +140,11 @@ public class SoundManager implements Disposable {
         play(soundID, MediaPlayer.INDEFINITE);
     }
 
-    public void play(SoundID soundID) {
+    public void play(Named soundID) {
         play(soundID, 1);
     }
 
-    public void play(SoundID soundID, int repetitions) {
+    public void play(Named soundID, int repetitions) {
         requireNonNull(soundID);
         if (isMute() || !isEnabled()) {
             return;
@@ -165,7 +166,7 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public boolean isPlaying(SoundID soundID) {
+    public boolean isPlaying(Named soundID) {
         requireNonNull(soundID);
         return switch (soundMap.get(soundID)) {
             case null -> false;
@@ -174,7 +175,7 @@ public class SoundManager implements Disposable {
         };
     }
 
-    public void pause(SoundID soundID) {
+    public void pause(Named soundID) {
         requireNonNull(soundID);
         switch (soundMap.get(soundID)) {
             case null -> {}
@@ -183,7 +184,7 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void stop(SoundID soundID)  {
+    public void stop(Named soundID)  {
         requireNonNull(soundID);
         switch (soundMap.get(soundID)) {
             case null -> {}
@@ -201,7 +202,7 @@ public class SoundManager implements Disposable {
         Logger.debug("All media players stopped");
     }
 
-    public MediaPlayer mediaPlayer(SoundID soundID) {
+    public MediaPlayer mediaPlayer(Named soundID) {
         requireNonNull(soundID);
         return switch (soundMap.get(soundID)) {
             case MediaPlayerResource(MediaPlayer player) -> player;
@@ -212,7 +213,7 @@ public class SoundManager implements Disposable {
 
     // private
 
-    private void register(SoundID soundID, SoundResource defaultValue) {
+    private void register(Named soundID, SoundResource defaultValue) {
         final SoundResource prevValue = soundMap.put(soundID, defaultValue);
         if (prevValue != null) {
             Logger.warn("Replaced sound id='{}': {} (was: {})", soundID, defaultValue);
