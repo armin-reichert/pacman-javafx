@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class AbstractGameSceneConfig implements GameVariantGameSceneConfig {
+public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     public static Named cutSceneID(int n) {
         return switch (n) {

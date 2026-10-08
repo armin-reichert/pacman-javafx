@@ -14,7 +14,7 @@ import java.util.Optional;
  * Defines the configuration and selection logic for all game scenes belonging to a specific
  * game variant or UI mode.
  */
-public interface GameVariantGameSceneConfig extends Disposable {
+public interface GameSceneConfig extends Disposable {
 
     boolean gameSceneHasID(GameScene gameScene, Named sceneID);
 

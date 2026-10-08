@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -84,7 +84,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     private final Factory3D factory3D;
-    private final GameVariantGameSceneConfig gameSceneConfig;
+    private final GameSceneConfig gameSceneConfig;
     private final TranslationManager translations;
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
@@ -149,7 +149,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public GameVariantGameSceneConfig gameSceneConfig() {
+    public GameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 
