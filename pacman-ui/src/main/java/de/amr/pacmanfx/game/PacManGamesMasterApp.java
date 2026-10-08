@@ -7,6 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -21,6 +22,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
@@ -62,6 +64,8 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private final SoundManager soundManager;
 
+    private final TranslationManager translationManager;
+
     private final GameSceneManager gameSceneManager;
 
     private final CommonGameActions actions;
@@ -79,6 +83,7 @@ public final class PacManGamesMasterApp implements GameApp {
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
+        translationManager = new CommonTranslationManager();
         gameLoop = new GameLoop(gameBox.clock(), this);
         actions = new CommonGameActions();
         gameLoop.setErrorHandler(this::handleFatalError);
@@ -86,7 +91,7 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private void handleFatalError(Throwable reason) {
         suspendGame();
-        final String errorMessage = ui.translationManager().translate("error.oh_no_my_program");
+        final String errorMessage = translationManager.translate("error.oh_no_my_program");
         ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
@@ -127,6 +132,11 @@ public final class PacManGamesMasterApp implements GameApp {
     @Override
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    @Override
+    public TranslationManager translationManager() {
+        return translationManager;
     }
 
     @Override

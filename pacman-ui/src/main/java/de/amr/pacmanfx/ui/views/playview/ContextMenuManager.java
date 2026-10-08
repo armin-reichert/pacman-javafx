@@ -40,7 +40,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         contextMenu.getItems().clear();
 
         app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = app.ui().translationManager();
+            final TranslationManager translations = app.translationManager();
             // Add 2D play scene-specific entries
             if (app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");

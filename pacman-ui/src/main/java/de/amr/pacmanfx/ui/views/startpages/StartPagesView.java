@@ -27,7 +27,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameApp appContext;
+    private GameApp app;
 
     private final Carousel carousel;
 
@@ -60,7 +60,7 @@ public class StartPagesView implements GameView {
 
     @Override
     public void setApp(GameApp app) {
-        this.appContext = requireNonNull(app);
+        this.app = requireNonNull(app);
     }
 
     @Override
@@ -125,6 +125,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return appContext != null ? appContext.ui().translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return app != null ? app.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

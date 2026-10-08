@@ -17,8 +17,8 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameApp appContext) {
-        final Joypad joypad = appContext.input().joypad();
+    public void setGameApp(GameApp app) {
+        final Joypad joypad = app.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;
 
@@ -43,7 +43,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
                 buttonKey(joypad, JoypadButton.LEFT),
                 buttonKey(joypad, JoypadButton.RIGHT))
         );
-        setText(appContext.ui().translationManager().translate("infobox.joypad.title"));
+        setText(app.translationManager().translate("infobox.joypad.title"));
     }
 
     private static String buttonKey(Joypad joypad, JoypadButton button) {

@@ -108,7 +108,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void onAppConnected() {
         final GameViewModel viewModel = app().ui().viewModel();
 
-        textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(app().translationManager().textBundle(), "game.over");
 
         final var comp3D = assertComponent(GameSceneView3D.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
@@ -155,8 +155,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        final String scoreTitle = app().ui().translationManager().translate("score.score");
-        final String highScoreTitle = app().ui().translationManager().translate("score.high_score");
+        final String scoreTitle = app().translationManager().translate("score.score");
+        final String highScoreTitle = app().translationManager().translate("score.high_score");
         replaceScoresView(scoreTitle, highScoreTitle);
     }
 
@@ -301,7 +301,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                app().ui().translationManager().translate("score.game_over"),
+                app().translationManager().translate("score.game_over"),
                 app().variantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 

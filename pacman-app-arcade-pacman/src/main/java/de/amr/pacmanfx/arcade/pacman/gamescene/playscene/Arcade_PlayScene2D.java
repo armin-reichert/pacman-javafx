@@ -120,7 +120,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = app().ui().translationManager();
+        final TranslationManager translations = app().translationManager();
         final CheatActions cheatActions = app().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();

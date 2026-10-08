@@ -38,7 +38,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
-                    final String actionText = app.ui().translationManager().translate(action.resourceBundleKey());
+                    final String actionText = app.translationManager().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled(app));
                     addRow(key.getDisplayText(), label);
                 });

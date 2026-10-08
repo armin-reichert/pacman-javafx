@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.json.JsonLoader;
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -16,7 +15,6 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -45,7 +43,8 @@ public class GameUI implements GameEventListener {
     private static GameUISettings loadDefaultSettings() {
         final URL url = GameUI.class.getResource(DEFAULT_UI_SETTINGS_PATH);
         if (url == null) {
-            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'".formatted(DEFAULT_UI_SETTINGS_PATH));
+            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'"
+                .formatted(DEFAULT_UI_SETTINGS_PATH));
         }
         final var settings = JsonLoader.load(url, GameUISettings.class);
         Logger.info("Default UI settings loaded, URL={}", url);
@@ -56,31 +55,33 @@ public class GameUI implements GameEventListener {
 
     private final GameWindow window;
     private final GameViewManager viewManager;
-    private final TranslationManager translationManager;
     private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
+    private final GameUISettings settings;
+    private final DashboardFactory dashboardFactory;
 
     private GameApp app;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
+        requireNonNull(stage);
+        this.settings = requireNonNull(settings);
+        this.dashboardFactory = requireNonNull(dashboardFactory);
+
+        window = new GameWindow(stage, width, height);
+
         viewModel = new GameViewModel();
         viewModel.init(settings);
-
         spriteAnimationTimer = new SpriteAnimationTimer();
-        window = new GameWindow(stage, width, height);
-        translationManager = new CommonTranslationManager();
-
         viewManager = createViewManager();
-
-        viewManager.gamePlayView().dashboard().populate(
-            dashboardFactory, settings.dashboard(), translationManager);
     }
 
     public void connectWithApp(GameApp app) {
         this.app = requireNonNull(app);
 
         viewManager.setGameApp(app);
+        viewManager.gamePlayView().dashboard().populate(dashboardFactory, settings.dashboard(), app.translationManager());
+
         window.setGameApp(app);
 
         app.soundManager().muteProperty().bind(viewModel.muteProperty());
@@ -126,10 +127,6 @@ public class GameUI implements GameEventListener {
 
     public SpriteAnimationTimer spriteAnimTimer() {
         return spriteAnimationTimer;
-    }
-
-    public TranslationManager translationManager() {
-        return translationManager;
     }
 
     public GameViewManager viewManager() {

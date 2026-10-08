@@ -168,7 +168,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = app().ui().translationManager();
+        final TranslationManager translations = app().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 

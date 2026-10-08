@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -67,15 +66,14 @@ public class StatusIconBox implements Disposable {
     }
 
     public void setGameApp(GameApp app) {
-        final TranslationManager translations = app.ui().translationManager();
         final GameViewModel vm = app.ui().viewModel();
         final GameViewManager views = app.ui().viewManager();
 
-        setTooltip(iconMuted,     translations.translate("status_icon.muted"));
-        setTooltip(icon3D,        translations.translate("status_icon.3d"));
-        setTooltip(iconAutopilot, translations.translate("status_icon.autopilot"));
-        setTooltip(iconImmune,    translations.translate("status_icon.immune"));
-        setTooltip(iconCheated,   translations.translate("status_icon.cheated"));
+        setTooltip(iconMuted,     app.translationManager().translate("status_icon.muted"));
+        setTooltip(icon3D,        app.translationManager().translate("status_icon.3d"));
+        setTooltip(iconAutopilot, app.translationManager().translate("status_icon.autopilot"));
+        setTooltip(iconImmune,    app.translationManager().translate("status_icon.immune"));
+        setTooltip(iconCheated,   app.translationManager().translate("status_icon.cheated"));
 
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(

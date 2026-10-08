@@ -50,7 +50,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         final GameApp app = playScene3D.app();
         final Game3DSettingsVM settings3D = app.ui().viewModel().common3DSettings();
         final GameCheats cheats = playScene3D.game().session().cheats();
-        final TranslationManager translator = app.ui().translationManager();
+        final TranslationManager translator = app.translationManager();
 
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 

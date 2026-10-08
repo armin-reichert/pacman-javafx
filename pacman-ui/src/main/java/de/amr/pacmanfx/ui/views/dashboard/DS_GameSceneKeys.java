@@ -42,7 +42,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                     .forEach(entry -> {
                         final KeyCombination keyCombination = entry.getKey();
                         final GameAction action = entry.getValue();
-                        final String localizedActionText = app.ui().translationManager().translate(action.resourceBundleKey());
+                        final String localizedActionText = app.translationManager().translate(action.resourceBundleKey());
                         addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(app)));
                     });
             }

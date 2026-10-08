@@ -94,7 +94,7 @@ public class UISettingsActions {
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
                 if (!app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
-                    final String msg = app.ui().translationManager().translate(
+                    final String msg = app.translationManager().translate(
                         miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     app.ui().shortMessage(msg);
                 }
@@ -109,7 +109,7 @@ public class UISettingsActions {
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();
                 if (!isPlaySceneRunning(app.gameSceneManager())) {
-                    app.ui().shortMessage(app.ui().translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                    app.ui().shortMessage(app.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
                     app.gameSceneManager().forceGameSceneUpdate(app);

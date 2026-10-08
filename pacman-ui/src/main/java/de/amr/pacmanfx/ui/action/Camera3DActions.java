@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -97,10 +96,9 @@ public class Camera3DActions {
     }
 
     private String translatedPerspectiveMessage(GameApp app, PerspectiveID perspectiveID) {
-        final TranslationManager translations = app.ui().translationManager();
-        return translations.translate(
+        return app.translationManager().translate(
             "camera_perspective",
-            translations.translate("perspective_id_" + perspectiveID.name())
+            app.translationManager().translate("perspective_id_" + perspectiveID.name())
         );
     }
 }

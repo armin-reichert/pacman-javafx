@@ -138,20 +138,20 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameApp appContext, boolean paused, boolean is3D) {
-        final String gameVariantName = appContext.variantManager().currentVariantName();
+    private String stageTitle(GameApp app, boolean paused, boolean is3D) {
+        final String gameVariantName = app.variantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = appContext.ui().translationManager().translate(is3D ?
+        final String viewModeKey = app.translationManager().translate(is3D ?
             "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = appContext.variantManager().currentRuntime().uiConfig().translations();
+        final TranslationManager variantTranslations = app.variantManager().currentRuntime().uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

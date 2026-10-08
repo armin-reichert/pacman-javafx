@@ -25,11 +25,11 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(GameApp appContext) {
+    public void ensureEditorCreated(GameApp app) {
         if (editor == null) {
-            editor = new TileMapEditor(appContext.ui().window().stage(), new Pac3DShapeFactory());
-            editor.setOnQuit(_ -> appContext.ui().viewManager().selectStartPagesView());
-            final MenuItem miQuitEditor = new MenuItem(appContext.ui().translationManager().translate("editor.menu.back_to_game"));
+            editor = new TileMapEditor(app.ui().window().stage(), new Pac3DShapeFactory());
+            editor.setOnQuit(_ -> app.ui().viewManager().selectStartPagesView());
+            final MenuItem miQuitEditor = new MenuItem(app.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey

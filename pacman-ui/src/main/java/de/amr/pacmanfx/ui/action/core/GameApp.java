@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameVariantManager;
@@ -38,6 +39,8 @@ public interface GameApp {
     CommonGameActions commonActions();
 
     RenderManager renderManager();
+
+    TranslationManager translationManager();
 
     SoundManager soundManager();
 

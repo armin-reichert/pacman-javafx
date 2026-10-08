@@ -53,17 +53,17 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final GameApp appContext;
+    private final GameApp app;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(GameApp appContext) {
-        this.appContext = requireNonNull(appContext);
+    public HelpInfo(GameApp app) {
+        this.app = requireNonNull(app);
     }
 
     private String translate(String key, Object... args) {
-        return appContext.ui().translationManager().translate(key, args);
+        return app.translationManager().translate(key, args);
     }
 
     public Pane createPane(GameApp appContext, Color backgroundColor, Font font) {
