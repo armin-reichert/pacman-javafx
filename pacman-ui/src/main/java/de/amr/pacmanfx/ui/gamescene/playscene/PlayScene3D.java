@@ -20,9 +20,12 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
@@ -171,6 +174,12 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         perspectiveManager.activeIDProperty().unbind();
         app().ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
+        // Remove actor 3D view components
+        game().session().optLevel().ifPresent(level -> {
+            level.entitySet().pac().removeComponent(PacView3D.class);
+            level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
+            level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
+        });
     }
 
     @Override
@@ -306,9 +315,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(level);
 
         final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        systems3D.transform().init(pac, level.worldMap());
-        systems3D.animation().stopAnimations(pac);
-        systems3D.animation().setPowerMode(pac, false);
+        systems3D.transformSystem().init(pac, level.worldMap());
+        systems3D.animationSystem().stopAnimations(pac);
+        systems3D.animationSystem().setPowerMode(pac, false);
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {

@@ -50,8 +50,8 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
     exports de.amr.pacmanfx.ui.entities3D.comp;
     exports de.amr.pacmanfx.ui.entities3D.pac.comp;
-    exports de.amr.pacmanfx.ui.entities3D;
     exports de.amr.pacmanfx.ui.entities3D.world;
     exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.playscene;
+    exports de.amr.pacmanfx.ui.entities3D.pac.system;
 }

@@ -28,8 +28,8 @@ public class World3DUpdateSystem {
 
     private void updatePac3D(Pac pac) {
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        pacSystems3D.transform().update(pac);
-        pacSystems3D.animation().updateAnimations(pac);
+        pacSystems3D.transformSystem().update(pac);
+        pacSystems3D.animationSystem().updateAnimations(pac);
     }
 
     private void updateLivesCounter3D(LivesCounter livesCounter) {

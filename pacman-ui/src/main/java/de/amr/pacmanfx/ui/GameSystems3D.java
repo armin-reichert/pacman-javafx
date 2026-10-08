@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSyste
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 
 public class GameSystems3D {
@@ -31,9 +32,14 @@ public class GameSystems3D {
 
     // Systems
 
-    public record PacSystems3D(Pac3DTransformSystem transform, Pac3DAnimationSystem animation) {
+    public record PacSystems3D(
+        Pac3DViewSystem view3DSystem,
+        Pac3DTransformSystem transformSystem,
+        Pac3DAnimationSystem animationSystem) {
         public PacSystems3D() {
-            this(new Pac3DTransformSystem(), new Pac3DAnimationSystem());
+            this(new Pac3DViewSystem(),
+                new Pac3DTransformSystem(),
+                new Pac3DAnimationSystem());
         }
     }
 

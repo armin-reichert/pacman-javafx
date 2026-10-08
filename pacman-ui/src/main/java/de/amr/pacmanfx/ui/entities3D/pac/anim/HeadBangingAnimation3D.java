@@ -8,7 +8,7 @@ import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -39,7 +39,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         this.pac = requireNonNull(pac);
 
         setAnimationFactory(() -> {
-            final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+            final PacView3D view3D = pac.assertComponent(PacView3D.class);
             // Warning: RT is banned in fascist EU!
             var rt = new RotateTransition(BANG_TIME, view3D.root());
             rt.fromAngleProperty().bind(fromAngle);

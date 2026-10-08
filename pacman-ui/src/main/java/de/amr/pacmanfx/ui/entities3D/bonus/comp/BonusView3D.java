@@ -18,7 +18,7 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class Bonus3DViewComp implements DisposableGraphicsObject {
+public class BonusView3D implements DisposableGraphicsObject {
 
     private final Group root;
     private final Box shape3D;
@@ -39,7 +39,7 @@ public class Bonus3DViewComp implements DisposableGraphicsObject {
     private final double symbolWidth;
     private final double pointsWidth;
 
-    public Bonus3DViewComp(
+    public BonusView3D(
         Image symbolImage, double symbolWidth,
         Image pointsImage, double pointsWidth)
     {

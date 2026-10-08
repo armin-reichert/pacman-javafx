@@ -12,7 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 
-public class Pac3DViewComp {
+public class PacView3D {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -24,7 +24,7 @@ public class Pac3DViewComp {
 
     private Vector3f center;
 
-    public Pac3DViewComp() {
+    public PacView3D() {
         root = new Group();
         bodyGroup = new Group();
 

@@ -38,7 +38,7 @@ import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -196,7 +196,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
-        level.entitySet().pac().assertComponent(Pac3DViewComp.class).root().setVisible(true);
+        level.entitySet().pac().assertComponent(PacView3D.class).root().setVisible(true);
 
         playScene3D.replaceActionBindings(game().session(), level);
 
@@ -247,7 +247,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().playConfig().rules().isLevelCompleted(level)) {
             final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-            systems3D.animation().setPowerMode(pac, true);
+            systems3D.animationSystem().setPowerMode(pac, true);
             playScene3D.animationSystem().startWallFlashing();
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
@@ -258,7 +258,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Pac pac = e.pac();
         final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
 
-        systems3D.animation().setPowerMode(pac, false);
+        systems3D.animationSystem().setPowerMode(pac, false);
         playScene3D.animationSystem().stopWallFlashing();
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
@@ -315,7 +315,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         playScene3D.animationSystem().stopAnimationsBeforePacManDies();
 
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
-        pacSystems3D.animation().playDyingAnimation(
+        pacSystems3D.animationSystem().playDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
             game().state()::triggerTimeout

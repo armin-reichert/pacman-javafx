@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.entities3D.pac.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.animation.*;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -16,7 +16,7 @@ import static de.amr.basics.util.Ufx.pauseSecThen;
 
 public class PacManDyingAnimation3D extends ManagedAnimation {
 
-    public PacManDyingAnimation3D(Pac3DViewComp view3D) {
+    public PacManDyingAnimation3D(PacView3D view3D) {
         super("PacMan_Dying");
         setAnimationFactory(() -> createAnimation(view3D.root(), view3D.powerLight()));
     }

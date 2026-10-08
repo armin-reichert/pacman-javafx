@@ -27,7 +27,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DSettings;
-import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
@@ -35,7 +35,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
@@ -166,13 +166,13 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        Ufx.setDrawMode(level.entitySet().pac().assertComponent(Pac3DViewComp.class).root(), drawMode);
+        Ufx.setDrawMode(level.entitySet().pac().assertComponent(PacView3D.class).root(), drawMode);
         level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.assertComponent(GhostView3D.class).root(), drawMode));
         Ufx.setDrawMode(mapView3D.root(), drawMode);
     }
 
     public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus, AnimationRegistry animationRegistry) {
-        if (!bonus.hasComponent(Bonus3DViewComp.class)) {
+        if (!bonus.hasComponent(BonusView3D.class)) {
             final var view3D = createBonusView3D(bonus, animationRegistry);
             root.getChildren().add(view3D.root());
         }
@@ -246,16 +246,16 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         return energizer3D;
     }
 
-    private Bonus3DViewComp createBonusView3D(Bonus bonus, AnimationRegistry animationRegistry) {
+    private BonusView3D createBonusView3D(Bonus bonus, AnimationRegistry animationRegistry) {
         final Bonus3DSettings config = uiConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
-        final Bonus3DViewComp view3D = new Bonus3DViewComp(
+        final BonusView3D view3D = new BonusView3D(
             renderConfig.createBonusSymbolImage(bonus.data().symbolCode()),
             config.symbolWidth(),
             renderConfig.createBonusPointsImage(bonus.data().symbolCode()),
             config.pointsWidth()
         );
-        bonus.setComponent(Bonus3DViewComp.class, view3D);
+        bonus.setComponent(BonusView3D.class, view3D);
 
         //TODO move elsewhere
         animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
@@ -265,7 +265,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     private void createPac3DView(Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(pac, settings);
-        pac.assertComponent(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
+        pac.assertComponent(PacView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
     private void createGhost3DViews(List<Ghost> ghosts, List<GhostSettings> settings) {
@@ -317,7 +317,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         final LivesCounterView3D livesCounterView3D = livesCounter.assertComponent(LivesCounterView3D.class);
         root.getChildren().add(livesCounterView3D.root());
 
-        final Pac3DViewComp pacView3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D pacView3D = pac.assertComponent(PacView3D.class);
         root.getChildren().add(pacView3D.root());
         root.getChildren().add(pacView3D.powerLight());
 

@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.basics.TileDimension.HTS;
@@ -22,7 +22,7 @@ public class Pac3DTransformSystem {
         requireNonNull(pac);
         requireNonNull(worldMap);
 
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
@@ -37,7 +37,7 @@ public class Pac3DTransformSystem {
             return;
         }
 
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
         final Vector2f center = pac.pos().bodyCenter();
 
         updateVisibility(pac, center);
@@ -53,13 +53,13 @@ public class Pac3DTransformSystem {
     }
 
     private void updateVisibility(Pac pac, Vector2f center) {
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
         final WorldMap worldMap = pac.worldNavigation().worldMap();
         final boolean outsideWorld = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
         view3D.root().setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    private void updateFacing(Pac3DViewComp view3D, Direction dir) {
+    private void updateFacing(PacView3D view3D, Direction dir) {
         final int angle = switch (dir) {
             case LEFT -> 0;
             case UP -> 90;

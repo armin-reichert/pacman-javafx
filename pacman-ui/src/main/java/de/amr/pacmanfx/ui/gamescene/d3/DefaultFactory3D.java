@@ -6,16 +6,17 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
-import de.amr.pacmanfx.ui.entities3D.Pac3DViewFactory;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
+import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
@@ -29,8 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    protected Pac3DShapeFactory shapeFactory = new Pac3DShapeFactory();
-    protected Pac3DViewFactory viewFactory = new Pac3DViewFactory();
+    protected Pac3DShapeFactory pac3DShapeFactory = new Pac3DShapeFactory();
 
     protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
@@ -45,25 +45,32 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
-        viewFactory.createPacManView3D(shapeFactory, pac, settings);
+        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        final PacView3D view3D = pacSystems3D.view3DSystem().createPacManView3D(pac3DShapeFactory, pac, settings);
+        pac.setComponent(PacView3D.class, view3D);
     }
 
     @Override
     public void createGhost3D(Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model = PacManMeshes3D.instance();
-        final GhostView3D view3D = ensureGhostHas3DView(ghost);
-        final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
+        if (!ghost.hasComponent(GhostView3D.class)) {
+            final GameSystems3D.GhostSystems3D ghostSystems3D = GameSystems3D.reqSystem(GameSystems3D.GhostSystems3D.class);
+            final GhostView3D view3D = ghostSystems3D.viewSystem().build(
+                settings,
+                model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
+            ghost.setComponent(GhostView3D.class, view3D);
+            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
 
-        view3D.build(settings, model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
-        view3D.setAppearanceMaterialSet(materialSet);
-
+            final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
+            view3D.setAppearanceMaterialSet(materialSet);
+        }
     }
 
     @Override
     public Group createLivesCounterShape3D(WorldSettings settings) {
         requireNonNull(settings);
         final PacSettings livesCounterPacSettings = settings.pac().resized(settings.livesCounter().shapeSize());
-        return shapeFactory.createPacBody(livesCounterPacSettings, true);
+        return pac3DShapeFactory.createPacBody(livesCounterPacSettings, true);
     }
 
     @Override
@@ -113,13 +120,5 @@ public class DefaultFactory3D implements Factory3D {
         );
 
         return new GhostAppearanceMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
-    }
-
-    private static GhostView3D ensureGhostHas3DView(Ghost ghost) {
-        if (!ghost.hasComponent(GhostView3D.class)) {
-            ghost.setComponent(GhostView3D.class, new GhostView3D());
-            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
-        }
-        return ghost.assertComponent(GhostView3D.class);
     }
 }

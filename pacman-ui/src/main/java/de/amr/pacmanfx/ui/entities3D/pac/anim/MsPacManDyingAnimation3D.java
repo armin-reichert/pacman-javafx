@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.entities3D.pac.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 public class MsPacManDyingAnimation3D extends ManagedAnimation {
 
-    public MsPacManDyingAnimation3D(Pac3DViewComp view3D) {
+    public MsPacManDyingAnimation3D(PacView3D view3D) {
         super("Ms. Pac-Man Dying");
         setAnimationFactory(() -> createAnimation(view3D.root()));
     }

@@ -9,7 +9,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.Stand;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -82,7 +82,7 @@ public class LivesCounterView3DSystem {
 
     public void startTrackingPac(LivesCounter livesCounter, Pac pac) {
         final LivesCounterView3D livesCounter3D = livesCounter.assertComponent(LivesCounterView3D.class);
-        final Pac3DViewComp pac3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D pac3D = pac.assertComponent(PacView3D.class);
         for (NodePositionTracker tracker : livesCounter3D.trackers()) {
             tracker.startTrackingTarget(pac3D.root());
         }

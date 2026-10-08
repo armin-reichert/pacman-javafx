@@ -8,7 +8,7 @@ import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
-import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import javafx.scene.shape.Box;
 
 public class Bonus3DAnimationSystem {
@@ -22,7 +22,7 @@ public class Bonus3DAnimationSystem {
     }
 
     private void lookEdible(Bonus bonus) {
-        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
+        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -31,7 +31,7 @@ public class Bonus3DAnimationSystem {
     }
 
     private void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {
-        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
+        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -47,7 +47,7 @@ public class Bonus3DAnimationSystem {
     }
 
     public void lookExpired(Bonus bonus, AnimationRegistry animationRegistry) {
-        final Bonus3DViewComp view3D = bonus.assertComponent(Bonus3DViewComp.class);
+        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(false);

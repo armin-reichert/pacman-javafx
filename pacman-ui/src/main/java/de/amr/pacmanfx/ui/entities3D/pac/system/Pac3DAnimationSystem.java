@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 
@@ -84,7 +84,7 @@ public class Pac3DAnimationSystem {
      */
     private void updatePowerLight(Pac pac) {
         final PacStateComp state = pac.state();
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
 
         final boolean lighted = state.enumValue() != PacState.DEAD;
         if (lighted) {

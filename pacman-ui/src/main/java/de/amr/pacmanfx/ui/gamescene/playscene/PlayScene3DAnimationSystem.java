@@ -34,7 +34,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
@@ -180,7 +180,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
     }
 
     private void createPacManAnimations(Pac pac) {
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
         final Pac3DAnimationComp anim3D = ensurePacAnim3DExists(pac);
 
         anim3D.setChewing(new PacChewingAnimation3D(pac));
@@ -189,7 +189,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
     }
 
     private void createMsPacManAnimations(Pac pac) {
-        final Pac3DViewComp view3D = pac.assertComponent(Pac3DViewComp.class);
+        final PacView3D view3D = pac.assertComponent(PacView3D.class);
         final Pac3DAnimationComp anim3D = ensurePacAnim3DExists(pac);
 
         anim3D.setChewing(new PacChewingAnimation3D(pac));
