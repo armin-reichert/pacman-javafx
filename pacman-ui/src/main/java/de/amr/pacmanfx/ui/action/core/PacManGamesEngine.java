@@ -8,6 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
@@ -43,6 +44,8 @@ public interface PacManGamesEngine {
     SoundManager soundManager();
 
     SpriteAnimationTimer spriteAnimationTimer();
+
+    GameBox gameBox();
 
     GameClock clock();
 

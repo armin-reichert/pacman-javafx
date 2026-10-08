@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGameEngineBuilder;
 import de.amr.pacmanfx.game.PacManGamesEngineImpl;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -24,7 +23,6 @@ import javafx.stage.Stage;
 
 public class PacManAllGamesApp extends Application {
 
-    private GameBox gameBox;
     private PacManGamesEngineImpl engine;
 
     private boolean includeTests;
@@ -32,7 +30,6 @@ public class PacManAllGamesApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox();
     }
 
     @Override
@@ -52,7 +49,7 @@ public class PacManAllGamesApp extends Application {
             .startPage(XXL_StartPage::new)
             .window(stage)
             .screenArea(1.6, 0.8)
-            .buildEngine(gameBox)
+            .buildEngine()
             .orElse(null);
 
         if (engine != null) {

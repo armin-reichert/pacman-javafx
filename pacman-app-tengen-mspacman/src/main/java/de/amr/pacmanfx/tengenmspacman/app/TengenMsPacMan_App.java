@@ -17,13 +17,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 
 public class TengenMsPacMan_App extends Application {
 
-    private GameBox gameBox;
     private PacManGamesEngineImpl engine;
-
-    @Override
-    public void init() {
-        gameBox = new GameBox();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -33,7 +27,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(NES_SCREEN_ASPECT_RATIO, 0.8)
-            .buildEngine(gameBox)
+            .buildEngine()
             .orElse(null);
 
         if (engine != null) {

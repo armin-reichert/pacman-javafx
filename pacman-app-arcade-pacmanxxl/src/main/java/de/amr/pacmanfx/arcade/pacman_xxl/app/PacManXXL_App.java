@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGameEngineBuilder;
 import de.amr.pacmanfx.game.PacManGamesEngineImpl;
 import javafx.application.Application;
@@ -15,13 +14,7 @@ import javafx.stage.Stage;
 
 public class PacManXXL_App extends Application {
 
-    private GameBox gameBox;
     private PacManGamesEngineImpl engine;
-
-    @Override
-    public void init() {
-        gameBox = new GameBox();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -32,7 +25,7 @@ public class PacManXXL_App extends Application {
             .startPage(XXL_StartPage::new)
             .window(stage)
             .screenArea(1.6, 0.8)
-            .buildEngine(gameBox)
+            .buildEngine()
             .orElse(null);
 
         if (engine != null) {

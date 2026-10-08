@@ -14,14 +14,7 @@ import javafx.stage.Stage;
 
 public class ArcadePacMan_App extends Application {
 
-    private GameBox gameBox;
-
     private PacManGamesEngineImpl engine;
-
-    @Override
-    public void init() {
-        gameBox = new GameBox();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -31,7 +24,7 @@ public class ArcadePacMan_App extends Application {
             .startPage(ArcadePacMan_StartPage::new)
             .window(stage)
             .screenArea(1.2, 0.8)
-            .buildEngine(gameBox)
+            .buildEngine()
             .orElse(null);
 
         if (engine != null) {

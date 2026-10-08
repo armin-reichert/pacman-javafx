@@ -52,14 +52,14 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
 
     private GameUI ui;
 
-    private GameContext game;
+    private GameContext currentGame;
 
     private StateChangeEventMapper stateChangeEventMapper;
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public PacManGamesEngineImpl(GameBox gameBox) {
-        this.gameBox = requireNonNull(gameBox);
+    public PacManGamesEngineImpl() {
+        gameBox = new GameBox();
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
@@ -94,13 +94,18 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         Platform.runLater(this::startBackgroundServices);
     }
 
-    // GameAppContext
+    // PacManGamesEngine interface
+
+    @Override
+    public GameBox gameBox() {
+        return gameBox;
+    }
 
     @Override
     public void newGameSession() {
         final GameSession session = new GameSession(
-            gameVariantManager.currentVariantName(), new GameCheats(), game.playConfig().initialLifeCount());
-        game.setSession(session);
+            gameVariantManager.currentVariantName(), new GameCheats(), currentGame.playConfig().initialLifeCount());
+        currentGame.setSession(session);
     }
 
     @Override
@@ -135,7 +140,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
 
     @Override
     public GameContext currentGame() {
-        return game;
+        return currentGame;
     }
 
     @Override
@@ -187,20 +192,20 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         requireNonNull(runtime);
 
         // Create new game context
-        game = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
+        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
 
         newGameSession();
 
-        stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
+        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(runtime.uiConfig().gameSceneConfig());
 
         // Just to be sure:
-        game.eventManager().removeAllSubscribers();
-        game.eventManager().addSubscriber(ui);
-        game.eventManager().addSubscriber(new PacEatingEventHandler(game));
-        game.eventManager().addSubscriber(new PacPowerEventHandler(game));
+        currentGame.eventManager().removeAllSubscribers();
+        currentGame.eventManager().addSubscriber(ui);
+        currentGame.eventManager().addSubscriber(new PacEatingEventHandler(currentGame));
+        currentGame.eventManager().addSubscriber(new PacPowerEventHandler(currentGame));
 
         runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
 
@@ -224,8 +229,8 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         spriteAnimationTimer.detachAnimationContainer();
         soundManager.dispose();
 
-        game.eventManager().removeAllSubscribers();
-        game = null;
+        currentGame.eventManager().removeAllSubscribers();
+        currentGame = null;
     }
 
     // GameLifecycle
@@ -234,9 +239,9 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
     public void startGame() {
         newGameSession();
 
-        game.playConfig().gamePlay().startSession(game);
+        currentGame.playConfig().gamePlay().startSession(currentGame);
 
-        ui.window().mainScene().connect(game.session());
+        ui.window().mainScene().connect(currentGame.session());
         ui.viewManager().selectGamePlayView();
 
         gameLoop.start();

@@ -94,12 +94,12 @@ public class PacManGameEngineBuilder {
         return this;
     }
 
-    public Optional<PacManGamesEngineImpl> buildEngine(GameBox gameBox) {
+    public Optional<PacManGamesEngineImpl> buildEngine() {
         try {
             validateConfigurationData();
-            gameBox.insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var engine = new PacManGamesEngineImpl(gameBox);
+            final var engine = new PacManGamesEngineImpl();
+            engine.gameBox().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
             engine.setUI(ui, dashboardFactory);
