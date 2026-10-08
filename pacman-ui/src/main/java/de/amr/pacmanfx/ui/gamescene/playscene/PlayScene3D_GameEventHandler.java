@@ -31,7 +31,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
@@ -70,7 +70,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         this.playScene3D = playScene3D;
     }
 
-    private EngineContext app() {
+    private PacManGameEngineContext app() {
         return playScene3D.app();
     }
 

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
@@ -30,7 +30,7 @@ public class EditorActions {
 
         actionOpenEditor = new GameAction("open_editor") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 openMapEditor(app).ifPresent(editor -> startEditor(app, editor));
             }
         };
@@ -48,7 +48,7 @@ public class EditorActions {
 
         return new GameAction("edit_map_file") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 openMapEditor(app).ifPresent(editor -> {
                     startEditor(app, editor);
                     if (mapFile != null) {
@@ -74,13 +74,13 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(EngineContext app, TileMapEditor editor) {
+    private void startEditor(PacManGameEngineContext app, TileMapEditor editor) {
         app.suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(EngineContext app) {
+    private Optional<TileMapEditor> openMapEditor(PacManGameEngineContext app) {
         final EditorView editorView = app.ui().viewManager().reqView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(app);
         if (!app.ui().viewManager().trySelectEditorView(app)) {

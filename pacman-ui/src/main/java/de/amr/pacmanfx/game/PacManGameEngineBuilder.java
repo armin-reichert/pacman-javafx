@@ -7,7 +7,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -26,9 +26,9 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Builder for constructing and configuring a game application.
+ * Builder for constructing and configuring a Pac-Man game "engine".
  */
-public class GameBuilder {
+public class PacManGameEngineBuilder {
 
     private final Set<Cartridge> cartridgeSet = new HashSet<>();
 
@@ -42,7 +42,7 @@ public class GameBuilder {
     private int width;
     private int height;
 
-    public GameBuilder() {
+    public PacManGameEngineBuilder() {
         dashboardFactory = CommonDashboardFactory.instance();
         uiSettings = JsonLoader.load(
             getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
@@ -52,35 +52,35 @@ public class GameBuilder {
         width = height * 28 / 32;
     }
 
-    public GameBuilder cartridges(Cartridge... cartridges) {
+    public PacManGameEngineBuilder cartridges(Cartridge... cartridges) {
         cartridgeSet.addAll(List.of(cartridges));
         return this;
     }
 
-    public GameBuilder size(int width, int height) {
+    public PacManGameEngineBuilder size(int width, int height) {
         this.width = width;
         this.height = height;
         return this;
     }
 
-    public GameBuilder screenArea(double aspectRatio, double heightFraction) {
+    public PacManGameEngineBuilder screenArea(double aspectRatio, double heightFraction) {
         Vector2i sectionSize = Ufx.computeScreenSectionSize(aspectRatio, heightFraction);
         width = sectionSize.x();
         height = sectionSize.y();
         return this;
     }
 
-    public GameBuilder window(Stage stage) {
+    public PacManGameEngineBuilder window(Stage stage) {
         this.stage = requireNonNull(stage);
         return this;
     }
 
-    public GameBuilder dashboardFactory(DashboardFactory dashboardFactory) {
+    public PacManGameEngineBuilder dashboardFactory(DashboardFactory dashboardFactory) {
         this.dashboardFactory = requireNonNull(dashboardFactory);
         return this;
     }
 
-    public GameBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
+    public PacManGameEngineBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
         }
@@ -88,24 +88,26 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder uiSettings(URL url) {
+    public PacManGameEngineBuilder uiSettings(URL url) {
         requireNonNull(url);
         uiSettings = JsonLoader.load(url, GameUISettings.class);
         return this;
     }
 
-    public Optional<Engine> build(GameBox gameBox) {
+    public Optional<PacManGameEngine> buildEngine(GameBox gameBox) {
         try {
             validateConfigurationData();
             gameBox.insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var game = new Engine(gameBox);
-            game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
+            final var engine = new PacManGameEngine(gameBox);
+
+            final GameUI ui = new GameUI(stage, width, height, uiSettings);
+            engine.setUI(ui, dashboardFactory);
 
             // Can only be done after UI has been assigned to game!
-            addStartPages(game);
+            addStartPages(engine);
 
-            return Optional.of(game);
+            return Optional.of(engine);
         }
         catch (Exception x) {
             Logger.error(x, "Game building failed");
@@ -113,7 +115,7 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(EngineContext appContext) {
+    private void addStartPages(PacManGameEngineContext appContext) {
         final StartPagesView startPagesView = appContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();

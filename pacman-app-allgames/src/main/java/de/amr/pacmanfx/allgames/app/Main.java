@@ -12,7 +12,7 @@ public class Main {
         boolean noBuilder = args.length > 0 && "no_builder".equals(args[0]);
         Logger.info("Creating application {} builder", noBuilder ? "without" : "using");
         if (noBuilder) {
-            Application.launch(PacManAllGamesNoBuilderApp.class, args);
+            Application.launch(PacManAllGamesNoBuilder.class, args);
         } else {
             Application.launch(PacManAllGamesApp.class, args);
         }

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, EngineContext app, GameClock clock, AbstractGameScene gameScene) {
+    public static void render(GamePlayView playView, PacManGameEngineContext app, GameClock clock, AbstractGameScene gameScene) {
         final GameVariantRuntime runtime = app.gameVariantManager().currentRuntime();
         final RenderManager renderManager = app.renderManager();
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();

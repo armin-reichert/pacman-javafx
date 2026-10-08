@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 /**
  * The game "engine".
  */
-public interface EngineContext {
+public interface PacManGameEngineContext {
 
     void exitGameVariant(GameVariantRuntime runtime);
 

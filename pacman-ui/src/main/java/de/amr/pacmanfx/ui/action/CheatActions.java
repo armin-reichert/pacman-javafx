@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.Media;
@@ -46,7 +46,7 @@ public final class CheatActions {
 
         actionAddLives = new GameAction("cheat_add_lives") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 final GameSession session = app.game().session();
                 session.setNumLives(session.numLives() + 3);
                 session.cheats().notifyCheatUsed();
@@ -55,14 +55,14 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionEatAllPellets = new GameAction("cheat_eat_all_pellets") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 final GameSession session = app.game().session();
                 final GameLevel level = session.level();
                 level.food().eatPellets();
@@ -72,7 +72,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 final AbstractGameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
@@ -80,7 +80,7 @@ public final class CheatActions {
 
         actionKillGhosts = new GameAction("cheat_kill_ghosts") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 final GameContext game = app.game();
                 final GameSession session = game.session();
                 final GameLevel level = session.level();
@@ -100,7 +100,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 final AbstractGameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
@@ -108,13 +108,13 @@ public final class CheatActions {
 
         actionEnterNextLevel = new GameAction("cheat_enter_next_level") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 app.game().session().cheats().notifyCheatUsed();
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 final AbstractGameState state = app.game().state();
                 final GameLevel level = normalLevel(app).orElse(null);
                 return level != null
@@ -125,74 +125,74 @@ public final class CheatActions {
 
         actionToggleAutopilot = new GameAction("toggle_autopilot") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 final GameCheats cheats = app.game().session().cheats();
                 setAutopilot(app, !cheats.isPacUsingAutopilot());
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionActivateAutopilot = new GameAction("activate_autopilot") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 setAutopilot(app, true);
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionDeactivateAutopilot = new GameAction("deactivate_autopilot") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 setAutopilot(app, false);
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionActivateImmunity = new GameAction("activate_immunity") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 setPacImmune(app, true);
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionDeactivateImmunity = new GameAction("deactivate_immunity") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 setPacImmune(app, false);
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
 
         actionToggleImmunity = new GameAction("toggle_immunity") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 final GameCheats cheats = app.game().session().cheats();
                 setPacImmune(app, !cheats.isPacImmune());
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 return normalLevel(app).isPresent();
             }
         };
@@ -253,7 +253,7 @@ public final class CheatActions {
 
     // Helpers
 
-    private void setAutopilot(EngineContext app, boolean auto) {
+    private void setAutopilot(PacManGameEngineContext app, boolean auto) {
         final GameCheats cheats = app.game().session().cheats();
         final GameUI ui = app.ui();
 
@@ -266,7 +266,7 @@ public final class CheatActions {
         app.soundManager().voice().playAfterSec(1, voice);
     }
 
-    private void setPacImmune(EngineContext app, boolean immune) {
+    private void setPacImmune(PacManGameEngineContext app, boolean immune) {
         final GameCheats cheats = app.game().session().cheats();
         final GameUI ui = app.ui();
 
@@ -279,7 +279,7 @@ public final class CheatActions {
         app.soundManager().voice().playAfterSec(1, voice);
     }
 
-    private Optional<GameLevel> normalLevel(EngineContext app) {
+    private Optional<GameLevel> normalLevel(PacManGameEngineContext app) {
         final GameSession session = app.game().session();
         return session.optLevel().filter(_ -> !session.isAttractMode());
     }

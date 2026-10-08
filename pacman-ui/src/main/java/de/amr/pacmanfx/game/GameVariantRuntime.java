@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge, EngineContext app) {
+    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge, PacManGameEngineContext app) {
         requireNonNull(gameBox);
         requireNonNull(cartridge);
 

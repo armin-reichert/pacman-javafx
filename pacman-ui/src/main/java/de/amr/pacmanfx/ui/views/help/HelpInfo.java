@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(EngineContext app) {
+    public static HelpInfo build(PacManGameEngineContext app) {
         final GameContext game = app.game();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
@@ -53,12 +53,12 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final EngineContext app;
+    private final PacManGameEngineContext app;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(EngineContext app) {
+    public HelpInfo(PacManGameEngineContext app) {
         this.app = requireNonNull(app);
     }
 
@@ -66,7 +66,7 @@ public class HelpInfo {
         return app.translationManager().translate(key, args);
     }
 
-    public Pane createPane(EngineContext appContext, Color backgroundColor, Font font) {
+    public Pane createPane(PacManGameEngineContext appContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);

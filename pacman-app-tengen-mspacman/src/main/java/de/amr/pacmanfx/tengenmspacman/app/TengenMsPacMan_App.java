@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.Engine;
+import de.amr.pacmanfx.game.PacManGameEngineBuilder;
+import de.amr.pacmanfx.game.PacManGameEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import javafx.application.Application;
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 public class TengenMsPacMan_App extends Application {
 
     private GameBox gameBox;
-    private Engine app;
+    private PacManGameEngine app;
 
     @Override
     public void init() {
@@ -27,13 +27,13 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        app = new GameBuilder()
+        app = new PacManGameEngineBuilder()
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(NES_SCREEN_ASPECT_RATIO, 0.8)
-            .build(gameBox)
+            .buildEngine(gameBox)
             .orElse(null);
 
         if (app != null) {

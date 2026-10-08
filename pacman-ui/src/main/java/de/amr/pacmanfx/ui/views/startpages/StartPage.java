@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -14,9 +14,9 @@ public interface StartPage {
 
     Pane rootPane();
 
-    EngineContext app();
+    PacManGameEngineContext app();
 
-    void setGameApp(EngineContext app);
+    void setGameApp(PacManGameEngineContext app);
 
     void onEnter();
 

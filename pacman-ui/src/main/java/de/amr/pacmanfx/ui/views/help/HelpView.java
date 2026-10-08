@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
@@ -33,7 +33,7 @@ public class HelpView extends Pane {
         prefHeightProperty().bind(parent.prefHeightProperty());
     }
 
-    public void showHelpPopup(EngineContext appContext, double scaling, String variantName) {
+    public void showHelpPopup(PacManGameEngineContext appContext, double scaling, String variantName) {
         final boolean msPacMan = variantName.equals(GameVariantID.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadeColor.RED.color() : ArcadeColor.BLUE.color();

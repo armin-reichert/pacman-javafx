@@ -13,8 +13,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -60,38 +60,39 @@ public class GameUI implements GameEventListener {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
 
-    private final GameUISettings settings;
+    private final GameUISettings uiSettings;
 
-    private final DashboardFactory dashboardFactory;
+    private PacManGameEngineContext engine;
 
-    private EngineContext app;
-
-    public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
+    public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
         requireNonNull(stage);
-        this.settings = requireNonNull(settings);
-        this.dashboardFactory = requireNonNull(dashboardFactory);
+        this.uiSettings = requireNonNull(uiSettings);
 
         window = new GameWindow(stage, width, height);
 
         viewModel = new GameViewModel();
-        viewModel.init(settings);
-        viewManager = createViewManager();
+        viewModel.init(uiSettings);
+
+        viewManager = new GameViewManager();
+        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
+        viewManager.registerView(GameViewID.GAMEPLAY, new GamePlayView());
+        viewManager.registerView(GameViewID.EDITOR, new EditorView());
     }
 
-    public void connectWithApp(EngineContext app) {
-        this.app = requireNonNull(app);
+    public void connectEngine(PacManGameEngineContext engine, DashboardFactory dashboardFactory) {
+        this.engine = requireNonNull(engine);
 
-        viewManager.setGameApp(app);
-        viewManager.gamePlayView().dashboard().populate(dashboardFactory, settings.dashboard(), app.translationManager());
+        viewManager.setGameApp(engine);
+        viewManager.gamePlayView().dashboard().populate(dashboardFactory, uiSettings.dashboard(), engine.translationManager());
 
-        window.setGameApp(app);
+        window.setGameApp(engine);
 
-        app.soundManager().muteProperty().bind(viewModel.muteProperty());
+        engine.soundManager().muteProperty().bind(viewModel.muteProperty());
 
-        connectKeyboard(app.input().keyboard());
-        bindCommonActions(app.commonActions());
+        connectKeyboard(engine.input().keyboard());
+        bindCommonActions(engine.commonActions());
 
-        Logger.info("UI connected with application");
+        Logger.info("UI connected with engine");
         Logger.info(actionBindings);
     }
 
@@ -100,7 +101,7 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
-                final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
+                final GameScene currentGameScene = engine.gameSceneManager().currentGameScene();
                 viewManager.gamePlayView().acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -114,9 +115,9 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        if (app != null) {
-            app.gameSceneManager().updateGameSceneAndForceReload(app, forceGameSceneReload);
-            app.gameSceneManager().optCurrentGameScene()
+        if (engine != null) {
+            engine.gameSceneManager().updateGameSceneAndForceReload(engine, forceGameSceneReload);
+            engine.gameSceneManager().optCurrentGameScene()
                 .flatMap(GameScene::optGameEventHandler)
                 .ifPresent(handler -> handler.onGameEvent(gameEvent));
         }
@@ -170,14 +171,6 @@ public class GameUI implements GameEventListener {
 
     // private
 
-    private static GameViewManager createViewManager() {
-        final var manager = new GameViewManager();
-        manager.registerView(GameViewID.START_PAGES, new StartPagesView());
-        manager.registerView(GameViewID.GAMEPLAY, new GamePlayView());
-        manager.registerView(GameViewID.EDITOR, new EditorView());
-        return manager;
-    }
-
     private void connectKeyboard(Keyboard keyboard) {
         keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
         keyboard.addStateListener(this::handleKeyboardStateChange);
@@ -189,8 +182,8 @@ public class GameUI implements GameEventListener {
             final GameViewID currentViewID = viewManager.currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
-                if (actionBindings.executeMatchingAction(app).isEmpty()) {
-                    viewManager.reqView(currentViewID).onInput(app);
+                if (actionBindings.executeMatchingAction(engine).isEmpty()) {
+                    viewManager.reqView(currentViewID).onInput(engine);
                 }
             }
         }

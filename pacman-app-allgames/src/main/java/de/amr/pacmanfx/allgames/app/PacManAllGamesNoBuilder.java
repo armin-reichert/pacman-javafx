@@ -16,7 +16,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.game.Engine;
+import de.amr.pacmanfx.game.PacManGameEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -26,13 +26,14 @@ import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class PacManAllGamesNoBuilderApp extends Application {
+public class PacManAllGamesNoBuilder extends Application {
 
     static final float ASPECT_RATIO    = 1.6f; // 16:10
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private GameBox gameBox;
-    private Engine app;
+    private PacManGameEngine engine;
+
     private boolean includeTests;
 
     @Override
@@ -54,25 +55,21 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        app = new Engine(gameBox);
+        engine = new PacManGameEngine(gameBox);
 
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final GameUI ui = new GameUI(
-            stage, sceneSize.x(), sceneSize.y(),
-            GameUI.DEFAULT_UI_SETTINGS,
-            TengenDashboardFactory.instance()
-        );
+        final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), GameUI.DEFAULT_UI_SETTINGS);
 
         final StartPagesView startPages = ui.viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
-        startPages.addStartPage(app, new ArcadePacMan_StartPage());
-        startPages.addStartPage(app, new ArcadeMsPacMan_StartPage());
-        startPages.addStartPage(app, new TengenMsPacMan_StartPage());
-        startPages.addStartPage(app, new XXL_StartPage());
+        startPages.addStartPage(engine, new ArcadePacMan_StartPage());
+        startPages.addStartPage(engine, new ArcadeMsPacMan_StartPage());
+        startPages.addStartPage(engine, new TengenMsPacMan_StartPage());
+        startPages.addStartPage(engine, new XXL_StartPage());
 
-        app.watchdog().addEventListener(XXL_WorldMapManager.instance());
+        engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
 
-        app.setUI(ui);
-        app.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        engine.setUI(ui, TengenDashboardFactory.instance());
+        engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
 
         // This must happen *after* UI has been set!
         startPages.rootPane().setSelectedIndex(0);
@@ -80,8 +77,8 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void stop() {
-        if (app != null) {
-            app.terminate();
+        if (engine != null) {
+            engine.terminate();
         }
     }
 }

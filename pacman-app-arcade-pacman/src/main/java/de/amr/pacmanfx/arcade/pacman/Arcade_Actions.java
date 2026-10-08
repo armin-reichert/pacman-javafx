@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
 
@@ -30,7 +30,7 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 app.soundManager().voice().stop();
                 app.soundManager().setEnabled(true);
                 app.game().coinMechanism().insertCoin();
@@ -40,7 +40,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 final GameSession session = app.game().session();
                 final AbstractGameState gameState = app.game().state();
                 if (app.game().coinMechanism().isFull()) {
@@ -57,13 +57,13 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(EngineContext app) {
+            public void execute(PacManGameEngineContext app) {
                 app.soundManager().voice().stop();
                 app.game().playConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
-            public boolean isEnabled(EngineContext app) {
+            public boolean isEnabled(PacManGameEngineContext app) {
                 if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }

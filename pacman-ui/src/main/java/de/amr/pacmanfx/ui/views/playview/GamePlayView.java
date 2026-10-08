@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -45,7 +45,7 @@ public class GamePlayView implements GameView {
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private EngineContext app;
+    private PacManGameEngineContext app;
     private ContextMenuManager contextMenuManager;
 
     public GamePlayView() {
@@ -95,7 +95,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(EngineContext app) {
+    public void showHelp(PacManGameEngineContext app) {
 //        final double scaling = framedContainer.scalingProperty().get();
 //        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
@@ -138,7 +138,7 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setApp(EngineContext app) {
+    public void setApp(PacManGameEngineContext app) {
         this.app = requireNonNull(app);
         final GameViewModel viewModel = app.ui().viewModel();
         final GameMainScene mainScene = app.ui().window().mainScene();
@@ -186,7 +186,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onInput(EngineContext app) {
+    public void onInput(PacManGameEngineContext app) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(app).isEmpty()) {

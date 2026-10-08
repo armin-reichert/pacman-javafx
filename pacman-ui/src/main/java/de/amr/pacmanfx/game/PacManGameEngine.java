@@ -21,13 +21,14 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.EngineContext;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -38,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class Engine implements EngineContext {
+public final class PacManGameEngine implements PacManGameEngineContext {
 
     /**
      * A state change event from the current game flow state machine is converted
@@ -81,7 +82,7 @@ public final class Engine implements EngineContext {
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public Engine(GameBox gameBox) {
+    public PacManGameEngine(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
@@ -100,11 +101,10 @@ public final class Engine implements EngineContext {
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 
-    public void setUI(GameUI ui) {
+    public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
         this.ui = requireNonNull(ui);
-        createVariantManager(ui);
-
-        ui.connectEngine(this);
+        createGameVariantManager(ui);
+        ui.connectEngine(this, dashboardFactory);
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -290,7 +290,7 @@ public final class Engine implements EngineContext {
 
     // Private area, no trespassing!
 
-    private void createVariantManager(GameUI ui) {
+    private void createGameVariantManager(GameUI ui) {
         gameVariantManager = new DefaultGameVariantManager(gameBox, this, ui.viewModel());
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
