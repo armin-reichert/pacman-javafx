@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private PacManGameEngineContext app;
+    private PacManGameEngineContext engine;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -46,7 +46,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     // Events
 
-    protected void onAppConnected() {}
+    protected void onEngineConnected() {}
 
     /**
      * Hook method called when the game scene becomes active.
@@ -73,17 +73,17 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public final void setEngine(PacManGameEngineContext engine) {
         requireNonNull(engine);
-        if (this.app != null) {
+        if (this.engine != null) {
             return;
         }
-        this.app = engine;
-        onAppConnected();
+        this.engine = engine;
+        onEngineConnected();
         Logger.info("Game scene {} connected with app", getClass().getSimpleName());
     }
 
     @Override
     public PacManGameEngineContext engine() {
-        return requireNonNull(app);
+        return requireNonNull(engine);
     }
 
     @Override
@@ -99,8 +99,8 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        if (app != null) {
-            actionBindings().registry().executeMatchingAction(app);
+        if (engine != null) {
+            actionBindings().registry().executeMatchingAction(engine);
         }
     }
 

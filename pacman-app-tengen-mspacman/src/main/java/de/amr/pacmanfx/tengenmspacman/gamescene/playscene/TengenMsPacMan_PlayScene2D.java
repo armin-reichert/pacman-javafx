@@ -98,7 +98,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    protected void onAppConnected() {
+    protected void onEngineConnected() {
         final Game2DSettingsVM settings = viewModel().common2DSettings();
         rootPane.backgroundProperty().bind(settings.canvasBackgroundColorProperty().map(Background::fill));
     }

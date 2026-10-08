@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     }
 
     @Override
-    protected void onAppConnected() {
+    protected void onEngineConnected() {
         final AssetMap assets = engine().gameVariantManager().currentRuntime().uiConfig().assets();
         copyrightImageView.image().setImage(assets.image("logo.midway"));
     }

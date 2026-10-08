@@ -105,7 +105,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    protected void onAppConnected() {
+    protected void onEngineConnected() {
         final GameViewModel viewModel = engine().ui().viewModel();
 
         textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
