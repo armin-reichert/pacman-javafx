@@ -22,13 +22,12 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private static final Map<CommonGameSceneID, Supplier<GameScene>> FACTORY_MAP = new EnumMap<>(Map.of(
+    private static final Map<Named, Supplier<GameScene>> FACTORY_MAP = Map.of(
         CommonGameSceneID.BOOT_SCENE   , Arcade_BootScene::new,
         CommonGameSceneID.INTRO_SCENE  , ArcadePacMan_IntroScene::new,
         CommonGameSceneID.START_SCENE  , ArcadePacMan_StartScene::new,
@@ -37,13 +36,13 @@ public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         CommonGameSceneID.CUTSCENE_1   , ArcadePacMan_CutScene1::new,
         CommonGameSceneID.CUTSCENE_2   , ArcadePacMan_CutScene2::new,
         CommonGameSceneID.CUTSCENE_3   , ArcadePacMan_CutScene3::new
-    ));
+    );
 
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
     protected Supplier<GameScene> getGameSceneFactory(Named sceneID) {
-        return FACTORY_MAP.get((CommonGameSceneID) sceneID);
+        return FACTORY_MAP.get(sceneID);
     }
 
     @Override

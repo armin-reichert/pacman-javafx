@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.Named;
@@ -79,7 +80,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public GameSceneEmbedding embedding(GameScene gameScene) {
         return switch (gameScene) {
             case TengenMsPacMan_PlayScene3D _ -> GameSceneEmbedding.SUBSCENE;
-            default -> GameSceneEmbedding.PLAIN_2D;
+            default -> GameSceneEmbedding.PLAIN_2D; //TODO Play scene 2D with camera
         };
     }
 }
