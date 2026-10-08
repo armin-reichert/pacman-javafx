@@ -7,7 +7,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -94,12 +94,12 @@ public class GameBuilder {
         return this;
     }
 
-    public Optional<PacManGamesMasterApp> build(GameBox gameBox) {
+    public Optional<Engine> build(GameBox gameBox) {
         try {
             validateConfigurationData();
             gameBox.insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var game = new PacManGamesMasterApp(gameBox);
+            final var game = new Engine(gameBox);
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!
@@ -113,7 +113,7 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(GameApp appContext) {
+    private void addStartPages(EngineContext appContext) {
         final StartPagesView startPagesView = appContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();

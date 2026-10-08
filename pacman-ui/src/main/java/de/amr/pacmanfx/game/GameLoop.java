@@ -7,7 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
@@ -24,7 +24,7 @@ public final class GameLoop {
     private final GameClock clock;
     private Consumer<Throwable> errorHandler;
 
-    public GameLoop(GameClock clock, GameApp app) {
+    public GameLoop(GameClock clock, EngineContext app) {
         this.clock = requireNonNull(clock);
         requireNonNull(app);
 
@@ -69,7 +69,7 @@ public final class GameLoop {
         clock.stop();
     }
 
-    private void render(GameApp app) {
+    private void render(EngineContext app) {
         if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
             final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
             final GamePlayView playView = app.ui().viewManager().gamePlayView();

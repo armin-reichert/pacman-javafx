@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
@@ -36,9 +36,9 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 /**
- * The Pac-Man games master app.
+ * The Pac-Man games "engine".
  */
-public final class PacManGamesMasterApp implements GameApp {
+public final class Engine implements EngineContext {
 
     /**
      * A state change event from the current game flow state machine is converted
@@ -81,7 +81,7 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public PacManGamesMasterApp(GameBox gameBox) {
+    public Engine(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();

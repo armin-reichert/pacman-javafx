@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.editor;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
@@ -25,7 +25,7 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(GameApp app) {
+    public void ensureEditorCreated(EngineContext app) {
         if (editor == null) {
             editor = new TileMapEditor(app.ui().window().stage(), new Pac3DShapeFactory());
             editor.setOnQuit(_ -> app.ui().viewManager().selectStartPagesView());
@@ -37,7 +37,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void setApp(GameApp app) {}
+    public void setApp(EngineContext app) {}
 
     public TileMapEditor editor() {
         return editor;
@@ -55,7 +55,7 @@ public class EditorView implements GameView {
     public void onExit() {}
 
     @Override
-    public void onInput(GameApp app) {
+    public void onInput(EngineContext app) {
         Logger.warn("I should never get input from the global keyboard!");
     }
 

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -65,9 +65,9 @@ public interface GameScene extends Disposable, QuitHandler {
      */
     Stream<Renderable> renderables();
 
-    void setApp(GameApp app);
+    void setApp(EngineContext app);
 
-    GameApp app();
+    EngineContext app();
 
     /**
      * Hook called when entering this 2D scene from a 3D scene.

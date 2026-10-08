@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -46,33 +46,33 @@ public final class TengenMsPacMan_Actions {
 
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
-            public boolean isEnabled(GameApp app) {
+            public boolean isEnabled(EngineContext app) {
                 return app.game().session().isAttractMode();
             }
         };
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
         actionTogglePlaySceneDisplayMode = new GameAction("toggle_play_scene_display_mode") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 final var uiSettings = app.variantManager().currentRuntime()
                     .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -83,14 +83,14 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(GameApp app) {
+            public boolean isEnabled(EngineContext app) {
                 return app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 
         actionToggleJoypadBindingsDisplayed = new GameAction("toggle_joypad_bindings_displayed") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 final var uiSettings = app.variantManager().currentRuntime()
                     .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -100,7 +100,7 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(level -> {
                     final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
@@ -114,7 +114,7 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(GameApp app) {
+            public boolean isEnabled(EngineContext app) {
                 final GameSession session = app.game().session();
                 return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }
@@ -122,7 +122,7 @@ public final class TengenMsPacMan_Actions {
 
         actionSelectNextJoypadKeyBinding = new GameAction("select_next_joypad_binding") {
             @Override
-            public void execute(GameApp app) {
+            public void execute(EngineContext app) {
                 app.input().joypad().selectNextBinding();
             }
         };

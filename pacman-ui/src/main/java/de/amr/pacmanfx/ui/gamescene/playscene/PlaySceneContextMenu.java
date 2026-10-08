@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import javafx.beans.property.ObjectProperty;
@@ -47,7 +47,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
     private final ObjectProperty<PerspectiveID> perspectiveIDProperty;
 
     public PlaySceneContextMenu(PlayScene3D playScene3D) {
-        final GameApp app = playScene3D.app();
+        final EngineContext app = playScene3D.app();
         final Game3DSettingsVM settings3D = app.ui().viewModel().common3DSettings();
         final GameCheats cheats = playScene3D.game().session().cheats();
         final TranslationManager translator = app.translationManager();

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -45,7 +45,7 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setGameApp(GameApp app) {
+    public void setGameApp(EngineContext app) {
         mainScene.setGameApp(app);
 
         titleBinding = createStageTitleBinding(app);
@@ -61,7 +61,7 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(GameApp appContext) {
+    public void show(EngineContext appContext) {
         updateStageIcon(appContext);
         stage.centerOnScreen();
         stage.show();
@@ -81,7 +81,7 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(GameApp app) {
+    private StringBinding createStageTitleBinding(EngineContext app) {
         return createStringBinding(
             () -> switch (app.ui().viewManager().currentViewID()) {
                 case null -> ""; // happens initially, don't mind
@@ -115,7 +115,7 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(GameApp appContext) {
+    private void updateStageIcon(EngineContext appContext) {
         final Image icon = appContext.variantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -124,7 +124,7 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(GameApp app) {
+    private String titleForCurrentGameScene(EngineContext app) {
         final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = app.ui().viewModel();
 
@@ -138,7 +138,7 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameApp app, boolean paused, boolean is3D) {
+    private String stageTitle(EngineContext app, boolean paused, boolean is3D) {
         final String gameVariantName = app.variantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";

@@ -9,14 +9,14 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGamesMasterApp;
+import de.amr.pacmanfx.game.Engine;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PacManXXL_App extends Application {
 
     private GameBox gameBox;
-    private PacManGamesMasterApp app;
+    private Engine app;
 
     @Override
     public void init() {

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -44,7 +44,7 @@ public class XXL_OptionMenu extends OptionMenu {
     private Renderer chaseAnimationRenderer;
     private boolean animationDirty;
 
-    private GameApp app;
+    private EngineContext app;
 
     private ObservableValue<Double> scaling;
 
@@ -110,7 +110,7 @@ public class XXL_OptionMenu extends OptionMenu {
         );
     }
 
-    public void init(GameApp app) {
+    public void init(EngineContext app) {
         this.app = requireNonNull(app);
 
         final GameUI ui = app.ui();

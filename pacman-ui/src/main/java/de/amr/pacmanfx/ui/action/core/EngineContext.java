@@ -19,9 +19,9 @@ import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 
 /**
- * The game application context.
+ * The game "engine".
  */
-public interface GameApp {
+public interface EngineContext {
 
     void exitGameVariant(GameVariantRuntime runtime);
 

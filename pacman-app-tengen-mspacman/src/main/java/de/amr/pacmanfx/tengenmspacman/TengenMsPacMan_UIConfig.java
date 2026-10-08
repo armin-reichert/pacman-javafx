@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -93,7 +93,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(GameApp app) {
+    public void load(EngineContext app) {
         assets = new AssetMap();
         assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
@@ -105,7 +105,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(GameApp app) {
+    public Map<Named, Object> createExtensions(EngineContext app) {
         return Map.of(
             EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(app),
             EXT_ACTIONS,     new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions())
@@ -113,7 +113,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(GameApp app) {
+    public void unload(EngineContext app) {
         unloadSounds(app.soundManager());
         dispose();
     }

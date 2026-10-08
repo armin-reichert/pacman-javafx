@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.control.Button;
 
@@ -32,21 +32,21 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setGameApp(GameApp app) {}
+    public void setGameApp(EngineContext app) {}
 
-    public void update(GameApp app) {
+    public void update(EngineContext app) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameApp app, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(EngineContext app, Function<GameScene, String> fnInfo) {
         return () -> app.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(GameApp app, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(EngineContext app, Function<GameLevel, Object> fnInfo) {
         return () -> app.game().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(GameApp app, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(EngineContext app, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(app.game().playConfig().rules());
     }
 
@@ -56,7 +56,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameApp app, Button button, GameAction gameAction) {
+    protected void setGameAction(EngineContext app, Button button, GameAction gameAction) {
         button.setOnAction(_ -> app.runAction(gameAction));
     }
 }
