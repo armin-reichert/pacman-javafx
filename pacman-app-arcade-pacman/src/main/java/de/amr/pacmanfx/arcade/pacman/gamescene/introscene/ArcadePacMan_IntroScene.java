@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
@@ -62,7 +63,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        bindingsMap.registerAllBindings(engine().commonActions().sceneTestActions().bindings()); // actions for starting tests
+        bindingsMap.registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }

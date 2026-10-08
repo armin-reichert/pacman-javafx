@@ -44,7 +44,6 @@ public class DS_GameControl extends GameDashboardSection {
 
     @Override
     public void setGameApp(PacManGameEngineContext app) {
-        final CommonGameActions actions = app.commonActions();
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 
@@ -67,10 +66,10 @@ public class DS_GameControl extends GameDashboardSection {
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
-        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
-        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
-        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
-        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
+        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
+        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
+        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
             app.currentGame().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()

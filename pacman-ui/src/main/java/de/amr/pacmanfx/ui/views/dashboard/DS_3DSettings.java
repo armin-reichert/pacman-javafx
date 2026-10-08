@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -52,10 +52,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
         addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(app)));
 
-        addDynamicInfo("Scene Size", () -> sceneSizeInfo(
-            app.gameSceneManager().optCurrentGameScene().orElse(null),
-            app.currentGame().session().optLevel().orElse(null)
-        ));
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(app.gameSceneManager().optCurrentGameScene().orElse(null)));
 
         cbMiniViewVisible = checkBox("Mini View", vm.miniViewSettings().activeProperty);
 
@@ -100,8 +97,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               vm.maze3DSettings().wallOpacityProperty());
         editPropertyWithChoiceBox(comboPerspectives,            vm.common3DSettings().cameraPerspectiveIDProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> app.runAction(app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D()));
-        cbWireframeMode .setOnAction(_ -> app.runAction(app.commonActions().camera3DActions().actionToggleDrawMode()));
+        cbUsePlayScene3D.setOnAction(_ -> app.runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
+        cbWireframeMode .setOnAction(_ -> app.runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
     }
 
     @Override
@@ -144,7 +141,7 @@ public class DS_3DSettings extends GameDashboardSection {
             camera.getTranslateZ());
     }
 
-    private static String sceneSizeInfo(GameScene gameScene, GameLevel level) {
+    private static String sceneSizeInfo(GameScene gameScene) {
         if (gameScene == null) return NO_INFO;
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {

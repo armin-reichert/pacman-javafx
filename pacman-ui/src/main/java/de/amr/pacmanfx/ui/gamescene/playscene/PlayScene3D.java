@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
@@ -369,7 +370,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {}
 
     protected void registerActionBindings() {
-        actionBindings().registry().registerAllBindings(engine().commonActions().camera3DActions().bindings());
+        actionBindings().registry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {

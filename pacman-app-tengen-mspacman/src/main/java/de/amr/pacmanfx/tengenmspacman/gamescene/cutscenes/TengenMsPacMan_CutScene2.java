@@ -18,6 +18,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -70,7 +71,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.bindActionToKeyCombination(
-            engine().commonActions().gameFlowActions().actionLetGameStateExpire(),
+            CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire(),
             joypad.keyForButton(JoypadButton.START));
 
         createActors();

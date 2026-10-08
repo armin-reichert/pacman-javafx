@@ -14,6 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -105,10 +106,10 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(PacManGameEngineContext app) {
+    public Map<Named, Object> createExtensions(PacManGameEngineContext engine) {
         return Map.of(
-            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(app),
-            EXT_ACTIONS,     new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions())
+            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engine),
+            EXT_ACTIONS,     new TengenMsPacMan_Actions(engine.input().joypad(), CommonGameActions.instance())
         );
     }
 

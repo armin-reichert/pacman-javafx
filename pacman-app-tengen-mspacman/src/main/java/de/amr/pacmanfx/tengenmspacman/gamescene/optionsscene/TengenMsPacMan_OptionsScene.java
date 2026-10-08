@@ -29,6 +29,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -165,7 +166,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         bindingsMap.selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
         bindingsMap.bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        bindingsMap.registerAllBindings(engine().commonActions().sceneTestActions().bindings());
+        bindingsMap.registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
         selectedOption.set(PlayOption.PAC_BOOSTER);
         gameOptionValues(session).setCanStartNewGame(true);

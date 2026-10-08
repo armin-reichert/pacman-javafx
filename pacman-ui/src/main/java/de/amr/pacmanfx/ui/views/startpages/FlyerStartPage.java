@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -139,7 +140,7 @@ public class FlyerStartPage implements StartPage {
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            engine.runAction(engine.commonActions().gameFlowActions().actionStartGame());
+            engine.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame());
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);

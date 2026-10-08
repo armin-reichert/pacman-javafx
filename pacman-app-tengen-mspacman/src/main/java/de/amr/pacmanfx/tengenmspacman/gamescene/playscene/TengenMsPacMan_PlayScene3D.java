@@ -15,6 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
@@ -128,7 +129,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             bindingsMap.registerAllBindings(actions.steeringBindings());
             bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            bindingsMap.registerAllBindings(engine().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
         }
         registerActionBindings();
 

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
@@ -165,7 +166,7 @@ public class GamePlayView implements GameView {
     @Override
     public void onEnter() {
         root.requestFocus();
-        actionBindings.registerAllBindings(engine.commonActions().bindings());
+        actionBindings.registerAllBindings(CommonGameActions.instance().bindings());
         layers.gameSceneLayer().installKeyBindings();
         Logger.debug(actionBindings);
     }

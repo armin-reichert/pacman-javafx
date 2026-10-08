@@ -13,8 +13,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -90,7 +90,7 @@ public class GameUI implements GameEventListener {
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
 
         connectKeyboard(engine.input().keyboard());
-        bindCommonActions(engine.commonActions());
+        bindCommonActions();
 
         Logger.info("UI connected with engine");
         Logger.info(actionBindings);
@@ -194,11 +194,11 @@ public class GameUI implements GameEventListener {
         return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 
-    private void bindCommonActions(CommonGameActions actions) {
-        final Set<ActionKeyBinding> bindings = actions.bindings();
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
+    private void bindCommonActions() {
+        final Set<ActionKeyBinding> commonActionBindings = CommonGameActions.instance().bindings();
+        actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionToggleKeyboardMonitor(), commonActionBindings);
+        actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionEnterFullScreen(), commonActionBindings);
+        actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().simulationActions().actionToggleMuted(), commonActionBindings);
+        actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().editorActions().actionOpenEditor(), commonActionBindings);
     }
 }

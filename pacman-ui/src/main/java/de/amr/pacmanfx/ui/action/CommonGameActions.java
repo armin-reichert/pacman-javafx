@@ -28,6 +28,15 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  */
 public final class CommonGameActions {
 
+    private static class SingletonHolder {
+        static final CommonGameActions SINGLETON = new CommonGameActions();
+    }
+
+    public static CommonGameActions instance() {
+        return CommonGameActions.SingletonHolder.SINGLETON;
+    }
+
+
     private final SimulationActions simulationActions;
     private final GameFlowActions gameFlowActions;
     private final SteeringActions steeringActions;
@@ -41,7 +50,7 @@ public final class CommonGameActions {
 
     private final Set<ActionKeyBinding> commonBindings;
 
-    public CommonGameActions() {
+    private CommonGameActions() {
         simulationActions = new SimulationActions();
         gameFlowActions = new GameFlowActions();
         steeringActions = new SteeringActions();

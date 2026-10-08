@@ -10,6 +10,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -83,7 +84,7 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = engine.input().keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            engine.runAction(engine.commonActions().editorActions().actionOpenEditor());
+            engine.runAction(CommonGameActions.instance().editorActions().actionOpenEditor());
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();

@@ -40,6 +40,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.ColorSchemedMapSprite;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
@@ -189,7 +190,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, engine().ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(engine(), contextMenu, translations, engine().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(engine(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -242,7 +243,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registry().registerAllBindings(actions().steeringBindings());
 
-        actionBindings().registry().registerAllBindings(engine().commonActions().cheatActions().bindings());
+        actionBindings().registry().registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
 
         actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
         actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());

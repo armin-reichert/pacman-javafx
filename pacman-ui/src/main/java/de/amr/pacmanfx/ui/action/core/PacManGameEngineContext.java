@@ -37,8 +37,6 @@ public interface PacManGameEngineContext {
 
     boolean runAction(GameAction gameAction);
 
-    CommonGameActions commonActions();
-
     RenderManager renderManager();
 
     TranslationManager translationManager();

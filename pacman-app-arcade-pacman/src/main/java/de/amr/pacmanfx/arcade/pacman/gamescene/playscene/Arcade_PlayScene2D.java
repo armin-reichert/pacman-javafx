@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationSystem;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
@@ -119,7 +120,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final CheatActions cheatActions = engine().commonActions().cheatActions();
+        final CheatActions cheatActions = CommonGameActions.instance().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, engine().translationManager(), "context_menu.pacman");
@@ -141,7 +142,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, engine().translationManager(), viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(engine(), contextMenu, engine().translationManager(), engine().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(engine(), contextMenu, engine().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -169,8 +170,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             soundManager().setEnabled(false);
         }
         else {
-            bindingsRegistry.registerAllBindings(engine().commonActions().steeringActions().bindings());
-            bindingsRegistry.registerAllBindings(engine().commonActions().cheatActions().bindings());
+            bindingsRegistry.registerAllBindings(CommonGameActions.instance().steeringActions().bindings());
+            bindingsRegistry.registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
             soundManager().setEnabled(true);
         }

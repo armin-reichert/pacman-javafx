@@ -72,8 +72,6 @@ public final class PacManGameEngine implements PacManGameEngineContext {
 
     private final SpriteAnimationTimer spriteAnimationTimer;
 
-    private final CommonGameActions actions;
-
     private GameUI ui;
 
     private GameContext game;
@@ -90,7 +88,6 @@ public final class PacManGameEngine implements PacManGameEngineContext {
         spriteAnimationTimer = new SpriteAnimationTimer();
         translationManager = new CommonTranslationManager();
         gameLoop = new GameLoop(gameBox.clock(), this);
-        actions = new CommonGameActions();
         gameLoop.setErrorHandler(this::handleFatalError);
     }
 
@@ -161,11 +158,6 @@ public final class PacManGameEngine implements PacManGameEngineContext {
     @Override
     public GameContext currentGame() {
         return game;
-    }
-
-    @Override
-    public CommonGameActions commonActions() {
-        return actions;
     }
 
     @Override

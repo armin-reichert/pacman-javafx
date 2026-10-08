@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import javafx.event.EventHandler;
@@ -48,7 +49,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
                     engine,
                     contextMenu,
                     translations,
-                    engine.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                    CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
             // Add game scene provided menu entries

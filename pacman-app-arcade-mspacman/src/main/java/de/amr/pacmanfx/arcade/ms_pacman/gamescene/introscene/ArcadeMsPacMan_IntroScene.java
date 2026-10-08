@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -72,7 +73,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
         final Arcade_Actions arcadeActions = runtime.extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
         actionBindings().registry().registerAllBindings(arcadeActions.gameStartActionBindings());
-        actionBindings().registry().registerAllBindings(engine().commonActions().sceneTestActions().bindings());
+        actionBindings().registry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
         view = new IntroSceneView(runtime);
 

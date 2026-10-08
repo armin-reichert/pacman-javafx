@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSys
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -81,7 +82,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction quitAction = engine().commonActions().gameFlowActions().actionLetGameStateExpire();
+        final GameAction quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.bindActionToKeyCombination(quitAction, engine().input().joypad().keyForButton(JoypadButton.START));

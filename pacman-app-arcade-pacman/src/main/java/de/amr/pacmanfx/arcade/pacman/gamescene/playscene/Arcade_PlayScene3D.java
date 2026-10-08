@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import org.tinylog.Logger;
 
@@ -27,8 +28,8 @@ public class Arcade_PlayScene3D extends PlayScene3D {
         if (session.isAttractMode()) {
             bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         } else {
-            bindingsMap.registerAllBindings(engine().commonActions().steeringActions().bindings());
-            bindingsMap.registerAllBindings(engine().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(CommonGameActions.instance().steeringActions().bindings());
+            bindingsMap.registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
         }
         registerActionBindings();
         Logger.info(actionBindings());

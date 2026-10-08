@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
@@ -55,7 +56,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 
         addLocalizedTitleItem(this, translator, "context_menu.scene_display");
-        addLocalizedActionItem(app, this, translator, app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+        addLocalizedActionItem(app, this, translator, CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
         addLocalizedCheckBox(this, translator, app.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
         addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
 
@@ -74,7 +75,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
         addSeparator(this);
         addLocalizedCheckBox(this, translator, app.ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app, this, translator, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app, this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);
     }
