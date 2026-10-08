@@ -302,7 +302,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         } else {
             scoresView.showTextForScore(
                 app().translationManager().translate("score.game_over"),
-                app().variantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
+                app().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -334,7 +334,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig uiConfig = app().variantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = app().gameVariantManager().currentRuntime().uiConfig();
         final GameViewModel viewModel      = app().ui().viewModel();
         final GameSession session          = game.session();
 
@@ -350,7 +350,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(app().variantManager().currentRuntime(), game.session(), level3D);
+        animationSystem.createAnimations(app().gameVariantManager().currentRuntime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();

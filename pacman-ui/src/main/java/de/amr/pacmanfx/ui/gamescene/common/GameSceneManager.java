@@ -57,7 +57,7 @@ public class GameSceneManager {
 
     public void updateGameSceneAndForceReload(EngineContext app, boolean forceReload) {
         final GameUI ui = app.ui();
-        final GameVariantUIConfig uiConfig = app.variantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = app.gameVariantManager().currentRuntime().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();
         final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();

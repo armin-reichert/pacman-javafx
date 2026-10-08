@@ -104,7 +104,7 @@ public final class Engine implements EngineContext {
         this.ui = requireNonNull(ui);
         createVariantManager(ui);
 
-        ui.connectWithApp(this);
+        ui.connectEngine(this);
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -149,7 +149,7 @@ public final class Engine implements EngineContext {
     }
 
     @Override
-    public GameVariantManager variantManager() {
+    public GameVariantManager gameVariantManager() {
         return gameVariantManager;
     }
 

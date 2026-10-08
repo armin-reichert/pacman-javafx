@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
         final ActorSpriteAnimController animController = app().game().playConfig().systems().actorSpriteAnimController();
-        final var renderer = app().variantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
+        final var renderer = app().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var bindingsMap = actionBindings().registry();
         bindingsMap.dispose();
 
-        final var actions = app().variantManager().currentRuntime()
+        final var actions = app().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {

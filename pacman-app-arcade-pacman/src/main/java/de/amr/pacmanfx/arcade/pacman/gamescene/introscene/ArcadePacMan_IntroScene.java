@@ -57,7 +57,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().variantManager().currentRuntime()
+        final Arcade_Actions actions = app().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindings().registry();
@@ -79,7 +79,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void initState() {
-        final GameVariantRuntime variant = app().variantManager().currentRuntime();
+        final GameVariantRuntime variant = app().gameVariantManager().currentRuntime();
         view.createPacManAndGhosts(
             variant.uiConfig().renderConfig(),
             variant.playConfig().systems().actorSpriteAnimController(),

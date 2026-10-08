@@ -61,7 +61,7 @@ public class DS_GameControl extends GameDashboardSection {
         setAction(choiceBoxInitialLives,
             () -> {
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                app.variantManager().currentRuntime().playConfig().setInitialLifeCount(lifeCount);
+                app.gameVariantManager().currentRuntime().playConfig().setInitialLifeCount(lifeCount);
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
@@ -88,7 +88,7 @@ public class DS_GameControl extends GameDashboardSection {
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(app.variantManager().currentRuntime().playConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(app.gameVariantManager().currentRuntime().playConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
@@ -107,7 +107,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     private boolean canStartLevel(EngineContext appContext, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variantManager().currentVariantName());
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !appContext.game().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

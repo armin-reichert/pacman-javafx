@@ -72,7 +72,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             return Stream.empty();
         }
 
-        final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariantManager().currentRuntime().uiConfig().renderConfig();
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
@@ -164,7 +164,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindings().registry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = app().variantManager().currentRuntime()
+            final Arcade_Actions actions = app().gameVariantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
@@ -179,7 +179,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(app().variantManager().currentRuntime(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(app().gameVariantManager().currentRuntime(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {

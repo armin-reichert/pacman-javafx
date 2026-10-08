@@ -126,13 +126,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = app().variantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig variantConfig = app().gameVariantManager().currentRuntime().uiConfig();
 
         game().session().setHudVisible(false);
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = app().variantManager().currentRuntime()
+        final var actions = app().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindings().registry();
@@ -235,7 +235,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
         marqueeTextView2.show();
 
-        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
+        final GameVariantRuntime runtime = app().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
@@ -301,7 +301,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantRuntime variant = scene.app().variantManager().currentRuntime();
+                final GameVariantRuntime variant = scene.app().gameVariantManager().currentRuntime();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
                 final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem nav = systems.navigator();

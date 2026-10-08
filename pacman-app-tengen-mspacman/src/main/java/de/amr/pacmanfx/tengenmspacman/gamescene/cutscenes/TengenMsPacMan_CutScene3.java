@@ -84,7 +84,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     }
     
     private void createActors() {
-        final GameVariantRuntime variant = app().variantManager().currentRuntime();
+        final GameVariantRuntime variant = app().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 

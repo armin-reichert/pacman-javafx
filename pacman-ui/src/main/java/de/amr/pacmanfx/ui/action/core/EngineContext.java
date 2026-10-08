@@ -49,7 +49,7 @@ public interface EngineContext {
 
     GameClock clock();
 
-    GameVariantManager variantManager();
+    GameVariantManager gameVariantManager();
 
     GameContext game();
 

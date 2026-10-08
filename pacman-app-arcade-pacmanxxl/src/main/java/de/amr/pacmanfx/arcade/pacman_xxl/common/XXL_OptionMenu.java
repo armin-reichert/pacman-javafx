@@ -71,7 +71,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
             if (animationDirty) {
-                final var runtime = app.variantManager().currentRuntime();
+                final var runtime = app.gameVariantManager().currentRuntime();
                 stopChaseAnimation();
                 createNewChaseAnimation(runtime, canvas);
                 animationDirty = false;
@@ -114,8 +114,8 @@ public class XXL_OptionMenu extends OptionMenu {
         this.app = requireNonNull(app);
 
         final GameUI ui = app.ui();
-        final String variantName = app.variantManager().currentVariantName();
-        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        final String variantName = app.gameVariantManager().currentVariantName();
+        final GameVariantRuntime runtime = app.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
@@ -139,11 +139,11 @@ public class XXL_OptionMenu extends OptionMenu {
 
         scaling = computeScalingValue(ui.window().stage().heightProperty());
 
-        app.variantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
-            final GameVariantRuntime oldRuntime = app.variantManager().variantRuntimeByName(oldVariantName);
+        app.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
+            final GameVariantRuntime oldRuntime = app.gameVariantManager().variantRuntimeByName(oldVariantName);
             app.exitGameVariant(oldRuntime);
 
-            final GameVariantRuntime newRuntime = app.variantManager().variantRuntimeByName(newVariantName);
+            final GameVariantRuntime newRuntime = app.gameVariantManager().variantRuntimeByName(newVariantName);
             app.enterGameVariant(newRuntime);
             restartChaseAnimation(newRuntime);
         });
@@ -205,7 +205,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
-        app.variantManager().selectVariant(newID.name());
+        app.gameVariantManager().selectVariant(newID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {

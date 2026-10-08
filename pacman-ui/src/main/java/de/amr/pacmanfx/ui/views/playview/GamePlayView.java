@@ -107,7 +107,7 @@ public class GamePlayView implements GameView {
         // Level changed: adjust game scene size by reembedding
         layers.gameSceneLayer().embedGameScene(
             app.ui(),
-            app.variantManager().currentRuntime().uiConfig(),
+            app.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
@@ -127,7 +127,7 @@ public class GamePlayView implements GameView {
 
         layers.gameSceneLayer().embedGameScene(
             app.ui(),
-            app.variantManager().currentRuntime().uiConfig(),
+            app.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();

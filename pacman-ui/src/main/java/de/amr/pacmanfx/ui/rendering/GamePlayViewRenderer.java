@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 public class GamePlayViewRenderer {
 
     public static void render(GamePlayView playView, EngineContext app, GameClock clock, AbstractGameScene gameScene) {
-        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        final GameVariantRuntime runtime = app.gameVariantManager().currentRuntime();
         final RenderManager renderManager = app.renderManager();
         final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
 

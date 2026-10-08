@@ -55,7 +55,7 @@ public class GameWindow {
         app.ui().viewManager().currentViewIDProperty().addListener(
             (_, _, viewID) -> updateStageTitleBinding(app.ui(), viewID));
 
-        app.variantManager().addVariantListener((_, _, _) -> updateStageIcon(app));
+        app.gameVariantManager().addVariantListener((_, _, _) -> updateStageIcon(app));
 
         // Triggers title update
         connected.set(true);
@@ -90,7 +90,7 @@ public class GameWindow {
                 case EDITOR -> optCurrentViewTitle(app.ui()).orElse(("Map Editor"));
             },
             connected,
-            app.variantManager().selectedVariantNameProperty(),
+            app.gameVariantManager().selectedVariantNameProperty(),
             app.gameSceneManager().currentGameSceneProperty(),
             app.clock().updatesDisabledProperty(),
             app.ui().viewModel().debugModeOnProperty(),
@@ -116,7 +116,7 @@ public class GameWindow {
     }
 
     private void updateStageIcon(EngineContext appContext) {
-        final Image icon = appContext.variantManager().currentRuntime().uiConfig().assets().image("app_icon");
+        final Image icon = appContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -139,7 +139,7 @@ public class GameWindow {
     }
 
     private String stageTitle(EngineContext app, boolean paused, boolean is3D) {
-        final String gameVariantName = app.variantManager().currentVariantName();
+        final String gameVariantName = app.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
@@ -151,7 +151,7 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = app.variantManager().currentRuntime().uiConfig().translations();
+        final TranslationManager variantTranslations = app.gameVariantManager().currentRuntime().uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

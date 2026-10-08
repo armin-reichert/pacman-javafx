@@ -33,7 +33,7 @@ public interface GameScene extends Disposable, QuitHandler {
     }
 
     default GameVariantRuntime runtime() {
-        return app().variantManager().currentRuntime();
+        return app().gameVariantManager().currentRuntime();
     }
 
     default GameViewModel viewModel() {

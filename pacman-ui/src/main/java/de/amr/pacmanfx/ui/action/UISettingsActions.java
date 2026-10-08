@@ -52,7 +52,7 @@ public class UISettingsActions {
 
             @Override
             public boolean isEnabled(EngineContext app) {
-                final String variantName = app.variantManager().currentVariantName();
+                final String variantName = app.gameVariantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
                       (app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
