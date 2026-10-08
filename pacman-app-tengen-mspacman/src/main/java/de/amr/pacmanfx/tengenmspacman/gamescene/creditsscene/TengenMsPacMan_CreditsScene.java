@@ -102,8 +102,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
         final var actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        final var bindingsMap = actionBindings().registry();
-        bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 
         fadeProgress = 0;
         displayMode = DisplayMode.ORIGINAL_AUTHORS;

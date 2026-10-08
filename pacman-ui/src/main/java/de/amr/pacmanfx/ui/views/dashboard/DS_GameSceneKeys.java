@@ -4,11 +4,9 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
 
@@ -32,20 +30,17 @@ public class DS_GameSceneKeys extends GameDashboardSection {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             return;
         }
-        if (abstractGameScene.hasComponent(ActionBindingsComp.class)) {
-            final ActionBindingsRegistry registry = abstractGameScene.assertComponent(ActionBindingsComp.class).registry();
-            if (registry.actionBindings().isEmpty()) {
-                addRow(createLabel(NO_INFO, false));
-            } else {
-                registry.actionBindings().entrySet().stream()
-                    .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
-                    .forEach(entry -> {
-                        final KeyCombination keyCombination = entry.getKey();
-                        final GameAction action = entry.getValue();
-                        final String localizedActionText = app.translationManager().translate(action.resourceBundleKey());
-                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(app)));
-                    });
-            }
+        if (abstractGameScene.actionBindingsRegistry().actionBindings().isEmpty()) {
+            addRow(createLabel(NO_INFO, false));
+        } else {
+            abstractGameScene.actionBindingsRegistry().actionBindings().entrySet().stream()
+                .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
+                .forEach(entry -> {
+                    final KeyCombination keyCombination = entry.getKey();
+                    final GameAction action = entry.getValue();
+                    final String localizedActionText = app.translationManager().translate(action.resourceBundleKey());
+                    addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(app)));
+                });
         }
     }
 }

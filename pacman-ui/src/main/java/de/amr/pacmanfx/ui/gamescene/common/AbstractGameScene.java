@@ -10,6 +10,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
@@ -31,7 +33,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComponent(GameSceneView2D.class, view2D);
 
-        setComponent(ActionBindingsComp.class, new ActionBindingsComp(this));
+        setComponent(ActionBindingsRegistry.class, new GameActionBindingsRegistry("Action Bindings for '%s'".formatted(this)));
     }
 
     // Typed game scene component access
@@ -40,8 +42,8 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return assertComponent(GameSceneView2D.class);
     }
 
-    public ActionBindingsComp actionBindings() {
-        return assertComponent(ActionBindingsComp.class);
+    public ActionBindingsRegistry actionBindingsRegistry() {
+        return assertComponent(ActionBindingsRegistry.class);
     }
 
     // Events
@@ -100,7 +102,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public void onInput() {
         if (engine != null) {
-            actionBindings().registry().executeMatchingAction(engine);
+            actionBindingsRegistry().executeMatchingAction(engine);
         }
     }
 

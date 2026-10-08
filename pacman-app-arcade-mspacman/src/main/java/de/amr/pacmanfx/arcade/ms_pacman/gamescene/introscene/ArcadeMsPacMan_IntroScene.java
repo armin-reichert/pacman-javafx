@@ -72,8 +72,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         final GameVariantRuntime runtime = engine().gameVariantManager().currentRuntime();
 
         final Arcade_Actions arcadeActions = runtime.extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-        actionBindings().registry().registerAllBindings(arcadeActions.gameStartActionBindings());
-        actionBindings().registry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
+        actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
+        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
         view = new IntroSceneView(runtime);
 
@@ -92,7 +92,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         soundManager().voice().stop();
-        actionBindings().registry().dispose();
+        actionBindingsRegistry().dispose();
     }
 
     @Override

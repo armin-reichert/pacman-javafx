@@ -185,7 +185,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction> executedAction = actionBindings().registry().executeMatchingAction(engine());
+        final Optional<GameAction> executedAction = actionBindingsRegistry().executeMatchingAction(engine());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {
@@ -370,7 +370,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {}
 
     protected void registerActionBindings() {
-        actionBindings().registry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
+        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {

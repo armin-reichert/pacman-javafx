@@ -161,7 +161,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         view2D().unscaledHeightProperty().set(terrainSize.y());
 
         // Action bindings (demo level, normal level)
-        final var bindingsRegistry = actionBindings().registry();
+        final var bindingsRegistry = actionBindingsRegistry();
         if (session.isAttractMode()) {
             final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);

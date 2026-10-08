@@ -223,7 +223,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             acceptNormalLevel();
         }
 
-        Logger.info(actionBindings().registry());
+        Logger.info(actionBindingsRegistry());
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -241,22 +241,18 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         soundManager().setEnabled(true); //TODO needed?
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        actionBindings().registry().registerAllBindings(actions().steeringBindings());
+        actionBindingsRegistry().registerAllBindings(actions().steeringBindings());
 
-        actionBindings().registry().registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
+        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
 
-        actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
-        actionBindings().registry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());
     }
 
     private void acceptDemoLevel() {
         soundManager().setEnabled(false); //TODO needed?
-
-        final var actions = actions();
-
-        final var bindingsMap = actionBindings().registry();
-        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
-        bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionQuitDemoLevel(), actions().localBindings());
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

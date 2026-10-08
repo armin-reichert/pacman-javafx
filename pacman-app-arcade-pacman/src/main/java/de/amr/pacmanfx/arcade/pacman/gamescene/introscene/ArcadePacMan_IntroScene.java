@@ -61,9 +61,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindings().registry();
-        bindingsMap.registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        bindingsMap.registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
+        actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
+        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }

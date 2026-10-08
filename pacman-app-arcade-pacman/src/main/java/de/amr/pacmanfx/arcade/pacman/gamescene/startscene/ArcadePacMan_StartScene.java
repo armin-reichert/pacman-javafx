@@ -41,8 +41,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
         final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindings().registry();
-        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
