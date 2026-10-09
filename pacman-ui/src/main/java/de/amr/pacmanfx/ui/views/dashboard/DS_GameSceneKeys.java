@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
@@ -20,15 +19,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGamesEngine engine) {
-        super.update(engine);
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        engineImpl.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(engine, gameScene));
+    public void update(GameActionExecutionContext context) {
+        super.update(context);
+        context.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(context, gameScene));
     }
 
-    private void updateInfo(PacManGamesEngine engine, GameScene gameScene) {
+    private void updateInfo(GameActionExecutionContext context, GameScene gameScene) {
         clearSection();
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
@@ -42,8 +38,10 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = engine.translationManager().translate(action.resourceBundleKey());
-                    addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(engine)));
+                    final String localizedActionText = context.translationManager()
+                        .translate(action.resourceBundleKey());
+                    addRow(keyCombination.getDisplayText(),
+                        createLabel(localizedActionText, action.isEnabled(context)));
                 });
         }
     }

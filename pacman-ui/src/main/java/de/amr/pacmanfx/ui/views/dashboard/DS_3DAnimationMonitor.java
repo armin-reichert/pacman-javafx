@@ -6,8 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -100,22 +99,16 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void connectEngine(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        tableView.prefHeightProperty().bind(engineImpl.ui().window().stage().heightProperty()
+    public void setExecutionContext(GameActionExecutionContext context) {
+        tableView.prefHeightProperty().bind(context.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(PacManGamesEngine engine) {
-        super.update(engine);
+    public void update(GameActionExecutionContext context) {
+        super.update(context);
 
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        if (engineImpl.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {
+        if (context.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {
             final AnimationRegistry animationRegistry = playScene3D.animations3D().registry();
             currentAnimationRegistry.set(animationRegistry);
         }

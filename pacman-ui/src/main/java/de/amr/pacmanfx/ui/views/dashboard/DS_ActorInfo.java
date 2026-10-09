@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -32,39 +32,39 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void connectEngine(PacManGamesEngine app) {
-        addDynamicInfo("Pac Name",  supplyPacStateAndName(app));
-        addDynamicInfo("Lives",     supplyLivesCount(app));
-        addDynamicInfo("Visible",   supplyPacText(app, this::actorVisibilityText));
-        addDynamicInfo("Movement",  supplyPacText(app, this::actorMovementText));
-        addDynamicInfo("Tile",      supplyPacText(app, this::actorLocationText));
-        addDynamicInfo("Power",     supplyPacPowerText(app));
-        addDynamicInfo("Animation", supplyPacAnimationText(app));
+    public void setExecutionContext(GameActionExecutionContext context) {
+        addDynamicInfo("Pac Name",  supplyPacStateAndName(context));
+        addDynamicInfo("Lives",     supplyLivesCount(context));
+        addDynamicInfo("Visible",   supplyPacText(context, this::actorVisibilityText));
+        addDynamicInfo("Movement",  supplyPacText(context, this::actorMovementText));
+        addDynamicInfo("Tile",      supplyPacText(context, this::actorLocationText));
+        addDynamicInfo("Power",     supplyPacPowerText(context));
+        addDynamicInfo("Animation", supplyPacAnimationText(context));
         emptyRow();
-        addGhostInfo(app, GhostPersonality.RED_GHOST_SHADOW);
+        addGhostInfo(context, GhostPersonality.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(app, GhostPersonality.PINK_GHOST_SPEEDY);
+        addGhostInfo(context, GhostPersonality.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(app, GhostPersonality.CYAN_GHOST_BASHFUL);
+        addGhostInfo(context, GhostPersonality.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(app, GhostPersonality.ORANGE_GHOST_POKEY);
+        addGhostInfo(context, GhostPersonality.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyPacStateAndName(PacManGamesEngine app) {
-        return () -> app.currentGame().session().optLevel()
+    private Supplier<String> supplyPacStateAndName(GameActionExecutionContext context) {
+        return () -> context.currentGame().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
     }
 
-    private Supplier<?> supplyLivesCount(PacManGamesEngine appContext) {
-        return fnLevelInfo(appContext, _ -> {
-            final GameSession session = appContext.currentGame().session();
+    private Supplier<?> supplyLivesCount(GameActionExecutionContext context) {
+        return fnLevelInfo(context, _ -> {
+            final GameSession session = context.currentGame().session();
             return session.numLives();
         });
     }
 
-    private void addGhostInfo(PacManGamesEngine appContext, GhostPersonality personality) {
+    private void addGhostInfo(GameActionExecutionContext appContext, GhostPersonality personality) {
         addDynamicInfo(ghostName(personality), supplyGhostText(appContext, this::ghostNameAndStateText, personality));
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
@@ -116,7 +116,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyPacPowerText(PacManGamesEngine appContext) {
+    private Supplier<String> supplyPacPowerText(GameActionExecutionContext appContext) {
         return () -> appContext.currentGame().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(this::pacPowerText)
@@ -129,12 +129,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<?> supplyPacText(PacManGamesEngine appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
+    private Supplier<?> supplyPacText(GameActionExecutionContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
         return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entitySet().pac()));
     }
 
     private Supplier<?> supplyGhostText(
-        PacManGamesEngine appContext,
+        GameActionExecutionContext appContext,
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
         return fnLevelInfo(appContext, level -> {
@@ -149,9 +149,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
-    private Supplier<String> supplyPacAnimationText(PacManGamesEngine app) {
-        return () -> app.currentGame().session().optLevel().map(level -> {
-            final ActorSpriteAnimController animSystem = app.currentGame().playConfig().systems().actorSpriteAnimController();
+    private Supplier<String> supplyPacAnimationText(GameActionExecutionContext context) {
+        return () -> context.currentGame().session().optLevel().map(level -> {
+            final ActorSpriteAnimController animSystem = context.currentGame().playConfig().systems().actorSpriteAnimController();
             final Pac pac = level.entitySet().pac();
             final boolean stopped = pac.animation().isStopped();
             final boolean locked = pac.animation().isLocked();

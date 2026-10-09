@@ -8,10 +8,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -40,31 +39,22 @@ public class UISettingsActions {
 
         actionEnterFullScreen = new GameAction("enter_fullscreen") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                engineImpl.ui().window().setFullScreen(true);
+            public void execute(GameActionExecutionContext context) {
+                context.ui().window().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction("show_help") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                engineImpl.ui().viewManager().gamePlayView().showHelp(engine);
+            public void execute(GameActionExecutionContext context) {
+                context.ui().viewManager().gamePlayView().showHelp(context.engine());
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final String variantName = engine.gameVariantManager().currentVariantName();
+            public boolean isEnabled(GameActionExecutionContext context) {
+                final String variantName = context.gameVariantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
-                final GameSceneManager gameSceneManager = engineImpl.gameSceneManager();
+                final GameSceneManager gameSceneManager = context.gameSceneManager();
                 return isArcadeGame &&
                       (gameSceneManager.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
                     || gameSceneManager.currentGameSceneHasID(CommonGameSceneID.START_SCENE)
@@ -74,89 +64,68 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction("toggle_dashboard") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                engineImpl.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
+            public void execute(GameActionExecutionContext context) {
+                context.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                return engineImpl.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(GameActionExecutionContext context) {
+                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleDebugInfo = new GameAction("toggle_debug_info") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                toggleBooleanProperty(engineImpl.ui().viewModel().debugModeOnProperty());
+            public void execute(GameActionExecutionContext context) {
+                toggleBooleanProperty(context.ui().viewModel().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction("toggle_keyboard_monitor") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                toggleBooleanProperty(engineImpl.ui().viewModel().keyboardMonitorOnProperty());
+            public void execute(GameActionExecutionContext context) {
+                toggleBooleanProperty(context.ui().viewModel().keyboardMonitorOnProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction("toggle_mini_view_visibility") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final BooleanProperty miniViewActiveProperty = engineImpl.ui().viewModel().miniViewSettings().activeProperty;
+            public void execute(GameActionExecutionContext context) {
+                final BooleanProperty miniViewActiveProperty = context.ui().viewModel().miniViewSettings().activeProperty;
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
-                if (!engineImpl.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
-                    final String msg = engine.translationManager().translate(
+                if (!context.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
+                    final String msg = context.translationManager().translate(
                         miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
-                    engineImpl.ui().shortMessage(msg);
+                    context.ui().shortMessage(msg);
                 }
             }
         };
 
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final GameContext game = engine.currentGame();
-                final BooleanProperty view3DEnabledProperty = engineImpl.ui().viewModel().common3DSettings().view3DEnabledProperty();
+            public void execute(GameActionExecutionContext context) {
+                final GameContext game = context.currentGame();
+                final BooleanProperty view3DEnabledProperty = context.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();
-                if (!isPlaySceneRunning(engineImpl.gameSceneManager())) {
-                    engineImpl.ui().shortMessage(engine.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                if (!isPlaySceneRunning(context.gameSceneManager())) {
+                    context.ui().shortMessage(context.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
                     //TODO This is dubious
-                    engineImpl.gameSceneManager().forceGameSceneUpdate(
-                        engine,
-                        engineImpl.ui(),
-                        engine.gameVariantManager().currentRuntime().uiConfig(),
-                        engine.currentGame()
+                    context.gameSceneManager().forceGameSceneUpdate(
+                        context.engine(),
+                        context.ui(),
+                        context.gameVariantManager().currentRuntime().uiConfig(),
+                        context.currentGame()
                     );
                 }
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                return engineImpl.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(GameActionExecutionContext context) {
+                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {

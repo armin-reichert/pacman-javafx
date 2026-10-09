@@ -148,7 +148,7 @@ public class GamePlayView implements GameView {
         contextMenuManager = new ContextMenuManager(this.engine);
         root.setOnContextMenuRequested(contextMenuManager);
 
-        dashboard.setApp(this.engine);
+        dashboard.setExecutionContext(this.engine);
 
         layers.miniViewLayer().setViewModel(viewModel);
         layers.iconLayer().visibleProperty().bind(this.engine.clock().updatesDisabledProperty());

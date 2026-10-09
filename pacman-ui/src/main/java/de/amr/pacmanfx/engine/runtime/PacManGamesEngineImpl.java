@@ -21,6 +21,7 @@ import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
@@ -36,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class PacManGamesEngineImpl implements PacManGamesEngine {
+public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActionExecutionContext {
 
     private final PlayStation playStation;
 
@@ -96,6 +97,13 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         Platform.runLater(this::startBackgroundServices);
     }
 
+    // GameActionExecutionContext interface
+
+    @Override
+    public PacManGamesEngine engine() {
+        return this;
+    }
+
     // PacManGamesEngine interface
 
     @Override
@@ -130,7 +138,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         return gameVariantManager;
     }
 
-    //@Override
+    @Override
     public GameSceneManager gameSceneManager() {
         return gameSceneManager;
     }
@@ -155,7 +163,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         return playStation.watchdog();
     }
 
-    //@Override
+    @Override
     public GameUI ui() {
         return ui;
     }

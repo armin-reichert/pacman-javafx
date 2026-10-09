@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 
 /**
  * Common base class for game actions.
@@ -29,18 +28,7 @@ public abstract class GameAction {
         return "GameAction{" + "id='" + id + '\'' + '}';
     }
 
-    /**
-     * This method has to be implemented by subclasses.
-     *
-     * @param app the application context
-     */
-    public abstract void execute(PacManGamesEngine app);
+    public abstract void execute(GameActionExecutionContext context);
 
-    /**
-     * This method may be implemented by subclasses to define when this action is enabled.
-     *
-     * @param app application context
-     * @return {@code true} if this action can be executed
-     */
-    public boolean isEnabled(PacManGamesEngine app) { return true; }
+    public boolean isEnabled(GameActionExecutionContext context) { return true; }
 }

@@ -3,9 +3,8 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -38,12 +37,8 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void connectEngine(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-
-        final GameViewModel viewModel = engineImpl.ui().viewModel();
+    public void setExecutionContext(GameActionExecutionContext context) {
+        final GameViewModel viewModel = context.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
 
@@ -53,11 +48,11 @@ public class DS_3DSettings extends GameDashboardSection {
 
         colorPicker("Floor Color", viewModel.maze3DSettings().floorColorProperty());
 
-        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(engine)));
+        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(context)));
 
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(engine)));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(context)));
 
-        addDynamicInfo("Scene Size", () -> sceneSizeInfo(engineImpl.gameSceneManager().optCurrentGameScene().orElse(null)));
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(context.gameSceneManager().optCurrentGameScene().orElse(null)));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty);
 
@@ -102,19 +97,15 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3DSettings().wallOpacityProperty());
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> engine.runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
-        cbWireframeMode .setOnAction(_ -> engine.runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
+        cbUsePlayScene3D.setOnAction(_ -> context.engine().runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
+        cbWireframeMode .setOnAction(_ -> context.engine().runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
     }
 
     @Override
-    public void update(PacManGamesEngine engine) {
-        super.update(engine);
+    public void update(GameActionExecutionContext context) {
+        super.update(context);
 
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-
-        final GameViewModel viewModel = engineImpl.ui().viewModel();
+        final GameViewModel viewModel = context.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3DSettings().cameraPerspectiveIDProperty().get());
 
@@ -123,16 +114,13 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(viewModel.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final MiniPlaySceneView miniView = engineImpl.ui().viewManager().gamePlayView().layers().miniViewLayer();
+        final MiniPlaySceneView miniView = context.ui().viewManager().gamePlayView().layers().miniViewLayer();
         cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 
-    private static SubScene currentSubSceneFX(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        return engineImpl.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
+    private static SubScene currentSubSceneFX(GameActionExecutionContext context) {
+        return context.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {

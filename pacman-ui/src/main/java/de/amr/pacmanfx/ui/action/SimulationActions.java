@@ -10,6 +10,7 @@ import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
@@ -39,132 +40,105 @@ public class SimulationActions {
 
         actionFaster = new GameAction("simulation_faster") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final GameClock clock = engine.clock();
+            public void execute(GameActionExecutionContext context) {
+                final GameClock clock = context.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-                engineImpl.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
         actionFastest = new GameAction("simulation_fastest") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+            public void execute(GameActionExecutionContext context) {
+                context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-                engineImpl.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
         actionSlower = new GameAction("simulation_slower") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final GameClock clock = engine.clock();
+            public void execute(GameActionExecutionContext context) {
+                final GameClock clock = context.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-                engineImpl.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
         actionSlowest = new GameAction("simulation_slowest") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+            public void execute(GameActionExecutionContext context) {
+                context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-                engineImpl.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
         actionOneStep = new GameAction("simulation_one_step") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final boolean failure = !engine.clock().makeOneStep(true);
+            public void execute(GameActionExecutionContext context) {
+                final boolean failure = !context.clock().makeOneStep(true);
                 if (failure) {
-                    engineImpl.ui().shortMessage("Simulation step error!");
+                    context.ui().shortMessage("Simulation step error!");
                 }
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) { return engine.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameActionExecutionContext context) { return context.clock().getUpdatesDisabled(); }
         };
 
         actionTenSteps = new GameAction("simulation_ten_steps") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final boolean failure = !engine.clock().makeSteps(10, true);
+            public void execute(GameActionExecutionContext context) {
+                final boolean failure = !context.clock().makeSteps(10, true);
                 if (failure) {
-                    engineImpl.ui().shortMessage("Simulation steps error!");
+                    context.ui().shortMessage("Simulation steps error!");
                 }
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) { return engine.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameActionExecutionContext context) { return context.clock().getUpdatesDisabled(); }
         };
 
         actionReset = new GameAction("simulation_reset") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final GameClock gameClock = engine.clock();
+            public void execute(GameActionExecutionContext context) {
+                final GameClock gameClock = context.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-                engineImpl.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
+                context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
             }
         };
 
         actionTogglePaused = new GameAction("toggle_paused") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                final GameClock gameClock = engine.clock();
+            public void execute(GameActionExecutionContext context) {
+                final GameClock gameClock = context.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {
-                    engine.soundManager().stopAll();
-                    engine.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+                    context.soundManager().stopAll();
+                    context.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
                 }
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                return engineImpl.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(GameActionExecutionContext context) {
+                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleMuted = new GameAction("toggle_muted") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                toggleBooleanProperty(engineImpl.ui().viewModel().muteProperty());
+            public void execute(GameActionExecutionContext context) {
+                toggleBooleanProperty(context.ui().viewModel().muteProperty());
             }
         };
 

@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.control.Button;
 
@@ -33,22 +33,22 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void connectEngine(PacManGamesEngine app) {}
+    public void setExecutionContext(GameActionExecutionContext context) {}
 
-    public void update(PacManGamesEngine app) {
+    public void update(GameActionExecutionContext context) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(PacManGamesEngineImpl engine, Function<GameScene, String> fnInfo) {
-        return () -> engine.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameSceneInfo(GameActionExecutionContext context, Function<GameScene, String> fnInfo) {
+        return () -> context.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(PacManGamesEngine app, Function<GameLevel, Object> fnInfo) {
-        return () -> app.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<?> fnLevelInfo(GameActionExecutionContext context, Function<GameLevel, Object> fnInfo) {
+        return () -> context.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(PacManGamesEngine app, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(app.currentGame().playConfig().rules());
+    protected Supplier<String> fnRulesInfo(GameActionExecutionContext context, Function<GameRules, String> fnInfo) {
+        return () -> fnInfo.apply(context.currentGame().playConfig().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {
@@ -57,7 +57,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(PacManGamesEngine app, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> app.runAction(gameAction));
+    protected void setGameAction(GameActionExecutionContext context, Button button, GameAction gameAction) {
+        button.setOnAction(_ -> context.engine().runAction(gameAction));
     }
 }

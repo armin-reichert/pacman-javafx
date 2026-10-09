@@ -8,10 +8,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -33,18 +32,15 @@ public class GameFlowActions {
 
         actionStartGame = new GameAction("start_game") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.startGame();
+            public void execute(GameActionExecutionContext context) {
+                context.engine().startGame();
             }
         };
 
         actionQuit = new GameAction("quit") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-                    throw new IllegalArgumentException("Illegal engine " + engine);
-                }
-                final GameUI ui = engineImpl.ui();
+            public void execute(GameActionExecutionContext context) {
+                final GameUI ui = context.ui();
                 Logger.info("Call QUIT handler for {}:", ui.viewManager().assertCurrentView());
                 ui.viewManager().assertCurrentView().onQuit();
             }
@@ -52,23 +48,23 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                engine.currentGame().state().triggerTimeout();
+            public void execute(GameActionExecutionContext context) {
+                context.currentGame().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction("restart_intro") {
             @Override
-            public void execute(PacManGamesEngine engine) {
-                final GameContext game = engine.currentGame();
+            public void execute(GameActionExecutionContext context) {
+                final GameContext game = context.currentGame();
                 final AbstractGameState gameState = game.state();
 
                 if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(game);
                 }
 
-                engine.suspendGame();
-                engine.clock().start();
+                context.engine().suspendGame();
+                context.clock().start();
                 game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
             }
         };

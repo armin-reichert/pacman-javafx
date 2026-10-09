@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import javafx.scene.image.ImageView;
 
@@ -17,8 +18,8 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void connectEngine(PacManGamesEngine app) {
-        final Joypad joypad = app.input().joypad();
+    public void setExecutionContext(GameActionExecutionContext context) {
+        final Joypad joypad = context.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;
 
@@ -43,7 +44,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
                 buttonKey(joypad, JoypadButton.LEFT),
                 buttonKey(joypad, JoypadButton.RIGHT))
         );
-        setText(app.translationManager().translate("infobox.joypad.title"));
+        setText(context.translationManager().translate("infobox.joypad.title"));
     }
 
     private static String buttonKey(Joypad joypad, JoypadButton button) {
