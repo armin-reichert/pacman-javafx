@@ -48,13 +48,13 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
     public PlaySceneContextMenu(PlayScene3D playScene3D) {
         final Game3DSettingsVM settings3D = playScene3D.ui().viewModel().common3DSettings();
-        final GameCheats cheats = playScene3D.game().session().cheats();
-        final TranslationManager translator = playScene3D.engine().translationManager();
+        final GameCheats cheats = playScene3D.actionContext().currentGame().session().cheats();
+        final TranslationManager translator = playScene3D.actionContext().translationManager();
 
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 
         addLocalizedTitleItem(this, translator, "context_menu.scene_display");
-        addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+        addLocalizedActionItem(playScene3D.actionContext(), this, translator, CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
         addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
         addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
 
@@ -73,7 +73,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
         addSeparator(this);
         addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(playScene3D.actionContext(), this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);
     }

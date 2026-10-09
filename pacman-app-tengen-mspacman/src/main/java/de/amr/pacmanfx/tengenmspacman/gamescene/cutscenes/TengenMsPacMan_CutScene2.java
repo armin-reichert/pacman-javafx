@@ -14,14 +14,14 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.input.Joypad;
+import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.input.Joypad;
-import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     public void onActivate() {
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = engine().input().joypad();
+        final Joypad joypad = actionContext().input().joypad();
 
         actionBindingsRegistry().bindActionToKeyCombination(
             CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire(),
@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = game().state().timer().tickCount();
+        final long tick = game.state().timer().tickCount();
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
@@ -92,7 +92,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game().state().triggerTimeout();
+            game.state().triggerTimeout();
         }
 
         ClapperboardStateSystem.update(clapperboard);
@@ -100,11 +100,11 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void playMusic() {
-        soundManager().play(PacManGameSoundID.INTERMISSION_2);
+        actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     private void stopMusic() {
-        soundManager().stop(PacManGameSoundID.INTERMISSION_2);
+        actionContext().soundManager().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
     private void updateScene(GameContext game, long tick) {
@@ -182,7 +182,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void createActors() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();

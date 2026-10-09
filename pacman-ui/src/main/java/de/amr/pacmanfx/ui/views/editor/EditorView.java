@@ -5,10 +5,11 @@
 package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
@@ -26,11 +27,11 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(PacManGamesEngine engine, GameUI ui) {
+    public void ensureEditorCreated(GameActionExecutionContext actionContext) {
         if (editor == null) {
-            editor = new TileMapEditor(ui.window().stage(), new Pac3DShapeFactory());
-            editor.setOnQuit(_ -> ui.viewManager().selectStartPagesView());
-            final MenuItem miQuitEditor = new MenuItem(engine.translationManager().translate("editor.menu.back_to_game"));
+            editor = new TileMapEditor(actionContext.ui().window().stage(), new Pac3DShapeFactory());
+            editor.setOnQuit(_ -> actionContext.ui().viewManager().selectStartPagesView());
+            final MenuItem miQuitEditor = new MenuItem(actionContext.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
@@ -48,6 +49,11 @@ public class EditorView implements GameView {
     public ActionBindingsRegistry actionBindings() { return ActionBindingsRegistry.NO_BINDINGS; }
 
     @Override
+    public GameActionExecutionContext actionContext() {
+        return null;
+    }
+
+    @Override
     public void onEnter() {
         editor.ui().layoutPane().requestFocus();
     }
@@ -56,7 +62,7 @@ public class EditorView implements GameView {
     public void onExit() {}
 
     @Override
-    public void onInput(PacManGamesEngine app) {
+    public void onInput(Input input) {
         Logger.warn("I should never get input from the global keyboard!");
     }
 

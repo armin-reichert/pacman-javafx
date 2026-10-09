@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Button;
@@ -106,10 +105,10 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(game.playConfig().rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
-    private boolean canStartLevel(PacManGamesEngine appContext, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.gameVariantManager().currentVariantName());
+    private boolean canStartLevel(GameActionExecutionContext actionContext, AbstractGameState gameState) {
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(actionContext.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !appContext.currentGame().coinMechanism().isEmpty()
+        return !actionContext.currentGame().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

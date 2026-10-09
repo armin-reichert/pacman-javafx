@@ -17,6 +17,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.pacmanfx.engine.runtime.action.GameAction.runAction;
+
 /**
  * Infobox with 3D related settings.
  */
@@ -97,8 +99,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3DSettings().wallOpacityProperty());
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> context.engine().runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
-        cbWireframeMode .setOnAction(_ -> context.engine().runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
+        cbUsePlayScene3D.setOnAction(_ -> runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), context));
+        cbWireframeMode .setOnAction(_ -> runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode(), context));
     }
 
     @Override

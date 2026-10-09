@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
@@ -97,25 +98,36 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActio
         Platform.runLater(this::startBackgroundServices);
     }
 
-    // GameActionExecutionContext interface
+    // interface GameActionExecutionContext
 
     @Override
-    public PacManGamesEngine engine() {
+    public GameClock clock() {
+        return playStation.clock();
+    }
+
+    @Override
+    public GameContext currentGame() {
+        return currentGame;
+    }
+
+    @Override
+    public EngineLifecycle engineLife() {
         return this;
     }
 
-    // PacManGamesEngine interface
-
     @Override
-    public PlayStation playStation() {
-        return playStation;
+    public GameSceneManager gameSceneManager() {
+        return gameSceneManager;
     }
 
     @Override
-    public void newGameSession() {
-        final GameSession session = new GameSession(
-            gameVariantManager.currentVariantName(), new GameCheats(), currentGame.playConfig().initialLifeCount());
-        currentGame.setSession(session);
+    public GameVariantManager gameVariantManager() {
+        return gameVariantManager;
+    }
+
+    @Override
+    public Input input() {
+        return playStation.input();
     }
 
     @Override
@@ -134,61 +146,19 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActio
     }
 
     @Override
-    public GameVariantManager gameVariantManager() {
-        return gameVariantManager;
-    }
-
-    @Override
-    public GameSceneManager gameSceneManager() {
-        return gameSceneManager;
-    }
-
-    @Override
-    public GameContext currentGame() {
-        return currentGame;
-    }
-
-    @Override
-    public GameClock clock() {
-        return playStation.clock();
-    }
-
-    @Override
-    public Input input() {
-        return playStation.input();
-    }
-
-    @Override
-    public DirectoryWatchdog watchdog() {
-        return playStation.watchdog();
-    }
-
-    @Override
     public GameUI ui() {
         return ui;
     }
 
     @Override
-    public boolean runAction(GameAction gameAction) {
-        boolean success = false;
-        if (gameAction.isEnabled(this)) {
-            try {
-                gameAction.execute(this);
-                success = true;
-                Logger.trace("Action '{}' executed successfully", gameAction.id());
-            }
-            catch (Exception x) {
-                Logger.error(x, "An error occurred executing action '{}'", gameAction.id());
-            }
-        } else {
-            Logger.warn("Action {}' not executed (disabled)", gameAction.id());
-        }
+    public PlayStation playStation() {
+        return playStation;
+    }
 
-        //TODO This is dubious!
-        // Clear the input that triggered this action
-        input().keyboard().clearState();
 
-        return success;
+    @Override
+    public DirectoryWatchdog watchdog() {
+        return playStation.watchdog();
     }
 
     //TODO This method is messy and needs a cleanup!
@@ -260,12 +230,29 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActio
         gameLoop.stop();
     }
 
+    @Override
+    public void newGameSession() {
+        final GameSession session = new GameSession(
+            gameVariantManager.currentVariantName(), new GameCheats(), currentGame.playConfig().initialLifeCount());
+        currentGame.setSession(session);
+    }
+
     public void terminate() {
         suspendGame();
         spriteAnimationTimer.stop();
         ui.window().mainScene().flashMessageManager().stopAnimationTimer();
         playStation.dispose();
         Logger.info("Application terminated. There is no way back!");
+    }
+
+    @Override
+    public void enterGameVariant(String variantName) {
+        enterGameVariant(gameVariantManager.variantRuntimeByName(variantName));
+    }
+
+    @Override
+    public void exitGameVariant(String variantName) {
+        exitGameVariant(gameVariantManager.variantRuntimeByName(variantName));
     }
 
     // Private area, no trespassing!
@@ -295,5 +282,4 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActio
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
-
 }

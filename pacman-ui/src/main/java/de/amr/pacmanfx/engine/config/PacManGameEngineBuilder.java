@@ -8,8 +8,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -118,11 +118,11 @@ public class PacManGameEngineBuilder {
         }
     }
 
-    private void addStartPages(PacManGamesEngine engine, StartPagesView startPagesView) {
+    private void addStartPages(GameActionExecutionContext actionContext, StartPagesView startPagesView) {
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addStartPage(engine, page);
+                startPagesView.addStartPage(actionContext, page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }

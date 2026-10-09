@@ -12,9 +12,9 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
@@ -51,22 +51,24 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(PacManGamesEngine engine, GameUI ui, GameVariantUIConfig uiConfig, GameContext game) {
-        updateGameSceneAndForceReload(engine, ui, uiConfig, game, true);
+    public void forceGameSceneUpdate(GameActionExecutionContext actionContext) {
+        updateGameSceneAndForceReload(actionContext, true);
     }
 
-    public void updateGameSceneAndForceReload(PacManGamesEngine engine, GameUI ui, GameVariantUIConfig uiConfig, GameContext game, boolean forceReload) {
-        final GameSession session = game.session();
-        final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
-
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(game, select3D).orElse(null);
+    public void updateGameSceneAndForceReload(GameActionExecutionContext actionContext, boolean forceReload) {
+        final GameVariantUIConfig uiConfig = actionContext.gameVariantManager().currentRuntime().uiConfig();
+        final GameSession session = actionContext.currentGame().session();
+        final boolean select3D = actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(actionContext.currentGame(), select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
 
-        //TODO This is dubious
-        nextGameScene.setEngine(engine);
+        //TODO This is crap and mus be changed
+        if (actionContext instanceof PacManGamesEngineImpl engine) {
+            nextGameScene.setEngine(engine);
+        }
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
@@ -75,14 +77,14 @@ public class GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
         nextGameScene.activate();
-        ui.viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
+        actionContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
         //TODO rethink this
         if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
             Logger.error("Next game scene is not an AbstractGameScene");
             return;
         }
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, actionContext.currentGame(), currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }

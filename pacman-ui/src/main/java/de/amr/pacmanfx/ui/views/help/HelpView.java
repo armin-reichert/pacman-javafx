@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.ui.views.help;
 
-import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.ArcadeColor;
+import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -33,12 +33,12 @@ public class HelpView extends Pane {
         prefHeightProperty().bind(parent.prefHeightProperty());
     }
 
-    public void showHelpPopup(PacManGamesEngine appContext, double scaling, String variantName) {
+    public void showHelpPopup(GameActionExecutionContext actionContext, double scaling, String variantName) {
         final boolean msPacMan = variantName.equals(GameVariantID.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadeColor.RED.color() : ArcadeColor.BLUE.color();
         final var font = GlobalFonts.MONOSPACED.font(Math.max(6, 14 * scaling));
-        final var infoPane = HelpInfo.build(appContext).createPane(appContext, colorWithOpacity(bgColor, 0.8), font);
+        final var infoPane = HelpInfo.build(actionContext).createPane(actionContext, colorWithOpacity(bgColor, 0.8), font);
         popup.setTranslateX(10 * scaling);
         popup.setTranslateY(30 * scaling);
         popup.setContent(infoPane);

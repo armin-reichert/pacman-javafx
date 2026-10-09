@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
@@ -33,7 +32,7 @@ public class EditorActions {
         actionOpenEditor = new GameAction("open_editor") {
             @Override
             public void execute(GameActionExecutionContext context) {
-                openMapEditor(context).ifPresent(editor -> startEditor(context.engine(), editor));
+                openMapEditor(context).ifPresent(editor -> startEditor(context, editor));
             }
         };
 
@@ -50,9 +49,9 @@ public class EditorActions {
 
         return new GameAction("edit_map_file") {
             @Override
-            public void execute(GameActionExecutionContext context) {
-                openMapEditor(context).ifPresent(editor -> {
-                    startEditor(context.engine(), editor);
+            public void execute(GameActionExecutionContext actionContext) {
+                openMapEditor(actionContext).ifPresent(editor -> {
+                    startEditor(actionContext, editor);
                     if (mapFile != null) {
                         try {
                             editor.editFile(mapFile);
@@ -76,17 +75,17 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(PacManGamesEngine app, TileMapEditor editor) {
-        app.suspendGame();
+    private void startEditor(GameActionExecutionContext actionContext, TileMapEditor editor) {
+        actionContext.engineLife().suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(GameActionExecutionContext context) {
-        final GameUI ui = context.ui();
+    private Optional<TileMapEditor> openMapEditor(GameActionExecutionContext actionContext) {
+        final GameUI ui = actionContext.ui();
         final EditorView editorView = ui.viewManager().reqView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(context.engine(), context.ui());
-        if (!ui.viewManager().trySelectEditorView(context.engine())) {
+        editorView.ensureEditorCreated(actionContext);
+        if (!ui.viewManager().trySelectEditorView(actionContext)) {
             ui.shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -132,12 +133,13 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(PacManGamesEngine appContext) {
+    public boolean trySelectEditorView(GameActionExecutionContext actionContext) {
+        requireNonNull(actionContext);
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (canOpenEditor(appContext)) {
+        if (canOpenEditor(actionContext)) {
             currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
@@ -147,12 +149,12 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(PacManGamesEngine engine) {
+    private boolean canOpenEditor(GameActionExecutionContext actionContext) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !engine.currentGame().session().isGameRunning();
+            return !actionContext.currentGame().session().isGameRunning();
         }
         return false;
     }

@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void initScene() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     private void updateStateClapperboard(GameSystems systems) {
         clapperboardSystem.update(clapperboard);
         if (sceneTimer.hasExpired()) {
-            soundManager().play(PacManGameSoundID.INTERMISSION_2);
+            actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing(systems);
         }
     }
@@ -178,7 +178,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
             nav.setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            game().state().triggerTimeout();
+            actionContext().currentGame().state().triggerTimeout();
         }
         else {
             List.of(pacMan, msPacMan).forEach(motor::move);

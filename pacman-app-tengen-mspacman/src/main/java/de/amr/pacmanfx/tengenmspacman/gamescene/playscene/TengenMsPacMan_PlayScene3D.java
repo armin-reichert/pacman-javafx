@@ -42,7 +42,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {
-        final GameSession session = game().session();
+        final GameSession session = actionContext().currentGame().session();
         session.optLevel().ifPresent(_ -> {
             if (!gameOptionValues(session).areInitial()) {
                 final ImageView levelInfo = createLevelInfoView(level3D);
@@ -52,7 +52,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private ImageView createLevelInfoView(GameLevelView3D level3D) {
-        final GameSession session = game().session();
+        final GameSession session = actionContext().currentGame().session();
         final GameLevel level = session.level();
 
         final ImageView levelInfo = new ImageView();
@@ -104,8 +104,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final ActorSpriteAnimController animController = engine().currentGame().playConfig().systems().actorSpriteAnimController();
-        final var renderer = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
+        final ActorSpriteAnimController animController = actionContext().currentGame().playConfig().systems().actorSpriteAnimController();
+        final var renderer = actionContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameSession session, GameLevel level) {
         actionBindingsRegistry().dispose();
 
-        final var actions = engine().gameVariantManager().currentRuntime()
+        final var actions = actionContext().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
@@ -143,7 +143,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {
-                scores3D.showTextForScore(engine().translationManager().translate("score.game_over"),
+                scores3D.showTextForScore(actionContext().translationManager().translate("score.game_over"),
                     Color.valueOf(NES_Palette.rgb(0x16)));
             }
             // Always show high score

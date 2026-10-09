@@ -40,7 +40,7 @@ class GameEventHandler implements DefaultGameEventListener {
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return gameScene.engine().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return gameScene.actionContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
@@ -70,7 +70,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        final GameContext game = gameScene.game();
+        final GameContext game = gameScene.actionContext().currentGame();
         final GameSystems systems = game.playConfig().systems();
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
@@ -91,7 +91,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final GameContext game = gameScene.game();
+        final GameContext game = gameScene.actionContext().currentGame();
         Logger.info("Enter game state '{}'", e.newState().name());
         final GameSession session = game.session();
         if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
@@ -112,13 +112,13 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        final GameContext game = gameScene.game();
+        final GameContext game = gameScene.actionContext().currentGame();
         gameScene.onAcceptGameLevel(game.session(), e.level());
     }
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        final GameContext game = gameScene.game();
+        final GameContext game = gameScene.actionContext().currentGame();
         final GameSession session = game.session();
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
 
@@ -127,7 +127,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        final GameContext game = gameScene.game();
+        final GameContext game = gameScene.actionContext().currentGame();
         game.state().triggerTimeout();
     }
 

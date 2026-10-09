@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -26,13 +25,10 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, PacManGamesEngine engine, AbstractGameScene gameScene) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
+    public static void render(GamePlayView playView, PacManGamesEngineImpl engine, AbstractGameScene gameScene) {
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
         final RenderManager renderManager = engine.renderManager();
-        final boolean debugMode = engineImpl.ui().viewModel().debugModeOnProperty().get();
+        final boolean debugMode = engine.ui().viewModel().debugModeOnProperty().get();
 
         fillRenderQueue(playView, renderManager, engine.currentGame(), gameScene, debugMode);
 

@@ -58,7 +58,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
+        final Arcade_Actions actions = actionContext().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
@@ -70,7 +70,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         view.pulse.stop();
-        soundManager().voice().stop();
+        actionContext().soundManager().voice().stop();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void initState() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         view.createPacManAndGhosts(
             variant.uiConfig().renderConfig(),
             variant.playConfig().systems().actorSpriteAnimController(),
@@ -91,7 +91,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        actionContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     void startChasingPacMan(GameContext game) {
@@ -116,7 +116,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chasePacMan(long tick) {
-        final GameSystems systems = game().playConfig().systems();
+        final GameSystems systems = actionContext().currentGame().playConfig().systems();
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 

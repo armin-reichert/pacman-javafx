@@ -4,8 +4,11 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -27,7 +30,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private PacManGamesEngine engine;
+    private PacManGamesEngineImpl engine;
 
     private final Carousel carousel;
 
@@ -58,9 +61,21 @@ public class StartPagesView implements GameView {
         ));
     }
 
+    public List<StartPage> pages() {
+        return pages;
+    }
+
     @Override
     public void connectEngine(PacManGamesEngine engine) {
-        this.engine = requireNonNull(engine);
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal game engine " + engine);
+        }
+        this.engine = engineImpl;
+    }
+
+    @Override
+    public GameActionExecutionContext actionContext() {
+        return engine;
     }
 
     @Override
@@ -77,8 +92,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void onInput(PacManGamesEngine app) {
-        currentStartPage().ifPresent(StartPage::onInput);
+    public void onInput(Input input) {
+        currentStartPage().ifPresent(startPage -> startPage.onInput(input));
     }
 
     @Override
@@ -97,7 +112,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(PacManGamesEngine appContext, StartPage startPage) {
+    public void addStartPage(GameActionExecutionContext actionContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");
@@ -105,7 +120,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.connectEngine(appContext);
+        startPage.setActionContext(actionContext);
     }
 
     // Private area

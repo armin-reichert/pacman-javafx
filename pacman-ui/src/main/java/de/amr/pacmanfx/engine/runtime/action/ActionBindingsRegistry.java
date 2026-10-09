@@ -6,7 +6,6 @@ package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Map;
@@ -23,9 +22,9 @@ public interface ActionBindingsRegistry extends Disposable {
 
     Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard);
 
-    default Optional<GameAction> executeMatchingAction(PacManGamesEngine app) {
-        final Optional<GameAction> matchingAction = findActionMatchingPressedKeys(app.input().keyboard());
-        matchingAction.ifPresent(app::runAction);
+    default Optional<GameAction> executeMatchingAction(GameActionExecutionContext context) {
+        final Optional<GameAction> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
+        matchingAction.ifPresent(action -> GameAction.runAction(action, context));
         return matchingAction;
     }
 

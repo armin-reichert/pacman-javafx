@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -26,13 +26,13 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(PacManGamesEngine app) {
-        final GameContext game = app.currentGame();
+    public static HelpInfo build(GameActionExecutionContext actionContext) {
+        final GameContext game = actionContext.currentGame();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
 
-        final HelpInfo helpInfo = new HelpInfo(app);
+        final HelpInfo helpInfo = new HelpInfo(actionContext);
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             helpInfo.addInfoForIntroScene();
         }
@@ -53,20 +53,20 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final PacManGamesEngine engine;
+    private final GameActionExecutionContext actionContext;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(PacManGamesEngine engine) {
-        this.engine = requireNonNull(engine);
+    public HelpInfo(GameActionExecutionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
     }
 
     private String translate(String key, Object... args) {
-        return engine.translationManager().translate(key, args);
+        return actionContext.translationManager().translate(key, args);
     }
 
-    public Pane createPane(PacManGamesEngine appContext, Color backgroundColor, Font font) {
+    public Pane createPane(GameActionExecutionContext actionContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -82,7 +82,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext game = appContext.currentGame();
+        final GameContext game = actionContext.currentGame();
         final GameCheats cheats = game.session().cheats();
 
         // add default entries:

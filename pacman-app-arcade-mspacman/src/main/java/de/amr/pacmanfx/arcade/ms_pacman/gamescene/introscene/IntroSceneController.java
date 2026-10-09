@@ -9,6 +9,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.List;
@@ -76,14 +77,15 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext game = scene.game();
+                final GameContext game = scene.actionContext().currentGame();
+                final GameFlow gameFlow = scene.actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow();
                 final boolean canPlay = !game.coinMechanism().isEmpty();
                 if (timer.atSecond(2.0) && !canPlay) {
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    gameFlow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                    gameFlow.enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                 }
             }
         };

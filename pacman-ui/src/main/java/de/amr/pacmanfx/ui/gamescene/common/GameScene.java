@@ -8,12 +8,8 @@ import de.amr.basics.Disposable;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
-import de.amr.pacmanfx.core.gamestate.GameFlow;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
-import de.amr.pacmanfx.engine.sound.SoundManager;
-import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
@@ -22,18 +18,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface GameScene extends Disposable, QuitHandler {
-
-    default GameContext game() {
-        return engine().currentGame();
-    }
-
-    default GameFlow gameFlow() {
-        return game().playConfig().gameFlow();
-    }
-
-    default GameVariantRuntime runtime() {
-        return engine().gameVariantManager().currentRuntime();
-    }
 
     default Optional<ContextMenu> optContextMenu() {
         return Optional.empty();
@@ -45,14 +29,6 @@ public interface GameScene extends Disposable, QuitHandler {
 
     default Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
-    }
-
-    default SoundManager soundManager() {
-        return engine().soundManager();
-    }
-
-    default Optional<PacManGameSoundEffects> optSoundEffects() {
-        return runtime().uiConfig().optSoundEffects();
     }
 
     /**

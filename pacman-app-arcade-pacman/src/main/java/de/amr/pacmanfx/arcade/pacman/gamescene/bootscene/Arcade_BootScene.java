@@ -63,9 +63,9 @@ public class Arcade_BootScene extends AbstractGameScene {
     public void onActivate() {
         currentState = SceneState.DARK;
 
-        game().session().setHudVisible(false);
+        actionContext().currentGame().session().setHudVisible(false);
         //TODO This is only a temporary solution
-        setHUDStyle(game().session().hud());
+        setHUDStyle(actionContext().currentGame().session().hud());
     }
 
     @Override
@@ -122,7 +122,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUDStyleComp hudStyle = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUDStyleComp hudStyle = actionContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.livesCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.gameScore().setComponent(HUDStyleComp.class, hudStyle);

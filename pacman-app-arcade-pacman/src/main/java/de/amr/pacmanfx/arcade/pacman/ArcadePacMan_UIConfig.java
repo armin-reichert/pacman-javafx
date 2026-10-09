@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -23,6 +24,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
+import de.amr.pacmanfx.ui.views.playview.PlainGameSceneContainer;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -84,25 +86,25 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(PacManGamesEngine app) {
+    public Map<Named, Object> createExtensions(GameActionExecutionContext actionContext) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void load(PacManGamesEngine app) {
+    public void load(GameActionExecutionContext actionContext) {
         assets = new AssetMap();
         assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.addAsset("maze.bright", createBrightEmptyMap());
         assets.freeze();
 
-        loadSounds(app.soundManager());
+        loadSounds(actionContext.soundManager());
         renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
 
     @Override
-    public void unload(PacManGamesEngine app) {
-        unloadSounds(app.soundManager());
+    public void unload(GameActionExecutionContext actionContext) {
+        unloadSounds(actionContext.soundManager());
         dispose();
     }
 

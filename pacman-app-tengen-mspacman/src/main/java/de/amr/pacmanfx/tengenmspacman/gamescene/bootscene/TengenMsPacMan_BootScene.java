@@ -10,6 +10,7 @@ import de.amr.basics.ui.entities.props.CanvasFill;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -64,22 +65,23 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime gameVariantRuntime = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime gameVariantRuntime = actionContext().gameVariantManager().currentRuntime();
         ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
             gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
             gameVariantRuntime.spriteAnimContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 
-        game().session().setHudVisible(false);
+        final GameSession session = actionContext().currentGame().session();
+        session.setHudVisible(false);
         //TODO temporary solution
-        setHUDStyle(game().session().hud());
+        setHUDStyle(session.hud());
     }
 
     @Override
     public void onTick(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
 
-        final int stateTick = (int) game().state().timer().tickCount();
+        final int stateTick = (int) game.state().timer().tickCount();
         final Color shadeOfBlue = shadeOfBlue(stateTick);
 
         switch (stateTick) {
@@ -107,7 +109,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case 204 -> fillCanvasGray(true);
             case 214 -> fillCanvasGray(false);
             case 220 -> {
-                game().state().triggerTimeout();
+                game.state().triggerTimeout();
                 return;
             }
         }
@@ -123,7 +125,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUDStyleComp hudStyle = engine().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUDStyleComp hudStyle = actionContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.livesCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.gameScore().setComponent(HUDStyleComp.class, hudStyle);

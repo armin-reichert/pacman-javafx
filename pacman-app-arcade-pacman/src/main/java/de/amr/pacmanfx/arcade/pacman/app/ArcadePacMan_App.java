@@ -27,6 +27,10 @@ public class ArcadePacMan_App extends Application {
             .orElse(null);
 
         if (engine != null) {
+            engine.ui().viewManager().startPagesView().pages().forEach(page -> {
+
+
+            });
             engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
         }
     }

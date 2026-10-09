@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     protected void onEngineConnected() {
-        final AssetMap assets = engine().gameVariantManager().currentRuntime().uiConfig().assets();
+        final AssetMap assets = actionContext().gameVariantManager().currentRuntime().uiConfig().assets();
 
         msPacManImageView = new ImageView();
         msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Bind "insert coin" + "start game" actions
-        final Arcade_Actions actions = engine().gameVariantManager().currentRuntime()
+        final Arcade_Actions actions = actionContext().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings());
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-        soundManager().voice().stop();
+        actionContext().soundManager().voice().stop();
         actionBindingsRegistry().dispose();
     }
 

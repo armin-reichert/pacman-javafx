@@ -33,7 +33,7 @@ public class GameFlowActions {
         actionStartGame = new GameAction("start_game") {
             @Override
             public void execute(GameActionExecutionContext context) {
-                context.engine().startGame();
+                context.engineLife().startGame();
             }
         };
 
@@ -63,7 +63,7 @@ public class GameFlowActions {
                     gameState.onExit(game);
                 }
 
-                context.engine().suspendGame();
+                context.engineLife().suspendGame();
                 context.clock().start();
                 game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
             }

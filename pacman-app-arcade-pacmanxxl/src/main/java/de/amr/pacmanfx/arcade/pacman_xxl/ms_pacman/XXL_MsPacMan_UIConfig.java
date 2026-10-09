@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -16,12 +17,12 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.SoundManager;
-import de.amr.basics.ui.assets.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -74,25 +75,25 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(PacManGamesEngine app) {
+    public Map<Named, Object> createExtensions(GameActionExecutionContext actionContext) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void load(PacManGamesEngine app) {
+    public void load(GameActionExecutionContext actionContext) {
         assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
-        loadSounds(app.soundManager());
+        loadSounds(actionContext.soundManager());
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
     }
 
     @Override
-    public void unload(PacManGamesEngine app) {
-        unloadSounds(app.soundManager());
+    public void unload(GameActionExecutionContext actionContext) {
+        unloadSounds(actionContext.soundManager());
         dispose();
     }
 

@@ -59,7 +59,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
@@ -120,13 +120,13 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void startTheShow() {
-        soundManager().play(PacManGameSoundID.INTERMISSION_2);
+        actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
         nailDressRapturing.setState(NailDressRapturingState.NAIL);
     }
 
     private void endTheShow() {
         blinky.hide();
-        game().state().triggerTimeout();
+        actionContext().currentGame().state().triggerTimeout();
     }
 
     private void dressRaptures(GameSystems systems) {

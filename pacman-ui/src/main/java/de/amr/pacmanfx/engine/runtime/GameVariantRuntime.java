@@ -30,7 +30,9 @@ public class GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(PlayStation playStation, Cartridge cartridge, PacManGamesEngine app) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public GameVariantRuntime(PlayStation playStation, Cartridge cartridge, PacManGamesEngineImpl engine)
+        throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
         requireNonNull(playStation);
         requireNonNull(cartridge);
 
@@ -45,7 +47,7 @@ public class GameVariantRuntime {
         //TODO Workaround until dependencies have been fixed
         uiConfig = (GameVariantUIConfig) cartridge.uiConfigFactory().getConstructor().newInstance();
 
-        extensions.putAll(uiConfig.createExtensions(app));
+        extensions.putAll(uiConfig.createExtensions(engine));
         Logger.info("Added {} extension(s) to game variant:", extensions.size());
         extensions.forEach((name, ext) -> Logger.info("- Name: {}, type: {}", name, ext.getClass().getSimpleName()));
     }

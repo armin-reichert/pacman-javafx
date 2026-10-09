@@ -19,6 +19,8 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -75,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final ObjectProperty<PlayOption> selectedOption = new SimpleObjectProperty<>(PlayOption.PLAY_MODE) {
         @Override
         protected void invalidated() {
-            soundManager().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            actionContext().soundManager().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
@@ -138,7 +140,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
-            createJoypadKeyBindingsView(), // dynamic, depends on current bindings and visibility
+            createJoypadKeyBindingsView(actionContext().input()), // dynamic, depends on current bindings and visibility
             playModeOptionView,
             boosterModeOptionView,
             difficultyOptionView,
@@ -156,10 +158,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameSession session = game().session();
+        final GameSession session = actionContext().currentGame().session();
         session.setHudVisible(false);
 
-        final var actions = engine().gameVariantManager().currentRuntime()
+        final var actions = actionContext().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
@@ -183,15 +185,17 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            gameFlow().enterGameState(game(), CommonGameStateID.GAME_INTRO);
+            actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
+                .enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
-        updateOptions();
+        updateOptions(game.session());
     }
 
     @Override
     public void onInput() {
-        final GameSession session = game().session();
-        final Joypad joypad = engine().input().joypad();
+        final GameSession session = actionContext().currentGame().session();
+        final Keyboard keyboard = actionContext().input().keyboard();
+        final Joypad joypad = actionContext().input().joypad();
 
         if (joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption.get().succ());
@@ -200,21 +204,21 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             selectedOption.set(selectedOption.get().pred());
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (joypad.isButtonPressed(JoypadButton.A) || engine().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (joypad.isButtonPressed(JoypadButton.A) || keyboard.isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case DIFFICULTY     -> setNextDifficultyValue(session);
                 case MAP_CATEGORY   -> setNextMapCategoryValue(session);
-                case STARTING_LEVEL -> setNextStartLevelValue();
+                case STARTING_LEVEL -> setNextStartLevelValue(session);
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (joypad.isButtonPressed(JoypadButton.B) || engine().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (joypad.isButtonPressed(JoypadButton.B) || keyboard.isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption.get()) {
                 case PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case DIFFICULTY     -> setPrevDifficultyValue(session);
                 case MAP_CATEGORY   -> setPrevMapCategoryValue(session);
-                case STARTING_LEVEL -> setPrevStartLevelValue();
+                case STARTING_LEVEL -> setPrevStartLevelValue(session);
             }
         }
         else {
@@ -222,32 +226,32 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
-    private void updateOptions() {
+    private void updateOptions(GameSession session) {
         // This is not strictly necessary because play mode cannot be changed, but...
         playModeOptionView.setSelected(selectedOption.get() == PlayOption.PLAY_MODE);
         playModeOptionView.setValue("1 PLAYER");
 
         boosterModeOptionView.setSelected(selectedOption.get() == PlayOption.PAC_BOOSTER);
-        final BoosterMode boosterMode = gameOptionValues(game().session()).boosterMode();
+        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
         boosterModeOptionView.setValue(switch (boosterMode) {
             case BOOSTER_OFF -> "OFF";
             case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
             case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
         });
 
-        final Difficulty difficulty = gameOptionValues(game().session()).difficulty();
+        final Difficulty difficulty = gameOptionValues(session).difficulty();
         difficultyOptionView.setSelected(selectedOption.get() == PlayOption.DIFFICULTY);
         difficultyOptionView.setValue(difficulty.name());
 
-        final MapCategory mapCategory = gameOptionValues(game().session()).mapCategory();
+        final MapCategory mapCategory = gameOptionValues(session).mapCategory();
         mapCategoryOptionView.setSelected(selectedOption.get() == PlayOption.MAP_CATEGORY);
         mapCategoryOptionView.setValue(mapCategory.name());
 
-        final int startLevelNumber = gameOptionValues(game().session()).startLevelNumber();
+        final int startLevelNumber = gameOptionValues(session).startLevelNumber();
         startingLevelOptionView.setSelected(selectedOption.get() == PlayOption.STARTING_LEVEL);
         startingLevelOptionView.setValue(String.valueOf(startLevelNumber));
 
-        final int numContinues = gameOptionValues(game().session()).numContinues();
+        final int numContinues = gameOptionValues(session).numContinues();
         if (numContinues < 4) {
             final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
             final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
@@ -265,9 +269,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
-    private void setPrevStartLevelValue() {
-        final GameSession session = game().session();
-
+    private void setPrevStartLevelValue(GameSession session) {
         int current = gameOptionValues(session).startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
         gameOptionValues(session).setStartLevelNumber(prev);
@@ -275,9 +277,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         optionValueChanged();
     }
 
-    private void setNextStartLevelValue() {
-        final GameSession session = game().session();
-
+    private void setNextStartLevelValue(GameSession session) {
         int current = gameOptionValues(session).startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
         gameOptionValues(session).setStartLevelNumber(next);
@@ -288,28 +288,28 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private void setPrevMapCategoryValue(GameSession session) {
         final MapCategory category = gameOptionValues(session).mapCategory();
         gameOptionValues(session).setMapCategory(category.pred());
-        saveHighScore();
+        saveHighScore(actionContext().currentGame());
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue(GameSession session) {
         final MapCategory category = gameOptionValues(session).mapCategory();
         gameOptionValues(session).setMapCategory(category.succ());
-        saveHighScore();
+        saveHighScore(actionContext().currentGame());
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue(GameSession session) {
         final Difficulty difficulty = gameOptionValues(session).difficulty();
         gameOptionValues(session).setDifficulty(difficulty.pred());
-        saveHighScore();
+        saveHighScore(actionContext().currentGame());
         optionValueChanged();
     }
 
     private void setNextDifficultyValue(GameSession session) {
         final Difficulty difficulty = gameOptionValues(session).difficulty();
         gameOptionValues(session).setDifficulty(difficulty.succ());
-        saveHighScore();
+        saveHighScore(actionContext().currentGame());
         optionValueChanged();
     }
 
@@ -326,23 +326,24 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private void optionValueChanged() {
-        soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        actionContext().soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 
-    private void saveHighScore() {
-        final ScoreSystem scoreSystem = game().playConfig().systems().scoreSystem();
-        final Score highScore = game().session().hud().highScore();
+    private void saveHighScore(GameContext game) {
+        final ScoreSystem scoreSystem = game.playConfig().systems().scoreSystem();
+        final Score highScore = game.session().hud().highScore();
         try {
             scoreSystem.save(highScore);
         } catch (IOException x) {
-            game().eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
+            game.eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
         }
     }
 
-    private JoypadKeyBindingsView createJoypadKeyBindingsView() {
-        final Joypad joypad = engine().input().joypad();
-        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+    private JoypadKeyBindingsView createJoypadKeyBindingsView(Input input) {
+        final Joypad joypad = input.joypad();
+        final var uiSettings = actionContext().gameVariantManager().currentRuntime()
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
         final boolean visible = uiSettings.joypadBindingsDisplayed.get();
         return visible ?
             new JoypadKeyBindingsView(joypad.currentKeyBinding(), new Vector2f(0,0))

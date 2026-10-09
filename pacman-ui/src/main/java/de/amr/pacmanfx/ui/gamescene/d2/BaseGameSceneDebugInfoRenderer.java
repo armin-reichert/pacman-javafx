@@ -30,7 +30,6 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -52,8 +51,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    public static BaseGameSceneDebugInfoRenderer createDefaultGameSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
-        final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
+    public static BaseGameSceneDebugInfoRenderer createDefaultGameSceneDebugRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new BaseGameSceneDebugInfoRenderer(animController, canvas);
     }
 
@@ -78,12 +76,12 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     }
 
     public void render(AbstractGameScene gameScene) {
-        final GameSession session = gameScene.game().session();
+        final GameSession session = gameScene.actionContext().currentGame().session();
         final GameSceneView2D canvasRendering = gameScene.assertComponent(GameSceneView2D.class);
 
         ctx.save();
         drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
-        drawGameStateInfo(gameScene.game());
+        drawGameStateInfo(gameScene.actionContext().currentGame());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
             level.entitySet().all().forEach(actor -> drawMovingActorInfo(animController, actor));

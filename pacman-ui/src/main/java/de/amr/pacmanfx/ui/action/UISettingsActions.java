@@ -46,8 +46,8 @@ public class UISettingsActions {
 
         actionShowHelp = new GameAction("show_help") {
             @Override
-            public void execute(GameActionExecutionContext context) {
-                context.ui().viewManager().gamePlayView().showHelp(context.engine());
+            public void execute(GameActionExecutionContext actionContext) {
+                actionContext.ui().viewManager().gamePlayView().showHelp(actionContext);
             }
 
             @Override
@@ -104,22 +104,17 @@ public class UISettingsActions {
 
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(GameActionExecutionContext context) {
-                final GameContext game = context.currentGame();
-                final BooleanProperty view3DEnabledProperty = context.ui().viewModel().common3DSettings().view3DEnabledProperty();
+            public void execute(GameActionExecutionContext actionContext) {
+                final GameContext game = actionContext.currentGame();
+                final BooleanProperty view3DEnabledProperty = actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();
-                if (!isPlaySceneRunning(context.gameSceneManager())) {
-                    context.ui().shortMessage(context.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                if (!isPlaySceneRunning(actionContext.gameSceneManager())) {
+                    actionContext.ui().shortMessage(actionContext.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
                     //TODO This is dubious
-                    context.gameSceneManager().forceGameSceneUpdate(
-                        context.engine(),
-                        context.ui(),
-                        context.gameVariantManager().currentRuntime().uiConfig(),
-                        context.currentGame()
-                    );
+                    actionContext.gameSceneManager().forceGameSceneUpdate(actionContext);
                 }
             }
 

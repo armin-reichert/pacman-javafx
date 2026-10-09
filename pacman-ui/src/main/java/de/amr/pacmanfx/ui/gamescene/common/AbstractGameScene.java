@@ -14,11 +14,14 @@ import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,6 +51,10 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return assertComponent(ActionBindingsRegistry.class);
     }
 
+    public Optional<PacManGameSoundEffects> optSoundEffects() {
+        return actionContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+    }
+
     // Events
 
     protected void onEngineConnected() {}
@@ -70,6 +77,11 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         final Vector2i terrainSizeInPixel = level.worldMap().terrainLayer().sizeInPixel();
         view2D().unscaledWidthProperty().set(terrainSizeInPixel.x());
         view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
+    }
+
+    // Convenience
+    public GameActionExecutionContext actionContext() {
+        return engine;
     }
 
     public GameUI ui() {

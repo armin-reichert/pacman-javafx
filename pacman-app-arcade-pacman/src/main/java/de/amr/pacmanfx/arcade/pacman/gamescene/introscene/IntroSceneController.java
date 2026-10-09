@@ -130,14 +130,14 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().playConfig().systems();
+                final GameSystems systems = scene.actionContext().currentGame().playConfig().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
-                    scene.startChasingPacMan(scene.game());
+                    scene.startChasingPacMan(scene.actionContext().currentGame());
                 }
                 else if (tick == TICK_PAC_MAN_REACHES_ENERGIZER) {
-                    scene.turnCardsStopPacMan(scene.game());
+                    scene.turnCardsStopPacMan(scene.actionContext().currentGame());
                     scene.view.removeTargetEnergizer();
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
@@ -155,7 +155,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().playConfig().systems();
+                final GameSystems systems = scene.actionContext().currentGame().playConfig().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 
@@ -174,7 +174,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     controller.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
                     updateEnergizers(scene);
-                    scene.chaseGhosts(scene.game(), tick);
+                    scene.chaseGhosts(scene.actionContext().currentGame(), tick);
                 }
             }
         },
@@ -187,14 +187,14 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext game = scene.game();
+                final GameContext game = scene.actionContext().currentGame();
 
                 scene.view.pulse.triggerPulse();
                 updateEnergizers(scene);
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.view.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -63,8 +63,8 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(PacManGamesEngine appContext) {
-        updateStageIcon(appContext);
+    public void show(GameActionExecutionContext actionContext) {
+        updateStageIcon(actionContext);
         stage.centerOnScreen();
         stage.show();
     }
@@ -117,8 +117,8 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(PacManGamesEngine appContext) {
-        final Image icon = appContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
+    private void updateStageIcon(GameActionExecutionContext actionContext) {
+        final Image icon = actionContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -140,20 +140,20 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(PacManGamesEngine app, boolean paused, boolean is3D) {
-        final String gameVariantName = app.gameVariantManager().currentVariantName();
+    private String stageTitle(GameActionExecutionContext actionContext, boolean paused, boolean is3D) {
+        final String gameVariantName = actionContext.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = app.translationManager().translate(is3D ?
+        final String viewModeKey = actionContext.translationManager().translate(is3D ?
             "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = app.gameVariantManager().currentRuntime().uiConfig().translations();
+        final TranslationManager variantTranslations = actionContext.gameVariantManager().currentRuntime().uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

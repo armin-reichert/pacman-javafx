@@ -6,9 +6,10 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -45,7 +46,8 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected PacManGamesEngineImpl engine;
+
+    protected GameActionExecutionContext actionContext;
 
     protected AbstractGameScene gameScene;
 
@@ -54,7 +56,6 @@ public class FlyerStartPage implements StartPage {
     public FlyerStartPage(URL configURL) {
         requireNonNull(configURL);
         config = JsonLoader.load(configURL, Config.class);
-        init(config.gameVariant());
 
         setTitle(config.title());
 
@@ -64,29 +65,9 @@ public class FlyerStartPage implements StartPage {
         voiceMedia = resourceManager.loadMedia(config.voice());
     }
 
-    private void init(String gameVariantName) {
-        this.gameVariantName = requireNonNull(gameVariantName);
-
-        title = "Start " + gameVariantName;
-
-        rootPane.getStyleClass().add("flyer-start-page");
-        rootPane.getChildren().add(flyer);
-
-        // Let scroll wheel scroll through flyer pages
-        rootPane.addEventHandler(ScrollEvent.SCROLL, e-> {
-            if (e.getDeltaY() < 0) {
-                flyer.nextFlyerPage();
-            } else if (e.getDeltaY() > 0) {
-                flyer.prevFlyerPage();
-            }
-        });
-
-        startButton = createStartButton();
-    }
-
     @Override
-    public void onInput() {
-        final Keyboard keyboard = engine().input().keyboard();
+    public void onInput(Input input) {
+        final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.DOWN)) {
             flyer.nextFlyerPage();
         }
@@ -94,37 +75,30 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (engine != null) {
-                engine.soundManager().voice().stop();
-                engine.ui().shortMessage(engine.translationManager().translate("flash.shut_up"));
+            if (actionContext != null) {
+                actionContext.soundManager().voice().stop();
+                actionContext.ui().shortMessage(actionContext.translationManager().translate("flash.shut_up"));
             }
         }
     }
 
     @Override
-    public PacManGamesEngine engine() {
-        return engine;
-    }
-
-    @Override
-    public void connectEngine(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        this.engine = engineImpl;
+    public void setActionContext(GameActionExecutionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
+        init(actionContext, config.gameVariant());
     }
 
     @Override
     public void onEnter() {
-        engine.gameVariantManager().selectVariant(gameVariantName);
+        actionContext.gameVariantManager().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        engine.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        actionContext.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        engine.soundManager().voice().stop();
+        actionContext.soundManager().voice().stop();
     }
 
     @Override
@@ -141,10 +115,10 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton() {
+    protected GameStartButton createStartButton(GameActionExecutionContext actionContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            engine.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame());
+            GameAction.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);
@@ -153,5 +127,25 @@ public class FlyerStartPage implements StartPage {
         button.translateYProperty().bind(rootPane.heightProperty().divide(10).negate());
 
         return button;
+    }
+
+    private void init(GameActionExecutionContext actionContext, String gameVariantName) {
+        this.gameVariantName = requireNonNull(gameVariantName);
+
+        title = "Start " + gameVariantName;
+
+        rootPane.getStyleClass().add("flyer-start-page");
+        rootPane.getChildren().add(flyer);
+
+        // Let scroll wheel scroll through flyer pages
+        rootPane.addEventHandler(ScrollEvent.SCROLL, e-> {
+            if (e.getDeltaY() < 0) {
+                flyer.nextFlyerPage();
+            } else if (e.getDeltaY() > 0) {
+                flyer.prevFlyerPage();
+            }
+        });
+
+        startButton = createStartButton(actionContext);
     }
 }

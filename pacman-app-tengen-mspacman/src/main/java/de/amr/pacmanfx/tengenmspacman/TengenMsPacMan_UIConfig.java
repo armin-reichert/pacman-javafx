@@ -10,25 +10,25 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.SoundManager;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_ACTIONS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_UI_SETTINGS;
 import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_ACTIONS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_UI_SETTINGS;
 
 public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -94,28 +94,28 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(PacManGamesEngine app) {
+    public void load(GameActionExecutionContext actionContext) {
         assets = new AssetMap();
         assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
         assets.addAsset("startpage.image2", RM.loadImage("graphics/flyer-page-2.png"));
         assets.freeze();
 
-        loadSounds(app.soundManager());
+        loadSounds(actionContext.soundManager());
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
     }
 
     @Override
-    public Map<Named, Object> createExtensions(PacManGamesEngine engine) {
+    public Map<Named, Object> createExtensions(GameActionExecutionContext actionContext) {
         return Map.of(
-            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engine),
-            EXT_ACTIONS,     new TengenMsPacMan_Actions(engine.input().joypad(), CommonGameActions.instance())
+            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(actionContext),
+            EXT_ACTIONS,     new TengenMsPacMan_Actions(actionContext.input().joypad(), CommonGameActions.instance())
         );
     }
 
     @Override
-    public void unload(PacManGamesEngine app) {
-        unloadSounds(app.soundManager());
+    public void unload(GameActionExecutionContext actionContext) {
+        unloadSounds(actionContext.soundManager());
         dispose();
     }
 

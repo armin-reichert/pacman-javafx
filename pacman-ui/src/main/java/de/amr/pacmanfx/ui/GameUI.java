@@ -116,10 +116,7 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        //TODO This cannot be right
-        engine.gameSceneManager().updateGameSceneAndForceReload(
-            engine, engine.ui(), engine.gameVariantManager().currentRuntime().uiConfig(), engine.currentGame(), forceGameSceneReload);
-
+        engine.gameSceneManager().updateGameSceneAndForceReload(engine, forceGameSceneReload);
         engine.gameSceneManager().optCurrentGameScene()
             .flatMap(GameScene::optGameEventHandler)
             .ifPresent(handler -> handler.onGameEvent(gameEvent));
@@ -182,7 +179,7 @@ public class GameUI implements GameEventListener {
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (actionBindings.executeMatchingAction(engine).isEmpty()) {
-                    viewManager.reqView(currentViewID).onInput(engine);
+                    viewManager.reqView(currentViewID).onInput(engine.input());
                 }
             }
         }

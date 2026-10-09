@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -98,7 +100,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(PacManGamesEngine app) {
+    public void showHelp(GameActionExecutionContext actionContext) {
 //        final double scaling = framedContainer.scalingProperty().get();
 //        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
@@ -174,6 +176,11 @@ public class GamePlayView implements GameView {
     }
 
     @Override
+    public GameActionExecutionContext actionContext() {
+        return engine;
+    }
+
+    @Override
     public void onEnter() {
         root.requestFocus();
         actionBindings.registerAllBindings(CommonGameActions.instance().bindings());
@@ -197,7 +204,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onInput(PacManGamesEngine ignored) {
+    public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(engine).isEmpty()) {

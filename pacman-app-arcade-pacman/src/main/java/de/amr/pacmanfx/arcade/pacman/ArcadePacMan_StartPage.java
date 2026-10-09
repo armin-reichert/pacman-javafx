@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 
 public class ArcadePacMan_StartPage extends FlyerStartPage {

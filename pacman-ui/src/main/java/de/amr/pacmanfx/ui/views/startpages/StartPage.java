@@ -3,7 +3,9 @@
  */
 package de.amr.pacmanfx.ui.views.startpages;
 
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -14,9 +16,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    PacManGamesEngine engine();
-
-    void connectEngine(PacManGamesEngine engine);
+    void setActionContext(GameActionExecutionContext actionContext);
 
     void onEnter();
 
@@ -24,7 +24,7 @@ public interface StartPage {
         Logger.info("Exit start page {}", this);
     }
 
-    void onInput();
+    void onInput(Input input);
 
     String title();
 }

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -28,7 +28,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final PlayStation playStation;
 
-    private final PacManGamesEngine engine;
+    private final PacManGamesEngineImpl engine;
 
     private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(PlayStation playStation, PacManGamesEngine engine, GameViewModel viewModel) {
+    public DefaultGameVariantManager(PlayStation playStation, PacManGamesEngineImpl engine, GameViewModel viewModel) {
         this.playStation = requireNonNull(playStation);
         this.engine = requireNonNull(engine);
         this.viewModel = requireNonNull(viewModel);
@@ -100,12 +100,12 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(PlayStation playStation, PacManGamesEngine app, String variantName, boolean includeInteractiveTests)
+    private GameVariantRuntime createGameVariantRuntime(PlayStation playStation, PacManGamesEngineImpl engine, String variantName, boolean includeInteractiveTests)
 
         throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final Cartridge cartridge = playStation.cartridgeByName(variantName);
-        final var variantRuntime = new GameVariantRuntime(playStation, cartridge, app);
+        final var variantRuntime = new GameVariantRuntime(playStation, cartridge, engine);
         if (includeInteractiveTests) {
             final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

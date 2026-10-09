@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     }
 
     private void initScene() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     // Scene controller state machine
 
     private void updateSceneState() {
-        final GameSystems systems = game().playConfig().systems();
+        final GameSystems systems = actionContext().currentGame().playConfig().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> {
@@ -145,7 +145,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
                 }
             }
 
-            case END -> game().state().triggerTimeout();
+            case END -> actionContext().currentGame().state().triggerTimeout();
 
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
@@ -162,7 +162,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     private void updateClapperboardState() {
         clapperboardSystem.update(clapperboard);
         if (timing().tick() ==  timing().animationStartTick() + 60) {
-            soundManager().play(PacManGameSoundID.INTERMISSION_3);
+            actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 
@@ -205,7 +205,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     }
 
     private void updateDeliverJuniorState() {
-        final MovementSystem motor = game().playConfig().systems().motor();
+        final MovementSystem motor = actionContext().currentGame().playConfig().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.pos().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {

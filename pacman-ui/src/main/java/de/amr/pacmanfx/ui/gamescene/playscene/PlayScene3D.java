@@ -109,7 +109,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void onEngineConnected() {
         final GameViewModel viewModel = ui().viewModel();
 
-        textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(actionContext().translationManager().textBundle(), "game.over");
 
         final var comp3D = assertComponent(GameSceneView3D.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
@@ -156,8 +156,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        final String scoreTitle = engine().translationManager().translate("score.score");
-        final String highScoreTitle = engine().translationManager().translate("score.high_score");
+        final String scoreTitle = actionContext().translationManager().translate("score.score");
+        final String highScoreTitle = actionContext().translationManager().translate("score.high_score");
         replaceScoresView(scoreTitle, highScoreTitle);
     }
 
@@ -176,7 +176,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         // Remove actor 3D view components
-        game().session().optLevel().ifPresent(level -> {
+        actionContext().currentGame().session().optLevel().ifPresent(level -> {
             level.entitySet().pac().removeComponent(PacView3D.class);
             level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
             level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
@@ -185,14 +185,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction> executedAction = actionBindingsRegistry().executeMatchingAction(engine());
+        final Optional<GameAction> executedAction = actionBindingsRegistry().executeMatchingAction(actionContext());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
                 if (perspective instanceof DronePerspective dronePerspective) {
-                    final Keyboard keyboard = engine().input().keyboard();
+                    final Keyboard keyboard = actionContext().input().keyboard();
                     dronePerspective.handleKeyPressed(keyboard);
                 }
             });
@@ -257,8 +257,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onQuit() {
         onDeactivate();
-        soundManager().setEnabled(false);
-        gameFlow().enterGameState(game(), CommonGameStateID.GAME_OVER);
+        actionContext().soundManager().setEnabled(false);
+        actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
+            .enterGameState(actionContext().currentGame(), CommonGameStateID.GAME_OVER);
     }
 
     // Other stuff
@@ -302,8 +303,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                engine().translationManager().translate("score.game_over"),
-                engine().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
+                actionContext().translationManager().translate("score.game_over"),
+                actionContext().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -335,7 +336,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig uiConfig = engine().gameVariantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = actionContext().gameVariantManager().currentRuntime().uiConfig();
         final GameViewModel viewModel      = ui().viewModel();
         final GameSession session          = game.session();
 
@@ -351,7 +352,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(engine().gameVariantManager().currentRuntime(), game.session(), level3D);
+        animationSystem.createAnimations(actionContext().gameVariantManager().currentRuntime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();
@@ -374,7 +375,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {
-        final GameSession session = game().session();
+        final GameSession session = actionContext().currentGame().session();
 
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {
@@ -417,8 +418,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     private void ensureAnimationsRunning() {
-        if (game().state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
-            game().state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
+        if (actionContext().currentGame().state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+            actionContext().currentGame().state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
             animationSystem.startEnergizerPumping(level3D);
         }
     }

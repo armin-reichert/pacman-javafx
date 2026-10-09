@@ -77,14 +77,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
-        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engine().input().joypad().keyForButton(JoypadButton.START));
+        actionBindingsRegistry().bindActionToKeyCombination(quitAction, actionContext().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
         darkness = false;
     }
     
     private void createActors() {
-        final GameVariantRuntime variant = engine().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
@@ -107,11 +107,11 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     }
     
     private void playMusic() {
-        soundManager().play(PacManGameSoundID.INTERMISSION_3);
+        actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_3);
     }
     
     private void stopMusic() {
-        soundManager().stop(PacManGameSoundID.INTERMISSION_3);
+        actionContext().soundManager().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = game().state().timer().tickCount();
+        final long tick = game.state().timer().tickCount();
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game().state().triggerTimeout();
+            game.state().triggerTimeout();
             return;
         }
 
