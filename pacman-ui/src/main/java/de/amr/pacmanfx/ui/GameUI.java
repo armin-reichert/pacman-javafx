@@ -82,9 +82,10 @@ public class GameUI implements GameEventListener {
     public void connectEngine(PacManGamesEngineImpl engine, DashboardFactory dashboardFactory) {
         this.engine = requireNonNull(engine);
 
-        viewManager.connectEngine(engine);
+        // Build dashboard
         viewManager.gamePlayView().dashboard().populate(dashboardFactory, uiSettings.dashboard(), engine.translationManager());
 
+        viewManager.connectEngine(engine);
         window.connectEngine(engine);
 
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
