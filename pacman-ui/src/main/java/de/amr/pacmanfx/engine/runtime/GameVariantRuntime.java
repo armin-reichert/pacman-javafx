@@ -10,9 +10,10 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.engine.config.GameBox;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.config.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 import org.tinylog.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge, PacManGamesEngine app) {
+    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge, PacManGamesEngine app) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         requireNonNull(gameBox);
         requireNonNull(cartridge);
 
@@ -41,7 +42,8 @@ public class GameVariantRuntime {
             cartridge.worldMapManagerFactory().get()
         );
 
-        uiConfig = cartridge.uiConfigFactory().get();
+        //TODO Workaround until dependencies have been fixed
+        uiConfig = (GameVariantUIConfig) cartridge.uiConfigFactory().getConstructor().newInstance();
 
         extensions.putAll(uiConfig.createExtensions(app));
         Logger.info("Added {} extension(s) to game variant:", extensions.size());

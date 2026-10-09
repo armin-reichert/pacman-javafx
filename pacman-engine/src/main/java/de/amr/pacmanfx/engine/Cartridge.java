@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.config;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameSystems;
@@ -20,5 +20,5 @@ public record Cartridge(
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends GameRules> gameRulesFactory,
     Supplier<? extends WorldMapManager> worldMapManagerFactory,
-    Supplier<? extends GameVariantUIConfig> uiConfigFactory)
+    Class<?> uiConfigFactory)
 {}

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.config.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 
 /**
  * Extension of Arcade Pac-Man with
@@ -26,6 +26,6 @@ public class XXL_PacMan_Cartridge {
         XXL_PacMan_GameFlow::new,
         XXL_PacMan_GameRules::new,
         XXL_WorldMapManager::instance,
-        XXL_PacMan_UIConfig::new
+        XXL_PacMan_UIConfig.class
     );
 }

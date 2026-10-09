@@ -14,9 +14,11 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.engine;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
     requires de.amr.pacmanfx.arcade.pacman;
+
     requires java.xml;
     requires jdk.xml.dom;
 

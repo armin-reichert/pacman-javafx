@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.config.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameSystems;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -22,6 +22,6 @@ public class TengenMsPacMan_Cartridge {
         TengenMsPacMan_GamePlay::createGameFlow,
         TengenMsPacMan_GameRules::new,
         TengenMsPacMan_WorldMapManager::new,
-        TengenMsPacMan_UIConfig::new
+        TengenMsPacMan_UIConfig.class
     );
 }

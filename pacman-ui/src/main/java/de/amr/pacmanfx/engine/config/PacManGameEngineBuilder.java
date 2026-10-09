@@ -6,6 +6,7 @@ package de.amr.pacmanfx.engine.config;
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;

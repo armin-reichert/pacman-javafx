@@ -6,8 +6,10 @@ See file LICENSE in repository root directory for details.
 module de.amr.pacmanfx.allgames {
     requires javafx.graphics;
     requires org.tinylog.api;
+
     requires de.amr.basics;
     requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.engine;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
     requires de.amr.pacmanfx.arcade.ms_pacman;

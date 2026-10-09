@@ -8,6 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.DefaultGameClock;
 import org.tinylog.Logger;

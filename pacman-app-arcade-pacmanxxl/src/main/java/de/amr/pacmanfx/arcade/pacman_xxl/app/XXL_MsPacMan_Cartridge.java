@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.config.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 
 /**
  * Extension of Arcade Ms. Pac-Man with
@@ -26,6 +26,6 @@ public class XXL_MsPacMan_Cartridge {
         XXL_MsPacMan_GameFlow::new,
         XXL_MsPacMan_GameRules::new,
         XXL_WorldMapManager::instance,
-        XXL_MsPacMan_UIConfig::new
+        XXL_MsPacMan_UIConfig.class
     );
 }

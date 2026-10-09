@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
+import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -16,6 +17,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import org.tinylog.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +45,13 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, engine, variantName, includeInteractiveTests);
-        configsByName.put(variantName, gameVariantRuntime);
+        final GameVariantRuntime gameVariantRuntime;
+        try {
+            gameVariantRuntime = createGameVariantRuntime(gameBox, engine, variantName, includeInteractiveTests);
+            configsByName.put(variantName, gameVariantRuntime);
+        } catch (Exception x) {
+            throw new RuntimeException("Game variant could not be registered", x);
+        }
     }
 
     @Override
@@ -92,7 +99,10 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, PacManGamesEngine app, String variantName, boolean includeInteractiveTests) {
+    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, PacManGamesEngine app, String variantName, boolean includeInteractiveTests)
+
+        throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
         final var variantRuntime = new GameVariantRuntime(gameBox, cartridge, app);
         if (includeInteractiveTests) {

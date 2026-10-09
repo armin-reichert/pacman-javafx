@@ -6,7 +6,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.config.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 
 public class ArcadePacMan_Cartridge {
 
@@ -17,6 +17,6 @@ public class ArcadePacMan_Cartridge {
         ArcadePacMan_GamePlay::createGameFlow,
         ArcadePacMan_GameRules::new,
         ArcadePacMan_WorldMapManager::new,
-        ArcadePacMan_UIConfig::new
+        ArcadePacMan_UIConfig.class
     );
 }
