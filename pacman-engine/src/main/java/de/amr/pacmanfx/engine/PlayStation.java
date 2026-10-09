@@ -2,15 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.config;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.DefaultGameClock;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -26,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  * Buy your cartridge now (super hot Black Friday deal: $0,99 per game)!
  * </p>
  */
-public class GameBox implements Disposable {
+public class PlayStation implements Disposable {
 
     private final Set<Cartridge> cartridgeSet = new HashSet<>(6);
 
@@ -34,7 +32,7 @@ public class GameBox implements Disposable {
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public GameBox() {
+    public PlayStation() {
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
 

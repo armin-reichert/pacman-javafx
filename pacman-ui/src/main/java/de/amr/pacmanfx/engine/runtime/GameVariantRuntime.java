@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.Cartridge;
 import org.tinylog.Logger;
@@ -30,8 +30,8 @@ public class GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge, PacManGamesEngine app) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        requireNonNull(gameBox);
+    public GameVariantRuntime(PlayStation playStation, Cartridge cartridge, PacManGamesEngine app) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        requireNonNull(playStation);
         requireNonNull(cartridge);
 
         playConfig = new GameVariantPlayConfig(

@@ -8,7 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
@@ -45,7 +45,7 @@ public interface PacManGamesEngine {
 
     SpriteAnimationTimer spriteAnimationTimer();
 
-    GameBox gameBox();
+    PlayStation gameBox();
 
     GameClock clock();
 

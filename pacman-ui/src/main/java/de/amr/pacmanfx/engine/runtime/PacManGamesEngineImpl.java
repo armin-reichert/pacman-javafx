@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
-import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGamesEngineImpl implements PacManGamesEngine {
 
-    private final GameBox gameBox;
+    private final PlayStation playStation;
 
     private final GameLoop gameLoop;
 
@@ -61,13 +61,13 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
     private DefaultGameVariantManager gameVariantManager;
 
     public PacManGamesEngineImpl() {
-        gameBox = new GameBox();
+        playStation = new PlayStation();
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
         spriteAnimationTimer = new SpriteAnimationTimer();
         translationManager = new CommonTranslationManager();
-        gameLoop = new GameLoop(gameBox.clock(), this);
+        gameLoop = new GameLoop(playStation.clock(), this);
         gameLoop.setErrorHandler(this::handleFatalError);
     }
 
@@ -99,8 +99,8 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
     // PacManGamesEngine interface
 
     @Override
-    public GameBox gameBox() {
-        return gameBox;
+    public PlayStation gameBox() {
+        return playStation;
     }
 
     @Override
@@ -147,17 +147,17 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
 
     @Override
     public GameClock clock() {
-        return gameBox.clock();
+        return playStation.clock();
     }
 
     @Override
     public Input input() {
-        return gameBox.input();
+        return playStation.input();
     }
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return gameBox.watchdog();
+        return playStation.watchdog();
     }
 
     @Override
@@ -261,14 +261,14 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         suspendGame();
         spriteAnimationTimer.stop();
         ui.window().mainScene().flashMessageManager().stopAnimationTimer();
-        gameBox.dispose();
+        playStation.dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
     // Private area, no trespassing!
 
     private void createGameVariantManager(GameUI ui) {
-        gameVariantManager = new DefaultGameVariantManager(gameBox, this, ui.viewModel());
+        gameVariantManager = new DefaultGameVariantManager(playStation, this, ui.viewModel());
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 
