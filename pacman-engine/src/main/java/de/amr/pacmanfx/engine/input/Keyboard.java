@@ -21,11 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class Keyboard {
 
-    public interface StateListener {
-        void onKeyboardStateChange(Keyboard keyboard);
-    }
-
-    private final Set<StateListener> listeners = ConcurrentHashMap.newKeySet();
+    private final Set<KeyboardStateListener> listeners = ConcurrentHashMap.newKeySet();
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
@@ -68,7 +64,7 @@ public final class Keyboard {
         target.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
     }
 
-    public void addStateListener(StateListener stateListener) {
+    public void addStateListener(KeyboardStateListener stateListener) {
         requireNonNull(stateListener);
         if (listeners.contains(stateListener)) {
             Logger.warn("State listener is already registered: {}", stateListener);
@@ -79,7 +75,7 @@ public final class Keyboard {
         }
     }
 
-    public void removeStateListener(StateListener stateListener) {
+    public void removeStateListener(KeyboardStateListener stateListener) {
         requireNonNull(stateListener);
         boolean removed = listeners.remove(stateListener);
         if (removed) {
