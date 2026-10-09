@@ -6,6 +6,8 @@ package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -14,17 +16,15 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
-import de.amr.pacmanfx.engine.input.Input;
-import de.amr.basics.ui.rendering.RenderManager;
-import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
@@ -118,11 +118,6 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
     @Override
     public SoundManager soundManager() {
         return soundManager;
-    }
-
-    @Override
-    public SpriteAnimationTimer spriteAnimationTimer() {
-        return spriteAnimationTimer;
     }
 
     @Override

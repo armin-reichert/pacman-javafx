@@ -43,8 +43,6 @@ public interface PacManGamesEngine {
 
     SoundManager soundManager();
 
-    SpriteAnimationTimer spriteAnimationTimer();
-
     PlayStation gameBox();
 
     GameClock clock();
