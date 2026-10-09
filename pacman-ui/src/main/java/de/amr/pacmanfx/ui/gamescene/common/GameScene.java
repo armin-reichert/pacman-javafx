@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -36,9 +36,7 @@ public interface GameScene extends Disposable, QuitHandler {
      */
     Stream<Renderable> renderables();
 
-    void setEngine(PacManGamesEngine engine);
-
-    PacManGamesEngine engine();
+    void setActionContext(GameActionContext actionContext);
 
     /**
      * Hook called when entering this 2D scene from a 3D scene.

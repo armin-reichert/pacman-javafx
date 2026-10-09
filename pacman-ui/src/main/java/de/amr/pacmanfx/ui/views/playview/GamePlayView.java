@@ -10,7 +10,7 @@ import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -100,7 +100,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(GameActionExecutionContext actionContext) {
+    public void showHelp(GameActionContext actionContext) {
 //        final double scaling = framedContainer.scalingProperty().get();
 //        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
@@ -176,7 +176,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public GameActionExecutionContext actionContext() {
+    public GameActionContext actionContext() {
         return engine;
     }
 

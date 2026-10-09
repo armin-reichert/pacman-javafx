@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.control.Button;
@@ -26,7 +26,7 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameActionExecutionContext context) {
+    public void setExecutionContext(GameActionContext context) {
         final GameViewModel viewModel = context.ui().viewModel();
 
         info("Java Version",   Runtime.version().toString());

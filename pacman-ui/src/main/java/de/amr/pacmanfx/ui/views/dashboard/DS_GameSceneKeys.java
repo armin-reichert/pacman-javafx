@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
@@ -19,12 +19,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameActionExecutionContext context) {
+    public void update(GameActionContext context) {
         super.update(context);
         context.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(context, gameScene));
     }
 
-    private void updateInfo(GameActionExecutionContext context, GameScene gameScene) {
+    private void updateInfo(GameActionContext context, GameScene gameScene) {
         clearSection();
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {

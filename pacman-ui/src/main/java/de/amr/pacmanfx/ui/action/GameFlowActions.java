@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -32,14 +32,14 @@ public class GameFlowActions {
 
         actionStartGame = new GameAction("start_game") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.engineLife().startGame();
             }
         };
 
         actionQuit = new GameAction("quit") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
                 Logger.info("Call QUIT handler for {}:", ui.viewManager().assertCurrentView());
                 ui.viewManager().assertCurrentView().onQuit();
@@ -48,14 +48,14 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.currentGame().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction("restart_intro") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameContext game = context.currentGame();
                 final AbstractGameState gameState = game.state();
 

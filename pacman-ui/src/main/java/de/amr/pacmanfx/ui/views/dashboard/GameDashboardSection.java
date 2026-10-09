@@ -7,9 +7,8 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.control.Button;
 
@@ -33,21 +32,21 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setExecutionContext(GameActionExecutionContext context) {}
+    public void setExecutionContext(GameActionContext context) {}
 
-    public void update(GameActionExecutionContext context) {
+    public void update(GameActionContext context) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameActionExecutionContext context, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(GameActionContext context, Function<GameScene, String> fnInfo) {
         return () -> context.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(GameActionExecutionContext context, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(GameActionContext context, Function<GameLevel, Object> fnInfo) {
         return () -> context.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(GameActionExecutionContext context, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(GameActionContext context, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(context.currentGame().playConfig().rules());
     }
 
@@ -57,7 +56,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameActionExecutionContext actionContext, Button button, GameAction gameAction) {
+    protected void setGameAction(GameActionContext actionContext, Button button, GameAction gameAction) {
         button.setOnAction(_ -> GameAction.runAction(gameAction, actionContext));
     }
 }

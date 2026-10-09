@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -31,7 +31,7 @@ public class EditorActions {
 
         actionOpenEditor = new GameAction("open_editor") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 openMapEditor(context).ifPresent(editor -> startEditor(context, editor));
             }
         };
@@ -49,7 +49,7 @@ public class EditorActions {
 
         return new GameAction("edit_map_file") {
             @Override
-            public void execute(GameActionExecutionContext actionContext) {
+            public void execute(GameActionContext actionContext) {
                 openMapEditor(actionContext).ifPresent(editor -> {
                     startEditor(actionContext, editor);
                     if (mapFile != null) {
@@ -75,13 +75,13 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(GameActionExecutionContext actionContext, TileMapEditor editor) {
+    private void startEditor(GameActionContext actionContext, TileMapEditor editor) {
         actionContext.engineLife().suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(GameActionExecutionContext actionContext) {
+    private Optional<TileMapEditor> openMapEditor(GameActionContext actionContext) {
         final GameUI ui = actionContext.ui();
         final EditorView editorView = ui.viewManager().reqView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(actionContext);

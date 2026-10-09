@@ -12,12 +12,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 
-public interface GameActionExecutionContext {
+public interface GameActionContext {
 
     GameClock clock();
 

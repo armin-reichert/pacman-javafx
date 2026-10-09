@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import org.tinylog.Logger;
 
@@ -22,7 +22,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         setId("game-dashboard");
     }
 
-    public void setExecutionContext(GameActionExecutionContext context) {
+    public void setExecutionContext(GameActionContext context) {
         requireNonNull(context);
         sections().forEach(section -> section.setExecutionContext(context));
     }
@@ -42,7 +42,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         }
     }
 
-    public void update(GameActionExecutionContext context) {
+    public void update(GameActionContext context) {
         requireNonNull(context);
         sections()
             .filter(GameDashboardSection::isExpanded)

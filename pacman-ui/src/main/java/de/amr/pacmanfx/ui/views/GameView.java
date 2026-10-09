@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import javafx.scene.Node;
 
@@ -18,7 +18,7 @@ public interface GameView extends QuitHandler {
 
     ActionBindingsRegistry actionBindings();
 
-    GameActionExecutionContext actionContext();
+    GameActionContext actionContext();
 
     default void onInput(Input input) {
         actionBindings().executeMatchingAction(actionContext());

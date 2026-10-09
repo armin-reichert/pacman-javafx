@@ -6,11 +6,9 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
@@ -40,7 +38,7 @@ public class SimulationActions {
 
         actionFaster = new GameAction("simulation_faster") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameClock clock = context.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -53,7 +51,7 @@ public class SimulationActions {
 
         actionFastest = new GameAction("simulation_fastest") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
                 context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -62,7 +60,7 @@ public class SimulationActions {
 
         actionSlower = new GameAction("simulation_slower") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameClock clock = context.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -75,7 +73,7 @@ public class SimulationActions {
 
         actionSlowest = new GameAction("simulation_slowest") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
                 context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -84,7 +82,7 @@ public class SimulationActions {
 
         actionOneStep = new GameAction("simulation_one_step") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final boolean failure = !context.clock().makeOneStep(true);
                 if (failure) {
                     context.ui().shortMessage("Simulation step error!");
@@ -92,12 +90,12 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) { return context.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameActionContext context) { return context.clock().getUpdatesDisabled(); }
         };
 
         actionTenSteps = new GameAction("simulation_ten_steps") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final boolean failure = !context.clock().makeSteps(10, true);
                 if (failure) {
                     context.ui().shortMessage("Simulation steps error!");
@@ -105,12 +103,12 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) { return context.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameActionContext context) { return context.clock().getUpdatesDisabled(); }
         };
 
         actionReset = new GameAction("simulation_reset") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameClock gameClock = context.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
                 context.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
@@ -119,7 +117,7 @@ public class SimulationActions {
 
         actionTogglePaused = new GameAction("toggle_paused") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameClock gameClock = context.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
@@ -130,14 +128,14 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleMuted = new GameAction("toggle_muted") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 toggleBooleanProperty(context.ui().viewModel().muteProperty());
             }
         };

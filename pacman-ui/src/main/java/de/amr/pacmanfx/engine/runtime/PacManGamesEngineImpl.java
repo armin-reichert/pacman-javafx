@@ -21,8 +21,7 @@ import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
@@ -38,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActionExecutionContext {
+public final class PacManGamesEngineImpl implements PacManGamesEngine, GameActionContext {
 
     private final PlayStation playStation;
 

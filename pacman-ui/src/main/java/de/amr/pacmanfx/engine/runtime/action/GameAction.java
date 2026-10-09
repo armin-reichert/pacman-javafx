@@ -12,7 +12,7 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    public static boolean runAction(GameAction gameAction, GameActionExecutionContext context) {
+    public static boolean runAction(GameAction gameAction, GameActionContext context) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {
@@ -52,7 +52,7 @@ public abstract class GameAction {
 
     public final String resourceBundleKey() { return "action." + id; }
 
-    public abstract void execute(GameActionExecutionContext context);
+    public abstract void execute(GameActionContext context);
 
-    public boolean isEnabled(GameActionExecutionContext context) { return true; }
+    public boolean isEnabled(GameActionContext context) { return true; }
 }

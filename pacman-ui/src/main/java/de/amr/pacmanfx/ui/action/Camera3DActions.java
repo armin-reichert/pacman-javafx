@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -30,7 +30,7 @@ public class Camera3DActions {
 
         actionNextPerspective = new GameAction("perspective_next") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
                 final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID perspectiveID = perspectiveIDProperty.get().next();
@@ -39,14 +39,14 @@ public class Camera3DActions {
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 return is3DPlaySceneActive(context);
             }
         };
 
         actionPreviousPerspective = new GameAction("perspective_previous") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
                 final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID prevID = perspectiveIDProperty.get().prev();
@@ -54,19 +54,19 @@ public class Camera3DActions {
                 ui.shortMessage(translatedPerspectiveMessage(context, prevID));
             }
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 return is3DPlaySceneActive(context);
             }
         };
 
         actionToggleDrawMode = new GameAction("toggle_draw_mode") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 final var drawModeProperty = context.ui().viewModel().common3DSettings().drawModeProperty();
                 Ufx.toggleProperty(drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 return is3DPlaySceneActive(context);
             }
         };
@@ -94,11 +94,11 @@ public class Camera3DActions {
         return bindings;
     }
 
-    private boolean is3DPlaySceneActive(GameActionExecutionContext context) {
+    private boolean is3DPlaySceneActive(GameActionContext context) {
         return context.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
-    private String translatedPerspectiveMessage(GameActionExecutionContext context, PerspectiveID perspectiveID) {
+    private String translatedPerspectiveMessage(GameActionContext context, PerspectiveID perspectiveID) {
         return context.translationManager().translate(
             "camera_perspective",
             context.translationManager().translate("perspective_id_" + perspectiveID.name())

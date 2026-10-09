@@ -10,11 +10,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
@@ -30,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private PacManGamesEngineImpl engine;
+    private GameActionContext actionContext;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -80,34 +78,26 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     // Convenience
-    public GameActionExecutionContext actionContext() {
-        return engine;
+    public GameActionContext actionContext() {
+        return actionContext;
     }
 
     public GameUI ui() {
-        return engine.ui();
+        return actionContext.ui();
     }
 
     // Interface GameScene
 
     @Override
-    public final void setEngine(PacManGamesEngine engine) {
-        requireNonNull(engine);
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal engine " + engine);
-        }
-        if (this.engine != null) {
-            Logger.info("Engine already assigned to game scene {]", this);
+    public final void setActionContext(GameActionContext actionContext) {
+        requireNonNull(actionContext);
+        if (this.actionContext != null) {
+            Logger.debug("Engine already assigned to game scene {}", this);
             return;
         }
-        this.engine = engineImpl;
+        this.actionContext = actionContext;
         onEngineConnected();
         Logger.info("Game scene {} connected with app", getClass().getSimpleName());
-    }
-
-    @Override
-    public PacManGamesEngine engine() {
-        return requireNonNull(engine);
     }
 
     @Override
@@ -123,8 +113,8 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        if (engine != null) {
-            actionBindingsRegistry().executeMatchingAction(engine);
+        if (actionContext != null) {
+            actionBindingsRegistry().executeMatchingAction(actionContext);
         }
     }
 

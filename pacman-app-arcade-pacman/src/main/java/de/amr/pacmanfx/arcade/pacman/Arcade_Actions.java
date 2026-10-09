@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
 
@@ -30,7 +30,7 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.soundManager().voice().stop();
                 context.soundManager().setEnabled(true);
                 context.currentGame().coinMechanism().insertCoin();
@@ -40,7 +40,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 final GameSession session = context.currentGame().session();
                 final AbstractGameState gameState = context.currentGame().state();
                 if (context.currentGame().coinMechanism().isFull()) {
@@ -57,13 +57,13 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(GameActionExecutionContext context) {
+            public void execute(GameActionContext context) {
                 context.soundManager().voice().stop();
                 context.currentGame().playConfig().gameFlow().enterState(context.currentGame(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
-            public boolean isEnabled(GameActionExecutionContext context) {
+            public boolean isEnabled(GameActionContext context) {
                 if (context.currentGame().coinMechanism().isEmpty()) {
                     return false;
                 }

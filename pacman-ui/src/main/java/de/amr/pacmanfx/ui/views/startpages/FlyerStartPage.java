@@ -9,7 +9,7 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionExecutionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -47,7 +47,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected GameActionExecutionContext actionContext;
+    protected GameActionContext actionContext;
 
     protected AbstractGameScene gameScene;
 
@@ -83,7 +83,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setActionContext(GameActionExecutionContext actionContext) {
+    public void setActionContext(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
         init(actionContext, config.gameVariant());
     }
@@ -115,7 +115,7 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(GameActionExecutionContext actionContext) {
+    protected GameStartButton createStartButton(GameActionContext actionContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
             GameAction.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
@@ -129,7 +129,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(GameActionExecutionContext actionContext, String gameVariantName) {
+    private void init(GameActionContext actionContext, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;
