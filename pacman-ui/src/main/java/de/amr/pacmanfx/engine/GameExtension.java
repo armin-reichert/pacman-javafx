@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.game;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;

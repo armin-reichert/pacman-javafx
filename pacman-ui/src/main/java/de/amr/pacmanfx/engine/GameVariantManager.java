@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.game;
+package de.amr.pacmanfx.engine;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

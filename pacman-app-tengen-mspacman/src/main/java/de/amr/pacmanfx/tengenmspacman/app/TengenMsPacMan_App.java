@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.game.PacManGameEngineBuilder;
-import de.amr.pacmanfx.game.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.PacManGameEngineBuilder;
+import de.amr.pacmanfx.engine.PacManGamesEngineImpl;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import javafx.application.Application;

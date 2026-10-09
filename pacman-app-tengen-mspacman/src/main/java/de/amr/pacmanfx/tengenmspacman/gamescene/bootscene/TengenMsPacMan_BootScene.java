@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;

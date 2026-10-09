@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

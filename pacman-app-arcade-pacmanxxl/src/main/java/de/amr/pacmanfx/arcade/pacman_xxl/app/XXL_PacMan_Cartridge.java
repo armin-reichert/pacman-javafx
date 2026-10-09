@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 
 /**
  * Extension of Arcade Pac-Man with

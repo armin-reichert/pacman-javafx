@@ -10,8 +10,8 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 
 //TODO make individual animation systems for ghosts and Pac-Man?
 public class ActorAnimationSystem {

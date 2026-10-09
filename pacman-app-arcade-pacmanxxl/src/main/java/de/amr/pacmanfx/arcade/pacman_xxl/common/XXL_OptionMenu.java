@@ -8,7 +8,7 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;

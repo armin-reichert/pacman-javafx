@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.game;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;

@@ -6,9 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.game.PacManGameEngineBuilder;
-import de.amr.pacmanfx.game.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.PacManGameEngineBuilder;
+import de.amr.pacmanfx.engine.PacManGamesEngineImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

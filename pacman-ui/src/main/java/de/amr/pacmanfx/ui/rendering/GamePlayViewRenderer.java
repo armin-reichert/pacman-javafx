@@ -8,7 +8,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;

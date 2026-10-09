@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;

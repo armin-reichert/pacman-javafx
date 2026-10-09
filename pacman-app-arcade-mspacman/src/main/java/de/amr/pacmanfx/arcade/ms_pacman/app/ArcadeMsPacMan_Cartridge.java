@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_WorldMapManager;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.Cartridge;
+import de.amr.pacmanfx.engine.Cartridge;
 
 /**
  * Ms. Pac-Man Arcade game.
