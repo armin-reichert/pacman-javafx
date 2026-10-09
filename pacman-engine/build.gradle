@@ -1,0 +1,28 @@
+plugins {
+    alias(libs.plugins.javafx)
+}
+
+dependencies {
+    implementation(
+        project(":basics"),
+        project(":basics-ui"),
+        project(":pacman-core"),
+        project(":pacman-ui-lib"),
+        project(":pacman-app-mapeditor"),
+        libs.bundles.tinylog,
+        libs.gson
+    )
+
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+javafx {
+    version = libs.versions.javafx.get()
+    modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
+}

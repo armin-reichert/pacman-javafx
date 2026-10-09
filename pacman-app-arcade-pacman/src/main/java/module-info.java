@@ -10,8 +10,6 @@ open module de.amr.pacmanfx.arcade.pacman {
     requires javafx.graphics;
     requires javafx.media;
 
-    requires java.desktop;
-
     requires org.tinylog.api;
 
     requires de.amr.pacmanfx.engine;
