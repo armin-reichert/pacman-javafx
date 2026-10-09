@@ -10,13 +10,13 @@ import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -115,15 +115,13 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        if (engine != null) {
-            engine.gameSceneManager().updateGameSceneAndForceReload(engine, forceGameSceneReload);
-            engine.gameSceneManager().optCurrentGameScene()
-                .flatMap(GameScene::optGameEventHandler)
-                .ifPresent(handler -> handler.onGameEvent(gameEvent));
-        }
-        else {
-            Logger.error("Cannot update and reload game scene: UI not yet connected with app");
-        }
+        //TODO This cannot be right
+        engine.gameSceneManager().updateGameSceneAndForceReload(
+            engine, engine.ui(), engine.gameVariantManager().currentRuntime().uiConfig(), engine.currentGame(), forceGameSceneReload);
+
+        engine.gameSceneManager().optCurrentGameScene()
+            .flatMap(GameScene::optGameEventHandler)
+            .ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
 
     // --- Accessors ---

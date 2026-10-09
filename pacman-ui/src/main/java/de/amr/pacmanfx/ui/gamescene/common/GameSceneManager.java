@@ -12,12 +12,12 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -51,14 +51,11 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(PacManGamesEngine engine) {
-        updateGameSceneAndForceReload(engine, true);
+    public void forceGameSceneUpdate(PacManGamesEngine engine, GameUI ui, GameVariantUIConfig uiConfig, GameContext game) {
+        updateGameSceneAndForceReload(engine, ui, uiConfig, game, true);
     }
 
-    public void updateGameSceneAndForceReload(PacManGamesEngine engine, boolean forceReload) {
-        final GameUI ui = engine.ui();
-        final GameVariantUIConfig uiConfig = engine.gameVariantManager().currentRuntime().uiConfig();
-        final GameContext game = engine.currentGame();
+    public void updateGameSceneAndForceReload(PacManGamesEngine engine, GameUI ui, GameVariantUIConfig uiConfig, GameContext game, boolean forceReload) {
         final GameSession session = game.session();
         final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
 
@@ -68,6 +65,7 @@ public class GameSceneManager {
             throw new IllegalStateException("Could not determine next game scene");
         }
 
+        //TODO This is dubious
         nextGameScene.setEngine(engine);
 
         if (nextGameScene == currentGameScene()) {

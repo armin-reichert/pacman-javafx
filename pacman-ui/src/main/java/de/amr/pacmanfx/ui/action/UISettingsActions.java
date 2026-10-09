@@ -103,16 +103,22 @@ public class UISettingsActions {
 
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameContext game = app.currentGame();
-                final BooleanProperty view3DEnabledProperty = app.ui().viewModel().common3DSettings().view3DEnabledProperty();
+            public void execute(PacManGamesEngine engine) {
+                final GameContext game = engine.currentGame();
+                final BooleanProperty view3DEnabledProperty = engine.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();
-                if (!isPlaySceneRunning(app.gameSceneManager())) {
-                    app.ui().shortMessage(app.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                if (!isPlaySceneRunning(engine.gameSceneManager())) {
+                    engine.ui().shortMessage(engine.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
-                    app.gameSceneManager().forceGameSceneUpdate(app);
+                    //TODO This is dubious
+                    engine.gameSceneManager().forceGameSceneUpdate(
+                        engine,
+                        engine.ui(),
+                        engine.gameVariantManager().currentRuntime().uiConfig(),
+                        engine.currentGame()
+                    );
                 }
             }
 
