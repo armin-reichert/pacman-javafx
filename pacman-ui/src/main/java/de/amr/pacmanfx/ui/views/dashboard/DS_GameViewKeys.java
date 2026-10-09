@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -21,9 +22,12 @@ public class DS_GameViewKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGamesEngine app) {
-        super.update(app);
-        app.ui().viewManager().optCurrentView().ifPresent(view -> updateInfo(app, view));
+    public void update(PacManGamesEngine engine) {
+        super.update(engine);
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        engineImpl.ui().viewManager().optCurrentView().ifPresent(view -> updateInfo(engine, view));
     }
 
     private void updateInfo(PacManGamesEngine app, GameView view) {

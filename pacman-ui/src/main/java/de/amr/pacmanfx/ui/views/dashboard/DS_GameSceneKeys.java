@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -19,12 +20,15 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGamesEngine app) {
-        super.update(app);
-        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
+    public void update(PacManGamesEngine engine) {
+        super.update(engine);
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        engineImpl.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(engine, gameScene));
     }
 
-    private void updateInfo(PacManGamesEngine app, GameScene gameScene) {
+    private void updateInfo(PacManGamesEngine engine, GameScene gameScene) {
         clearSection();
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
@@ -38,8 +42,8 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = app.translationManager().translate(action.resourceBundleKey());
-                    addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(app)));
+                    final String localizedActionText = engine.translationManager().translate(action.resourceBundleKey());
+                    addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(engine)));
                 });
         }
     }

@@ -130,7 +130,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         return gameVariantManager;
     }
 
-    @Override
+    //@Override
     public GameSceneManager gameSceneManager() {
         return gameSceneManager;
     }
@@ -155,7 +155,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
         return playStation.watchdog();
     }
 
-    @Override
+    //@Override
     public GameUI ui() {
         return ui;
     }

@@ -8,6 +8,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
@@ -62,13 +63,16 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction("toggle_collision_strategy") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameContext game = app.currentGame();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameContext game = engine.currentGame();
                 final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
                 collisionRules.collisionStrategyProperty().set(nextStrategy);
-                app.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
+                engineImpl.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
             }
         };
 

@@ -14,8 +14,9 @@ import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.sound.SoundManager;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+
+//import de.amr.pacmanfx.ui.GameUI;
+//import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 
 /**
  * The game "engine".
@@ -50,9 +51,9 @@ public interface PacManGamesEngine {
 
     GameContext currentGame();
 
-    GameUI ui();
+    //GameUI ui();
 
-    GameSceneManager gameSceneManager();
+    //GameSceneManager gameSceneManager();
 
     Input input();
 

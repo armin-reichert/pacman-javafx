@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -27,9 +27,11 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
-        final GameViewModel viewModel = app.ui().viewModel();
-        final GameClock gameClock = app.clock();
+    public void connectEngine(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        final GameViewModel viewModel = engineImpl.ui().viewModel();
 
         info("Java Version",   Runtime.version().toString());
         info("JavaFX Version", System.getProperty("javafx.runtime.version"));
@@ -50,29 +52,29 @@ public class DS_General extends GameDashboardSection {
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setGameAction(app, btnPlayPause, CommonGameActions.instance().simulationActions().actionTogglePaused());
+        btnPlayPause.graphicProperty().bind(engine.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(engine.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        setGameAction(engine, btnPlayPause, CommonGameActions.instance().simulationActions().actionTogglePaused());
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(gameClock.updatesDisabledProperty().not());
-        setAction(btnStep, () -> gameClock.makeSteps(viewModel.numSimulationStepsProperty().get(), true));
+        btnStep.disableProperty().bind(engine.clock().updatesDisabledProperty().not());
+        setAction(btnStep, () -> engine.clock().makeSteps(viewModel.numSimulationStepsProperty().get(), true));
 
         intSpinner("Num Steps", 1, 50, viewModel.numSimulationStepsProperty());
 
         final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        editPropertyWithSlider(sliderTargetFPS, gameClock.targetFrameRateProperty());
+        editPropertyWithSlider(sliderTargetFPS, engine.clock().targetFrameRateProperty());
 
-        addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
-        addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
-        addDynamicInfo("Render Queue Size: ", () -> app.renderManager().renderQueueSize());
+        addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(engine.clock().fps(), engine.clock().targetFrameRate()));
+        addDynamicInfo("Total Updates",  engine.clock()::pausableUpdatesCount);
+        addDynamicInfo("Render Queue Size: ", () -> engine.renderManager().renderQueueSize());
         colorPicker("Canvas Color", viewModel.common2DSettings().canvasBackgroundColorProperty());
         //checkBox("Font Smoothing",  viewModel.common2DSettings().fontSmoothingOnProperty());
         checkBox("Show Debug Info", viewModel.debugModeOnProperty());
-        checkBox("Time Measured",   gameClock.timeMeasuredProperty());
+        checkBox("Time Measured", engine.clock().timeMeasuredProperty());
     }
 }

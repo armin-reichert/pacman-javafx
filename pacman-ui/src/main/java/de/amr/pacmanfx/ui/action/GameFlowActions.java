@@ -8,9 +8,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -38,31 +40,35 @@ public class GameFlowActions {
 
         actionQuit = new GameAction("quit") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                Logger.info("Call QUIT handler for {}", app.ui().viewManager().assertCurrentView());
-                app.ui().viewManager().assertCurrentView().onQuit();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameUI ui = engineImpl.ui();
+                Logger.info("Call QUIT handler for {}:", ui.viewManager().assertCurrentView());
+                ui.viewManager().assertCurrentView().onQuit();
             }
         };
 
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.currentGame().state().triggerTimeout();
+            public void execute(PacManGamesEngine engine) {
+                engine.currentGame().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction("restart_intro") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameContext game = app.currentGame();
+            public void execute(PacManGamesEngine engine) {
+                final GameContext game = engine.currentGame();
                 final AbstractGameState gameState = game.state();
 
                 if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(game);
                 }
 
-                app.suspendGame();
-                app.clock().start();
+                engine.suspendGame();
+                engine.clock().start();
                 game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
             }
         };

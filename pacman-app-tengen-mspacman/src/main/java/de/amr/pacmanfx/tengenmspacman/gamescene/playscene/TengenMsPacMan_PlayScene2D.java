@@ -100,7 +100,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onEngineConnected() {
-        final Game2DSettingsVM settings = viewModel().common2DSettings();
+        final Game2DSettingsVM settings = ui().viewModel().common2DSettings();
         rootPane.backgroundProperty().bind(settings.canvasBackgroundColorProperty().map(Background::fill));
     }
 
@@ -189,7 +189,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, engine().ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedCheckBox(contextMenu, translations, ui().viewModel().muteProperty(), "context_menu.muted");
         addLocalizedActionItem(engine(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);

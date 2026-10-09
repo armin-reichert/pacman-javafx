@@ -5,10 +5,11 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -46,7 +47,8 @@ public class GamePlayView implements GameView {
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private PacManGamesEngine engine;
+    private PacManGamesEngineImpl engine;
+
     private ContextMenuManager contextMenuManager;
 
     public GamePlayView() {
@@ -134,28 +136,36 @@ public class GamePlayView implements GameView {
         contextMenuManager.hideContextMenu();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameView interface
-    // -----------------------------------------------------------------------------------------------------------------
+    private void setEngine(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal game engine " + engine);
+        }
+        this.engine = engineImpl;
 
-    @Override
-    public void setEngine(PacManGamesEngine engine) {
-        this.engine = requireNonNull(engine);
-        final GameViewModel viewModel = engine.ui().viewModel();
-        final GameMainScene mainScene = engine.ui().window().mainScene();
+        final GameViewModel viewModel = this.engine.ui().viewModel();
+        final GameMainScene mainScene = this.engine.ui().window().mainScene();
 
-        contextMenuManager = new ContextMenuManager(engine);
+        contextMenuManager = new ContextMenuManager(this.engine);
         root.setOnContextMenuRequested(contextMenuManager);
 
-        dashboard.setApp(engine);
+        dashboard.setApp(this.engine);
 
         layers.miniViewLayer().setViewModel(viewModel);
-        layers.iconLayer().visibleProperty().bind(engine.clock().updatesDisabledProperty());
+        layers.iconLayer().visibleProperty().bind(this.engine.clock().updatesDisabledProperty());
         layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
         viewModel.debugModeOnProperty().addListener(
             (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
 
         installMainSceneResizeHandler(mainScene);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // GameView interface
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void connectEngine(PacManGamesEngine engine) {
+        setEngine(engine);
     }
 
     @Override
@@ -187,11 +197,11 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onInput(PacManGamesEngine app) {
+    public void onInput(PacManGamesEngine ignored) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (actionBindings.executeMatchingAction(app).isEmpty()) {
-            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+        if (actionBindings.executeMatchingAction(engine).isEmpty()) {
+            engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 

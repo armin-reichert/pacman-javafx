@@ -13,10 +13,11 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.Media;
@@ -46,42 +47,45 @@ public final class CheatActions {
 
         actionAddLives = new GameAction("cheat_add_lives") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameSession session = app.currentGame().session();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameSession session = engine.currentGame().session();
                 session.setNumLives(session.numLives() + 3);
                 session.cheats().notifyCheatUsed();
-                final String msg = app.translationManager().translate("flash.cheat_add_lives", session.numLives());
-                app.ui().shortMessage(msg);
+                final String msg = engine.translationManager().translate("flash.cheat_add_lives", session.numLives());
+                engineImpl.ui().shortMessage(msg);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionEatAllPellets = new GameAction("cheat_eat_all_pellets") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameSession session = app.currentGame().session();
+            public void execute(PacManGamesEngine engine) {
+                final GameSession session = engine.currentGame().session();
                 final GameLevel level = session.level();
                 level.food().eatPellets();
                 session.cheats().notifyCheatUsed();
-                app.currentGame().eventManager().publishEvent(
-                    new PacEatsFoodEvent(level.entitySet().pac(), false, true, app.clock().currentTick()));
+                engine.currentGame().eventManager().publishEvent(
+                    new PacEatsFoodEvent(level.entitySet().pac(), false, true, engine.clock().currentTick()));
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                final AbstractGameState gameState = app.currentGame().state();
-                return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                final AbstractGameState gameState = engine.currentGame().state();
+                return normalLevel(engine).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
         actionKillGhosts = new GameAction("cheat_kill_ghosts") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameContext game = app.currentGame();
+            public void execute(PacManGamesEngine engine) {
+                final GameContext game = engine.currentGame();
                 final GameSession session = game.session();
                 final GameLevel level = session.level();
                 
@@ -100,100 +104,118 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                final AbstractGameState gameState = app.currentGame().state();
-                return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                final AbstractGameState gameState = engine.currentGame().state();
+                return normalLevel(engine).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
         actionEnterNextLevel = new GameAction("cheat_enter_next_level") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.currentGame().session().cheats().notifyCheatUsed();
-                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_LEVEL_COMPLETE);
+            public void execute(PacManGamesEngine engine) {
+                engine.currentGame().session().cheats().notifyCheatUsed();
+                engine.currentGame().playConfig().gameFlow().enterGameState(engine.currentGame(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                final AbstractGameState state = app.currentGame().state();
-                final GameLevel level = normalLevel(app).orElse(null);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                final AbstractGameState state = engine.currentGame().state();
+                final GameLevel level = normalLevel(engine).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
-                    && level.number() < app.currentGame().playConfig().rules().lastLevelNumber();
+                    && level.number() < engine.currentGame().playConfig().rules().lastLevelNumber();
             }
         };
 
         actionToggleAutopilot = new GameAction("toggle_autopilot") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameCheats cheats = app.currentGame().session().cheats();
-                setAutopilot(app, !cheats.isPacUsingAutopilot());
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameCheats cheats = engine.currentGame().session().cheats();
+                setAutopilot(engineImpl, !cheats.isPacUsingAutopilot());
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionActivateAutopilot = new GameAction("activate_autopilot") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                setAutopilot(app, true);
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                setAutopilot(engineImpl, true);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionDeactivateAutopilot = new GameAction("deactivate_autopilot") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                setAutopilot(app, false);
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                setAutopilot(engineImpl, false);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionActivateImmunity = new GameAction("activate_immunity") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                setPacImmune(app, true);
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                setPacImmune(engineImpl, true);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionDeactivateImmunity = new GameAction("deactivate_immunity") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                setPacImmune(app, false);
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                setPacImmune(engineImpl, false);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
         actionToggleImmunity = new GameAction("toggle_immunity") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameCheats cheats = app.currentGame().session().cheats();
-                setPacImmune(app, !cheats.isPacImmune());
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameCheats cheats = engine.currentGame().session().cheats();
+                setPacImmune(engineImpl, !cheats.isPacImmune());
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return normalLevel(app).isPresent();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return normalLevel(engine).isPresent();
             }
         };
 
@@ -253,34 +275,34 @@ public final class CheatActions {
 
     // Helpers
 
-    private void setAutopilot(PacManGamesEngine app, boolean auto) {
-        final GameCheats cheats = app.currentGame().session().cheats();
-        final GameUI ui = app.ui();
+    private void setAutopilot(PacManGamesEngineImpl engine, boolean auto) {
+        final GameCheats cheats = engine.currentGame().session().cheats();
+        final GameUI ui = engine.ui();
 
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        final String message = app.translationManager().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
+        final String message = engine.translationManager().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
         final Media voice = auto ? VoiceID.AUTOPILOT_ON.media() : VoiceID.AUTOPILOT_OFF.media();
 
         ui.shortMessage(message);
-        app.soundManager().voice().playAfterSec(1, voice);
+        engine.soundManager().voice().playAfterSec(1, voice);
     }
 
-    private void setPacImmune(PacManGamesEngine app, boolean immune) {
-        final GameCheats cheats = app.currentGame().session().cheats();
-        final GameUI ui = app.ui();
+    private void setPacImmune(PacManGamesEngineImpl engine, boolean immune) {
+        final GameCheats cheats = engine.currentGame().session().cheats();
+        final GameUI ui = engine.ui();
 
         cheats.pacImmuneProperty().set(immune);
 
-        final String message = app.translationManager().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
+        final String message = engine.translationManager().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
         final Media voice = immune ? VoiceID.IMMUNITY_ON.media() : VoiceID.IMMUNITY_OFF.media();
 
         ui.shortMessage(message);
-        app.soundManager().voice().playAfterSec(1, voice);
+        engine.soundManager().voice().playAfterSec(1, voice);
     }
 
-    private Optional<GameLevel> normalLevel(PacManGamesEngine app) {
-        final GameSession session = app.currentGame().session();
+    private Optional<GameLevel> normalLevel(PacManGamesEngine engine) {
+        final GameSession session = engine.currentGame().session();
         return session.optLevel().filter(_ -> !session.isAttractMode());
     }
 }

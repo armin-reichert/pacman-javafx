@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -59,7 +59,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setEngine(PacManGamesEngine engine) {
+    public void connectEngine(PacManGamesEngine engine) {
         this.engine = requireNonNull(engine);
     }
 
@@ -105,7 +105,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setEngine(appContext);
+        startPage.connectEngine(appContext);
     }
 
     // Private area

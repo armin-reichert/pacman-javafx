@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -26,23 +27,23 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void setGameApp(PacManGamesEngine app) {
-        requireNonNull(app);
+    public void connectEngine(PacManGamesEngineImpl engine) {
+        requireNonNull(engine);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
-            app.ui().clearMessage();
+            engine.ui().clearMessage();
 
             if (oldID != null) {
                 reqView(oldID).onExit();
             }
 
             final GameView newView = reqView(newID);
-            app.ui().window().mainScene().replaceGameView(newView);
+            engine.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.setEngine(app));
+        views.values().forEach(gameView -> gameView.connectEngine(engine));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {
@@ -146,12 +147,12 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(PacManGamesEngine appContext) {
+    private boolean canOpenEditor(PacManGamesEngine engine) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !appContext.currentGame().session().isGameRunning();
+            return !engine.currentGame().session().isGameRunning();
         }
         return false;
     }

@@ -23,15 +23,15 @@ public final class GameLoop {
     private final GameClock clock;
     private Consumer<Throwable> errorHandler;
 
-    public GameLoop(GameClock clock, PacManGamesEngine app) {
+    public GameLoop(GameClock clock, PacManGamesEngineImpl engine) {
         this.clock = requireNonNull(clock);
-        requireNonNull(app);
+        requireNonNull(engine);
 
         this.errorHandler = x -> Logger.error(x, "An error occurred in the game loop");
 
         clock.setUpdateAction(() -> {
             try {
-                final GameContext game = app.currentGame();
+                final GameContext game = engine.currentGame();
                 game.session().newFrameState(clock.currentTick());
                 game.playConfig().systems().updateSystem().updateEntities(game);
 
@@ -39,7 +39,7 @@ public final class GameLoop {
                 game.playConfig().gameFlow().update(game);
 
                 // IMPORTANT: The current game scene is up-to-date only at this point!
-                app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
+                engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
             }
             catch (Exception x) {
                 errorHandler.accept(x);
@@ -48,7 +48,7 @@ public final class GameLoop {
 
         clock.setPermanentAction(() -> {
             try {
-                render(app);
+                render(engine);
             } catch (Exception x) {
                 errorHandler.accept(x);
             }
@@ -68,12 +68,12 @@ public final class GameLoop {
         clock.stop();
     }
 
-    private void render(PacManGamesEngine app) {
-        if (app.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
-            final GameScene currentGameScene = app.gameSceneManager().currentGameScene();
-            final GamePlayView playView = app.ui().viewManager().gamePlayView();
+    private void render(PacManGamesEngineImpl engine) {
+        if (engine.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
+            final GameScene currentGameScene = engine.gameSceneManager().currentGameScene();
+            final GamePlayView playView = engine.ui().viewManager().gamePlayView();
             if (currentGameScene instanceof AbstractGameScene abstractGameScene) {
-                GamePlayViewRenderer.render(playView, app, clock, abstractGameScene);
+                GamePlayViewRenderer.render(playView, engine, abstractGameScene);
             }
             playView.update();
         }

@@ -5,9 +5,11 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import javafx.scene.input.KeyCode;
@@ -29,42 +31,62 @@ public class Camera3DActions {
 
         actionNextPerspective = new GameAction("perspective_next") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final var perspectiveIDProperty = app.ui().viewModel().common3DSettings().cameraPerspectiveIDProperty();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameUI ui = engineImpl.ui();
+                final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID perspectiveID = perspectiveIDProperty.get().next();
                 perspectiveIDProperty.set(perspectiveID);
-                app.ui().shortMessage(translatedPerspectiveMessage(app, perspectiveID));
+                ui.shortMessage(translatedPerspectiveMessage(engine, perspectiveID));
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return is3DPlaySceneActive(app);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                return is3DPlaySceneActive(engineImpl);
             }
         };
 
         actionPreviousPerspective = new GameAction("perspective_previous") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final var perspectiveIDProperty = app.ui().viewModel().common3DSettings().cameraPerspectiveIDProperty();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameUI ui = engineImpl.ui();
+                final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID prevID = perspectiveIDProperty.get().prev();
                 perspectiveIDProperty.set(prevID);
-                app.ui().shortMessage(translatedPerspectiveMessage(app, prevID));
+                ui.shortMessage(translatedPerspectiveMessage(engine, prevID));
             }
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return is3DPlaySceneActive(app);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                return is3DPlaySceneActive(engineImpl);
             }
         };
 
         actionToggleDrawMode = new GameAction("toggle_draw_mode") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final var drawModeProperty = app.ui().viewModel().common3DSettings().drawModeProperty();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final var drawModeProperty = engineImpl.ui().viewModel().common3DSettings().drawModeProperty();
                 Ufx.toggleProperty(drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return is3DPlaySceneActive(app);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                return is3DPlaySceneActive(engineImpl);
             }
         };
 
@@ -91,8 +113,8 @@ public class Camera3DActions {
         return bindings;
     }
 
-    private boolean is3DPlaySceneActive(PacManGamesEngine app) {
-        return app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+    private boolean is3DPlaySceneActive(PacManGamesEngineImpl engine) {
+        return engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
     private String translatedPerspectiveMessage(PacManGamesEngine app, PerspectiveID perspectiveID) {

@@ -16,7 +16,7 @@ public interface StartPage {
 
     PacManGamesEngine engine();
 
-    void setEngine(PacManGamesEngine engine);
+    void connectEngine(PacManGamesEngine engine);
 
     void onEnter();
 

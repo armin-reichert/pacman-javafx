@@ -5,9 +5,10 @@
 package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
@@ -25,11 +26,11 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(PacManGamesEngine app) {
+    public void ensureEditorCreated(PacManGamesEngineImpl engine) {
         if (editor == null) {
-            editor = new TileMapEditor(app.ui().window().stage(), new Pac3DShapeFactory());
-            editor.setOnQuit(_ -> app.ui().viewManager().selectStartPagesView());
-            final MenuItem miQuitEditor = new MenuItem(app.translationManager().translate("editor.menu.back_to_game"));
+            editor = new TileMapEditor(engine.ui().window().stage(), new Pac3DShapeFactory());
+            editor.setOnQuit(_ -> engine.ui().viewManager().selectStartPagesView());
+            final MenuItem miQuitEditor = new MenuItem(engine.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
@@ -37,7 +38,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void setEngine(PacManGamesEngine engine) {}
+    public void connectEngine(PacManGamesEngine engine) {}
 
     public TileMapEditor editor() {
         return editor;

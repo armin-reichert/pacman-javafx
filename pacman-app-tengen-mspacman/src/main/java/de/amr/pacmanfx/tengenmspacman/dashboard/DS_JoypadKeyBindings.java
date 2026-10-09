@@ -17,7 +17,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngine app) {
         final Joypad joypad = app.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;

@@ -27,7 +27,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngine app) {
         final var readmeText = new Text();
         readmeText.setText(app.translationManager().translate("infobox.readme.content"));
 

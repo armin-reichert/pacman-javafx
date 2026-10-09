@@ -24,7 +24,7 @@ public class DS_About extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine appContext) {
+    public void connectEngine(PacManGamesEngine appContext) {
         final var myImage = new ImageView(ARMIN_1970);
         myImage.setFitWidth(250);
         myImage.setPreserveRatio(true);

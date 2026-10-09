@@ -7,8 +7,9 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.control.Button;
 
@@ -32,14 +33,14 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setGameApp(PacManGamesEngine app) {}
+    public void connectEngine(PacManGamesEngine app) {}
 
     public void update(PacManGamesEngine app) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(PacManGamesEngine app, Function<GameScene, String> fnInfo) {
-        return () -> app.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameSceneInfo(PacManGamesEngineImpl engine, Function<GameScene, String> fnInfo) {
+        return () -> engine.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<?> fnLevelInfo(PacManGamesEngine app, Function<GameLevel, Object> fnInfo) {

@@ -7,7 +7,6 @@ import de.amr.basics.Disposable;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import javafx.beans.property.ObjectProperty;
@@ -48,16 +47,15 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
     private final ObjectProperty<PerspectiveID> perspectiveIDProperty;
 
     public PlaySceneContextMenu(PlayScene3D playScene3D) {
-        final PacManGamesEngine app = playScene3D.engine();
-        final Game3DSettingsVM settings3D = app.ui().viewModel().common3DSettings();
+        final Game3DSettingsVM settings3D = playScene3D.ui().viewModel().common3DSettings();
         final GameCheats cheats = playScene3D.game().session().cheats();
-        final TranslationManager translator = app.translationManager();
+        final TranslationManager translator = playScene3D.engine().translationManager();
 
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 
         addLocalizedTitleItem(this, translator, "context_menu.scene_display");
-        addLocalizedActionItem(app, this, translator, CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
-        addLocalizedCheckBox(this, translator, app.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
+        addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+        addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
         addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
 
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -74,8 +72,8 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
         addSeparator(this);
-        addLocalizedCheckBox(this, translator, app.ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app, this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);
     }

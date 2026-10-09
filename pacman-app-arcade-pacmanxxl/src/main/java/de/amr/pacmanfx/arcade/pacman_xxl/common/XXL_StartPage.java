@@ -10,9 +10,10 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -23,8 +24,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -43,7 +42,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private PacManGamesEngine engine;
+    private PacManGamesEngineImpl engine;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
@@ -72,8 +71,12 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setEngine(PacManGamesEngine engine) {
-        this.engine = requireNonNull(engine);
+    public void connectEngine(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        this.engine = engineImpl;
+
         // Ensure both game variants are available
         engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
         engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());

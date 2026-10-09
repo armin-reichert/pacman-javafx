@@ -142,6 +142,6 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onTestStarted(TestStartedEvent e) {
-        gameScene.engine().ui().shortMessage("Testing level %d".formatted(e.level().number()));
+        gameScene.ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

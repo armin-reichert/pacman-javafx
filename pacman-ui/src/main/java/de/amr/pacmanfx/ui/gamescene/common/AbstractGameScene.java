@@ -10,10 +10,12 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
@@ -25,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private PacManGamesEngine engine;
+    private PacManGamesEngineImpl engine;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -70,15 +72,23 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
     }
 
+    public GameUI ui() {
+        return engine.ui();
+    }
+
     // Interface GameScene
 
     @Override
     public final void setEngine(PacManGamesEngine engine) {
         requireNonNull(engine);
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
         if (this.engine != null) {
+            Logger.info("Engine already assigned to game scene {]", this);
             return;
         }
-        this.engine = engine;
+        this.engine = engineImpl;
         onEngineConnected();
         Logger.info("Game scene {} connected with app", getClass().getSimpleName());
     }

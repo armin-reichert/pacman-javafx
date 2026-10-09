@@ -32,7 +32,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngine app) {
         addDynamicInfo("Pac Name",  supplyPacStateAndName(app));
         addDynamicInfo("Lives",     supplyLivesCount(app));
         addDynamicInfo("Visible",   supplyPacText(app, this::actorVisibilityText));

@@ -24,7 +24,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
 
     public void setApp(PacManGamesEngine appContext) {
         requireNonNull(appContext);
-        sections().forEach(section -> section.setGameApp(appContext));
+        sections().forEach(section -> section.connectEngine(appContext));
     }
 
     public void populate(

@@ -8,12 +8,12 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
@@ -26,12 +26,15 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, PacManGamesEngine app, GameClock clock, AbstractGameScene gameScene) {
-        final GameVariantRuntime runtime = app.gameVariantManager().currentRuntime();
-        final RenderManager renderManager = app.renderManager();
-        final boolean debugMode = app.ui().viewModel().debugModeOnProperty().get();
+    public static void render(GamePlayView playView, PacManGamesEngine engine, AbstractGameScene gameScene) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        final RenderManager renderManager = engine.renderManager();
+        final boolean debugMode = engineImpl.ui().viewModel().debugModeOnProperty().get();
 
-        fillRenderQueue(playView, renderManager, app.currentGame(), gameScene, debugMode);
+        fillRenderQueue(playView, renderManager, engine.currentGame(), gameScene, debugMode);
 
         //TODO This should not be done in each render frame
         updateRenderers(
@@ -51,7 +54,7 @@ public class GamePlayViewRenderer {
             renderManager.variantRenderer().clearCanvas();
         }
 
-        renderManager.renderFrame(clock.currentTick(), debugMode);
+        renderManager.renderFrame(engine.clock().currentTick(), debugMode);
     }
 
     public static void updateRenderers(

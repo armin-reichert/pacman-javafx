@@ -107,7 +107,8 @@ public class PacManGameEngineBuilder {
             engine.setUI(ui, dashboardFactory);
 
             // Can only be done after UI has been assigned to game!
-            addStartPages(engine);
+            final StartPagesView startPagesView = ui.viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
+            addStartPages(engine, startPagesView);
 
             return Optional.of(engine);
         }
@@ -117,12 +118,11 @@ public class PacManGameEngineBuilder {
         }
     }
 
-    private void addStartPages(PacManGamesEngine appContext) {
-        final StartPagesView startPagesView = appContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
+    private void addStartPages(PacManGamesEngine engine, StartPagesView startPagesView) {
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addStartPage(appContext, page);
+                startPagesView.addStartPage(engine, page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }

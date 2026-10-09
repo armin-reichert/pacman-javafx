@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -37,51 +38,55 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
-        final GameViewModel vm = app.ui().viewModel();
+    public void connectEngine(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+
+        final GameViewModel viewModel = engineImpl.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
 
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
 
-        colorPicker("Light Color", vm.maze3DSettings().lightColorProperty());
+        colorPicker("Light Color", viewModel.maze3DSettings().lightColorProperty());
 
-        colorPicker("Floor Color", vm.maze3DSettings().floorColorProperty());
+        colorPicker("Floor Color", viewModel.maze3DSettings().floorColorProperty());
 
-        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(app)));
+        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(engine)));
 
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(app)));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(engine)));
 
-        addDynamicInfo("Scene Size", () -> sceneSizeInfo(app.gameSceneManager().optCurrentGameScene().orElse(null)));
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(engineImpl.gameSceneManager().optCurrentGameScene().orElse(null)));
 
-        cbMiniViewVisible = checkBox("Mini View", vm.miniViewSettings().activeProperty);
+        cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty);
 
         sliderMiniViewHeight = slider(
             " - Height",
-            vm.miniViewSettings().minHeightProperty.get(),
-            vm.miniViewSettings().maxHeightProperty.get(),
-            vm.miniViewSettings().heightProperty.get(),
+            viewModel.miniViewSettings().minHeightProperty.get(),
+            viewModel.miniViewSettings().maxHeightProperty.get(),
+            viewModel.miniViewSettings().heightProperty.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = slider(
             " - Opacity",
             0, 100,
-            vm.miniViewSettings().opacityPercentageProperty.get(),
+            viewModel.miniViewSettings().opacityPercentageProperty.get(),
             false, false);
 
         sliderWallHeight = slider(
             "Wall Height",
             0, 16,
-            vm.maze3DSettings().wallHeightProperty().get(),
+            viewModel.maze3DSettings().wallHeightProperty().get(),
             false, false);
 
         sliderWallOpacity = slider(
             "Wall Opacity",
             0, 1,
-            vm.maze3DSettings().wallOpacityProperty().get(),
+            viewModel.maze3DSettings().wallOpacityProperty().get(),
             false, false);
 
-        cbAxesVisible = checkBox("Show Axes", vm.common3DSettings().axesVisibleProperty());
+        cbAxesVisible = checkBox("Show Axes", viewModel.common3DSettings().axesVisibleProperty());
 
         cbWireframeMode = checkBox("Wireframe Mode");
 
@@ -91,36 +96,43 @@ public class DS_3DSettings extends GameDashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        editPropertyWithSlider(sliderMiniViewHeight,            vm.miniViewSettings().heightProperty);
-        editPropertyWithSlider(sliderMiniViewOpacityPercentage, vm.miniViewSettings().opacityPercentageProperty);
-        editPropertyWithSlider(sliderWallHeight,                vm.maze3DSettings().wallHeightProperty());
-        editPropertyWithSlider(sliderWallOpacity,               vm.maze3DSettings().wallOpacityProperty());
-        editPropertyWithChoiceBox(comboPerspectives,            vm.common3DSettings().cameraPerspectiveIDProperty());
+        editPropertyWithSlider(sliderMiniViewHeight,            viewModel.miniViewSettings().heightProperty);
+        editPropertyWithSlider(sliderMiniViewOpacityPercentage, viewModel.miniViewSettings().opacityPercentageProperty);
+        editPropertyWithSlider(sliderWallHeight,                viewModel.maze3DSettings().wallHeightProperty());
+        editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3DSettings().wallOpacityProperty());
+        editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> app.runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
-        cbWireframeMode .setOnAction(_ -> app.runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
+        cbUsePlayScene3D.setOnAction(_ -> engine.runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
+        cbWireframeMode .setOnAction(_ -> engine.runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
     }
 
     @Override
-    public void update(PacManGamesEngine app) {
-        super.update(app);
+    public void update(PacManGamesEngine engine) {
+        super.update(engine);
 
-        final GameViewModel vm = app.ui().viewModel();
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
 
-        comboPerspectives.setValue(vm.common3DSettings().cameraPerspectiveIDProperty().get());
+        final GameViewModel viewModel = engineImpl.ui().viewModel();
 
-        cbUsePlayScene3D.setSelected(vm.common3DSettings().view3DEnabledProperty().get());
-        cbAxesVisible   .setSelected(vm.common3DSettings().axesVisibleProperty().get());
-        cbWireframeMode .setSelected(vm.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
+        comboPerspectives.setValue(viewModel.common3DSettings().cameraPerspectiveIDProperty().get());
+
+        cbUsePlayScene3D.setSelected(viewModel.common3DSettings().view3DEnabledProperty().get());
+        cbAxesVisible   .setSelected(viewModel.common3DSettings().axesVisibleProperty().get());
+        cbWireframeMode .setSelected(viewModel.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final MiniPlaySceneView miniView = app.ui().viewManager().gamePlayView().layers().miniViewLayer();
-        cbMiniViewVisible.setSelected(vm.miniViewSettings().activeProperty.getValue());
+        final MiniPlaySceneView miniView = engineImpl.ui().viewManager().gamePlayView().layers().miniViewLayer();
+        cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 
-    private static SubScene currentSubSceneFX(PacManGamesEngine app) {
-        return app.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
+    private static SubScene currentSubSceneFX(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        return engineImpl.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {

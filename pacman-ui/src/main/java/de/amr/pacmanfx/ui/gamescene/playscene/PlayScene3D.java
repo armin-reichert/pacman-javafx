@@ -17,9 +17,10 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.comp.ScoreViewComp;
@@ -35,7 +36,6 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.DoubleProperty;
@@ -107,7 +107,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     protected void onEngineConnected() {
-        final GameViewModel viewModel = engine().ui().viewModel();
+        final GameViewModel viewModel = ui().viewModel();
 
         textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
@@ -163,7 +163,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onActivate() {
-        final Game3DSettingsVM settings3D = engine().ui().viewModel().common3DSettings();
+        final Game3DSettingsVM settings3D = ui().viewModel().common3DSettings();
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
         registerActionBindings();
@@ -173,7 +173,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        engine().ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
+        ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         // Remove actor 3D view components
         game().session().optLevel().ifPresent(level -> {
@@ -336,7 +336,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(level);
 
         final GameVariantUIConfig uiConfig = engine().gameVariantManager().currentRuntime().uiConfig();
-        final GameViewModel viewModel      = engine().ui().viewModel();
+        final GameViewModel viewModel      = ui().viewModel();
         final GameSession session          = game.session();
 
         if (level3D != null) {

@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
@@ -30,8 +32,8 @@ public class EditorActions {
 
         actionOpenEditor = new GameAction("open_editor") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                openMapEditor(app).ifPresent(editor -> startEditor(app, editor));
+            public void execute(PacManGamesEngine engine) {
+                openMapEditor(engine).ifPresent(editor -> startEditor(engine, editor));
             }
         };
 
@@ -48,14 +50,14 @@ public class EditorActions {
 
         return new GameAction("edit_map_file") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                openMapEditor(app).ifPresent(editor -> {
-                    startEditor(app, editor);
+            public void execute(PacManGamesEngine engine) {
+                openMapEditor(engine).ifPresent(editor -> {
+                    startEditor(engine, editor);
                     if (mapFile != null) {
                         try {
                             editor.editFile(mapFile);
                         } catch (Exception x) {
-                            app.ui().shortMessage("Cannot edit map file");
+                            //engine.ui().shortMessage("Cannot edit map file");
                             Logger.error(x, "Cannot edit map file {}", mapFile);
                         }
                     }
@@ -80,11 +82,15 @@ public class EditorActions {
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(PacManGamesEngine app) {
-        final EditorView editorView = app.ui().viewManager().reqView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(app);
-        if (!app.ui().viewManager().trySelectEditorView(app)) {
-            app.ui().shortMessage("Cannot open the map editor.");
+    private Optional<TileMapEditor> openMapEditor(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        final GameUI ui = engineImpl.ui();
+        final EditorView editorView = ui.viewManager().reqView(GameViewID.EDITOR, EditorView.class);
+        editorView.ensureEditorCreated(engineImpl);
+        if (!ui.viewManager().trySelectEditorView(engine)) {
+            ui.shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());

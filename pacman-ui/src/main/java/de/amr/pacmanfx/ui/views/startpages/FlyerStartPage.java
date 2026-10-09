@@ -6,10 +6,11 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.application.Platform;
@@ -44,7 +45,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected PacManGamesEngine engine;
+    protected PacManGamesEngineImpl engine;
 
     protected AbstractGameScene gameScene;
 
@@ -106,8 +107,11 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setEngine(PacManGamesEngine engine) {
-        this.engine = requireNonNull(engine);
+    public void connectEngine(PacManGamesEngine engine) {
+        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+            throw new IllegalArgumentException("Illegal engine " + engine);
+        }
+        this.engine = engineImpl;
     }
 
     @Override

@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import javafx.scene.Node;
 
@@ -26,9 +26,9 @@ public interface GameView extends QuitHandler {
         return Optional.empty();
     }
 
-    void setEngine(PacManGamesEngine engine);
-
     void onEnter();
 
     void onExit();
+
+    void connectEngine(PacManGamesEngine engine);
 }

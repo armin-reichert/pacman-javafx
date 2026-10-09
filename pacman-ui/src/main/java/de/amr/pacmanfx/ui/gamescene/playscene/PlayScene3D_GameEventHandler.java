@@ -30,8 +30,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
@@ -92,7 +92,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(engine().ui().viewModel().common3DSettings(), game().session().level());
+            handleTestState(playScene3D.ui().viewModel().common3DSettings(), game().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -332,7 +332,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameViewModel viewModel = engine().ui().viewModel();
+        final GameViewModel viewModel = playScene3D.ui().viewModel();
         final GameLevel level = game().session().level();
         final House house = level.entitySet().entities().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
@@ -409,7 +409,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevelView3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            engine().ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
+            playScene3D.ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
         playScene3D.animationSystem().stopAllAnimations();

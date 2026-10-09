@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -65,7 +65,7 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngineImpl app) {
         final GameViewModel vm = app.ui().viewModel();
         final GameViewManager views = app.ui().viewManager();
 

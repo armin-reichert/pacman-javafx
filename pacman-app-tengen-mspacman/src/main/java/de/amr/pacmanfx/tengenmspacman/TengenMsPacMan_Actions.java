@@ -7,27 +7,28 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.input.Joypad;
+import de.amr.pacmanfx.engine.input.JoypadButton;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.SteeringActions;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.engine.input.Joypad;
-import de.amr.pacmanfx.engine.input.JoypadButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Set;
 
 import static de.amr.basics.util.Ufx.toggleBooleanProperty;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public final class TengenMsPacMan_Actions {
 
@@ -46,34 +47,34 @@ public final class TengenMsPacMan_Actions {
 
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_PREPARATION);
+            public void execute(PacManGamesEngine engine) {
+                engine.currentGame().playConfig().gameFlow().enterGameState(engine.currentGame(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_PREPARATION);
+            public void execute(PacManGamesEngine engine) {
+                engine.currentGame().playConfig().gameFlow().enterGameState(engine.currentGame(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return app.currentGame().session().isAttractMode();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                return engine.currentGame().session().isAttractMode();
             }
         };
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.currentGame().playConfig().gameFlow().enterGameState(app.currentGame(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            public void execute(PacManGamesEngine engine) {
+                engine.currentGame().playConfig().gameFlow().enterGameState(engine.currentGame(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
         actionTogglePlaySceneDisplayMode = new GameAction("toggle_play_scene_display_mode") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final var uiSettings = app.gameVariantManager().currentRuntime()
+            public void execute(PacManGamesEngine engine) {
+                final var uiSettings = engine.gameVariantManager().currentRuntime()
                     .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
@@ -83,15 +84,18 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                return app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
+            public boolean isEnabled(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                return engineImpl.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 
         actionToggleJoypadBindingsDisplayed = new GameAction("toggle_joypad_bindings_displayed") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final var uiSettings = app.gameVariantManager().currentRuntime()
+            public void execute(PacManGamesEngine engine) {
+                final var uiSettings = engine.gameVariantManager().currentRuntime()
                     .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
@@ -100,13 +104,16 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                final GameSession session = app.currentGame().session();
+            public void execute(PacManGamesEngine engine) {
+                if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
+                    throw new IllegalArgumentException("Illegal engine " + engine);
+                }
+                final GameSession session = engine.currentGame().session();
                 session.optLevel().ifPresent(level -> {
                     final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
                     gameOptionValues(session).setBoosterEnabled(nextEnabledState);
                     if (nextEnabledState) {
-                        app.ui().shortMessage("Booster ON!"); //TODO localize
+                        engineImpl.ui().shortMessage("Booster ON!"); //TODO localize
                     }
                     //TODO hack: this should be done by entity update system!
                     level.entitySet().pac().assertComponent(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
@@ -114,16 +121,16 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(PacManGamesEngine app) {
-                final GameSession session = app.currentGame().session();
+            public boolean isEnabled(PacManGamesEngine engine) {
+                final GameSession session = engine.currentGame().session();
                 return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }
         };
 
         actionSelectNextJoypadKeyBinding = new GameAction("select_next_joypad_binding") {
             @Override
-            public void execute(PacManGamesEngine app) {
-                app.input().joypad().selectNextBinding();
+            public void execute(PacManGamesEngine engine) {
+                engine.input().joypad().selectNextBinding();
             }
         };
 

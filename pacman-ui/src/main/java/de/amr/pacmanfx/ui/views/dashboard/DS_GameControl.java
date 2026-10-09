@@ -43,7 +43,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngine app) {
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 

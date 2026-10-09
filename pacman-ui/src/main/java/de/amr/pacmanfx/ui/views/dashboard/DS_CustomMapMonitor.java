@@ -65,7 +65,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(PacManGamesEngine app) {
+    public void connectEngine(PacManGamesEngine app) {
         requireNonNull(app);
         setCustomDirWatchDog(app.watchdog());
         setMapEditFunction(mapFile -> app.runAction(CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile)));

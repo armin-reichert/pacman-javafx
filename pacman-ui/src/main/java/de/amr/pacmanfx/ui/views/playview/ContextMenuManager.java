@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
@@ -23,9 +23,9 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final PacManGamesEngine engine;
+    private final PacManGamesEngineImpl engine;
 
-    public ContextMenuManager(PacManGamesEngine engine) {
+    public ContextMenuManager(PacManGamesEngineImpl engine) {
         this.engine = requireNonNull(engine);
         engine.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
