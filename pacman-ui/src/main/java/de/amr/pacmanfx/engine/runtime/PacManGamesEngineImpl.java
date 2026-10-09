@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.ui.rendering.RenderManager;
+import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;

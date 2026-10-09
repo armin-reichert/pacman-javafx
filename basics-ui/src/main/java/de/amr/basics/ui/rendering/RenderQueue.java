@@ -2,9 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.rendering;
-
-import de.amr.basics.ui.rendering.Renderable;
+package de.amr.basics.ui.rendering;
 
 import java.util.ArrayList;
 import java.util.Collection;
