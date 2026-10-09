@@ -35,7 +35,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.DoubleProperty;

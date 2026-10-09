@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 

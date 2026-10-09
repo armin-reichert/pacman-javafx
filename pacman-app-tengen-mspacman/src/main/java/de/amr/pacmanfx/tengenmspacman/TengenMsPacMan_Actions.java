@@ -17,8 +17,8 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.input.Joypad;
-import de.amr.pacmanfx.ui.input.JoypadButton;
+import de.amr.pacmanfx.engine.input.Joypad;
+import de.amr.pacmanfx.engine.input.JoypadButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -26,8 +26,8 @@ import java.util.Set;
 
 import static de.amr.basics.util.Ufx.toggleBooleanProperty;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public final class TengenMsPacMan_Actions {
 

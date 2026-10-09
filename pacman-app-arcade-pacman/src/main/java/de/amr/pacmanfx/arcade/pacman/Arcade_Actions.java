@@ -17,7 +17,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public final class Arcade_Actions {
 

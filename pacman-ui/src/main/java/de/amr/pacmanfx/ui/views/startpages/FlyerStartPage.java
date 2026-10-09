@@ -9,7 +9,7 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.application.Platform;

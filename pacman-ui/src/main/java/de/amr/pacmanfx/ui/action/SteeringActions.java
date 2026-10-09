@@ -16,8 +16,8 @@ import javafx.scene.input.KeyCode;
 import java.util.EnumMap;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 import static java.util.Objects.requireNonNull;
 
 public class SteeringActions {

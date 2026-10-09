@@ -30,7 +30,7 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.levelcounter.system;
     exports de.amr.pacmanfx.ui.entities3D.livescounter.comp;
     exports de.amr.pacmanfx.ui.entities3D.livescounter.system;
-    exports de.amr.pacmanfx.ui.input;
+    exports de.amr.pacmanfx.engine.input;
     exports de.amr.pacmanfx.ui.views;
     exports de.amr.pacmanfx.ui.sound;
     exports de.amr.pacmanfx.ui.views.playview;

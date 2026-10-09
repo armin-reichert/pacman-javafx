@@ -32,8 +32,8 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.input.Joypad;
-import de.amr.pacmanfx.ui.input.JoypadButton;
+import de.amr.pacmanfx.engine.input.Joypad;
+import de.amr.pacmanfx.engine.input.JoypadButton;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -45,7 +45,7 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.

@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.engine.input.Input;
 import org.tinylog.Logger;
 
 import java.io.File;

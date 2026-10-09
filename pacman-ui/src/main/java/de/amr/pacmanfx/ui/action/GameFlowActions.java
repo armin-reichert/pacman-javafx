@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public class GameFlowActions {
 

@@ -17,8 +17,8 @@ import javafx.util.Duration;
 import java.util.Set;
 
 import static de.amr.basics.util.Ufx.toggleBooleanProperty;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class SimulationActions {
 

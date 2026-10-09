@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
 import de.amr.basics.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;

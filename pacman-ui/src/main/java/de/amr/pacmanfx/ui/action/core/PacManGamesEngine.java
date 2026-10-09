@@ -14,7 +14,7 @@ import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 

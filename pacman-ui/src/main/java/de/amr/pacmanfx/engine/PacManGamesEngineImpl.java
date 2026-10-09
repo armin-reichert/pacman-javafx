@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;

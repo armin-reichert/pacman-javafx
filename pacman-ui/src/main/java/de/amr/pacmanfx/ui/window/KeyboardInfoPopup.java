@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
-import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;

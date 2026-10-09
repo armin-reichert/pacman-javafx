@@ -15,7 +15,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class Camera3DActions {
 

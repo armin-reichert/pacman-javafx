@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Map;

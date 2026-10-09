@@ -49,7 +49,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
-import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
+import de.amr.pacmanfx.engine.input.JoypadKeyBinding;
 import de.amr.basics.ui.assets.FacingSprite;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

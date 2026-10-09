@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.ui.input.JoypadButton;
-import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
+import de.amr.pacmanfx.engine.input.JoypadButton;
+import de.amr.pacmanfx.engine.input.JoypadKeyBinding;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
