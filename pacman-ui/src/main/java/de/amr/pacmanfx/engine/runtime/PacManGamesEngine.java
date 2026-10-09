@@ -7,7 +7,6 @@ package de.amr.pacmanfx.engine.runtime;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
-import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.engine.PlayStation;
@@ -43,7 +42,7 @@ public interface PacManGamesEngine {
 
     SoundManager soundManager();
 
-    PlayStation gameBox();
+    PlayStation playStation();
 
     GameClock clock();
 

@@ -39,7 +39,7 @@ public class PacManAllGamesNoBuilder extends Application {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
 
         engine = new PacManGamesEngineImpl();
-        engine.gameBox().insertCartridges(
+        engine.playStation().insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,

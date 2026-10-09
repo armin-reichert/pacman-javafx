@@ -101,7 +101,7 @@ public class PacManGameEngineBuilder {
             validateConfigurationData();
 
             final var engine = new PacManGamesEngineImpl();
-            engine.gameBox().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
+            engine.playStation().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
             engine.setUI(ui, dashboardFactory);

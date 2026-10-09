@@ -99,7 +99,7 @@ public final class PacManGamesEngineImpl implements PacManGamesEngine {
     // PacManGamesEngine interface
 
     @Override
-    public PlayStation gameBox() {
+    public PlayStation playStation() {
         return playStation;
     }
 
