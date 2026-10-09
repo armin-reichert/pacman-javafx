@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;

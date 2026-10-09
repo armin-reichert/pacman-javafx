@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.config;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;

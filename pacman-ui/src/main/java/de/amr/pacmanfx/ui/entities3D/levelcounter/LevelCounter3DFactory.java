@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterDataComp;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DSettings;
 import javafx.scene.Group;
 import javafx.scene.image.Image;

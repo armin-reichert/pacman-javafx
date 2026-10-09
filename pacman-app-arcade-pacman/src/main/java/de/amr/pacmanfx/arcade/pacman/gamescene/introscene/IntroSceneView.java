@@ -20,7 +20,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.basics.ui.assets.ArcadeColor;

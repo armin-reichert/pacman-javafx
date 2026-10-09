@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

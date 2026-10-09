@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
-import de.amr.pacmanfx.ui.action.core.QuitHandler;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import javafx.scene.Node;
 
 import java.util.Optional;

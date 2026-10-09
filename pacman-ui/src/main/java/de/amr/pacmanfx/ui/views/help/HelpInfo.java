@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;

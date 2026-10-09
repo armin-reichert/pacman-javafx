@@ -15,8 +15,8 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
-import de.amr.pacmanfx.engine.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;

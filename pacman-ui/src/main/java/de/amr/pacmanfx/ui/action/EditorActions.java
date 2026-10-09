@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;

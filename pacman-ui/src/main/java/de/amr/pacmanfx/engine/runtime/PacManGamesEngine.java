@@ -2,21 +2,21 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.action.core;
+package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.engine.GameBox;
-import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
-import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 
 /**
  * The game "engine".

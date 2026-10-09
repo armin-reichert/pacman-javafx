@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;

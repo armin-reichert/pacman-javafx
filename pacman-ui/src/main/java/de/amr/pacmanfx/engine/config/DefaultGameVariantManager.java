@@ -2,13 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.config;
 
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

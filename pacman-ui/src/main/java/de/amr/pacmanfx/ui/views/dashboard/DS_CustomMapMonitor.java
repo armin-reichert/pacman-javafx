@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

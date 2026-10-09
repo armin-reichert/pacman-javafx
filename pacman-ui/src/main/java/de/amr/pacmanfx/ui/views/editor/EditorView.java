@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;

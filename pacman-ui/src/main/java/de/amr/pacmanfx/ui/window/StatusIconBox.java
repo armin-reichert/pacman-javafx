@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;

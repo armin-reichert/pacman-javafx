@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.config;
 
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

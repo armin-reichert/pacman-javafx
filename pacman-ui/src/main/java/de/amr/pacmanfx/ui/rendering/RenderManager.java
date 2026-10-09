@@ -10,7 +10,7 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;

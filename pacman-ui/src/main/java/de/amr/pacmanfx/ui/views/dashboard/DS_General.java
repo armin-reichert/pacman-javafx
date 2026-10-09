@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.action.core;
+package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;

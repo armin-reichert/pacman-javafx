@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 

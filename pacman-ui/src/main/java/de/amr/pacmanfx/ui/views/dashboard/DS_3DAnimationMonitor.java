@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.config;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;

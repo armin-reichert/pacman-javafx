@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;

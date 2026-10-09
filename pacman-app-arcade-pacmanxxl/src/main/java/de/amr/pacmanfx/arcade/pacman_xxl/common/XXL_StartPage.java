@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;

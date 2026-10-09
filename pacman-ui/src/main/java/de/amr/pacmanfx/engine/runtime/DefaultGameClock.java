@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.Validations;

@@ -13,15 +13,15 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -29,8 +29,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
 
 /**
  * The Arcade Pac‑Man game variant.

@@ -17,8 +17,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 

@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;

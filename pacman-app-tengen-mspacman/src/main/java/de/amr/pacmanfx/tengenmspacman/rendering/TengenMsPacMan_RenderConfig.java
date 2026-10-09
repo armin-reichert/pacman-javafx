@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySceneDebugInfoRenderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;

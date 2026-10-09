@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import javafx.scene.input.KeyCode;

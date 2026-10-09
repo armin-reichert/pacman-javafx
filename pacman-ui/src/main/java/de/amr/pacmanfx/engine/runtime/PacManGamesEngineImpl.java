@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -14,15 +14,17 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
+import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.rendering.RenderManager;
-import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;

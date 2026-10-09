@@ -39,10 +39,8 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.views.help;
     exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.gamescene.common;
-    exports de.amr.pacmanfx.ui.action.core;
     exports de.amr.pacmanfx.ui.settings.ui;
     exports de.amr.pacmanfx.ui.settings.world;
-    exports de.amr.pacmanfx.engine;
     exports de.amr.pacmanfx.ui.viewmodel;
     exports de.amr.pacmanfx.ui.views.miniview;
     exports de.amr.pacmanfx.ui.rendering;
@@ -54,4 +52,8 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.playscene;
     exports de.amr.pacmanfx.ui.entities3D.pac.system;
+    exports de.amr.pacmanfx.engine.config;
+    exports de.amr.pacmanfx.engine.runtime;
+    exports de.amr.pacmanfx.engine.sound;
+    exports de.amr.pacmanfx.engine.runtime.action;
 }

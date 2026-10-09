@@ -8,9 +8,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 

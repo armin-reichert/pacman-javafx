@@ -2,13 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.basics.Named;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.config.GameBox;
+import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.config.Cartridge;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

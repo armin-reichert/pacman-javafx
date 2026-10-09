@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.sound;
+package de.amr.pacmanfx.engine.sound;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;

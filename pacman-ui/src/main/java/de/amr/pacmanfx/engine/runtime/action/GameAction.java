@@ -2,9 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.action.core;
+package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 
 /**
  * Common base class for game actions.

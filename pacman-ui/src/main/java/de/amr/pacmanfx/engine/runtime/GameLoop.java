@@ -2,12 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;

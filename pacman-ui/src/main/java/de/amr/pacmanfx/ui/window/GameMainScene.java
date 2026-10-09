@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;

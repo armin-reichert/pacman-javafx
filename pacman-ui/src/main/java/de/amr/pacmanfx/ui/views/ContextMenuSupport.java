@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;

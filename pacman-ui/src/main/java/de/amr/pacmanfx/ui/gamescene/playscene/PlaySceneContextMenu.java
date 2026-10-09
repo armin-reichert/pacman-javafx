@@ -7,7 +7,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import javafx.beans.property.ObjectProperty;

@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;

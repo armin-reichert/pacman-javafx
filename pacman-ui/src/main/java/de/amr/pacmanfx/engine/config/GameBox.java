@@ -2,13 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.config;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.engine.runtime.DefaultGameClock;
 import org.tinylog.Logger;
 
 import java.io.File;

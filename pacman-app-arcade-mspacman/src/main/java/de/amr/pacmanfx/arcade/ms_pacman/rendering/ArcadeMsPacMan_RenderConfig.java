@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.engine.GameVariantRenderConfig;
+import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
