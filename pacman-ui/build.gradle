@@ -4,13 +4,14 @@ plugins {
 
 dependencies {
     implementation(
-        project(":basics"),
-        project(":basics-ui"),
-        project(":pacman-core"),
-        project(":pacman-ui-lib"),
-        project(":pacman-app-mapeditor"),
-        libs.bundles.tinylog,
-        libs.gson
+            project(":basics"),
+            project(":basics-ui"),
+            project(":pacman-core"),
+            project(":pacman-engine"),
+            project(":pacman-ui-lib"),
+            project(":pacman-app-mapeditor"),
+            libs.bundles.tinylog,
+            libs.gson
     )
 
     testImplementation(libs.junit.jupiter.api)

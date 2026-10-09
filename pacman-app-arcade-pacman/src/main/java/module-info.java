@@ -5,18 +5,21 @@ See file LICENSE in repository root directory for details.
 
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.arcade.pacman {
-    requires org.tinylog.api;
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
+
+    requires java.desktop;
+
+    requires org.tinylog.api;
+
+    requires de.amr.pacmanfx.engine;
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
-    requires java.xml;
-    requires java.desktop;
 
     exports de.amr.pacmanfx.arcade.pacman;
     exports de.amr.pacmanfx.arcade.pacman.app;

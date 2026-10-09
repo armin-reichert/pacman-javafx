@@ -7,17 +7,20 @@ See file LICENSE in repository root directory for details.
 open module de.amr.pacmanfx.ui {
     requires transitive java.prefs;
     requires javafx.base;
+    requires java.desktop;
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.media;
+
     requires org.tinylog.api;
     requires com.google.gson;
+
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
+    requires de.amr.pacmanfx.engine;
     requires de.amr.pacmanfx.mapeditor;
-    requires java.desktop;
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
@@ -30,7 +33,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.levelcounter.system;
     exports de.amr.pacmanfx.ui.entities3D.livescounter.comp;
     exports de.amr.pacmanfx.ui.entities3D.livescounter.system;
-    exports de.amr.pacmanfx.engine.input;
     exports de.amr.pacmanfx.ui.views;
     exports de.amr.pacmanfx.ui.sound;
     exports de.amr.pacmanfx.ui.views.playview;

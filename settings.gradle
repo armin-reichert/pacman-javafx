@@ -24,17 +24,19 @@ dependencyResolutionManagement {
 rootProject.name = "pacman-javafx"
 
 include(
-    "basics",
-    "basics-ui",
-    "meshbuilder",
-    "objparser",
-    "pacman-core",
-    "pacman-ui-lib",
-    "pacman-ui",
-    "pacman-app-arcade-pacman",
-    "pacman-app-arcade-mspacman",
-    "pacman-app-arcade-pacmanxxl",
-    "pacman-app-tengen-mspacman",
-    "pacman-app-allgames",
-    "pacman-app-mapeditor",
-    "experiments")
+        "basics",
+        "basics-ui",
+        "meshbuilder",
+        "objparser",
+        "pacman-core",
+        "pacman-engine",
+        "pacman-ui-lib",
+        "pacman-ui",
+        "pacman-app-arcade-pacman",
+        "pacman-app-arcade-mspacman",
+        "pacman-app-arcade-pacmanxxl",
+        "pacman-app-tengen-mspacman",
+        "pacman-app-allgames",
+        "pacman-app-mapeditor",
+        "experiments"
+)

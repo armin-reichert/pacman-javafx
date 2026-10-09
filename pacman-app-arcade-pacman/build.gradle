@@ -10,6 +10,7 @@ dependencies {
         project(":basics-ui"),
         project(":pacman-core"),
         project(":pacman-ui-lib"),
+        project(":pacman-engine"),
         project(":pacman-ui"),
         libs.bundles.tinylog
     )
