@@ -5,4 +5,4 @@ import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 
 import java.util.function.Function;
 
-public record GameExtension(Named id, Function<PacManGamesEngine, Object> creator) {}
+public record GameEngineExtension(Named id, Function<PacManGamesEngine, Object> creator) {}
