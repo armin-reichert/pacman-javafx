@@ -2,10 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d2;
+package de.amr.basics.ui.spriteanim;
 
-import de.amr.basics.ui.spriteanim.SpriteAnimation;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

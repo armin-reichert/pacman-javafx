@@ -6,6 +6,8 @@ package de.amr.pacmanfx.engine.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.engine.PlayStation;
@@ -15,8 +17,6 @@ import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.basics.ui.rendering.RenderManager;
 
 /**
  * The game "engine".
