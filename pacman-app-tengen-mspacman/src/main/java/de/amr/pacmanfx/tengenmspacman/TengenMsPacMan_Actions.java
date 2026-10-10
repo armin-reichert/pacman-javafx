@@ -7,10 +7,10 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
@@ -31,27 +31,27 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionV
 
 public final class TengenMsPacMan_Actions {
 
-    private final GameAction actionEnterStartScreen;
-    private final GameAction actionQuitDemoLevel;
-    private final GameAction actionStartPlaying;
-    private final GameAction actionTogglePlaySceneDisplayMode;
-    private final GameAction actionToggleJoypadBindingsDisplayed;
-    private final GameAction actionTogglePacBooster;
-    private final GameAction actionSelectNextJoypadKeyBinding;
+    private final GameAction<GameActionContext> actionEnterStartScreen;
+    private final GameAction<GameActionContext> actionQuitDemoLevel;
+    private final GameAction<GameActionContext> actionStartPlaying;
+    private final GameAction<GameActionContext> actionTogglePlaySceneDisplayMode;
+    private final GameAction<GameActionContext> actionToggleJoypadBindingsDisplayed;
+    private final GameAction<GameActionContext> actionTogglePacBooster;
+    private final GameAction<GameActionContext> actionSelectNextJoypadKeyBinding;
 
     private final Set<ActionKeyBinding> steeringBindings;
     private final Set<ActionKeyBinding> localBindings;
 
     public TengenMsPacMan_Actions(Joypad joypad, CommonGameActions commonGameActions) {
 
-        actionEnterStartScreen = new GameAction("enter_start_screen") {
+        actionEnterStartScreen = new GameAction<>("enter_start_screen") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
-        actionQuitDemoLevel = new GameAction("quit_demo_level") {
+        actionQuitDemoLevel = new GameAction<>("quit_demo_level") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_PREPARATION);
@@ -63,14 +63,14 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction("start_playing") {
+        actionStartPlaying = new GameAction<>("start_playing") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
-        actionTogglePlaySceneDisplayMode = new GameAction("toggle_play_scene_display_mode") {
+        actionTogglePlaySceneDisplayMode = new GameAction<>("toggle_play_scene_display_mode") {
             @Override
             public void execute(GameActionContext context) {
                 final var uiSettings = context.gameVariantManager().currentRuntime()
@@ -88,7 +88,7 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionToggleJoypadBindingsDisplayed = new GameAction("toggle_joypad_bindings_displayed") {
+        actionToggleJoypadBindingsDisplayed = new GameAction<>("toggle_joypad_bindings_displayed") {
             @Override
             public void execute(GameActionContext context) {
                 final var uiSettings = context.gameVariantManager().currentRuntime()
@@ -98,7 +98,7 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionTogglePacBooster = new GameAction("toggle_pac_booster") {
+        actionTogglePacBooster = new GameAction<>("toggle_pac_booster") {
             @Override
             public void execute(GameActionContext context) {
                 final GameSession session = context.currentGame().session();
@@ -120,7 +120,7 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionSelectNextJoypadKeyBinding = new GameAction("select_next_joypad_binding") {
+        actionSelectNextJoypadKeyBinding = new GameAction<>("select_next_joypad_binding") {
             @Override
             public void execute(GameActionContext context) {
                 context.input().joypad().selectNextBinding();
@@ -155,31 +155,31 @@ public final class TengenMsPacMan_Actions {
         return localBindings;
     }
 
-    public GameAction actionEnterStartScreen() {
+    public GameAction<GameActionContext> actionEnterStartScreen() {
         return actionEnterStartScreen;
     }
 
-    public GameAction actionQuitDemoLevel() {
+    public GameAction<GameActionContext> actionQuitDemoLevel() {
         return actionQuitDemoLevel;
     }
 
-    public GameAction actionStartPlaying() {
+    public GameAction<GameActionContext> actionStartPlaying() {
         return actionStartPlaying;
     }
 
-    public GameAction actionTogglePlaySceneDisplayMode() {
+    public GameAction<GameActionContext> actionTogglePlaySceneDisplayMode() {
         return actionTogglePlaySceneDisplayMode;
     }
 
-    public GameAction actionToggleJoypadBindingsDisplayed() {
+    public GameAction<GameActionContext> actionToggleJoypadBindingsDisplayed() {
         return actionToggleJoypadBindingsDisplayed;
     }
 
-    public GameAction actionTogglePacBooster() {
+    public GameAction<GameActionContext> actionTogglePacBooster() {
         return actionTogglePacBooster;
     }
 
-    public GameAction actionSelectNextJoypadKeyBinding() {
+    public GameAction<GameActionContext> actionSelectNextJoypadKeyBinding() {
         return actionSelectNextJoypadKeyBinding;
     }
 

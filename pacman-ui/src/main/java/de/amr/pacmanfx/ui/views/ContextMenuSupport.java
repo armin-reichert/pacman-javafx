@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
@@ -49,7 +49,7 @@ public final class ContextMenuSupport {
         GameActionContext context,
         ContextMenu menu,
         TranslationManager translator,
-        GameAction action,
+        GameAction<GameActionContext> action,
         String globalAssetsKey,
         Object... args)
     {

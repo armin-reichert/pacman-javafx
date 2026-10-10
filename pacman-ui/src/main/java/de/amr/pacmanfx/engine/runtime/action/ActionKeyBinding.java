@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.engine.runtime.action;
 
+import de.amr.pacmanfx.engine.action.GameAction;
 import javafx.scene.input.KeyCodeCombination;
 
-public record ActionKeyBinding(GameAction action, KeyCodeCombination... keyCombinations) {}
+public record ActionKeyBinding(GameAction<GameActionContext> action, KeyCodeCombination... keyCombinations) {}

@@ -15,10 +15,10 @@ import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGamesEngine implements EngineLifecycle, GameActionContext {
 
-    public static boolean runAction(GameAction gameAction, GameActionContext context) {
+    public static boolean runAction(GameAction<GameActionContext> gameAction, GameActionContext context) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {

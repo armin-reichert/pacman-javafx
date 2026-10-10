@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.engine.runtime.action;
 
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -28,21 +29,21 @@ public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings() {
         return Map.of();
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction action, Set<ActionKeyBinding> bindings) {}
+    public void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination) {}
+    public void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination) {}
 
     @Override
     public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
         return Optional.empty();
     }
 }

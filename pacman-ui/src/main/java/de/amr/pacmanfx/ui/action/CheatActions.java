@@ -13,8 +13,8 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.VoiceID;
@@ -29,22 +29,22 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public final class CheatActions {
 
-    private final GameAction actionAddLives;
-    private final GameAction actionEatAllPellets;
-    private final GameAction actionKillGhosts;
-    private final GameAction actionEnterNextLevel;
-    private final GameAction actionToggleAutopilot;
-    private final GameAction actionActivateAutopilot;
-    private final GameAction actionDeactivateAutopilot;
-    private final GameAction actionActivateImmunity;
-    private final GameAction actionDeactivateImmunity;
-    private final GameAction actionToggleImmunity;
+    private final GameAction<GameActionContext> actionAddLives;
+    private final GameAction<GameActionContext> actionEatAllPellets;
+    private final GameAction<GameActionContext> actionKillGhosts;
+    private final GameAction<GameActionContext> actionEnterNextLevel;
+    private final GameAction<GameActionContext> actionToggleAutopilot;
+    private final GameAction<GameActionContext> actionActivateAutopilot;
+    private final GameAction<GameActionContext> actionDeactivateAutopilot;
+    private final GameAction<GameActionContext> actionActivateImmunity;
+    private final GameAction<GameActionContext> actionDeactivateImmunity;
+    private final GameAction<GameActionContext> actionToggleImmunity;
 
     private final Set<ActionKeyBinding> bindings;
 
     public CheatActions() {
 
-        actionAddLives = new GameAction("cheat_add_lives") {
+        actionAddLives = new GameAction<>("cheat_add_lives") {
             @Override
             public void execute(GameActionContext context) {
                 final GameSession session = context.currentGame().session();
@@ -60,7 +60,7 @@ public final class CheatActions {
             }
         };
 
-        actionEatAllPellets = new GameAction("cheat_eat_all_pellets") {
+        actionEatAllPellets = new GameAction<>("cheat_eat_all_pellets") {
             @Override
             public void execute(GameActionContext context) {
                 final GameSession session = context.currentGame().session();
@@ -78,13 +78,13 @@ public final class CheatActions {
             }
         };
 
-        actionKillGhosts = new GameAction("cheat_kill_ghosts") {
+        actionKillGhosts = new GameAction<>("cheat_kill_ghosts") {
             @Override
             public void execute(GameActionContext context) {
                 final GameContext game = context.currentGame();
                 final GameSession session = game.session();
                 final GameLevel level = session.level();
-                
+
                 session.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entitySet().ghosts()
@@ -106,7 +106,7 @@ public final class CheatActions {
             }
         };
 
-        actionEnterNextLevel = new GameAction("cheat_enter_next_level") {
+        actionEnterNextLevel = new GameAction<>("cheat_enter_next_level") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().session().cheats().notifyCheatUsed();
@@ -123,7 +123,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleAutopilot = new GameAction("toggle_autopilot") {
+        actionToggleAutopilot = new GameAction<>("toggle_autopilot") {
             @Override
             public void execute(GameActionContext context) {
                 final GameCheats cheats = context.currentGame().session().cheats();
@@ -136,7 +136,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateAutopilot = new GameAction("activate_autopilot") {
+        actionActivateAutopilot = new GameAction<>("activate_autopilot") {
             @Override
             public void execute(GameActionContext context) {
                 setAutopilot(context, true);
@@ -148,7 +148,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateAutopilot = new GameAction("deactivate_autopilot") {
+        actionDeactivateAutopilot = new GameAction<>("deactivate_autopilot") {
             @Override
             public void execute(GameActionContext context) {
                 setAutopilot(context, false);
@@ -160,7 +160,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateImmunity = new GameAction("activate_immunity") {
+        actionActivateImmunity = new GameAction<>("activate_immunity") {
             @Override
             public void execute(GameActionContext context) {
                 setPacImmune(context, true);
@@ -172,7 +172,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateImmunity = new GameAction("deactivate_immunity") {
+        actionDeactivateImmunity = new GameAction<>("deactivate_immunity") {
             @Override
             public void execute(GameActionContext context) {
                 setPacImmune(context, false);
@@ -184,7 +184,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleImmunity = new GameAction("toggle_immunity") {
+        actionToggleImmunity = new GameAction<>("toggle_immunity") {
             @Override
             public void execute(GameActionContext context) {
                 final GameCheats cheats = context.currentGame().session().cheats();
@@ -207,43 +207,43 @@ public final class CheatActions {
         );
     }
 
-    public GameAction actionAddLives() {
+    public GameAction<GameActionContext> actionAddLives() {
         return actionAddLives;
     }
 
-    public GameAction actionEatAllPellets() {
+    public GameAction<GameActionContext> actionEatAllPellets() {
         return actionEatAllPellets;
     }
 
-    public GameAction actionKillGhosts() {
+    public GameAction<GameActionContext> actionKillGhosts() {
         return actionKillGhosts;
     }
 
-    public GameAction actionEnterNextLevel() {
+    public GameAction<GameActionContext> actionEnterNextLevel() {
         return actionEnterNextLevel;
     }
 
-    public GameAction actionToggleAutopilot() {
+    public GameAction<GameActionContext> actionToggleAutopilot() {
         return actionToggleAutopilot;
     }
 
-    public GameAction actionActivateAutopilot() {
+    public GameAction<GameActionContext> actionActivateAutopilot() {
         return actionActivateAutopilot;
     }
 
-    public GameAction actionDeactivateAutopilot() {
+    public GameAction<GameActionContext> actionDeactivateAutopilot() {
         return actionDeactivateAutopilot;
     }
 
-    public GameAction actionActivateImmunity() {
+    public GameAction<GameActionContext> actionActivateImmunity() {
         return actionActivateImmunity;
     }
 
-    public GameAction actionDeactivateImmunity() {
+    public GameAction<GameActionContext> actionDeactivateImmunity() {
         return actionDeactivateImmunity;
     }
 
-    public GameAction actionToggleImmunity() {
+    public GameAction<GameActionContext> actionToggleImmunity() {
         return actionToggleImmunity;
     }
 

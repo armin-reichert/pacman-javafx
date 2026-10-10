@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -20,15 +20,15 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class Camera3DActions {
 
-    private final GameAction actionPreviousPerspective;
-    private final GameAction actionNextPerspective;
-    private final GameAction actionToggleDrawMode;
+    private final GameAction<GameActionContext> actionPreviousPerspective;
+    private final GameAction<GameActionContext> actionNextPerspective;
+    private final GameAction<GameActionContext> actionToggleDrawMode;
 
     private final Set<ActionKeyBinding> bindings;
 
     public Camera3DActions() {
 
-        actionNextPerspective = new GameAction("perspective_next") {
+        actionNextPerspective = new GameAction<>("perspective_next") {
             @Override
             public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
@@ -44,7 +44,7 @@ public class Camera3DActions {
             }
         };
 
-        actionPreviousPerspective = new GameAction("perspective_previous") {
+        actionPreviousPerspective = new GameAction<>("perspective_previous") {
             @Override
             public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
@@ -53,18 +53,20 @@ public class Camera3DActions {
                 perspectiveIDProperty.set(prevID);
                 ui.shortMessage(translatedPerspectiveMessage(context, prevID));
             }
+
             @Override
             public boolean isEnabled(GameActionContext context) {
                 return is3DPlaySceneActive(context);
             }
         };
 
-        actionToggleDrawMode = new GameAction("toggle_draw_mode") {
+        actionToggleDrawMode = new GameAction<>("toggle_draw_mode") {
             @Override
             public void execute(GameActionContext context) {
                 final var drawModeProperty = context.ui().viewModel().common3DSettings().drawModeProperty();
                 Ufx.toggleProperty(drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
+
             @Override
             public boolean isEnabled(GameActionContext context) {
                 return is3DPlaySceneActive(context);
@@ -78,15 +80,15 @@ public class Camera3DActions {
         );
     }
 
-    public GameAction actionPreviousPerspective() {
+    public GameAction<GameActionContext> actionPreviousPerspective() {
         return actionPreviousPerspective;
     }
 
-    public GameAction actionNextPerspective() {
+    public GameAction<GameActionContext> actionNextPerspective() {
         return actionNextPerspective;
     }
 
-    public GameAction actionToggleDrawMode() {
+    public GameAction<GameActionContext> actionToggleDrawMode() {
         return actionToggleDrawMode;
     }
 

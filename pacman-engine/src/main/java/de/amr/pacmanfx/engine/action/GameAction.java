@@ -2,14 +2,16 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.runtime.action;
+package de.amr.pacmanfx.engine.action;
 
 import de.amr.pacmanfx.core.Validations;
 
 /**
  * Common base class for game actions.
+ *
+ * @param <C> type of action context
  */
-public abstract class GameAction {
+public abstract class GameAction<C> {
 
     protected final String id;
 
@@ -28,7 +30,7 @@ public abstract class GameAction {
 
     public final String resourceBundleKey() { return "action." + id; }
 
-    public abstract void execute(GameActionContext context);
+    public abstract void execute(C context);
 
-    public boolean isEnabled(GameActionContext context) { return true; }
+    public boolean isEnabled(C context) { return true; }
 }

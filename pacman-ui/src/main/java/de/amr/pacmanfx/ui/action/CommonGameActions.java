@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -46,7 +46,7 @@ public final class CommonGameActions {
     private final TestActions sceneTestActions;
     private final UISettingsActions uiSettingsActions;
 
-    private final GameAction actionToggleCollisionStrategy;
+    private final GameAction<GameActionContext> actionToggleCollisionStrategy;
 
     private final Set<ActionKeyBinding> commonBindings;
 
@@ -60,7 +60,7 @@ public final class CommonGameActions {
         sceneTestActions = new TestActions();
         uiSettingsActions = new UISettingsActions();
 
-        actionToggleCollisionStrategy = new GameAction("toggle_collision_strategy") {
+        actionToggleCollisionStrategy = new GameAction<>("toggle_collision_strategy") {
             @Override
             public void execute(GameActionContext context) {
                 final GameContext game = context.currentGame();
@@ -114,7 +114,7 @@ public final class CommonGameActions {
         return uiSettingsActions;
     }
 
-    public GameAction actionToggleCollisionStrategy() {
+    public GameAction<GameActionContext> actionToggleCollisionStrategy() {
         return actionToggleCollisionStrategy;
     }
 

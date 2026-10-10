@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.engine.runtime.action;
 
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -16,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 public class GameActionBindingsRegistry implements ActionBindingsRegistry {
 
     private final String name;
-    private final Map<KeyCodeCombination, GameAction> actionBindingsMap = new HashMap<>();
+    private final Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindingsMap = new HashMap<>();
 
     public GameActionBindingsRegistry(String name) {
         this.name = requireNonNull(name);
@@ -36,7 +37,7 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
         return name + "\n" + entriesText;
     }
 
-    private String formatEntry(Map.Entry<KeyCodeCombination, GameAction> e) {
+    private String formatEntry(Map.Entry<KeyCodeCombination, GameAction<GameActionContext>> e) {
         return "%-15s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey());
     }
 
@@ -47,19 +48,19 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings() {
         return actionBindingsMap;
     }
 
     @Override
-    public void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination) {
+    public void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionBindingsMap.put(combination, action);
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction action, Set<ActionKeyBinding> bindingSet) {
+    public void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindingSet) {
         requireNonNull(action);
         requireNonNull(bindingSet);
 
@@ -86,11 +87,11 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
     }
 
     @Override
-    public Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
         for (var entry : actionBindingsMap.entrySet()) {
             final KeyCodeCombination actionTrigger = entry.getKey();
             if (keyboard.stateMatches(actionTrigger)) {
-                final GameAction action = entry.getValue();
+                final GameAction<GameActionContext> action = entry.getValue();
                 Logger.debug("ACTION MATCH FOUND: key='{}' action='{}'", actionTrigger, action.id());
                 return Optional.of(action);
             }

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.scene.control.Label;
@@ -29,7 +29,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
     private void updateInfo(GameActionContext context, GameView view) {
         clearSection();
 
-        final Map<KeyCodeCombination, GameAction> currentBindingMap = view.actionBindings().actionBindings();
+        final Map<KeyCodeCombination, GameAction<GameActionContext>> currentBindingMap = view.actionBindings().actionBindings();
         if (currentBindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
@@ -37,7 +37,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
             currentBindingMap.keySet().stream()
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
-                    final GameAction action = currentBindingMap.get(key);
+                    final GameAction<GameActionContext> action = currentBindingMap.get(key);
                     final String actionText = context.translationManager().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled(context));
                     addRow(key.getDisplayText(), label);

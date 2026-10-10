@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
@@ -21,23 +21,23 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public class GameFlowActions {
 
-    private final GameAction actionStartGame;
-    private final GameAction actionQuit;
-    private final GameAction actionLetGameStateExpire;
-    private final GameAction actionRestartIntro;
+    private final GameAction<GameActionContext> actionStartGame;
+    private final GameAction<GameActionContext> actionQuit;
+    private final GameAction<GameActionContext> actionLetGameStateExpire;
+    private final GameAction<GameActionContext> actionRestartIntro;
 
     private final Set<ActionKeyBinding> bindings;
 
     public GameFlowActions() {
 
-        actionStartGame = new GameAction("start_game") {
+        actionStartGame = new GameAction<>("start_game") {
             @Override
             public void execute(GameActionContext context) {
                 context.engineLife().startGame();
             }
         };
 
-        actionQuit = new GameAction("quit") {
+        actionQuit = new GameAction<>("quit") {
             @Override
             public void execute(GameActionContext context) {
                 final GameUI ui = context.ui();
@@ -46,14 +46,14 @@ public class GameFlowActions {
             }
         };
 
-        actionLetGameStateExpire = new GameAction("let_game_state_expire") {
+        actionLetGameStateExpire = new GameAction<>("let_game_state_expire") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().state().triggerTimeout();
             }
         };
 
-        actionRestartIntro = new GameAction("restart_intro") {
+        actionRestartIntro = new GameAction<>("restart_intro") {
             @Override
             public void execute(GameActionContext context) {
                 final GameContext game = context.currentGame();
@@ -75,19 +75,19 @@ public class GameFlowActions {
         );
     }
 
-    public GameAction actionLetGameStateExpire() {
+    public GameAction<GameActionContext> actionLetGameStateExpire() {
         return actionLetGameStateExpire;
     }
 
-    public GameAction actionQuit() {
+    public GameAction<GameActionContext> actionQuit() {
         return actionQuit;
     }
 
-    public GameAction actionRestartIntro() {
+    public GameAction<GameActionContext> actionRestartIntro() {
         return actionRestartIntro;
     }
 
-    public GameAction actionStartGame() {
+    public GameAction<GameActionContext> actionStartGame() {
         return actionStartGame;
     }
 

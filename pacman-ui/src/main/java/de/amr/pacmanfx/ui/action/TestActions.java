@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -17,15 +17,15 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class TestActions {
 
-    private final GameAction actionTestCutScenes;
-    private final GameAction actionTestLevelShort;
-    private final GameAction actionTestLevelMedium;
+    private final GameAction<GameActionContext> actionTestCutScenes;
+    private final GameAction<GameActionContext> actionTestLevelShort;
+    private final GameAction<GameActionContext> actionTestLevelMedium;
 
     private final Set<ActionKeyBinding> bindings;
 
     public TestActions() {
 
-        actionTestCutScenes = new GameAction("test_cut_scenes") {
+        actionTestCutScenes = new GameAction<>("test_cut_scenes") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), TestStateID.CUT_SCENE_TEST);
@@ -38,7 +38,7 @@ public class TestActions {
             }
         };
 
-        actionTestLevelShort = new GameAction("short_level_test") {
+        actionTestLevelShort = new GameAction<>("short_level_test") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().restartGameState(context.currentGame(), TestStateID.LEVEL_TEST_S);
@@ -51,7 +51,7 @@ public class TestActions {
             }
         };
 
-        actionTestLevelMedium = new GameAction("medium_level_test") {
+        actionTestLevelMedium = new GameAction<>("medium_level_test") {
             @Override
             public void execute(GameActionContext context) {
                 context.currentGame().playConfig().gameFlow().restartGameState(context.currentGame(), TestStateID.LEVEL_TEST_M);
@@ -71,15 +71,15 @@ public class TestActions {
         );
     }
 
-    public GameAction actionTestCutScenes() {
+    public GameAction<GameActionContext> actionTestCutScenes() {
         return actionTestCutScenes;
     }
 
-    public GameAction actionTestLevelShort() {
+    public GameAction<GameActionContext> actionTestLevelShort() {
         return actionTestLevelShort;
     }
 
-    public GameAction actionTestLevelMedium() {
+    public GameAction<GameActionContext> actionTestLevelMedium() {
         return actionTestLevelMedium;
     }
 

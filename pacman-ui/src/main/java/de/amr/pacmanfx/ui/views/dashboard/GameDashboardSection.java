@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import javafx.scene.control.Button;
@@ -58,7 +58,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameActionContext actionContext, Button button, GameAction gameAction) {
+    protected void setGameAction(GameActionContext actionContext, Button button, GameAction<GameActionContext> gameAction) {
         button.setOnAction(_ -> runAction(gameAction, actionContext));
     }
 }

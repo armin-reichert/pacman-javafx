@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -20,19 +21,19 @@ public interface ActionBindingsRegistry extends Disposable {
 
     String name();
 
-    Map<KeyCodeCombination, GameAction> actionBindings();
+    Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings();
 
-    Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard);
+    Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard);
 
-    default Optional<GameAction> executeMatchingAction(GameActionContext context) {
-        final Optional<GameAction> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
+    default Optional<GameAction<GameActionContext>> executeMatchingAction(GameActionContext context) {
+        final Optional<GameAction<GameActionContext>> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
         matchingAction.ifPresent(action -> runAction(action, context));
         return matchingAction;
     }
 
-    void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination);
+    void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination);
 
-    void selectAnyMatchingBinding(GameAction action, Set<ActionKeyBinding> bindings);
+    void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindings);
 
     void registerAllBindings(Set<ActionKeyBinding> bindings);
 }

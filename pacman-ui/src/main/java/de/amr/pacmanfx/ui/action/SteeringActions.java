@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import javafx.scene.input.KeyCode;
 
@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 
 public class SteeringActions {
 
-    public static class SteeringAction extends GameAction {
+    public static class SteeringAction extends GameAction<GameActionContext> {
 
         private static String createActionID(Direction dir) {
             return "steer_pac_%s".formatted(dir.name().toLowerCase());
@@ -51,7 +51,7 @@ public class SteeringActions {
         }
     }
 
-    private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
+    private final EnumMap<Direction, GameAction<GameActionContext>> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
     public SteeringActions() {
@@ -67,7 +67,7 @@ public class SteeringActions {
         );
     }
 
-    public GameAction actionSteer(Direction dir) {
+    public GameAction<GameActionContext> actionSteer(Direction dir) {
         requireNonNull(dir);
         return actions.get(dir);
     }

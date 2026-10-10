@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
@@ -21,14 +21,14 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public final class Arcade_Actions {
 
-    private final GameAction actionInsertCoin;
-    private final GameAction actionStartPlaying;
+    private final GameAction<GameActionContext> actionInsertCoin;
+    private final GameAction<GameActionContext> actionStartPlaying;
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
     public Arcade_Actions() {
 
-        actionInsertCoin = new GameAction("insert_coin") {
+        actionInsertCoin = new GameAction<>("insert_coin") {
             @Override
             public void execute(GameActionContext context) {
                 context.soundManager().voice().stop();
@@ -55,7 +55,7 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction("start_playing") {
+        actionStartPlaying = new GameAction<>("start_playing") {
             @Override
             public void execute(GameActionContext context) {
                 context.soundManager().voice().stop();
@@ -79,11 +79,11 @@ public final class Arcade_Actions {
         );
     }
 
-    public GameAction actionInsertCoin() {
+    public GameAction<GameActionContext> actionInsertCoin() {
         return actionInsertCoin;
     }
 
-    public GameAction actionStartPlaying() {
+    public GameAction<GameActionContext> actionStartPlaying() {
         return actionStartPlaying;
     }
 

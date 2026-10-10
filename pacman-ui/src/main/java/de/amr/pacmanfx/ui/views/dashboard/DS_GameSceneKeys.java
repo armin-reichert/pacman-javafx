@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -37,7 +37,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
-                    final GameAction action = entry.getValue();
+                    final GameAction<GameActionContext> action = entry.getValue();
                     final String localizedActionText = context.translationManager()
                         .translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(),

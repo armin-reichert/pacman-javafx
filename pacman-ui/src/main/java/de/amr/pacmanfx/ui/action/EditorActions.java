@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.GameUI;
@@ -23,13 +23,13 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final GameAction actionOpenEditor;
+    private final GameAction<GameActionContext> actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
     public EditorActions() {
 
-        actionOpenEditor = new GameAction("open_editor") {
+        actionOpenEditor = new GameAction<>("open_editor") {
             @Override
             public void execute(GameActionContext context) {
                 openMapEditor(context).ifPresent(editor -> startEditor(context, editor));
@@ -45,9 +45,9 @@ public class EditorActions {
      * @param mapFile map file to edit or {@code null}
      * @return action which opens the map editor and edits the given map file if any
      */
-    public GameAction createEditMapFileAction(File mapFile) {
+    public GameAction<GameActionContext> createEditMapFileAction(File mapFile) {
 
-        return new GameAction("edit_map_file") {
+        return new GameAction<>("edit_map_file") {
             @Override
             public void execute(GameActionContext actionContext) {
                 openMapEditor(actionContext).ifPresent(editor -> {
@@ -65,7 +65,7 @@ public class EditorActions {
         };
     }
 
-    public GameAction actionOpenEditor() {
+    public GameAction<GameActionContext> actionOpenEditor() {
         return actionOpenEditor;
     }
 
