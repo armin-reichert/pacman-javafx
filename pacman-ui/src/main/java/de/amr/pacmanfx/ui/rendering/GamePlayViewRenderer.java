@@ -26,11 +26,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, RenderManager renderManager, GameActionContext actionContext, AbstractGameScene gameScene) {
+    public static void render(GamePlayView playView, GameActionContext actionContext, GameScene gameScene) {
         requireNonNull(playView);
-        requireNonNull(renderManager);
         requireNonNull(actionContext);
         requireNonNull(gameScene);
+
+        final RenderManager renderManager = actionContext.renderManager();
 
         // --- Refill the render queue
 
@@ -58,12 +59,16 @@ public class GamePlayViewRenderer {
 
         // --- Update the renderers
 
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            return; // Should never happen
+        }
+
         //TODO This should not be done in each render frame
 
         final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
-        final GameSceneView2D view2D = gameScene.view2D();
+        final GameSceneView2D view2D = abstractGameScene.view2D();
 
         if (view2D != null) {
             final RenderingSurface renderingSurface = view2D.renderingSurface();

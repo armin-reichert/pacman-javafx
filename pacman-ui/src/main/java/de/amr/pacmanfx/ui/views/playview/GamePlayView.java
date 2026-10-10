@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
@@ -13,6 +14,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
@@ -135,6 +137,10 @@ public class GamePlayView implements GameView {
             (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
+    }
+
+    public void render() {
+        GamePlayViewRenderer.render(this, actionContext, actionContext.gameSceneManager().currentGameScene());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
