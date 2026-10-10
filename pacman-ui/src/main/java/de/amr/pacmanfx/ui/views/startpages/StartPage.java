@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -15,7 +15,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    void setActionContext(GameActionContext actionContext);
+    void setActionContext(GameEngineContext actionContext);
 
     void onEnter();
 

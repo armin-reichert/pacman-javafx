@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.config;
 
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 public class TengenMsPacMan_UISettings {
 
     // Signature needed for cartridge
-    public TengenMsPacMan_UISettings(GameActionContext actionContext) {}
+    public TengenMsPacMan_UISettings(GameEngineContext actionContext) {}
 
     public final BooleanProperty joypadBindingsDisplayed = new SimpleBooleanProperty(false);
 

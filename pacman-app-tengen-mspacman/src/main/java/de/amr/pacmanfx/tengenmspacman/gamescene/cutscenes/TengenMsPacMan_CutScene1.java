@@ -19,7 +19,7 @@ import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction<GameActionContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
+        final GameAction<GameEngineContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
         actionBindingsRegistry().bindActionToKeyCombination(quitAction, actionContext().input().joypad().keyForButton(JoypadButton.START));
 

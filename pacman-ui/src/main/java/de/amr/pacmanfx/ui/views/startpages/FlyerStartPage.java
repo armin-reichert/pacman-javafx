@@ -8,7 +8,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -47,7 +47,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected GameActionContext actionContext;
+    protected GameEngineContext actionContext;
 
     protected AbstractGameScene gameScene;
 
@@ -83,7 +83,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setActionContext(GameActionContext actionContext) {
+    public void setActionContext(GameEngineContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
         init(actionContext, config.gameVariant());
     }
@@ -115,7 +115,7 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(GameActionContext actionContext) {
+    protected GameStartButton createStartButton(GameEngineContext actionContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
             runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
@@ -129,7 +129,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(GameActionContext actionContext, String gameVariantName) {
+    private void init(GameEngineContext actionContext, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;

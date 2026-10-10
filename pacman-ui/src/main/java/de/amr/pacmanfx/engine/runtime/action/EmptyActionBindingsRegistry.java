@@ -29,21 +29,21 @@ public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings() {
         return Map.of();
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindings) {}
+    public void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination) {}
+    public void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination) {}
 
     @Override
     public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
         return Optional.empty();
     }
 }

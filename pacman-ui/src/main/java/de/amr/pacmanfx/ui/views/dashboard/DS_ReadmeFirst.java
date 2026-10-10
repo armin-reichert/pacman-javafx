@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,7 +27,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameActionContext context) {
+    public void setExecutionContext(GameEngineContext context) {
         final var readmeText = new Text();
         readmeText.setText(context.translationManager().translate("infobox.readme.content"));
 

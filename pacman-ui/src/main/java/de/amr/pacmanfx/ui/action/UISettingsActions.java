@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -25,13 +25,13 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class UISettingsActions {
 
-    private final GameAction<GameActionContext> actionEnterFullScreen;
-    private final GameAction<GameActionContext> actionShowHelp;
-    private final GameAction<GameActionContext> actionToggleDashboard;
-    private final GameAction<GameActionContext> actionToggleDebugInfo;
-    private final GameAction<GameActionContext> actionToggleKeyboardMonitor;
-    private final GameAction<GameActionContext> actionToggleMiniViewVisibility;
-    private final GameAction<GameActionContext> actionTogglePlayScene2D3D;
+    private final GameAction<GameEngineContext> actionEnterFullScreen;
+    private final GameAction<GameEngineContext> actionShowHelp;
+    private final GameAction<GameEngineContext> actionToggleDashboard;
+    private final GameAction<GameEngineContext> actionToggleDebugInfo;
+    private final GameAction<GameEngineContext> actionToggleKeyboardMonitor;
+    private final GameAction<GameEngineContext> actionToggleMiniViewVisibility;
+    private final GameAction<GameEngineContext> actionTogglePlayScene2D3D;
 
     private final Set<ActionKeyBinding> bindings;
 
@@ -39,19 +39,19 @@ public class UISettingsActions {
 
         actionEnterFullScreen = new GameAction<>("enter_fullscreen") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 context.ui().window().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction<>("show_help") {
             @Override
-            public void execute(GameActionContext actionContext) {
+            public void execute(GameEngineContext actionContext) {
                 actionContext.ui().viewManager().gamePlayView().showHelp(actionContext);
             }
 
             @Override
-            public boolean isEnabled(GameActionContext context) {
+            public boolean isEnabled(GameEngineContext context) {
                 final String variantName = context.gameVariantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 final GameSceneManager gameSceneManager = context.gameSceneManager();
@@ -64,33 +64,33 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction<>("toggle_dashboard") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 context.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
-            public boolean isEnabled(GameActionContext context) {
+            public boolean isEnabled(GameEngineContext context) {
                 return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleDebugInfo = new GameAction<>("toggle_debug_info") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 toggleBooleanProperty(context.ui().viewModel().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction<>("toggle_keyboard_monitor") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 toggleBooleanProperty(context.ui().viewModel().keyboardMonitorOnProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction<>("toggle_mini_view_visibility") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 final BooleanProperty miniViewActiveProperty = context.ui().viewModel().miniViewSettings().activeProperty;
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
@@ -104,7 +104,7 @@ public class UISettingsActions {
 
         actionTogglePlayScene2D3D = new GameAction<>("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(GameActionContext actionContext) {
+            public void execute(GameEngineContext actionContext) {
                 final GameContext game = actionContext.currentGame();
                 final BooleanProperty view3DEnabledProperty = actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
@@ -119,7 +119,7 @@ public class UISettingsActions {
             }
 
             @Override
-            public boolean isEnabled(GameActionContext context) {
+            public boolean isEnabled(GameEngineContext context) {
                 return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
@@ -144,31 +144,31 @@ public class UISettingsActions {
         );
     }
 
-    public GameAction<GameActionContext> actionEnterFullScreen() {
+    public GameAction<GameEngineContext> actionEnterFullScreen() {
         return actionEnterFullScreen;
     }
 
-    public GameAction<GameActionContext> actionShowHelp() {
+    public GameAction<GameEngineContext> actionShowHelp() {
         return actionShowHelp;
     }
 
-    public GameAction<GameActionContext> actionToggleDashboard() {
+    public GameAction<GameEngineContext> actionToggleDashboard() {
         return actionToggleDashboard;
     }
 
-    public GameAction<GameActionContext> actionToggleDebugInfo() {
+    public GameAction<GameEngineContext> actionToggleDebugInfo() {
         return actionToggleDebugInfo;
     }
 
-    public GameAction<GameActionContext> actionToggleKeyboardMonitor() {
+    public GameAction<GameEngineContext> actionToggleKeyboardMonitor() {
         return actionToggleKeyboardMonitor;
     }
 
-    public GameAction<GameActionContext> actionToggleMiniViewVisibility() {
+    public GameAction<GameEngineContext> actionToggleMiniViewVisibility() {
         return actionToggleMiniViewVisibility;
     }
 
-    public GameAction<GameActionContext> actionTogglePlayScene2D3D() {
+    public GameAction<GameEngineContext> actionTogglePlayScene2D3D() {
         return actionTogglePlayScene2D3D;
     }
 

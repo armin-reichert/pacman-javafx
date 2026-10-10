@@ -16,7 +16,7 @@ import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 
-public interface GameActionContext {
+public interface GameEngineContext {
 
     GameClock clock();
 

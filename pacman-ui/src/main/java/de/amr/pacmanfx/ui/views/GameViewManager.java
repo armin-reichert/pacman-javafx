@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -132,7 +132,7 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(GameActionContext actionContext) {
+    public boolean trySelectEditorView(GameEngineContext actionContext) {
         requireNonNull(actionContext);
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
@@ -148,7 +148,7 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(GameActionContext actionContext) {
+    private boolean canOpenEditor(GameEngineContext actionContext) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }

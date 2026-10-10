@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -48,7 +48,7 @@ public class GamePlayView implements GameView {
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private GameActionContext actionContext;
+    private GameEngineContext actionContext;
 
     private ContextMenuManager contextMenuManager;
 
@@ -100,7 +100,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(GameActionContext actionContext) {
+    public void showHelp(GameEngineContext actionContext) {
         layers.helpLayer().showHelpPopup(actionContext, 2, actionContext.gameVariantManager().currentVariantName());
     }
 
@@ -146,7 +146,7 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setActionContext(GameActionContext actionContext) {
+    public void setActionContext(GameEngineContext actionContext) {
         this.actionContext = actionContext;
 
         final GameViewModel viewModel = actionContext.ui().viewModel();
@@ -175,7 +175,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public GameActionContext actionContext() {
+    public GameEngineContext actionContext() {
         return actionContext;
     }
 

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final GameAction<GameActionContext> actionOpenEditor;
+    private final GameAction<GameEngineContext> actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
@@ -31,7 +31,7 @@ public class EditorActions {
 
         actionOpenEditor = new GameAction<>("open_editor") {
             @Override
-            public void execute(GameActionContext context) {
+            public void execute(GameEngineContext context) {
                 openMapEditor(context).ifPresent(editor -> startEditor(context, editor));
             }
         };
@@ -45,11 +45,11 @@ public class EditorActions {
      * @param mapFile map file to edit or {@code null}
      * @return action which opens the map editor and edits the given map file if any
      */
-    public GameAction<GameActionContext> createEditMapFileAction(File mapFile) {
+    public GameAction<GameEngineContext> createEditMapFileAction(File mapFile) {
 
         return new GameAction<>("edit_map_file") {
             @Override
-            public void execute(GameActionContext actionContext) {
+            public void execute(GameEngineContext actionContext) {
                 openMapEditor(actionContext).ifPresent(editor -> {
                     startEditor(actionContext, editor);
                     if (mapFile != null) {
@@ -65,7 +65,7 @@ public class EditorActions {
         };
     }
 
-    public GameAction<GameActionContext> actionOpenEditor() {
+    public GameAction<GameEngineContext> actionOpenEditor() {
         return actionOpenEditor;
     }
 
@@ -75,13 +75,13 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(GameActionContext actionContext, TileMapEditor editor) {
+    private void startEditor(GameEngineContext actionContext, TileMapEditor editor) {
         actionContext.engineLife().suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(GameActionContext actionContext) {
+    private Optional<TileMapEditor> openMapEditor(GameEngineContext actionContext) {
         final GameUI ui = actionContext.ui();
         final EditorView editorView = ui.viewManager().reqView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(actionContext);

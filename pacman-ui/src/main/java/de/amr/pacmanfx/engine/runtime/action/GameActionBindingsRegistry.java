@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 public class GameActionBindingsRegistry implements ActionBindingsRegistry {
 
     private final String name;
-    private final Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindingsMap = new HashMap<>();
+    private final Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindingsMap = new HashMap<>();
 
     public GameActionBindingsRegistry(String name) {
         this.name = requireNonNull(name);
@@ -37,7 +37,7 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
         return name + "\n" + entriesText;
     }
 
-    private String formatEntry(Map.Entry<KeyCodeCombination, GameAction<GameActionContext>> e) {
+    private String formatEntry(Map.Entry<KeyCodeCombination, GameAction<GameEngineContext>> e) {
         return "%-15s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey());
     }
 
@@ -48,19 +48,19 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings() {
         return actionBindingsMap;
     }
 
     @Override
-    public void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination) {
+    public void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionBindingsMap.put(combination, action);
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindingSet) {
+    public void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding> bindingSet) {
         requireNonNull(action);
         requireNonNull(bindingSet);
 
@@ -87,11 +87,11 @@ public class GameActionBindingsRegistry implements ActionBindingsRegistry {
     }
 
     @Override
-    public Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
         for (var entry : actionBindingsMap.entrySet()) {
             final KeyCodeCombination actionTrigger = entry.getKey();
             if (keyboard.stateMatches(actionTrigger)) {
-                final GameAction<GameActionContext> action = entry.getValue();
+                final GameAction<GameEngineContext> action = entry.getValue();
                 Logger.debug("ACTION MATCH FOUND: key='{}' action='{}'", actionTrigger, action.id());
                 return Optional.of(action);
             }

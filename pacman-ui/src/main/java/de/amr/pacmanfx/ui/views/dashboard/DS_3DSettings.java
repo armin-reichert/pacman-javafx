@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameActionContext context) {
+    public void setExecutionContext(GameEngineContext context) {
         final GameViewModel viewModel = context.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -104,7 +104,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameActionContext context) {
+    public void update(GameEngineContext context) {
         super.update(context);
 
         final GameViewModel viewModel = context.ui().viewModel();
@@ -121,7 +121,7 @@ public class DS_3DSettings extends GameDashboardSection {
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 
-    private static SubScene currentSubSceneFX(GameActionContext context) {
+    private static SubScene currentSubSceneFX(GameEngineContext context) {
         return context.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 

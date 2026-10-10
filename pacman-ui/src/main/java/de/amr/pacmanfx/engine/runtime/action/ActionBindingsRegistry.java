@@ -21,19 +21,19 @@ public interface ActionBindingsRegistry extends Disposable {
 
     String name();
 
-    Map<KeyCodeCombination, GameAction<GameActionContext>> actionBindings();
+    Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings();
 
-    Optional<GameAction<GameActionContext>> findActionMatchingPressedKeys(Keyboard keyboard);
+    Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard);
 
-    default Optional<GameAction<GameActionContext>> executeMatchingAction(GameActionContext context) {
-        final Optional<GameAction<GameActionContext>> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
+    default Optional<GameAction<GameEngineContext>> executeMatchingAction(GameEngineContext context) {
+        final Optional<GameAction<GameEngineContext>> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
         matchingAction.ifPresent(action -> runAction(action, context));
         return matchingAction;
     }
 
-    void bindActionToKeyCombination(GameAction<GameActionContext> action, KeyCodeCombination combination);
+    void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination);
 
-    void selectAnyMatchingBinding(GameAction<GameActionContext> action, Set<ActionKeyBinding> bindings);
+    void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding> bindings);
 
     void registerAllBindings(Set<ActionKeyBinding> bindings);
 }

@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import javafx.scene.control.Button;
 
@@ -34,21 +34,21 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setExecutionContext(GameActionContext context) {}
+    public void setExecutionContext(GameEngineContext context) {}
 
-    public void update(GameActionContext context) {
+    public void update(GameEngineContext context) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameActionContext context, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(GameEngineContext context, Function<GameScene, String> fnInfo) {
         return () -> context.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(GameActionContext context, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(GameEngineContext context, Function<GameLevel, Object> fnInfo) {
         return () -> context.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(GameActionContext context, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(GameEngineContext context, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(context.currentGame().playConfig().rules());
     }
 
@@ -58,7 +58,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameActionContext actionContext, Button button, GameAction<GameActionContext> gameAction) {
+    protected void setGameAction(GameEngineContext actionContext, Button button, GameAction<GameEngineContext> gameAction) {
         button.setOnAction(_ -> runAction(gameAction, actionContext));
     }
 }

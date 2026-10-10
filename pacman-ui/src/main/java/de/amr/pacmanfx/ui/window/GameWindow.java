@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -63,7 +63,7 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(GameActionContext actionContext) {
+    public void show(GameEngineContext actionContext) {
         updateStageIcon(actionContext);
         stage.centerOnScreen();
         stage.show();
@@ -117,7 +117,7 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(GameActionContext actionContext) {
+    private void updateStageIcon(GameEngineContext actionContext) {
         final Image icon = actionContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -140,7 +140,7 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameActionContext actionContext, boolean paused, boolean is3D) {
+    private String stageTitle(GameEngineContext actionContext, boolean paused, boolean is3D) {
         final String gameVariantName = actionContext.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";

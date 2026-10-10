@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import javafx.scene.input.KeyCombination;
@@ -19,12 +19,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameActionContext context) {
+    public void update(GameEngineContext context) {
         super.update(context);
         context.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(context, gameScene));
     }
 
-    private void updateInfo(GameActionContext context, GameScene gameScene) {
+    private void updateInfo(GameEngineContext context, GameScene gameScene) {
         clearSection();
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
@@ -37,7 +37,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
-                    final GameAction<GameActionContext> action = entry.getValue();
+                    final GameAction<GameEngineContext> action = entry.getValue();
                     final String localizedActionText = context.translationManager()
                         .translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(),

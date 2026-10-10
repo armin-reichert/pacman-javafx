@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -62,11 +62,11 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(GameActionContext actionContext) {
+    public void forceGameSceneUpdate(GameEngineContext actionContext) {
         updateGameSceneAndForceReload(actionContext, true);
     }
 
-    public void updateGameSceneAndForceReload(GameActionContext actionContext, boolean forceReload) {
+    public void updateGameSceneAndForceReload(GameEngineContext actionContext, boolean forceReload) {
         final GameVariantUIConfig uiConfig = actionContext.gameVariantManager().currentRuntime().uiConfig();
         final GameSession session = actionContext.currentGame().session();
         final boolean select3D = actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();

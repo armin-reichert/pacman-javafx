@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
@@ -44,7 +44,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private GameActionContext actionContext;
+    private GameEngineContext actionContext;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
@@ -68,7 +68,7 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setActionContext(GameActionContext actionContext) {
+    public void setActionContext(GameEngineContext actionContext) {
         this.actionContext = actionContext;
 
         // Ensure both game variants are available

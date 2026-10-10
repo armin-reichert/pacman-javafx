@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.editor;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
@@ -26,7 +26,7 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(GameActionContext actionContext) {
+    public void ensureEditorCreated(GameEngineContext actionContext) {
         if (editor == null) {
             editor = new TileMapEditor(actionContext.ui().window().stage(), new Pac3DShapeFactory());
             editor.setOnQuit(_ -> actionContext.ui().viewManager().selectStartPagesView());
@@ -45,10 +45,10 @@ public class EditorView implements GameView {
     public ActionBindingsRegistry actionBindings() { return ActionBindingsRegistry.NO_BINDINGS; }
 
     @Override
-    public void setActionContext(GameActionContext actionContext) {}
+    public void setActionContext(GameEngineContext actionContext) {}
 
     @Override
-    public GameActionContext actionContext() {
+    public GameEngineContext actionContext() {
         return null;
     }
 

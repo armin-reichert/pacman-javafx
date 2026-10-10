@@ -19,7 +19,7 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
@@ -37,9 +37,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class PacManGamesEngine implements EngineLifecycle, GameActionContext {
+public final class PacManGamesEngine implements EngineLifecycle, GameEngineContext {
 
-    public static boolean runAction(GameAction<GameActionContext> gameAction, GameActionContext context) {
+    public static boolean runAction(GameAction<GameEngineContext> gameAction, GameEngineContext context) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private GameActionContext actionContext;
+    private GameEngineContext actionContext;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -79,7 +79,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     // Convenience
-    public GameActionContext actionContext() {
+    public GameEngineContext actionContext() {
         return actionContext;
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return actionContext.ui();
     }
 
-    public final void setActionContext(GameActionContext actionContext) {
+    public final void setActionContext(GameEngineContext actionContext) {
         requireNonNull(actionContext);
         if (this.actionContext != null) {
             Logger.debug("Engine already assigned to game scene {}", this);
