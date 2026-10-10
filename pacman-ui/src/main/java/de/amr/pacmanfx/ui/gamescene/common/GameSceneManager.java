@@ -30,6 +30,16 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
+    public static Named cutSceneID(int n) {
+        return switch (n) {
+            case 1 -> CommonGameSceneID.CUTSCENE_1;
+            case 2 -> CommonGameSceneID.CUTSCENE_2;
+            case 3 -> CommonGameSceneID.CUTSCENE_3;
+            case 4 -> CommonGameSceneID.CUTSCENE_4;
+            default -> throw new IllegalArgumentException("Illegal cut scene number " + n);
+        };
+    }
+
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private GameSceneConfig gameSceneConfig;

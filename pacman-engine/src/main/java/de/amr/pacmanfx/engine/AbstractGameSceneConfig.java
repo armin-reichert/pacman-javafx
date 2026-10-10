@@ -2,34 +2,20 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.common;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.engine.GameScene;
-import de.amr.pacmanfx.engine.GameSceneConfig;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractGameSceneConfig implements GameSceneConfig {
-
-    public static Named cutSceneID(int n) {
-        return switch (n) {
-            case 1 -> CommonGameSceneID.CUTSCENE_1;
-            case 2 -> CommonGameSceneID.CUTSCENE_2;
-            case 3 -> CommonGameSceneID.CUTSCENE_3;
-            case 4 -> CommonGameSceneID.CUTSCENE_4;
-            default -> throw new IllegalArgumentException("Illegal cut scene number " + n);
-        };
-    }
 
     protected final Map<Named, GameScene> scenesByID = new HashMap<>();
 
@@ -46,6 +32,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         scenesByID.clear();
     }
 
+    /*
     @Override
     public Named resolveCutSceneID(GameContext game) {
         final GameLevel level = game.session().level();
@@ -55,6 +42,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         }
         return AbstractGameSceneConfig.cutSceneID(cutSceneNumber.getAsInt());
     }
+     */
 
     @Override
     public final Optional<GameScene> selectGameScene(GameContext game, boolean select3D) {

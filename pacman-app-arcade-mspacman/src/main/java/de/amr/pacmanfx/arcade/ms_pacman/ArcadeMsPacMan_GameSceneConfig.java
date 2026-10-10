@@ -16,15 +16,20 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene3D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.engine.GameSceneEmbedding;
+import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
+
+import static de.amr.pacmanfx.ui.gamescene.common.GameSceneManager.cutSceneID;
 
 public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
@@ -51,7 +56,7 @@ public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         final AbstractGameState state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {
-            return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            return cutSceneID(testState.testedCutSceneNumber);
         }
 
         if (CommonGameStateID.BOOT.hasSameNameAs(state)) {
@@ -67,6 +72,16 @@ public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.START_SCENE;
         }
         return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+    }
+
+    @Override
+    public Named resolveCutSceneID(GameContext game) {
+        final GameLevel level = game.session().level();
+        final OptionalInt cutSceneNumber = game.playConfig().rules().cutSceneAfterLevel(level.number());
+        if (cutSceneNumber.isEmpty()) {
+            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
+        }
+        return GameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
     }
 
     @Override

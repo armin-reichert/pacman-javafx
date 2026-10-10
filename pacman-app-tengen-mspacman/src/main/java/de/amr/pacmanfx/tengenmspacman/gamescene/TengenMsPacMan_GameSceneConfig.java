@@ -8,7 +8,10 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
+import de.amr.pacmanfx.engine.GameScene;
+import de.amr.pacmanfx.engine.GameSceneEmbedding;
 import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene1;
@@ -20,13 +23,15 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_Opti
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene3D;
 import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
+import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.engine.GameScene;
-import de.amr.pacmanfx.engine.GameSceneEmbedding;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
+
+import static de.amr.pacmanfx.ui.gamescene.common.GameSceneManager.cutSceneID;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
@@ -55,7 +60,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         final AbstractGameState state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {
-            return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            return cutSceneID(testState.testedCutSceneNumber);
         }
 
         if (CommonGameStateID.BOOT.hasSameNameAs(state)) {
@@ -74,6 +79,16 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return TengenSceneID.HALL_OF_FAME;
         }
         return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+    }
+
+    @Override
+    public Named resolveCutSceneID(GameContext game) {
+        final GameLevel level = game.session().level();
+        final OptionalInt cutSceneNumber = game.playConfig().rules().cutSceneAfterLevel(level.number());
+        if (cutSceneNumber.isEmpty()) {
+            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
+        }
+        return GameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
     }
 
     @Override
