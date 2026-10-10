@@ -72,27 +72,27 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            context.currentGame().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            context.optCurrentGame().get().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> context.currentGame().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> context.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
-    public void update(GameEngineContext context) {
-        super.update(context);
+    public void update(GameEngineContext engineContext) {
+        super.update(engineContext);
 
-        final GameContext game = context.currentGame();
+        final GameContext game = engineContext.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(context.gameVariantManager().currentRuntime().playConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(engineContext.gameVariantManager().currentRuntime().playConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
-        credit.set(context.currentGame().coinMechanism().numCoins());
+        credit.set(game.coinMechanism().numCoins());
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         //buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));
@@ -108,7 +108,7 @@ public class DS_GameControl extends GameDashboardSection {
     private boolean canStartLevel(GameEngineContext engineContext, AbstractGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(engineContext.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !engineContext.currentGame().coinMechanism().isEmpty()
+        return !engineContext.optCurrentGame().get().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

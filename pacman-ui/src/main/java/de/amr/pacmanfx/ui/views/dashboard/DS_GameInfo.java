@@ -35,14 +35,14 @@ public class DS_GameInfo extends GameDashboardSection {
 
     @Override
     public void setExecutionContext(GameEngineContext context) {
-        addDynamicInfo("Game State",  () -> context.currentGame().state().name());
+        addDynamicInfo("Game State",  () -> context.optCurrentGame().get().state().name());
 
-        addDynamicInfo("State Timer", () -> stateTimerInfo(context.currentGame().state()));
+        addDynamicInfo("State Timer", () -> stateTimerInfo(context.optCurrentGame().get().state()));
 
         addDynamicInfo("Game Scene", fnGameSceneInfo(context, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicInfo("Level Number", fnLevelInfo(context,
-            level -> (context.currentGame().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+            level -> (context.optCurrentGame().get().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
         addDynamicInfo("World Map", fnLevelInfo(context,
@@ -75,13 +75,13 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Pac lives",      () -> context.currentGame().session().numLives());
+        addDynamicInfo("Pac lives",      () -> context.optCurrentGame().get().session().numLives());
         addDynamicInfo("Hunting Phase",  fnLevelInfo(context, this::fmtHuntingPhase));
         addDynamicInfo("-Running",       fnLevelInfo(context, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicInfo("-Remaining",     fnLevelInfo(context, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
         addDynamicInfo("Collision mode", fnRulesInfo(context, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
-        addDynamicInfo("Pac-Man speed",  supplyLevelSpeedInfo(context, (level, rules) -> fmtPacNormalSpeed(context.currentGame(), level, rules)));
-        addDynamicInfo("- empowered",    supplyLevelSpeedInfo(context, (level, rules) -> fmtPacSpeedPowered(context.currentGame(), level, rules)));
+        addDynamicInfo("Pac-Man speed",  supplyLevelSpeedInfo(context, (level, rules) -> fmtPacNormalSpeed(context.optCurrentGame().get(), level, rules)));
+        addDynamicInfo("- empowered",    supplyLevelSpeedInfo(context, (level, rules) -> fmtPacSpeedPowered(context.optCurrentGame().get(), level, rules)));
         addDynamicInfo("Power Duration", fnLevelInfo(context, level -> fmtPacPowerTime(rules(context), level)));
         addDynamicInfo("Pellets",        fnLevelInfo(context, this::fmtPelletCount));
         addDynamicInfo("Ghost speed",    supplyLevelSpeedInfo(context, this::fmtGhostAttackSpeed));
@@ -91,14 +91,14 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(GameEngineContext context) {
-        return context.currentGame().playConfig().rules();
+        return context.optCurrentGame().get().playConfig().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
         GameEngineContext context,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
-            final GameContext game = context.currentGame();
+            final GameContext game = context.optCurrentGame().get();
             final ActorSpeedRules speedRules = game.playConfig().rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);

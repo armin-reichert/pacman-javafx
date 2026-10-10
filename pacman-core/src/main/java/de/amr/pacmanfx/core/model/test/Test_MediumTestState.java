@@ -33,7 +33,7 @@ public class Test_MediumTestState extends AbstractGameState {
         timer().restartSeconds(TEST_DURATION_SEC);
 
         final GameLevel level = gamePlay.buildNormalLevel(game, 1);
-        game.eventManager().publishEvent(new LevelCreatedEvent(level));
+        game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         configureLevelForTest(game);
         gamePlay.startLevel(game, session.level());

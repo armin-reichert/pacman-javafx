@@ -318,7 +318,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entitySet().ghosts().forEach(GameEntity::show);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        game.eventManager().publishEvent(new LevelStartedEvent(level.number()));
+        game.eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
     }
 
     // Playing level

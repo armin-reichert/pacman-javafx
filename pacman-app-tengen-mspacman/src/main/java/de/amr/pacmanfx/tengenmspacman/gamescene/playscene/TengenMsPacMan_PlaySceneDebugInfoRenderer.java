@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -34,24 +33,25 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
     }
 
     public void draw(AbstractGameScene playScene) {
-        final GameContext game = playScene.engineContext().currentGame();
-        final GameSession session = game.session();
-        final AbstractGameState gameState = game.state();
+        playScene.engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            final AbstractGameState gameState = game.state();
 
-        ctx.save();
-        ctx.getCanvas().setClip(null);
-        drawDebugGrid(NES_SCREEN_WIDTH, playScene.view2D().unscaledHeight(), Color.LIGHTGRAY);
-        ctx.restore();
+            ctx.save();
+            ctx.getCanvas().setClip(null);
+            drawDebugGrid(NES_SCREEN_WIDTH, playScene.view2D().unscaledHeight(), Color.LIGHTGRAY);
+            ctx.restore();
 
-        ctx.save();
-        ctx.translate(scaled(TengenMsPacMan_PlayScene2D.OFFSET_X), 0);
-        ctx.setFill(debugTextFill);
-        ctx.setFont(debugTextFont);
-        ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * TS));
-        session.optLevel().ifPresent(level -> {
-            drawMovingActorInfo(animController, level.entitySet().pac());
-            level.entitySet().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
+            ctx.save();
+            ctx.translate(scaled(TengenMsPacMan_PlayScene2D.OFFSET_X), 0);
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
+            ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * TS));
+            session.optLevel().ifPresent(level -> {
+                drawMovingActorInfo(animController, level.entitySet().pac());
+                level.entitySet().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
+            });
+            ctx.restore();
         });
-        ctx.restore();
     }
 }

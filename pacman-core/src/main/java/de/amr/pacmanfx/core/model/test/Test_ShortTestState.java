@@ -35,7 +35,7 @@ public class Test_ShortTestState extends AbstractGameState {
         lastTestedLevelNumber = rules.lastLevelNumber() == Integer.MAX_VALUE ? 25 : rules.lastLevelNumber();
 
         final GameLevel level = gamePlay.buildNormalLevel(game, 1);
-        game.eventManager().publishEvent(new LevelCreatedEvent(level));
+        game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         level.entitySet().pac().show();
         level.entitySet().ghosts().forEach(GameEntity::show);

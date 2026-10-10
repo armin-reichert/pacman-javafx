@@ -38,11 +38,13 @@ public class GamePlayViewRenderer {
         renderManager.clearRenderQueue();
 
         // HUD
-        final GameSession session = engineContext.currentGame().session();
-        if (session.isHUDVisible()) {
-            GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
-                .forEach(renderManager::addRenderable);
-        }
+        engineContext.optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            if (session.isHUDVisible()) {
+                GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
+                    .forEach(renderManager::addRenderable);
+            }
+        });
 
         // Mini view
         playView.layers().miniViewLayer().renderables().forEach(renderManager::addRenderable);

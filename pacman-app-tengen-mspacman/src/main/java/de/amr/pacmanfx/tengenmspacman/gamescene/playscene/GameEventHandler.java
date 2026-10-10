@@ -70,7 +70,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
+        final GameContext game = e.game();
         final GameSystems systems = game.playConfig().systems();
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
@@ -91,18 +91,19 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
-        Logger.info("Enter game state '{}'", e.newState().name());
-        final GameSession session = game.session();
-        if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = session.level();
-            final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
-            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
-            gameScene.playLevelCompleteAnimation(level, numFlashes);
-        }
-        else if (e.newState() == Tengen_GameState.GAME_OVER.state()) {
-            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
-        }
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+            Logger.info("Enter game state '{}'", e.newState().name());
+            final GameSession session = game.session();
+            if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
+                final GameLevel level = session.level();
+                final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
+                optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+                gameScene.playLevelCompleteAnimation(game, level, numFlashes);
+            }
+            else if (e.newState() == Tengen_GameState.GAME_OVER.state()) {
+                optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+            }
+        });
     }
 
     @Override
@@ -112,13 +113,13 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
+        final GameContext game = e.game();
         gameScene.onAcceptGameLevel(game.session(), e.level());
     }
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
+        final GameContext game = e.game();
         final GameSession session = game.session();
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
 
@@ -127,7 +128,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
+        final GameContext game = e.game();
         game.state().triggerTimeout();
     }
 

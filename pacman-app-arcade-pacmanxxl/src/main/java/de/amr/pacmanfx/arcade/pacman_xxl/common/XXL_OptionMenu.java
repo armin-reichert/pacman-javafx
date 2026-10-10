@@ -121,12 +121,12 @@ public class XXL_OptionMenu extends OptionMenu {
         }
         xxlMapManager.loadMapPrototypes();
 
-        engineContext.engineLife().newGameSession();
+        engineContext.engineLife().newGameSession(engineContext.optCurrentGame().orElseThrow());
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
         meView3DEnabled.setValue(engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
-        meCutScenesEnabled.setValue(engineContext.currentGame().session().cutScenesEnabled());
+        meCutScenesEnabled.setValue(engineContext.optCurrentGame().orElseThrow().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
         meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
@@ -137,7 +137,6 @@ public class XXL_OptionMenu extends OptionMenu {
         scaling = computeScalingValue(engineContext.ui().window().stage().heightProperty());
 
         engineContext.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
-            final GameVariantRuntime oldRuntime = engineContext.gameVariantManager().variantRuntimeByName(oldVariantName);
             engineContext.engineLife().exitGameVariant(oldVariantName);
 
             final GameVariantRuntime newRuntime = engineContext.gameVariantManager().variantRuntimeByName(newVariantName);
@@ -210,7 +209,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        engineContext.currentGame().session().setCutScenesEnabled(newValue);
+        engineContext.optCurrentGame().orElseThrow().session().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

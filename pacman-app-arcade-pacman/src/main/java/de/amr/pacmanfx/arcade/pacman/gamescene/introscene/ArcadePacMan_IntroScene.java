@@ -116,7 +116,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chasePacMan(long tick) {
-        final GameSystems systems = engineContext().currentGame().playConfig().systems();
+        final GameContext game = engineContext().optCurrentGame().orElse(null);
+        if (game == null) return;
+
+        final GameSystems systems = game.playConfig().systems();
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 

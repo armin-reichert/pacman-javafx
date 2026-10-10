@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -30,26 +30,33 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction<>("insert_coin") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.soundManager().voice().stop();
-                context.soundManager().setEnabled(true);
-                context.currentGame().coinMechanism().insertCoin();
-                context.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
-                context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_PREPARATION);
-                context.currentGame().eventManager().publishEvent(new CreditAddedEvent(1));
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    engineContext.soundManager().voice().stop();
+                    engineContext.soundManager().setEnabled(true);
+                    game.coinMechanism().insertCoin();
+                    game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                    game.eventManager().publishEvent(new CreditAddedEvent(1));
+                    engineContext.gameVariantManager().currentRuntime().uiConfig().optSoundEffects()
+                        .ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
+                });
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                final GameSession session = context.currentGame().session();
-                final AbstractGameState gameState = context.currentGame().state();
-                if (context.currentGame().coinMechanism().isFull()) {
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                if (game == null) return false;
+
+                if (game.coinMechanism().isFull()) {
                     return false;
                 }
+
                 // In demo level, coin can always be inserted
-                if (session.isAttractMode()) {
+                if (game.session().isAttractMode()) {
                     return true;
                 }
+
+                final AbstractGameState gameState = game.state();
                 return CommonGameStateID.GAME_INTRO.hasSameNameAs(gameState)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(gameState);
             }
@@ -57,17 +64,22 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.soundManager().voice().stop();
-                context.currentGame().playConfig().gameFlow().enterState(context.currentGame(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+            public void execute(GameEngineContext engineContext) {
+                engineContext.soundManager().voice().stop();
+                engineContext.optCurrentGame().ifPresent(game ->
+                    game.playConfig().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                if (context.currentGame().coinMechanism().isEmpty()) {
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                if (game == null) return false;
+
+                if (game.coinMechanism().isEmpty()) {
                     return false;
                 }
-                final AbstractGameState state = context.currentGame().state();
+
+                final AbstractGameState state = game.state();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

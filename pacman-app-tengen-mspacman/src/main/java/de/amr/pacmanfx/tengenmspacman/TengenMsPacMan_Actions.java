@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -46,27 +47,31 @@ public final class TengenMsPacMan_Actions {
 
         actionEnterStartScreen = new GameAction<>("enter_start_screen") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_PREPARATION);
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+                    .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
         };
 
         actionQuitDemoLevel = new GameAction<>("quit_demo_level") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_PREPARATION);
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+                    .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                return context.currentGame().session().isAttractMode();
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                return game != null && game.session().isAttractMode();
             }
         };
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+                    .enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING));
             }
         };
 
@@ -100,23 +105,29 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction<>("toggle_pac_booster") {
             @Override
-            public void execute(GameEngineContext context) {
-                final GameSession session = context.currentGame().session();
-                session.optLevel().ifPresent(level -> {
-                    final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
-                    gameOptionValues(session).setBoosterEnabled(nextEnabledState);
-                    if (nextEnabledState) {
-                        context.ui().shortMessage("Booster ON!"); //TODO localize
-                    }
-                    //TODO hack: this should be done by entity update system!
-                    level.entitySet().pac().assertComponent(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    final GameSession session = game.session();
+                    session.optLevel().ifPresent(level -> {
+                        final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
+                        gameOptionValues(session).setBoosterEnabled(nextEnabledState);
+                        if (nextEnabledState) {
+                            engineContext.ui().shortMessage("Booster ON!"); //TODO localize
+                        }
+                        //TODO hack: this should be done by entity update system!
+                        level.entitySet().pac().assertComponent(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
+                    });
                 });
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                final GameSession session = context.currentGame().session();
-                return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                if (game != null) {
+                    final GameSession session = game.session();
+                    return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
+                }
+                return false;
             }
         };
 

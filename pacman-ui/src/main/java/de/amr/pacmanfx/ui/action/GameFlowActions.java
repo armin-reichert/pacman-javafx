@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -48,24 +47,25 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction<>("let_game_state_expire") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().state().triggerTimeout();
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
             }
         };
 
         actionRestartIntro = new GameAction<>("restart_intro") {
             @Override
-            public void execute(GameEngineContext context) {
-                final GameContext game = context.currentGame();
-                final AbstractGameState gameState = game.state();
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    final AbstractGameState gameState = game.state();
 
-                if (gameState.id() instanceof TestStateID) {
-                    gameState.onExit(game);
-                }
+                    if (gameState.id() instanceof TestStateID) {
+                        gameState.onExit(game);
+                    }
 
-                context.engineLife().suspendGame();
-                context.clock().start();
-                game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
+                    engineContext.engineLife().suspendGame();
+                    engineContext.clock().start();
+                    game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
+                });
             }
         };
 

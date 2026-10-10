@@ -158,22 +158,24 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameSession session = engineContext().currentGame().session();
-        session.setHudVisible(false);
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            session.setHudVisible(false);
 
-        final var actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+            final var actions = engineContext().gameVariantManager().currentRuntime()
+                .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
-        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
-        actionBindingsRegistry().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+            actionBindingsRegistry().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
+            actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
-        selectedOption.set(PlayOption.PAC_BOOSTER);
-        gameOptionValues(session).setCanStartNewGame(true);
+            selectedOption.set(PlayOption.PAC_BOOSTER);
+            gameOptionValues(session).setCanStartNewGame(true);
 
-        idleTicks = 0;
-        initialDelay = INITIAL_DELAY;
+            idleTicks = 0;
+            initialDelay = INITIAL_DELAY;
+        });
     }
 
     @Override
@@ -193,37 +195,39 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     @Override
     public void onInput() {
-        final GameSession session = engineContext().currentGame().session();
-        final Keyboard keyboard = engineContext().input().keyboard();
-        final Joypad joypad = engineContext().input().joypad();
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            final Keyboard keyboard = engineContext().input().keyboard();
+            final Joypad joypad = engineContext().input().joypad();
 
-        if (joypad.isButtonPressed(JoypadButton.DOWN)) {
-            selectedOption.set(selectedOption.get().succ());
-        }
-        else if (joypad.isButtonPressed(JoypadButton.UP)) {
-            selectedOption.set(selectedOption.get().pred());
-        }
-        // Button "A" on the joypad is located right of "B": select next value
-        else if (joypad.isButtonPressed(JoypadButton.A) || keyboard.isKeyPressed(KeyCode.RIGHT)) {
-            switch (selectedOption.get()) {
-                case PAC_BOOSTER    -> setNextPacBoosterValue(session);
-                case DIFFICULTY     -> setNextDifficultyValue(session);
-                case MAP_CATEGORY   -> setNextMapCategoryValue(session);
-                case STARTING_LEVEL -> setNextStartLevelValue(session);
+            if (joypad.isButtonPressed(JoypadButton.DOWN)) {
+                selectedOption.set(selectedOption.get().succ());
             }
-        }
-        // Button "B" is left of "A": select previous value
-        else if (joypad.isButtonPressed(JoypadButton.B) || keyboard.isKeyPressed(KeyCode.LEFT)) {
-            switch (selectedOption.get()) {
-                case PAC_BOOSTER    -> setPrevPacBoosterValue(session);
-                case DIFFICULTY     -> setPrevDifficultyValue(session);
-                case MAP_CATEGORY   -> setPrevMapCategoryValue(session);
-                case STARTING_LEVEL -> setPrevStartLevelValue(session);
+            else if (joypad.isButtonPressed(JoypadButton.UP)) {
+                selectedOption.set(selectedOption.get().pred());
             }
-        }
-        else {
-            super.onInput();
-        }
+            // Button "A" on the joypad is located right of "B": select next value
+            else if (joypad.isButtonPressed(JoypadButton.A) || keyboard.isKeyPressed(KeyCode.RIGHT)) {
+                switch (selectedOption.get()) {
+                    case PAC_BOOSTER    -> setNextPacBoosterValue(game);
+                    case DIFFICULTY     -> setNextDifficultyValue(game);
+                    case MAP_CATEGORY   -> setNextMapCategoryValue(game);
+                    case STARTING_LEVEL -> setNextStartLevelValue(session);
+                }
+            }
+            // Button "B" is left of "A": select previous value
+            else if (joypad.isButtonPressed(JoypadButton.B) || keyboard.isKeyPressed(KeyCode.LEFT)) {
+                switch (selectedOption.get()) {
+                    case PAC_BOOSTER    -> setPrevPacBoosterValue(game);
+                    case DIFFICULTY     -> setPrevDifficultyValue(game);
+                    case MAP_CATEGORY   -> setPrevMapCategoryValue(game);
+                    case STARTING_LEVEL -> setPrevStartLevelValue(session);
+                }
+            }
+            else {
+                super.onInput();
+            }
+        });
     }
 
     private void updateOptions(GameSession session) {
@@ -285,43 +289,43 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         optionValueChanged();
     }
 
-    private void setPrevMapCategoryValue(GameSession session) {
-        final MapCategory category = gameOptionValues(session).mapCategory();
-        gameOptionValues(session).setMapCategory(category.pred());
-        saveHighScore(engineContext().currentGame());
+    private void setPrevMapCategoryValue(GameContext game) {
+        final MapCategory category = gameOptionValues(game.session()).mapCategory();
+        gameOptionValues(game.session()).setMapCategory(category.pred());
+        saveHighScore(game);
         optionValueChanged();
     }
 
-    private void setNextMapCategoryValue(GameSession session) {
-        final MapCategory category = gameOptionValues(session).mapCategory();
-        gameOptionValues(session).setMapCategory(category.succ());
-        saveHighScore(engineContext().currentGame());
+    private void setNextMapCategoryValue(GameContext game) {
+        final MapCategory category = gameOptionValues(game.session()).mapCategory();
+        gameOptionValues(game.session()).setMapCategory(category.succ());
+        saveHighScore(game);
         optionValueChanged();
     }
 
-    private void setPrevDifficultyValue(GameSession session) {
-        final Difficulty difficulty = gameOptionValues(session).difficulty();
-        gameOptionValues(session).setDifficulty(difficulty.pred());
-        saveHighScore(engineContext().currentGame());
+    private void setPrevDifficultyValue(GameContext game) {
+        final Difficulty difficulty = gameOptionValues(game.session()).difficulty();
+        gameOptionValues(game.session()).setDifficulty(difficulty.pred());
+        saveHighScore(game);
         optionValueChanged();
     }
 
-    private void setNextDifficultyValue(GameSession session) {
-        final Difficulty difficulty = gameOptionValues(session).difficulty();
-        gameOptionValues(session).setDifficulty(difficulty.succ());
-        saveHighScore(engineContext().currentGame());
+    private void setNextDifficultyValue(GameContext game) {
+        final Difficulty difficulty = gameOptionValues(game.session()).difficulty();
+        gameOptionValues(game.session()).setDifficulty(difficulty.succ());
+        saveHighScore(game);
         optionValueChanged();
     }
 
-    private void setPrevPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
-        gameOptionValues(session).setBoosterMode(boosterMode.pred());
+    private void setPrevPacBoosterValue(GameContext game) {
+        final BoosterMode boosterMode = gameOptionValues(game.session()).boosterMode();
+        gameOptionValues(game.session()).setBoosterMode(boosterMode.pred());
         optionValueChanged();
     }
 
-    private void setNextPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = gameOptionValues(session).boosterMode();
-        gameOptionValues(session).setBoosterMode(boosterMode.succ());
+    private void setNextPacBoosterValue(GameContext game) {
+        final BoosterMode boosterMode = gameOptionValues(game.session()).boosterMode();
+        gameOptionValues(game.session()).setBoosterMode(boosterMode.succ());
         optionValueChanged();
     }
 

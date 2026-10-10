@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
             startBigPacManChasingBlinky(systems);
         }
         else if (timing.tick() == timing.animationStartTick() + 632) {
-            engineContext().currentGame().state().triggerTimeout();
+            game.state().triggerTimeout();
         }
         if (timing.tick() >= timing.animationStartTick()) {
             systems.motor().move(pacMan);

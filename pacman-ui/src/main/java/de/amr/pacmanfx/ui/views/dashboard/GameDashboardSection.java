@@ -43,11 +43,14 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<?> fnLevelInfo(GameEngineContext context, Function<GameLevel, Object> fnInfo) {
-        return () -> context.currentGame().session().optLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> context.optCurrentGame()
+            .flatMap(game -> game.session().optLevel())
+            .map(fnInfo)
+            .orElse(NO_INFO);
     }
 
     protected Supplier<String> fnRulesInfo(GameEngineContext context, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(context.currentGame().playConfig().rules());
+        return () -> fnInfo.apply(context.optCurrentGame().orElseThrow().playConfig().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

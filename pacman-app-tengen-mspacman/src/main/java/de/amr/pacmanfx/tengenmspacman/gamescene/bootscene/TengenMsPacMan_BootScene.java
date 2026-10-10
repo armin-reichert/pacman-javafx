@@ -65,16 +65,18 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime gameVariantRuntime = engineContext().gameVariantManager().currentRuntime();
-        ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
-            gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
-            gameVariantRuntime.spriteAnimContainer(),
-            GhostPersonality.RED_GHOST_SHADOW);
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameVariantRuntime gameVariantRuntime = engineContext().gameVariantManager().currentRuntime();
+            ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
+                gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
+                gameVariantRuntime.spriteAnimContainer(),
+                GhostPersonality.RED_GHOST_SHADOW);
 
-        final GameSession session = engineContext().currentGame().session();
-        session.setHudVisible(false);
-        //TODO temporary solution
-        setHUDStyle(session.hud());
+            final GameSession session = game.session();
+            session.setHudVisible(false);
+            //TODO temporary solution
+            setHUDStyle(session.hud());
+        });
     }
 
     @Override

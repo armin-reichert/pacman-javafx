@@ -107,7 +107,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         if (currentLevel.number() < lastLevelNumber) {
             final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
-            game.eventManager().publishEvent(new LevelCreatedEvent(nextLevel));
+            game.eventManager().publishEvent(new LevelCreatedEvent(game, nextLevel));
             startLevel(game, nextLevel);
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);

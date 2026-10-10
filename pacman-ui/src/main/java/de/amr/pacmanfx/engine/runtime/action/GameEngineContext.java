@@ -53,7 +53,7 @@ public interface GameEngineContext {
 
     GameClock clock();
 
-    GameContext currentGame();
+    Optional<GameContext> optCurrentGame();
 
     EngineLifecycle engineLife();
 

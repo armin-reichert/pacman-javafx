@@ -79,7 +79,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             if (bonus != null) {
                 level.entitySet().remove(bonus);
             }
-            game.eventManager().publishEvent(new PacDeadEvent(pac));
+            game.eventManager().publishEvent(new PacDeadEvent(game, pac));
         }
 
         if (timer().hasExpired()) {

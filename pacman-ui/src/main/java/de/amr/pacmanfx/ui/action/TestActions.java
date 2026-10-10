@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -27,40 +28,49 @@ public class TestActions {
 
         actionTestCutScenes = new GameAction<>("test_cut_scenes") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().enterGameState(context.currentGame(), TestStateID.CUT_SCENE_TEST);
-                context.ui().shortMessage("Cut scenes test"); //TODO localize
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    game.playConfig().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
+                    engineContext.ui().shortMessage("Cut scenes test"); //TODO localize
+                });
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                return context.currentGame().playConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction<>("short_level_test") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().restartGameState(context.currentGame(), TestStateID.LEVEL_TEST_S);
-                context.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
+                    engineContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+                });
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                return context.currentGame().playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction<>("medium_level_test") {
             @Override
-            public void execute(GameEngineContext context) {
-                context.currentGame().playConfig().gameFlow().restartGameState(context.currentGame(), TestStateID.LEVEL_TEST_M);
-                context.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
+                    engineContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+                });
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) {
-                return context.currentGame().playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
+            public boolean isEnabled(GameEngineContext engineContext) {
+                final GameContext game = engineContext.optCurrentGame().orElse(null);
+                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
 

@@ -153,7 +153,8 @@ public final class GameViewManager {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !engineContext.currentGame().session().isGameRunning();
+            if (engineContext.optCurrentGame().isEmpty()) return true;
+            return !engineContext.optCurrentGame().get().session().isGameRunning();
         }
         return false;
     }

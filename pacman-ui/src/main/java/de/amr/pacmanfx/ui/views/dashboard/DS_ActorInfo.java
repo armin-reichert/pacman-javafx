@@ -11,6 +11,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
@@ -50,26 +51,26 @@ public class DS_ActorInfo extends GameDashboardSection {
         addGhostInfo(context, GhostPersonality.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyPacStateAndName(GameEngineContext context) {
-        return () -> context.currentGame().session().optLevel()
+    private Supplier<String> supplyPacStateAndName(GameEngineContext engineContext) {
+        return () -> engineContext.optCurrentGame().flatMap(game -> game.session().optLevel())
             .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
     }
 
-    private Supplier<?> supplyLivesCount(GameEngineContext context) {
-        return fnLevelInfo(context, _ -> {
-            final GameSession session = context.currentGame().session();
-            return session.numLives();
+    private Supplier<?> supplyLivesCount(GameEngineContext engineContext) {
+        return fnLevelInfo(engineContext, _ -> {
+            final GameSession session = engineContext.optCurrentGame().map(GameContext::session).orElse(null);
+            return session != null ? session.numLives() : 0;
         });
     }
 
-    private void addGhostInfo(GameEngineContext appContext, GhostPersonality personality) {
-        addDynamicInfo(ghostName(personality), supplyGhostText(appContext, this::ghostNameAndStateText, personality));
-        addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(appContext,
-            (_, ghost) -> ghostAnimationText(appContext.currentGame().playConfig().systems().actorSpriteAnimController(), ghost),
+    private void addGhostInfo(GameEngineContext engineContext, GhostPersonality personality) {
+        addDynamicInfo(ghostName(personality), supplyGhostText(engineContext, this::ghostNameAndStateText, personality));
+        addDynamicInfo("Movement",  supplyGhostText(engineContext, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(engineContext, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(engineContext,
+            (_, ghost) -> ghostAnimationText(engineContext.optCurrentGame().get().playConfig().systems().actorSpriteAnimController(), ghost),
             personality));
     }
 
@@ -117,7 +118,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(GameEngineContext appContext) {
-        return () -> appContext.currentGame().session().optLevel()
+        return () -> appContext.optCurrentGame().get().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -150,8 +151,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(GameEngineContext context) {
-        return () -> context.currentGame().session().optLevel().map(level -> {
-            final ActorSpriteAnimController animSystem = context.currentGame().playConfig().systems().actorSpriteAnimController();
+        return () -> context.optCurrentGame().get().session().optLevel().map(level -> {
+            final ActorSpriteAnimController animSystem = context.optCurrentGame().get().playConfig().systems().actorSpriteAnimController();
             final Pac pac = level.entitySet().pac();
             final boolean stopped = pac.animation().isStopped();
             final boolean locked = pac.animation().isLocked();

@@ -10,16 +10,15 @@ import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
@@ -93,21 +92,23 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
     public void enterGameVariant(GameVariantRuntime runtime) {
         requireNonNull(runtime);
 
+        final GameEventManager gameEventManager = new DefaultGameEventManager();
+
         // Create new game context
-        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
+        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), gameEventManager);
 
-        newGameSession();
+        newGameSession(currentGame);
 
-        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
+        stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(runtime.uiConfig().gameSceneConfig());
 
         // Just to be sure:
-        currentGame.eventManager().removeAllSubscribers();
-        currentGame.eventManager().addSubscriber(ui);
-        currentGame.eventManager().addSubscriber(new PacEatingEventHandler(currentGame));
-        currentGame.eventManager().addSubscriber(new PacPowerEventHandler(currentGame));
+        gameEventManager.removeAllSubscribers();
+        gameEventManager.addSubscriber(ui);
+        gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
+        gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
 
         runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
 
@@ -142,8 +143,8 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
     }
 
     @Override
-    public GameContext currentGame() {
-        return currentGame;
+    public Optional<GameContext> optCurrentGame() {
+        return Optional.ofNullable(currentGame);
     }
 
     @Override
@@ -195,30 +196,43 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
 
     @Override
     public void startGame() {
-        newGameSession();
+        if (currentGame != null) {
+            newGameSession(currentGame);
+            currentGame.playConfig().gamePlay().startSession(currentGame);
 
-        currentGame.playConfig().gamePlay().startSession(currentGame);
+            ui.window().mainScene().connect(currentGame.session());
+            ui.viewManager().selectGamePlayView();
 
-        ui.window().mainScene().connect(currentGame.session());
-        ui.viewManager().selectGamePlayView();
-
-        clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
-        clock().start();
+            clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
+            clock().start();
+        }
+        else {
+            fatalError(new IllegalStateException("Game not be started, no game is currently selected"));
+        }
     }
 
     @Override
     public void suspendGame() {
-        soundManager.stopAll();
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> ui.viewManager().onGameSuspended(gameScene));
-        gameSceneManager.removeCurrentGameScene();
-        clock().stop();
+        if (currentGame != null) {
+            soundManager.stopAll();
+            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> ui.viewManager().onGameSuspended(gameScene));
+            gameSceneManager.removeCurrentGameScene();
+            clock().stop();
+        }
+        else {
+            fatalError(new IllegalStateException("Game not be suspended, no game is currently selected"));
+        }
     }
 
     @Override
-    public void newGameSession() {
+    public void newGameSession(GameContext game) {
+        requireNonNull(game);
         final GameSession session = new GameSession(
-            gameVariantManager.currentVariantName(), new GameCheats(), currentGame.playConfig().initialLifeCount());
-        currentGame.setSession(session);
+            gameVariantManager.currentVariantName(),
+            new GameCheats(),
+            game.playConfig().initialLifeCount()
+        );
+        game.setSession(session);
     }
 
     @Override
@@ -271,38 +285,36 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
     // --- Game loop
 
     private void simulate() {
-        try {
-            final GameContext game = currentGame();
-            game.session().newFrameState(clock().currentTick());
-            game.playConfig().systems().updateSystem().updateEntities(game);
+        if (currentGame != null) {
+            try {
+                currentGame.session().newFrameState(clock().currentTick());
+                currentGame.playConfig().systems().updateSystem().updateEntities(currentGame);
 
-            // This can change the current game state!
-            game.playConfig().gameFlow().update(game);
+                // This can change the current game state!
+                currentGame.playConfig().gameFlow().update(currentGame);
 
-            // IMPORTANT: The current game scene is up-to-date only at this point!
-            gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
-        }
-        catch (Exception x) {
-            handleFatalError(x);
+                // IMPORTANT: The current game scene is up-to-date only at this point!
+                gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
+            }
+            catch (Exception x) {
+                fatalError(x);
+            }
         }
     }
 
     private void render() {
         try {
-            renderCurrentGameView(ui().viewManager());
+            final GameViewManager viewManager = ui.viewManager();
+            if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
+                viewManager.gamePlayView().render();
+                viewManager.gamePlayView().update();
+            }
         } catch (Exception x) {
-            handleFatalError(x);
+            fatalError(x);
         }
     }
 
-    private void renderCurrentGameView(GameViewManager viewManager) {
-        if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
-            viewManager.gamePlayView().render();
-            viewManager.gamePlayView().update();
-        }
-    }
-
-    private void handleFatalError(Throwable reason) {
+    private void fatalError(Throwable reason) {
         suspendGame();
         final String errorMessage = translationManager.translate("error.oh_no_my_program");
         ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());

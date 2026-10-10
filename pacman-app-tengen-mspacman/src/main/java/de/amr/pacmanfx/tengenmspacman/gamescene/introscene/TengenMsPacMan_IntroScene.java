@@ -126,31 +126,33 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = engineContext().gameVariantManager().currentRuntime().uiConfig();
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameVariantUIConfig variantConfig = engineContext().gameVariantManager().currentRuntime().uiConfig();
 
-        engineContext().currentGame().session().setHudVisible(false);
+            game.session().setHudVisible(false);
 
-        spriteSheet = TengenMsPacMan_SpriteSheet.instance();
+            spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+            final var actions = engineContext().gameVariantManager().currentRuntime()
+                .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
-        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
-        final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
-        ghostColors = Stream.of(
-                GhostPersonality.RED_GHOST_SHADOW,
-                GhostPersonality.PINK_GHOST_SPEEDY,
-                GhostPersonality.CYAN_GHOST_BASHFUL,
-                GhostPersonality.ORANGE_GHOST_POKEY)
-            .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
-            .toArray(Color[]::new);
+            final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
+            ghostColors = Stream.of(
+                    GhostPersonality.RED_GHOST_SHADOW,
+                    GhostPersonality.PINK_GHOST_SPEEDY,
+                    GhostPersonality.CYAN_GHOST_BASHFUL,
+                    GhostPersonality.ORANGE_GHOST_POKEY)
+                .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
+                .toArray(Color[]::new);
 
-        createTengenPresentsSubSceneContent();
-        createMarqueeSubSceneContent();
+            createTengenPresentsSubSceneContent();
+            createMarqueeSubSceneContent();
 
-        flow.restartState(this, SceneState.PRESENTING_GAME);
+            flow.restartState(this, SceneState.PRESENTING_GAME);
+        });
     }
 
     @Override
@@ -349,30 +351,31 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-
-                final Ghost currentGhost = scene.currentGhost();
-                final int personalityIndex = currentGhost.personality().ordinal();
-                final Color ghostColor = scene.ghostColors[personalityIndex];
-                if (scene.ghostIndex == 0) {
-                    scene.marqueeTextView1.data().setText(WITH);
-                    scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
-                    scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 23);
-                    scene.marqueeTextView1.show();
-                } else {
-                    scene.marqueeTextView1.hide();
-                }
-                scene.marqueeTextView2.data().setText(currentGhost.name().toUpperCase());
-                scene.marqueeTextView2.data().setFillColor(ghostColor);
-                scene.marqueeTextView2.pos().set(ANCHOR_X + 44, ANCHOR_Y + 41);
-
-                boolean reachedEndPosition = letGhostMarchIn(scene);
-                if (reachedEndPosition) {
-                    if (scene.ghostIndex == 3) {
-                        scene.flow.enterState(scene, MS_PACMAN_MARCHING_IN);
+                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                    final Ghost currentGhost = scene.currentGhost();
+                    final int personalityIndex = currentGhost.personality().ordinal();
+                    final Color ghostColor = scene.ghostColors[personalityIndex];
+                    if (scene.ghostIndex == 0) {
+                        scene.marqueeTextView1.data().setText(WITH);
+                        scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
+                        scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 23);
+                        scene.marqueeTextView1.show();
                     } else {
-                        ++scene.ghostIndex;
+                        scene.marqueeTextView1.hide();
                     }
-                }
+                    scene.marqueeTextView2.data().setText(currentGhost.name().toUpperCase());
+                    scene.marqueeTextView2.data().setFillColor(ghostColor);
+                    scene.marqueeTextView2.pos().set(ANCHOR_X + 44, ANCHOR_Y + 41);
+
+                    boolean reachedEndPosition = letGhostMarchIn(game, scene);
+                    if (reachedEndPosition) {
+                        if (scene.ghostIndex == 3) {
+                            scene.flow.enterState(scene, MS_PACMAN_MARCHING_IN);
+                        } else {
+                            ++scene.ghostIndex;
+                        }
+                    }
+                });
             }
 
             @Override
@@ -381,8 +384,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 scene.marqueeTextView2.hide();
             }
 
-            boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.engineContext().currentGame().playConfig().systems();
+            boolean letGhostMarchIn(GameContext game, TengenMsPacMan_IntroScene scene) {
+                final GameSystems systems = game.playConfig().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();
 
@@ -426,37 +429,38 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().currentGame();
-                final GameFlow flow = game.playConfig().gameFlow();
-                final GameSystems systems = game.playConfig().systems();
-                final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
-                final MovementSystem motor = systems.motor();
-                final WorldNavigationSystem nav = systems.navigator();
+                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                    final GameFlow flow = game.playConfig().gameFlow();
+                    final GameSystems systems = game.playConfig().systems();
+                    final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+                    final MovementSystem motor = systems.motor();
+                    final WorldNavigationSystem nav = systems.navigator();
 
-                scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 22);
-                scene.marqueeTextView1.data().setText(STARRING);
-                scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
-                scene.marqueeTextView1.show();
+                    scene.marqueeTextView1.pos().set(ANCHOR_X + 12, ANCHOR_Y + 22);
+                    scene.marqueeTextView1.data().setText(STARRING);
+                    scene.marqueeTextView1.data().setFillColor(NES_Palette.color(0x20));
+                    scene.marqueeTextView1.show();
 
-                scene.marqueeTextView2.pos().set(ANCHOR_X + 28, ANCHOR_Y + 38);
-                scene.marqueeTextView2.data().setText(MS_PAC_MAN);
-                scene.marqueeTextView2.data().setFillColor(NES_Palette.color(0x28));
-                scene.marqueeTextView2.show();
+                    scene.marqueeTextView2.pos().set(ANCHOR_X + 28, ANCHOR_Y + 38);
+                    scene.marqueeTextView2.data().setText(MS_PAC_MAN);
+                    scene.marqueeTextView2.data().setFillColor(NES_Palette.color(0x28));
+                    scene.marqueeTextView2.show();
 
-                motor.move(scene.msPacMan);
-                if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    nav.setSpeed(scene.msPacMan, 0);
-                    animController.resetSelected(scene.msPacMan);
-                }
-                if (timer.atSecond(8)) {
-                    // start demo level or show options
-                    if (gameOptionValues(game.session()).areInitial()) {
-                        gameOptionValues(game.session()).setCanStartNewGame(false); // TODO check this
-                        flow.restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
-                    } else {
-                        flow.enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                    motor.move(scene.msPacMan);
+                    if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
+                        nav.setSpeed(scene.msPacMan, 0);
+                        animController.resetSelected(scene.msPacMan);
                     }
-                }
+                    if (timer.atSecond(8)) {
+                        // start demo level or show options
+                        if (gameOptionValues(game.session()).areInitial()) {
+                            gameOptionValues(game.session()).setCanStartNewGame(false); // TODO check this
+                            flow.restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
+                        } else {
+                            flow.enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                        }
+                    }
+                });
             }
         };
 

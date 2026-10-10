@@ -69,8 +69,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         this.playScene3D = playScene3D;
     }
 
-    private GameContext game() {
-        return playScene3D.engineContext().currentGame();
+    private GameContext assertGame() {
+        return playScene3D.engineContext().optCurrentGame().orElseThrow();
     }
 
     private Optional<PacManGameSoundEffects> optSoundEffects() {
@@ -87,7 +87,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(playScene3D.ui().viewModel().common3DSettings(), game().session().level());
+            handleTestState(playScene3D.ui().viewModel().common3DSettings(), assertGame().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -143,14 +143,14 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = assertGame().session().level().entitySet().entities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final GameSession session = game().session();
-        final AbstractGameState state = game().state();
+        final GameSession session = assertGame().session();
+        final AbstractGameState state = assertGame().state();
 
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
@@ -159,7 +159,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entitySet()
+        final MessageView messageView = assertGame().session().level().entitySet()
             .entities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
@@ -171,20 +171,20 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D.replaceGameLevel3D(game(), event.level());
+        playScene3D.replaceGameLevel3D(assertGame(), event.level());
     }
 
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
-        final GameLevel level = game().session().level();
+        final GameLevel level = assertGame().session().level();
         final GameLevelView3D level3D = assertLevel3D();
-        final State<GameContext> newState = game().state();
+        final State<GameContext> newState = assertGame().state();
 
-        level3D.replaceLevelCounter3D(game().session().hud().levelCounter());
+        level3D.replaceLevelCounter3D(assertGame().session().hud().levelCounter());
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
-            playScene3D.replaceGameLevel3D(game(), level);
+            playScene3D.replaceGameLevel3D(assertGame(), level);
             playScene3D.animationSystem().startEnergizerPumping(level3D);
             final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
@@ -193,7 +193,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entitySet().pac().assertComponent(PacView3D.class).root().setVisible(true);
 
-        playScene3D.replaceActionBindings(game().session(), level);
+        playScene3D.replaceActionBindings(assertGame().session(), level);
 
         playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
             .ifPresent(ManagedAnimation::replay);
@@ -237,10 +237,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
-        final GameLevel level = game().session().level();
+        final GameLevel level = assertGame().session().level();
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
-        if (!game().playConfig().rules().isLevelCompleted(level)) {
+        if (!assertGame().playConfig().rules().isLevelCompleted(level)) {
             final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
             systems3D.animationSystem().setPowerMode(pac, true);
             playScene3D.animationSystem().startWallFlashing();
@@ -295,9 +295,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void onPacManDying() {
-        final GameLevel level = game().session().level();
+        final GameLevel level = assertGame().session().level();
 
-        game().state().timer().resetToIndefiniteDuration();
+        assertGame().state().timer().resetToIndefiniteDuration();
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
@@ -313,12 +313,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         pacSystems3D.animationSystem().playDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound),
-            game().state()::triggerTimeout
+            assertGame().state()::triggerTimeout
         );
     }
 
     private void onGhostsKilled(GameLevelView3D level3D) {
-        final GameSession session = game().session();
+        final GameSession session = assertGame().session();
         final GameVariantUIConfig uiConfig = playScene3D.engineContext().gameVariantManager().currentRuntime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
@@ -328,11 +328,11 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onLevelComplete() {
         final GameViewModel viewModel = playScene3D.ui().viewModel();
-        final GameLevel level = game().session().level();
+        final GameLevel level = assertGame().session().level();
         final House house = level.entitySet().entities().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
-        final boolean cutSceneFollows = !game().session().isAttractMode()
-            && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = !assertGame().session().isAttractMode()
+            && assertGame().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         playScene3D.opacityProperty().set(0);
 
@@ -371,11 +371,11 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Optional<ManagedAnimation> levelEndAnimation = playScene3D.animations3D().registry().optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> game().state().triggerTimeout()).play();
+            Ufx.pauseSecThen(2, () -> assertGame().state().triggerTimeout()).play();
             return;
         }
 
-        game().state().timer().resetToIndefiniteDuration();
+        assertGame().state().timer().resetToIndefiniteDuration();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIDProperty().get();
 
@@ -394,12 +394,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             levelEndAnimation.get().delegate(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> game().state().triggerTimeout());
+        seq.setOnFinished(_ -> assertGame().state().triggerTimeout());
         seq.play();
     }
 
     private void onGameOver() {
-        final GameSession session = game().session();
+        final GameSession session = assertGame().session();
         final GameLevel level = session.level();
         final GameLevelView3D level3D = assertLevel3D();
 
@@ -420,7 +420,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
-            playScene3D.replaceGameLevel3D(game(), level);
+            playScene3D.replaceGameLevel3D(assertGame(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIDProperty().set(PerspectiveID.TOTAL);
         });

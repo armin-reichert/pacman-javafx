@@ -42,18 +42,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {
-        final GameSession session = engineContext().currentGame().session();
-        session.optLevel().ifPresent(_ -> {
-            if (!gameOptionValues(session).areInitial()) {
-                final ImageView levelInfo = createLevelInfoView(level3D);
-                level3D.root().getChildren().add(levelInfo);
-            }
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            session.optLevel().ifPresent(_ -> {
+                if (!gameOptionValues(session).areInitial()) {
+                    final ImageView levelInfo = createLevelInfoView(game, level3D);
+                    level3D.root().getChildren().add(levelInfo);
+                }
+            });
         });
     }
 
-    private ImageView createLevelInfoView(GameLevelView3D level3D) {
-        final GameSession session = engineContext().currentGame().session();
-        final GameLevel level = session.level();
+    private ImageView createLevelInfoView(GameContext game, GameLevelView3D level3D) {
+        final GameLevel level = game.session().level();
 
         final ImageView levelInfo = new ImageView();
         final double infoWidth = tilesPx(level.worldMap().numCols());
@@ -61,7 +62,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
         levelInfo.imageProperty().bind(ui().viewModel().maze3DSettings().floorColorProperty().map(
-            color -> createLevelInfoImage(level.number(), session, infoWidth, infoHeight, color))
+            color -> createLevelInfoImage(level.number(), game, infoWidth, infoHeight, color))
         );
 
         // Display the level info at front side of floor just over the surface
@@ -74,11 +75,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     private Image createLevelInfoImage(
         int levelNumber,
-        GameSession session,
+        GameContext game,
         double width,
         double height,
         Color backgroundColor)
     {
+        final GameSession session = game.session();
+
         final double quality = 6;
         final var canvas = new Canvas(quality * width, quality * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
@@ -104,7 +107,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final ActorSpriteAnimController animController = engineContext().currentGame().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
         final var renderer = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);

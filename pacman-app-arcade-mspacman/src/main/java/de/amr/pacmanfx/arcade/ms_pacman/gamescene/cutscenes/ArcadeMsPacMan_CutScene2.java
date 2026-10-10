@@ -178,7 +178,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
             nav.setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            engineContext().currentGame().state().triggerTimeout();
+            engineContext().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
         }
         else {
             List.of(pacMan, msPacMan).forEach(motor::move);

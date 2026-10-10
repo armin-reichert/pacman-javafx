@@ -5,11 +5,10 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -62,13 +61,14 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction<>("toggle_collision_strategy") {
             @Override
-            public void execute(GameEngineContext context) {
-                final GameContext game = context.currentGame();
-                final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
-                final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
-                final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
-                collisionRules.collisionStrategyProperty().set(nextStrategy);
-                context.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
+            public void execute(GameEngineContext engineContext) {
+                engineContext.optCurrentGame().ifPresent(game -> {
+                    final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
+                    final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
+                    final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
+                    collisionRules.collisionStrategyProperty().set(nextStrategy);
+                    engineContext.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
+                });
             }
         };
 

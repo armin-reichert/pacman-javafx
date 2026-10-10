@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         } else if (timing.tick() == timing.TICK_BLINK_INSPECTS_DAMAGE) {
             blinkyInspectsDamagedDress(systems.actorSpriteAnimController());
         } else if (timing.tick() == timing.TICK_ANIMATION_ENDS) {
-            endTheShow();
+            endTheShow(game);
         }
         systems.motor().move(pacMan);
         systems.motor().move(blinky);
@@ -124,9 +124,9 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         nailDressRapturing.setState(NailDressRapturingState.NAIL);
     }
 
-    private void endTheShow() {
+    private void endTheShow(GameContext game) {
         blinky.hide();
-        engineContext().currentGame().state().triggerTimeout();
+        game.state().triggerTimeout();
     }
 
     private void dressRaptures(GameSystems systems) {

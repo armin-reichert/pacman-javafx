@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -47,15 +47,18 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letGhostWalkIn(scene.view.ghosts().get(scene.ghostInSpotlight));
-                if (atEndPosition) {
-                    if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
-                        controller.enterState(scene, MS_PACMAN_MARCHING_IN);
-                    } else {
-                        ++scene.ghostInSpotlight;
-                        scene.updateMarqueeText(this);
+                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                    final Ghost ghost = scene.view.ghosts().get(scene.ghostInSpotlight);
+                    final boolean atEndPosition = scene.letGhostWalkIn(game, ghost);
+                    if (atEndPosition) {
+                        if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
+                            controller.enterState(scene, MS_PACMAN_MARCHING_IN);
+                        } else {
+                            ++scene.ghostInSpotlight;
+                            scene.updateMarqueeText(this);
+                        }
                     }
-                }
+                });
             }
         },
 
@@ -67,26 +70,29 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letMsPacManWalkIn(scene.view.msPacMan());
-                if (atEndPosition) {
-                    controller.enterState(scene, READY_TO_PLAY);
-                }
+                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                    final boolean atEndPosition = scene.letMsPacManWalkIn(game, scene.view.msPacMan());
+                    if (atEndPosition) {
+                        controller.enterState(scene, READY_TO_PLAY);
+                    }
+                });
             }
         },
 
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().currentGame();
-                final GameFlow gameFlow = scene.engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow();
-                final boolean canPlay = !game.coinMechanism().isEmpty();
-                if (timer.atSecond(2.0) && !canPlay) {
-                    gameFlow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
-                }
-                //TODO can this happen at all?
-                else if (timer.atSecond(5)) {
-                    gameFlow.enterGameState(game, CommonGameStateID.GAME_PREPARATION);
-                }
+                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                    final GameFlow gameFlow = scene.engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow();
+                    final boolean canPlay = !game.coinMechanism().isEmpty();
+                    if (timer.atSecond(2.0) && !canPlay) {
+                        gameFlow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    }
+                    //TODO can this happen at all?
+                    else if (timer.atSecond(5)) {
+                        gameFlow.enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                    }
+                });
             }
         };
 

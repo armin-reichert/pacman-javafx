@@ -111,7 +111,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameSession session = engineContext().currentGame().session();
+        final GameContext game = engineContext().optCurrentGame().orElse(null);
+        if (game == null) return Stream.empty();
+
+        final GameSession session = game.session();
         final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return session.optLevel()
             .map(level -> Ufx.<Renderable>streamOf(
@@ -123,25 +126,29 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = engineContext().currentGame().session();
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
 
-        final HUD hud = session.hud();
-        hud.levelCounter().show();
-        hud.livesCounter().show();
-        session.setHudVisible(true);
+            final HUD hud = session.hud();
+            hud.levelCounter().show();
+            hud.livesCounter().show();
+            session.setHudVisible(true);
 
-        session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
+            session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
+        });
     }
 
     @Override
     public void onActivate() {
-        final GameSession session = engineContext().currentGame().session();
-        final HUD hud = session.hud();
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            final HUD hud = session.hud();
 
-        hud.gameScore().show();
-        hud.levelCounter().show();
-        hud.livesCounter().show();
-        session.setHudVisible(true);
+            hud.gameScore().show();
+            hud.levelCounter().show();
+            hud.livesCounter().show();
+            session.setHudVisible(true);
+        });
     }
 
     @Override
@@ -155,16 +162,18 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             ensureActorAnimationsCreated(level, gameOptionValues(session).boosterEnabled());
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
-                soundEffects.playAmbientGameLevelSound(engineContext().currentGame(), level);
+                soundEffects.playAmbientGameLevelSound(game, level);
             });
         });
     }
 
     @Override
     public void onQuit() {
-        onDeactivate();
-        engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-            .enterGameState(engineContext().currentGame(), CommonGameStateID.GAME_OVER);
+        engineContext().optCurrentGame().ifPresent(game -> {
+            onDeactivate();
+            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
+                .enterGameState(game, CommonGameStateID.GAME_OVER);
+        });
     }
 
     @Override
@@ -173,26 +182,29 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
         final TranslationManager translations = engineContext().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
+
         final var contextMenu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "context_menu.scaled_to_fit");
-        miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
-        miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "context_menu.scaled_to_fit");
+            miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
+            miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "context_menu.scrolling");
-        miScrolling.setSelected(displayMode == SCROLLING);
-        miScrolling.setOnAction(_ -> uiSettings.playSceneDisplay.set(SCROLLING));
+            final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "context_menu.scrolling");
+            miScrolling.setSelected(displayMode == SCROLLING);
+            miScrolling.setOnAction(_ -> uiSettings.playSceneDisplay.set(SCROLLING));
 
-        final ToggleGroup toggleGroup = new ToggleGroup();
-        miScaledToFit.setToggleGroup(toggleGroup);
-        miScrolling.setToggleGroup(toggleGroup);
+            final ToggleGroup toggleGroup = new ToggleGroup();
+            miScaledToFit.setToggleGroup(toggleGroup);
+            miScrolling.setToggleGroup(toggleGroup);
 
-        addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, translations, engineContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(contextMenu, translations, engineContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity");
-        addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(engineContext(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
+            addLocalizedCheckBox(contextMenu, translations, game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+            addLocalizedCheckBox(contextMenu, translations, game.session().cheats().pacImmuneProperty(), "context_menu.immunity");
+            addSeparator(contextMenu);
+            addLocalizedCheckBox(contextMenu, translations, ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedActionItem(engineContext(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        });
 
         return Optional.of(contextMenu);
     }
@@ -257,9 +269,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         actionBindingsRegistry().selectAnyMatchingBinding(actions().actionQuitDemoLevel(), actions().localBindings());
     }
 
-    void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
+    void playLevelCompleteAnimation(GameContext game, GameLevel level, int numFlashes) {
         levelCompletedAnimation = new LevelCompletedAnimation();
-        levelCompletedAnimation.setOnFinished(() -> engineContext().currentGame().state().triggerTimeout());
+        levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
         levelCompletedAnimation.play(level, numFlashes);
     }
 

@@ -61,39 +61,40 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
-        //TODO Does not belong here
-        final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
-        game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+            //TODO Does not belong here
+            final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
+            game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
+        });
     }
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
-        final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
-        if (!silent) {
-            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
-        }
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+            if (!silent) {
+                optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
+            }
+        });
     }
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         final State<GameContext> newState = e.newState();
-
         Logger.info("Entering game state '{}'", newState.name());
 
-        final GameContext game = gameScene.engineContext().currentGame();
-        if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
-            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+            if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
+                optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
-            final GameLevel level = game.session().level();
-            final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
-            gameScene.levelCompletedAnimation().play(level, numFlashes);
-        }
-        else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
-            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
-        }
+                final GameLevel level = game.session().level();
+                final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
+                gameScene.levelCompletedAnimation().play(level, numFlashes);
+            } else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
+                optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
+            }
+        });
     }
 
     @Override
@@ -103,15 +104,13 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
-        gameScene.onAcceptGameLevel(game.session(), e.level());
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> gameScene.onAcceptGameLevel(game.session(), e.level()));
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        final GameContext game = gameScene.engineContext().currentGame();
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        game.state().triggerTimeout();
+        gameScene.engineContext().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
     }
 
     @Override

@@ -68,9 +68,10 @@ public class GameSceneManager {
 
     public void updateGameSceneAndForceReload(GameEngineContext engineContext, boolean forceReload) {
         final GameVariantUIConfig uiConfig = engineContext.gameVariantManager().currentRuntime().uiConfig();
-        final GameSession session = engineContext.currentGame().session();
+        final GameContext currentGame = engineContext.optCurrentGame().orElseThrow();
+        final GameSession session = currentGame.session();
         final boolean select3D = engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(engineContext.currentGame(), select3D).orElse(null);
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(currentGame, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -90,7 +91,7 @@ public class GameSceneManager {
         nextGameScene.activate();
         engineContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, engineContext.currentGame(), currentGameScene(), nextScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }

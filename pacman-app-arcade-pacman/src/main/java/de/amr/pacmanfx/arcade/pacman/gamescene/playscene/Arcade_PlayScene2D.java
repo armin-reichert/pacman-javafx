@@ -67,7 +67,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameLevel level = engineContext().currentGame().session().optLevel().orElse(null);
+        final GameContext game = engineContext().optCurrentGame().orElse(null);
+        if (game == null) {
+            return Stream.empty();
+        }
+        final GameLevel level = game.session().optLevel().orElse(null);
         if (level == null) {
             return Stream.empty();
         }
@@ -100,22 +104,27 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onActivate() {
-        levelCompletedAnimation = new LevelCompletedAnimation();
-        levelCompletedAnimation.setOnFinished(() -> engineContext().currentGame().state().triggerTimeout());
+        engineContext().optCurrentGame().ifPresent(game -> {
+            levelCompletedAnimation = new LevelCompletedAnimation();
+            levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
+        });
     }
 
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(
-            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(engineContext().currentGame(), level)));
+            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game, level)));
     }
 
     @Override
     public void onQuit() {
-        onDeactivate();
-        // Avoid game over sound being played
-        engineContext().soundManager().setEnabled(false);
-        engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow().enterGameState(engineContext().currentGame(), CommonGameStateID.GAME_OVER);
+        engineContext().optCurrentGame().ifPresent(game -> {
+            onDeactivate();
+            // Avoid game over sound being played
+            engineContext().soundManager().setEnabled(false);
+            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
+                .enterGameState(game, CommonGameStateID.GAME_OVER);
+        });
     }
 
     @Override
@@ -123,36 +132,42 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final CheatActions cheatActions = CommonGameActions.instance().cheatActions();
 
         final var contextMenu = new ContextMenu();
-        addLocalizedTitleItem(contextMenu, engineContext().translationManager(), "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
-            engineContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
-            final var checkBox = (CheckMenuItem) e.getSource();
-            if (checkBox.isSelected()) {
-                engineContext().runAction(cheatActions.actionActivateAutopilot());
-            } else {
-                engineContext().runAction(cheatActions.actionDeactivateAutopilot());
-            }
+
+        engineContext().optCurrentGame().ifPresent(game -> {
+            addLocalizedTitleItem(contextMenu, engineContext().translationManager(), "context_menu.pacman");
+            addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
+                game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
+                final var checkBox = (CheckMenuItem) e.getSource();
+                if (checkBox.isSelected()) {
+                    engineContext().runAction(cheatActions.actionActivateAutopilot());
+                } else {
+                    engineContext().runAction(cheatActions.actionDeactivateAutopilot());
+                }
+            });
+            addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
+                game.session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
+                final var checkBox = (CheckMenuItem) e.getSource();
+                if (checkBox.isSelected()) {
+                    engineContext().runAction(cheatActions.actionActivateImmunity());
+                } else {
+                    engineContext().runAction(cheatActions.actionDeactivateImmunity());
+                }
+            });
+            addSeparator(contextMenu);
+            addLocalizedCheckBox(contextMenu, engineContext().translationManager(), ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedActionItem(engineContext(), contextMenu, engineContext().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+
         });
-        addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
-            engineContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
-            final var checkBox = (CheckMenuItem) e.getSource();
-            if (checkBox.isSelected()) {
-                engineContext().runAction(cheatActions.actionActivateImmunity());
-            } else {
-                engineContext().runAction(cheatActions.actionDeactivateImmunity());
-            }
-        });
-        addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, engineContext().translationManager(), ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(engineContext(), contextMenu, engineContext().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = engineContext().currentGame().session();
-        session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
+        engineContext().optCurrentGame().ifPresent(game -> {
+            final GameSession session = game.session();
+            session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
+        });
     }
 
     @Override

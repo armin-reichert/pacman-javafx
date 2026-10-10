@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.event.gameplay;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 
-public record LevelStartedEvent(int levelNumber) implements GameEvent {}
+public record LevelStartedEvent(GameContext game, int levelNumber) implements GameEvent {}

@@ -90,7 +90,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        updateSceneState();
+        updateSceneState(game);
     }
 
     public Stream<Renderable> renderables() {
@@ -124,8 +124,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     // Scene controller state machine
 
-    private void updateSceneState() {
-        final GameSystems systems = engineContext().currentGame().playConfig().systems();
+    private void updateSceneState(GameContext game) {
+        final GameSystems systems = game.playConfig().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> {
@@ -141,11 +141,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
                 if (timing().isEndTime()) {
                     changeState(SceneState.END);
                 } else {
-                    updateDeliverJuniorState();
+                    updateDeliverJuniorState(game);
                 }
             }
 
-            case END -> engineContext().currentGame().state().triggerTimeout();
+            case END -> game.state().triggerTimeout();
 
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
@@ -204,8 +204,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         numBagBounces = 0;
     }
 
-    private void updateDeliverJuniorState() {
-        final MovementSystem motor = engineContext().currentGame().playConfig().systems().motor();
+    private void updateDeliverJuniorState(GameContext game) {
+        final MovementSystem motor = game.playConfig().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.pos().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {

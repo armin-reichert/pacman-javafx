@@ -6,10 +6,9 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import javafx.scene.input.KeyCode;
 
@@ -36,18 +35,20 @@ public class SteeringActions {
         }
 
         @Override
-        public void execute(GameEngineContext context) {
-            final GameContext game = context.currentGame();
-            final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
-            game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
+        public void execute(GameEngineContext engineContext) {
+            engineContext.optCurrentGame().ifPresent(game -> {
+                final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
+                game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
+            });
         }
 
         @Override
-        public boolean isEnabled(GameEngineContext context) {
-            final GameSession session = context.currentGame().session();
-            return session.optLevel().isPresent()
-                && !session.isAttractMode()
-                && !session.level().entitySet().pac().cheats().isUsingAutopilot();
+        public boolean isEnabled(GameEngineContext engineContext) {
+            final GameContext game = engineContext.optCurrentGame().orElse(null);
+            return game != null
+                && game.session().optLevel().isPresent()
+                && !game.session().isAttractMode()
+                && !game.session().level().entitySet().pac().cheats().isUsingAutopilot();
         }
     }
 
