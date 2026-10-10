@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
@@ -37,9 +38,7 @@ public class PacManAllGamesNoBuilder extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-
-        engine = new PacManGamesEngine();
-        engine.playStation().insertCartridges(
+        PlayStation.instance().insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
@@ -48,6 +47,7 @@ public class PacManAllGamesNoBuilder extends Application {
             null,
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
+        engine = new PacManGamesEngine();
     }
 
     @Override

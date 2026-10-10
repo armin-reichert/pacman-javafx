@@ -26,8 +26,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private final PlayStation playStation;
-
     private final PacManGamesEngine engine;
 
     private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
@@ -36,8 +34,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(PlayStation playStation, PacManGamesEngine engine, GameViewModel viewModel) {
-        this.playStation = requireNonNull(playStation);
+    public DefaultGameVariantManager(PacManGamesEngine engine, GameViewModel viewModel) {
         this.engine = requireNonNull(engine);
         this.viewModel = requireNonNull(viewModel);
     }
@@ -48,7 +45,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
         final GameVariantRuntime gameVariantRuntime;
         try {
-            gameVariantRuntime = createGameVariantRuntime(playStation, engine, variantName, includeInteractiveTests);
+            gameVariantRuntime = createGameVariantRuntime(engine, variantName, includeInteractiveTests);
             configsByName.put(variantName, gameVariantRuntime);
         } catch (Exception x) {
             throw new RuntimeException("Game variant could not be registered", x);
@@ -100,12 +97,11 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(PlayStation playStation, PacManGamesEngine engine, String variantName, boolean includeInteractiveTests)
-
+    private GameVariantRuntime createGameVariantRuntime(PacManGamesEngine engine, String variantName, boolean includeInteractiveTests)
         throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        final Cartridge cartridge = playStation.cartridgeByName(variantName);
-        final var variantRuntime = new GameVariantRuntime(playStation, cartridge, engine);
+        final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
+        final var variantRuntime = new GameVariantRuntime(cartridge, engine);
         if (includeInteractiveTests) {
             final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

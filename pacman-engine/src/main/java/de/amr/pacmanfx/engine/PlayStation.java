@@ -26,13 +26,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayStation implements Disposable {
 
+    private static class SingletonHolder {
+        static final PlayStation SINGLETON = new PlayStation();
+    }
+
+    public static PlayStation instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
     private final Set<Cartridge> cartridgeSet = new HashSet<>(6);
 
     private final Input input = new Input();
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public PlayStation() {
+    private PlayStation() {
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
 

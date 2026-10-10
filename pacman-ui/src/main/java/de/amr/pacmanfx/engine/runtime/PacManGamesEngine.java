@@ -8,10 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
-import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
@@ -26,6 +23,8 @@ import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
@@ -38,10 +37,6 @@ import static java.util.Objects.requireNonNull;
  * The Pac-Man games "engine".
  */
 public final class PacManGamesEngine implements EngineLifecycle, GameActionContext {
-
-    private final PlayStation playStation;
-
-    private final GameLoop gameLoop;
 
     private final RenderManager renderManager;
 
@@ -62,21 +57,14 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
     private DefaultGameVariantManager gameVariantManager;
 
     public PacManGamesEngine() {
-        playStation = new PlayStation();
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
         spriteAnimationTimer = new SpriteAnimationTimer();
         translationManager = new CommonTranslationManager();
-        gameLoop = new GameLoop(playStation.clock(), this);
-        gameLoop.setErrorHandler(this::handleFatalError);
-    }
 
-    private void handleFatalError(Throwable reason) {
-        suspendGame();
-        final String errorMessage = translationManager.translate("error.oh_no_my_program");
-        ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-        Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
+        clock().setUpdateAction(this::simulate);
+        clock().setPermanentAction(this::render);
     }
 
     public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
@@ -95,10 +83,6 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
         ui.window().show(this);
 
         Platform.runLater(this::startBackgroundServices);
-    }
-
-    public PlayStation playStation() {
-        return playStation;
     }
 
     //TODO This method is messy and needs a cleanup!
@@ -150,7 +134,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
 
     @Override
     public GameClock clock() {
-        return playStation.clock();
+        return PlayStation.instance().clock();
     }
 
     @Override
@@ -175,7 +159,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
 
     @Override
     public Input input() {
-        return playStation.input();
+        return PlayStation.instance().input();
     }
 
     @Override
@@ -200,7 +184,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return playStation.watchdog();
+        return PlayStation.instance().watchdog();
     }
 
     // EngineLifecycle
@@ -214,7 +198,8 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
         ui.window().mainScene().connect(currentGame.session());
         ui.viewManager().selectGamePlayView();
 
-        gameLoop.start();
+        clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
+        clock().start();
     }
 
     @Override
@@ -222,7 +207,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
         soundManager.stopAll();
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> ui.viewManager().onGameSuspended(gameScene));
         gameSceneManager.removeCurrentGameScene();
-        gameLoop.stop();
+        clock().stop();
     }
 
     @Override
@@ -237,7 +222,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
         suspendGame();
         spriteAnimationTimer.stop();
         ui.window().mainScene().flashMessageManager().stopAnimationTimer();
-        playStation.dispose();
+        PlayStation.instance().dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
@@ -254,7 +239,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
     // Private area, no trespassing!
 
     private void createGameVariantManager(GameUI ui) {
-        gameVariantManager = new DefaultGameVariantManager(playStation, this, ui.viewModel());
+        gameVariantManager = new DefaultGameVariantManager(this, ui.viewModel());
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 
@@ -277,5 +262,46 @@ public final class PacManGamesEngine implements EngineLifecycle, GameActionConte
 
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
+    }
+
+    // --- Game loop
+
+    private void simulate() {
+        try {
+            final GameContext game = currentGame();
+            game.session().newFrameState(clock().currentTick());
+            game.playConfig().systems().updateSystem().updateEntities(game);
+
+            // This can change the current game state!
+            game.playConfig().gameFlow().update(game);
+
+            // IMPORTANT: The current game scene is up-to-date only at this point!
+            gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
+        }
+        catch (Exception x) {
+            handleFatalError(x);
+        }
+    }
+
+    private void render() {
+        try {
+            renderCurrentGameView(ui().viewManager());
+        } catch (Exception x) {
+            handleFatalError(x);
+        }
+    }
+
+    private void renderCurrentGameView(GameViewManager viewManager) {
+        if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
+            viewManager.gamePlayView().render();
+            viewManager.gamePlayView().update();
+        }
+    }
+
+    private void handleFatalError(Throwable reason) {
+        suspendGame();
+        final String errorMessage = translationManager.translate("error.oh_no_my_program");
+        ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+        Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }
