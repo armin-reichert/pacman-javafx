@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.engine.runtime.action;
+package de.amr.pacmanfx.engine;
 
 public interface QuitHandler {
 

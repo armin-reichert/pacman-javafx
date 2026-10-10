@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.engine.GameScene;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;

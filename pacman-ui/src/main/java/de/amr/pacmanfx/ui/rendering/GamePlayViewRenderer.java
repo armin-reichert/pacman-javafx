@@ -13,7 +13,7 @@ import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;

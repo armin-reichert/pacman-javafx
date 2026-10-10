@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
+import de.amr.pacmanfx.engine.QuitHandler;
 import javafx.scene.Node;
 
 import java.util.Optional;

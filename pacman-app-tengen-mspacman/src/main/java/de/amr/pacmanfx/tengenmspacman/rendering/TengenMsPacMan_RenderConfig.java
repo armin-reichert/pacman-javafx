@@ -39,7 +39,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

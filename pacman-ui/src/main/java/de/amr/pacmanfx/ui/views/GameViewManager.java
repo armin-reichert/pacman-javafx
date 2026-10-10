@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;

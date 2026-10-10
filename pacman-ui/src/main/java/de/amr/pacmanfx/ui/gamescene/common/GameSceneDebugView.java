@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.pacmanfx.engine.GameScene;
 
 public record GameSceneDebugView(GameScene gameScene) implements Renderable {
 

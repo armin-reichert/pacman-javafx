@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySce
 import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
 
 import java.util.Map;

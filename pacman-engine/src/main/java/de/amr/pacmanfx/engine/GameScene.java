@@ -2,14 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.common;
+package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
-import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
@@ -35,8 +33,6 @@ public interface GameScene extends Disposable, QuitHandler {
      * @return the renderables produced by this game scene
      */
     Stream<Renderable> renderables();
-
-    void setActionContext(GameActionContext actionContext);
 
     /**
      * Hook called when entering this 2D scene from a 3D scene.

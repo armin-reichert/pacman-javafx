@@ -10,10 +10,11 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
+import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -86,9 +87,6 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return actionContext.ui();
     }
 
-    // Interface GameScene
-
-    @Override
     public final void setActionContext(GameActionContext actionContext) {
         requireNonNull(actionContext);
         if (this.actionContext != null) {
@@ -99,6 +97,8 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         onEngineConnected();
         Logger.info("Game scene {} connected with app", getClass().getSimpleName());
     }
+
+    // Interface GameScene
 
     @Override
     public final void activate() {

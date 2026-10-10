@@ -11,8 +11,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.GameScene;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -64,11 +64,11 @@ public class GameSceneManager {
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
-
-        //TODO This is crap and mus be changed
-        if (actionContext instanceof PacManGamesEngine engine) {
-            nextGameScene.setActionContext(engine);
+        if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
+            throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
+
+        nextScene.setActionContext(actionContext);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
@@ -79,11 +79,6 @@ public class GameSceneManager {
         nextGameScene.activate();
         actionContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
-        //TODO rethink this
-        if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
-            Logger.error("Next game scene is not an AbstractGameScene");
-            return;
-        }
         session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, actionContext.currentGame(), currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
