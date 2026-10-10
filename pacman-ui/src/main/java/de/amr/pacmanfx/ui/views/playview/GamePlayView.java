@@ -101,8 +101,7 @@ public class GamePlayView implements GameView {
     }
 
     public void showHelp(GameActionContext actionContext) {
-//        final double scaling = framedContainer.scalingProperty().get();
-//        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
+        layers.helpLayer().showHelpPopup(actionContext, 2, actionContext.gameVariantManager().currentVariantName());
     }
 
     public void acceptLevel(GameScene currentGameScene, GameLevel level) {
