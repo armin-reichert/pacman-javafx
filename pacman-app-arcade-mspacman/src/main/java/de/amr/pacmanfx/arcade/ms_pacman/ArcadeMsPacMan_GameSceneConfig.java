@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.engine.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
+import de.amr.pacmanfx.engine.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
 import java.util.Map;

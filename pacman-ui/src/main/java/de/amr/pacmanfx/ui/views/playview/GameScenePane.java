@@ -9,7 +9,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneEmbedding;
+import de.amr.pacmanfx.engine.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;

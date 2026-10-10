@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.common;
+package de.amr.pacmanfx.engine;
 
 public enum GameSceneEmbedding {
     PLAIN_2D, DECORATED_2D, SUBSCENE

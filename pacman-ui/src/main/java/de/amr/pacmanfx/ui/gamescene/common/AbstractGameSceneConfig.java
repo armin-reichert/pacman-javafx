@@ -8,6 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.GameScene;
+import de.amr.pacmanfx.engine.GameSceneConfig;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
