@@ -40,7 +40,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.engine.runtime.action.GameAction.runAction;
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**

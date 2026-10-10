@@ -12,6 +12,8 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
+
 public final class ContextMenuSupport {
 
     private ContextMenuSupport() {}
@@ -52,7 +54,7 @@ public final class ContextMenuSupport {
         Object... args)
     {
         var item = new MenuItem(translator.translate(globalAssetsKey, args));
-        item.setOnAction(_ -> GameAction.runAction(action, context));
+        item.setOnAction(_ -> runAction(action, context));
         return add(menu, item);
     }
 

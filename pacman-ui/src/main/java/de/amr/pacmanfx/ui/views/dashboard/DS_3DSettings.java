@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
@@ -17,7 +17,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.engine.runtime.action.GameAction.runAction;
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 
 /**
  * Infobox with 3D related settings.

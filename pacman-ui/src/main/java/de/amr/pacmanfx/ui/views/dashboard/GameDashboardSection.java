@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
+
 public class GameDashboardSection extends DashboardSection implements DashboardSectionCreator<GameDashboardSection> {
 
     public static final String NO_INFO = "n/a";
@@ -57,6 +59,6 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected void setGameAction(GameActionContext actionContext, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> GameAction.runAction(gameAction, actionContext));
+        button.setOnAction(_ -> runAction(gameAction, actionContext));
     }
 }

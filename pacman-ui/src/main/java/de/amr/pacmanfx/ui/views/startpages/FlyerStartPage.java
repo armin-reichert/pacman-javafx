@@ -8,7 +8,6 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -27,6 +26,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
@@ -118,7 +118,7 @@ public class FlyerStartPage implements StartPage {
     protected GameStartButton createStartButton(GameActionContext actionContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            GameAction.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
+            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);

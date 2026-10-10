@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -25,6 +24,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
+
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -80,7 +81,7 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            GameAction.runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), actionContext);
+            runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), actionContext);
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();

@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
+
 public interface ActionBindingsRegistry extends Disposable {
 
     ActionBindingsRegistry NO_BINDINGS = new EmptyActionBindingsRegistry();
@@ -24,7 +26,7 @@ public interface ActionBindingsRegistry extends Disposable {
 
     default Optional<GameAction> executeMatchingAction(GameActionContext context) {
         final Optional<GameAction> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
-        matchingAction.ifPresent(action -> GameAction.runAction(action, context));
+        matchingAction.ifPresent(action -> runAction(action, context));
         return matchingAction;
     }
 
