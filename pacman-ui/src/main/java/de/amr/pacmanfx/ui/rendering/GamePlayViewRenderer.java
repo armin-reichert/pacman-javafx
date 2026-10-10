@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.beans.property.ObjectProperty;
@@ -27,15 +26,15 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, GameActionContext actionContext, AbstractGameScene gameScene) {
+    public static void render(GamePlayView playView, RenderManager renderManager, GameActionContext actionContext, AbstractGameScene gameScene) {
         requireNonNull(playView);
+        requireNonNull(renderManager);
         requireNonNull(actionContext);
         requireNonNull(gameScene);
 
-        final RenderManager renderManager = actionContext.renderManager();
-        final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
         final GameViewModel viewModel = actionContext.ui().viewModel();
-        final boolean debugMode = viewModel.debugModeOnProperty().get();
+
+        // --- Refill the render queue
 
         renderManager.clearRenderQueue();
 
@@ -53,43 +52,22 @@ public class GamePlayViewRenderer {
         gameScene.renderables().forEach(renderManager::addRenderable);
 
         // Debug mode rendering
+        final boolean debugMode = viewModel.debugModeOnProperty().get();
         if (debugMode) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
         }
 
+        // --- Update the renderers
         //TODO This should not be done in each render frame
-        updateRenderers(
-            renderManager,
-            viewModel,
-            runtime.playConfig().systems().actorSpriteAnimController(),
-            runtime.uiConfig().renderConfig(),
-            gameScene,
-            gameScene.view2D(),
-            playView.layers().miniViewLayer()
-        );
 
-        playView.layers().miniViewLayer().renderingSurface().fill(Color.BLACK);
+        final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final GameSceneView2D view2D = gameScene.view2D();
 
-        //TODO Rethink this (maybe add "clear canvas" command into queue?
-        if (gameScene.view2D() != null && gameScene.view2D().autoClearCanvas()) {
-            renderManager.variantRenderer().clearCanvas();
-        }
-
-        renderManager.renderFrame(actionContext.clock().currentTick(), debugMode);
-    }
-
-    private static void updateRenderers(
-        RenderManager renderManager,
-        GameViewModel viewModel,
-        ActorSpriteAnimController animController,
-        GameVariantRenderConfig renderConfig,
-        GameScene gameScene,
-        GameSceneView2D sceneRendering, // can be null!
-        MiniPlaySceneView miniView)
-    {
-        if (sceneRendering != null) { // A game scene that can be rendered in 2D
-            renderManager.setClipRect(sceneRendering.clipRect());
-            final RenderingSurface renderingSurface = sceneRendering.renderingSurface();
+        if (view2D != null) {
+            renderManager.setClipRect(view2D.clipRect());
+            final RenderingSurface renderingSurface = view2D.renderingSurface();
             if (renderingSurface != null) {
                 setRenderers(renderManager,
                     createVariantRenderer(
@@ -106,20 +84,28 @@ public class GamePlayViewRenderer {
                         viewModel.common2DSettings().canvasBackgroundColorProperty()
                     )
                 );
+                if (view2D.autoClearCanvas()) {
+                    renderManager.variantRenderer().clearCanvas();
+                }
             }
         }
-        else { // Assume game scene is 3D and mini view is active
+        else {
             setRenderers(renderManager,
                 createVariantRenderer(
                     renderConfig,
                     animController,
-                    miniView.renderingSurface(),
+                    playView.layers().miniViewLayer().renderingSurface(),
                     viewModel.common2DSettings().canvasBackgroundColorProperty()
                 ),
                 // No debug rendering in mini view
                 null
             );
+            playView.layers().miniViewLayer().renderingSurface().fill(Color.BLACK);
         }
+
+        // --- Render everything
+
+        renderManager.renderFrame(actionContext.clock().currentTick(), debugMode);
     }
 
     private static void setRenderers(RenderManager renderManager, Renderer variantRenderer, Renderer debugRenderer) {
@@ -151,5 +137,4 @@ public class GamePlayViewRenderer {
         renderer.scalingProperty().bind(renderingSurface.scalingProperty());
         return renderer;
     }
-
 }

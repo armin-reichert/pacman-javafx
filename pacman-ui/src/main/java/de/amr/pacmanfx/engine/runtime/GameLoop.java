@@ -7,10 +7,12 @@ package de.amr.pacmanfx.engine.runtime;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import org.tinylog.Logger;
 
@@ -68,12 +70,13 @@ public final class GameLoop {
         clock.stop();
     }
 
-    private void render(PacManGamesEngineImpl engine) {
-        if (engine.ui().viewManager().isSelected(GameViewID.GAMEPLAY)) {
-            final GameScene currentGameScene = engine.gameSceneManager().currentGameScene();
-            final GamePlayView playView = engine.ui().viewManager().gamePlayView();
+    private void render(GameActionContext actionContext) {
+        final GameViewManager viewManager = actionContext.ui().viewManager();
+        if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
+            final GamePlayView playView = viewManager.gamePlayView();
+            final GameScene currentGameScene = actionContext.gameSceneManager().currentGameScene();
             if (currentGameScene instanceof AbstractGameScene abstractGameScene) {
-                GamePlayViewRenderer.render(playView, engine, abstractGameScene);
+                GamePlayViewRenderer.render(playView, actionContext.renderManager(), actionContext, abstractGameScene);
             }
             playView.update();
         }
