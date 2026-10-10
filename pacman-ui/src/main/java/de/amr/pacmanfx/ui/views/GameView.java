@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.runtime.action.QuitHandler;
@@ -34,5 +33,5 @@ public interface GameView extends QuitHandler {
 
     void onExit();
 
-    void connectEngine(PacManGamesEngine engine);
+    void setActionContext(GameActionContext actionContext);
 }

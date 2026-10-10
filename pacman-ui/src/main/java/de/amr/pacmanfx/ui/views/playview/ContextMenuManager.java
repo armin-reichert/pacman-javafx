@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import javafx.event.EventHandler;
@@ -23,11 +23,11 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final PacManGamesEngineImpl engine;
+    private final GameActionContext actionContext;
 
-    public ContextMenuManager(PacManGamesEngineImpl engine) {
-        this.engine = requireNonNull(engine);
-        engine.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+    public ContextMenuManager(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
+        actionContext.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
@@ -40,13 +40,13 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
         contextMenu.getItems().clear();
 
-        engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = engine.translationManager();
+        actionContext.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
+            final TranslationManager translations = actionContext.translationManager();
             // Add 2D play scene-specific entries
-            if (engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (actionContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(
-                    engine,
+                    actionContext,
                     contextMenu,
                     translations,
                     CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(),
@@ -57,7 +57,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(engine.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
+            contextMenu.show(actionContext.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }

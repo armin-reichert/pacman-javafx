@@ -43,7 +43,7 @@ public final class GameViewManager {
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.connectEngine(engine));
+        views.values().forEach(gameView -> gameView.setActionContext(engine));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {

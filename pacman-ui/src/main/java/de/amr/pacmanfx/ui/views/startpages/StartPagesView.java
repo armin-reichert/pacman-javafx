@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -30,7 +28,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private PacManGamesEngineImpl engine;
+    private GameActionContext actionContext;
 
     private final Carousel carousel;
 
@@ -66,16 +64,13 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void connectEngine(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal game engine " + engine);
-        }
-        this.engine = engineImpl;
+    public void setActionContext(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
     }
 
     @Override
     public GameActionContext actionContext() {
-        return engine;
+        return actionContext;
     }
 
     @Override
@@ -140,6 +135,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return engine != null ? engine.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return actionContext != null ? actionContext.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

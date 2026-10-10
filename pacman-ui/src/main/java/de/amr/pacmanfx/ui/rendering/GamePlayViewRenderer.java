@@ -32,8 +32,6 @@ public class GamePlayViewRenderer {
         requireNonNull(actionContext);
         requireNonNull(gameScene);
 
-        final GameViewModel viewModel = actionContext.ui().viewModel();
-
         // --- Refill the render queue
 
         renderManager.clearRenderQueue();
@@ -51,13 +49,15 @@ public class GamePlayViewRenderer {
         // Game scene content
         gameScene.renderables().forEach(renderManager::addRenderable);
 
-        // Debug mode rendering
+        // Debug mode rendering?
+        final GameViewModel viewModel = actionContext.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
         if (debugMode) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
         }
 
         // --- Update the renderers
+
         //TODO This should not be done in each render frame
 
         final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
@@ -66,7 +66,6 @@ public class GamePlayViewRenderer {
         final GameSceneView2D view2D = gameScene.view2D();
 
         if (view2D != null) {
-            renderManager.setClipRect(view2D.clipRect());
             final RenderingSurface renderingSurface = view2D.renderingSurface();
             if (renderingSurface != null) {
                 setRenderers(renderManager,
@@ -87,6 +86,7 @@ public class GamePlayViewRenderer {
                 if (view2D.autoClearCanvas()) {
                     renderManager.variantRenderer().clearCanvas();
                 }
+                renderManager.setClipRect(view2D.clipRect());
             }
         }
         else {

@@ -6,8 +6,6 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
@@ -49,7 +47,7 @@ public class GamePlayView implements GameView {
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private PacManGamesEngineImpl engine;
+    private GameActionContext actionContext;
 
     private ContextMenuManager contextMenuManager;
 
@@ -112,8 +110,8 @@ public class GamePlayView implements GameView {
 
         // Level changed: adjust game scene size by reembedding
         layers.gameSceneLayer().embedGameScene(
-            engine.ui(),
-            engine.gameVariantManager().currentRuntime().uiConfig(),
+            actionContext.ui(),
+            actionContext.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
@@ -132,34 +130,11 @@ public class GamePlayView implements GameView {
         nextGameScene.onBeforeEmbedded();
 
         layers.gameSceneLayer().embedGameScene(
-            engine.ui(),
-            engine.gameVariantManager().currentRuntime().uiConfig(),
+            actionContext.ui(),
+            actionContext.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
-    }
-
-    private void setEngine(PacManGamesEngine engine) {
-        if (!(engine instanceof PacManGamesEngineImpl engineImpl)) {
-            throw new IllegalArgumentException("Illegal game engine " + engine);
-        }
-        this.engine = engineImpl;
-
-        final GameViewModel viewModel = this.engine.ui().viewModel();
-        final GameMainScene mainScene = this.engine.ui().window().mainScene();
-
-        contextMenuManager = new ContextMenuManager(this.engine);
-        root.setOnContextMenuRequested(contextMenuManager);
-
-        dashboard.setExecutionContext(this.engine);
-
-        layers.miniViewLayer().setViewModel(viewModel);
-        layers.iconLayer().visibleProperty().bind(this.engine.clock().updatesDisabledProperty());
-        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
-        viewModel.debugModeOnProperty().addListener(
-            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
-
-        installMainSceneResizeHandler(mainScene);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -167,8 +142,27 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void connectEngine(PacManGamesEngine engine) {
-        setEngine(engine);
+    public void setActionContext(GameActionContext actionContext) {
+        this.actionContext = actionContext;
+
+        final GameViewModel viewModel = actionContext.ui().viewModel();
+        final GameMainScene mainScene = actionContext.ui().window().mainScene();
+
+        contextMenuManager = new ContextMenuManager(actionContext);
+        root.setOnContextMenuRequested(contextMenuManager);
+
+        dashboard.setExecutionContext(actionContext);
+
+        layers.miniViewLayer().setViewModel(viewModel);
+
+        layers.iconLayer().visibleProperty().bind(actionContext.clock().updatesDisabledProperty());
+
+        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
+
+        viewModel.debugModeOnProperty().addListener(
+            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
+
+        installMainSceneResizeHandler(mainScene);
     }
 
     @Override
@@ -178,7 +172,7 @@ public class GamePlayView implements GameView {
 
     @Override
     public GameActionContext actionContext() {
-        return engine;
+        return actionContext;
     }
 
     @Override
@@ -191,25 +185,25 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onExit() {
-        engine.suspendGame();
-        engine.soundManager().stopAll();
-        engine.soundManager().voice().stop();
+        actionContext.engineLife().suspendGame();
+        actionContext.soundManager().stopAll();
+        actionContext.soundManager().voice().stop();
         actionBindings.dispose();
         layers.gameSceneLayer().uninstallKeyBindings();
     }
 
     @Override
     public void onQuit() {
-        engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        engine.ui().viewManager().selectStartPagesView();
+        actionContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
+        actionContext.ui().viewManager().selectStartPagesView();
     }
 
     @Override
     public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (actionBindings.executeMatchingAction(engine).isEmpty()) {
-            engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+        if (actionBindings.executeMatchingAction(actionContext).isEmpty()) {
+            actionContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -227,12 +221,12 @@ public class GamePlayView implements GameView {
 
     private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
-            dashboard.update(engine);
+            dashboard.update(actionContext);
         }
     }
 
     private void updateMiniView() {
-        final boolean playScene3DActive = engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        final boolean playScene3DActive = actionContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         layers.miniViewLayer().update(playScene3DActive);
     }
 
