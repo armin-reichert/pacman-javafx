@@ -28,7 +28,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameEngineContext actionContext;
+    private GameEngineContext engineContext;
 
     private final Carousel carousel;
 
@@ -65,12 +65,12 @@ public class StartPagesView implements GameView {
 
     @Override
     public void setEngineContext(GameEngineContext engineContext) {
-        this.actionContext = requireNonNull(engineContext);
+        this.engineContext = requireNonNull(engineContext);
     }
 
     @Override
-    public GameEngineContext actionContext() {
-        return actionContext;
+    public GameEngineContext engineContext() {
+        return engineContext;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(GameEngineContext actionContext, StartPage startPage) {
+    public void addStartPage(GameEngineContext engineContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");
@@ -115,7 +115,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setEngineContext(actionContext);
+        startPage.setEngineContext(engineContext);
     }
 
     // Private area
@@ -135,6 +135,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return actionContext != null ? actionContext.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return engineContext != null ? engineContext.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

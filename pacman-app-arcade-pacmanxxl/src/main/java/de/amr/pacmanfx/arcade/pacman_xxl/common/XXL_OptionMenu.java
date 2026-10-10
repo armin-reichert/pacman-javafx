@@ -37,7 +37,7 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
-    private GameEngineContext actionContext;
+    private GameEngineContext engineContext;
 
     private final Timeline chaseAnimationTimer;
     private XXL_ChaseAnimation chaseAnimation;
@@ -69,7 +69,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
             if (animationDirty) {
-                final var runtime = actionContext.gameVariantManager().currentRuntime();
+                final var runtime = engineContext.gameVariantManager().currentRuntime();
                 stopChaseAnimation();
                 createNewChaseAnimation(runtime, canvas);
                 animationDirty = false;
@@ -108,11 +108,11 @@ public class XXL_OptionMenu extends OptionMenu {
         );
     }
 
-    public void init(GameEngineContext actionContext) {
-        this.actionContext = actionContext;
+    public void init(GameEngineContext engineContext) {
+        this.engineContext = engineContext;
 
-        final String variantName = actionContext.gameVariantManager().currentVariantName();
-        final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
+        final String variantName = engineContext.gameVariantManager().currentVariantName();
+        final GameVariantRuntime runtime = engineContext.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
@@ -121,27 +121,27 @@ public class XXL_OptionMenu extends OptionMenu {
         }
         xxlMapManager.loadMapPrototypes();
 
-        actionContext.engineLife().newGameSession();
+        engineContext.engineLife().newGameSession();
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
-        meView3DEnabled.setValue(actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
-        meCutScenesEnabled.setValue(actionContext.currentGame().session().cutScenesEnabled());
+        meView3DEnabled.setValue(engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
+        meCutScenesEnabled.setValue(engineContext.currentGame().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
         meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(actionContext.soundManager().muteProperty().not());
+        soundEnabledProperty().bind(engineContext.soundManager().muteProperty().not());
 
-        scaling = computeScalingValue(actionContext.ui().window().stage().heightProperty());
+        scaling = computeScalingValue(engineContext.ui().window().stage().heightProperty());
 
-        actionContext.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
-            final GameVariantRuntime oldRuntime = actionContext.gameVariantManager().variantRuntimeByName(oldVariantName);
-            actionContext.engineLife().exitGameVariant(oldVariantName);
+        engineContext.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
+            final GameVariantRuntime oldRuntime = engineContext.gameVariantManager().variantRuntimeByName(oldVariantName);
+            engineContext.engineLife().exitGameVariant(oldVariantName);
 
-            final GameVariantRuntime newRuntime = actionContext.gameVariantManager().variantRuntimeByName(newVariantName);
-            actionContext.engineLife().enterGameVariant(newVariantName);
+            final GameVariantRuntime newRuntime = engineContext.gameVariantManager().variantRuntimeByName(newVariantName);
+            engineContext.engineLife().enterGameVariant(newVariantName);
             restartChaseAnimation(newRuntime);
         });
     }
@@ -202,15 +202,15 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
-        actionContext.gameVariantManager().selectVariant(newID.name());
+        engineContext.gameVariantManager().selectVariant(newID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty().set(newValue);
+        engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        actionContext.currentGame().session().setCutScenesEnabled(newValue);
+        engineContext.currentGame().session().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

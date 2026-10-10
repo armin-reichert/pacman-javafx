@@ -19,11 +19,11 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    void load(GameEngineContext actionContext);
+    void load(GameEngineContext engineContext);
 
-    void unload(GameEngineContext actionContext);
+    void unload(GameEngineContext engineContext);
 
-    default Map<Named, Object> createExtensions(GameEngineContext actionContext) {
+    default Map<Named, Object> createExtensions(GameEngineContext engineContext) {
         return Map.of();
     }
 

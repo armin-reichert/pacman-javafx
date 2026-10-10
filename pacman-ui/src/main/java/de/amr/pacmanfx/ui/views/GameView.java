@@ -17,10 +17,12 @@ public interface GameView extends QuitHandler {
 
     ActionBindingsRegistry<GameEngineContext> actionBindings();
 
-    GameEngineContext actionContext();
+    void setEngineContext(GameEngineContext engineContext);
+
+    GameEngineContext engineContext();
 
     default void onInput(Input input) {
-        actionContext().executeMatchingAction(actionBindings());
+        engineContext().executeMatchingAction(actionBindings());
     }
 
     Node rootPane();
@@ -32,6 +34,4 @@ public interface GameView extends QuitHandler {
     void onEnter();
 
     void onExit();
-
-    void setEngineContext(GameEngineContext engineContext);
 }

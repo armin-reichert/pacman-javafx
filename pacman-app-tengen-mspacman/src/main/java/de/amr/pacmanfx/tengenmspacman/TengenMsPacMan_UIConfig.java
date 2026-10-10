@@ -94,28 +94,28 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(GameEngineContext actionContext) {
+    public void load(GameEngineContext engineContext) {
         assets = new AssetMap();
         assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
         assets.addAsset("startpage.image2", RM.loadImage("graphics/flyer-page-2.png"));
         assets.freeze();
 
-        loadSounds(actionContext.soundManager());
+        loadSounds(engineContext.soundManager());
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
     }
 
     @Override
-    public Map<Named, Object> createExtensions(GameEngineContext actionContext) {
+    public Map<Named, Object> createExtensions(GameEngineContext engineContext) {
         return Map.of(
-            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(actionContext),
-            EXT_ACTIONS,     new TengenMsPacMan_Actions(actionContext.input().joypad(), CommonGameActions.instance())
+            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engineContext),
+            EXT_ACTIONS,     new TengenMsPacMan_Actions(engineContext.input().joypad(), CommonGameActions.instance())
         );
     }
 
     @Override
-    public void unload(GameEngineContext actionContext) {
-        unloadSounds(actionContext.soundManager());
+    public void unload(GameEngineContext engineContext) {
+        unloadSounds(engineContext.soundManager());
         dispose();
     }
 

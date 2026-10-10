@@ -63,8 +63,8 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(GameEngineContext actionContext) {
-        updateStageIcon(actionContext);
+    public void show(GameEngineContext engineContext) {
+        updateStageIcon(engineContext);
         stage.centerOnScreen();
         stage.show();
     }
@@ -117,8 +117,8 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(GameEngineContext actionContext) {
-        final Image icon = actionContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
+    private void updateStageIcon(GameEngineContext engineContext) {
+        final Image icon = engineContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -140,20 +140,20 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameEngineContext actionContext, boolean paused, boolean is3D) {
-        final String gameVariantName = actionContext.gameVariantManager().currentVariantName();
+    private String stageTitle(GameEngineContext engineContext, boolean paused, boolean is3D) {
+        final String gameVariantName = engineContext.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = actionContext.translationManager().translate(is3D ?
+        final String viewModeKey = engineContext.translationManager().translate(is3D ?
             "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = actionContext.gameVariantManager().currentRuntime().uiConfig().translations();
+        final TranslationManager variantTranslations = engineContext.gameVariantManager().currentRuntime().uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

@@ -111,11 +111,11 @@ public class PacManGameEngineBuilder {
         }
     }
 
-    private void addStartPages(GameEngineContext actionContext, StartPagesView startPagesView) {
+    private void addStartPages(GameEngineContext engineContext, StartPagesView startPagesView) {
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addStartPage(actionContext, page);
+                startPagesView.addStartPage(engineContext, page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }

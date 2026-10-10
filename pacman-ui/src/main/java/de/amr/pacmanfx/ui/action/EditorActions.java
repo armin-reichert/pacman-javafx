@@ -49,9 +49,9 @@ public class EditorActions {
 
         return new GameAction<>("edit_map_file") {
             @Override
-            public void execute(GameEngineContext actionContext) {
-                openMapEditor(actionContext).ifPresent(editor -> {
-                    startEditor(actionContext, editor);
+            public void execute(GameEngineContext engineContext) {
+                openMapEditor(engineContext).ifPresent(editor -> {
+                    startEditor(engineContext, editor);
                     if (mapFile != null) {
                         try {
                             editor.editFile(mapFile);
@@ -75,17 +75,17 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(GameEngineContext actionContext, TileMapEditor editor) {
-        actionContext.engineLife().suspendGame();
+    private void startEditor(GameEngineContext engineContext, TileMapEditor editor) {
+        engineContext.engineLife().suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(GameEngineContext actionContext) {
-        final GameUI ui = actionContext.ui();
+    private Optional<TileMapEditor> openMapEditor(GameEngineContext engineContext) {
+        final GameUI ui = engineContext.ui();
         final EditorView editorView = ui.viewManager().reqView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(actionContext);
-        if (!ui.viewManager().trySelectEditorView(actionContext)) {
+        editorView.ensureEditorCreated(engineContext);
+        if (!ui.viewManager().trySelectEditorView(engineContext)) {
             ui.shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }

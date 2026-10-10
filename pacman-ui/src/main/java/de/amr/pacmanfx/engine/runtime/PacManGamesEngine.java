@@ -134,7 +134,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
         currentGame = null;
     }
 
-    // Interface GameActionContext
+    // Interface GameEngineContext
 
     @Override
     public GameClock clock() {

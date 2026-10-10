@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 public class TengenMsPacMan_UISettings {
 
     // Signature needed for cartridge
-    public TengenMsPacMan_UISettings(GameEngineContext actionContext) {}
+    public TengenMsPacMan_UISettings(GameEngineContext engineContext) {}
 
     public final BooleanProperty joypadBindingsDisplayed = new SimpleBooleanProperty(false);
 

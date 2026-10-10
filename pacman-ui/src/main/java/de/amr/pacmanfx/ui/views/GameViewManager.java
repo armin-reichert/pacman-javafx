@@ -132,13 +132,13 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(GameEngineContext actionContext) {
-        requireNonNull(actionContext);
+    public boolean trySelectEditorView(GameEngineContext engineContext) {
+        requireNonNull(engineContext);
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (canOpenEditor(actionContext)) {
+        if (canOpenEditor(engineContext)) {
             currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
@@ -148,12 +148,12 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(GameEngineContext actionContext) {
+    private boolean canOpenEditor(GameEngineContext engineContext) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !actionContext.currentGame().session().isGameRunning();
+            return !engineContext.currentGame().session().isGameRunning();
         }
         return false;
     }

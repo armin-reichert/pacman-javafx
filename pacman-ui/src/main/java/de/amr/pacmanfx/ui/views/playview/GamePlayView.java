@@ -100,8 +100,8 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(GameEngineContext actionContext) {
-        layers.helpLayer().showHelpPopup(actionContext, 2, actionContext.gameVariantManager().currentVariantName());
+    public void showHelp(GameEngineContext engineContext) {
+        layers.helpLayer().showHelpPopup(engineContext, 2, engineContext.gameVariantManager().currentVariantName());
     }
 
     public void acceptLevel(GameScene currentGameScene, GameLevel level) {
@@ -175,7 +175,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public GameEngineContext actionContext() {
+    public GameEngineContext engineContext() {
         return engineContext;
     }
 

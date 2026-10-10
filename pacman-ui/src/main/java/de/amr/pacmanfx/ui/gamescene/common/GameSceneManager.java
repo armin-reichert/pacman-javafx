@@ -62,15 +62,15 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(GameEngineContext actionContext) {
-        updateGameSceneAndForceReload(actionContext, true);
+    public void forceGameSceneUpdate(GameEngineContext engineContext) {
+        updateGameSceneAndForceReload(engineContext, true);
     }
 
-    public void updateGameSceneAndForceReload(GameEngineContext actionContext, boolean forceReload) {
-        final GameVariantUIConfig uiConfig = actionContext.gameVariantManager().currentRuntime().uiConfig();
-        final GameSession session = actionContext.currentGame().session();
-        final boolean select3D = actionContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(actionContext.currentGame(), select3D).orElse(null);
+    public void updateGameSceneAndForceReload(GameEngineContext engineContext, boolean forceReload) {
+        final GameVariantUIConfig uiConfig = engineContext.gameVariantManager().currentRuntime().uiConfig();
+        final GameSession session = engineContext.currentGame().session();
+        final boolean select3D = engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(engineContext.currentGame(), select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -79,7 +79,7 @@ public class GameSceneManager {
             throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
 
-        nextScene.setEngineContext(actionContext);
+        nextScene.setEngineContext(engineContext);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
@@ -88,9 +88,9 @@ public class GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
         nextGameScene.activate();
-        actionContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
+        engineContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, actionContext.currentGame(), currentGameScene(), nextScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, engineContext.currentGame(), currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }

@@ -26,13 +26,13 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(GameEngineContext actionContext) {
-        final GameContext game = actionContext.currentGame();
+    public static HelpInfo build(GameEngineContext engineContext) {
+        final GameContext game = engineContext.currentGame();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
 
-        final HelpInfo helpInfo = new HelpInfo(actionContext);
+        final HelpInfo helpInfo = new HelpInfo(engineContext);
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             helpInfo.addInfoForIntroScene();
         }
@@ -53,20 +53,20 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final GameEngineContext actionContext;
+    private final GameEngineContext engineContext;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(GameEngineContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public HelpInfo(GameEngineContext engineContext) {
+        this.engineContext = requireNonNull(engineContext);
     }
 
     private String translate(String key, Object... args) {
-        return actionContext.translationManager().translate(key, args);
+        return engineContext.translationManager().translate(key, args);
     }
 
-    public Pane createPane(GameEngineContext actionContext, Color backgroundColor, Font font) {
+    public Pane createPane(GameEngineContext engineContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -82,7 +82,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext game = actionContext.currentGame();
+        final GameContext game = engineContext.currentGame();
         final GameCheats cheats = game.session().cheats();
 
         // add default entries:

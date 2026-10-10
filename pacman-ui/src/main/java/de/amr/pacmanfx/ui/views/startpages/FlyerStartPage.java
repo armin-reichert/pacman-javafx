@@ -46,7 +46,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected GameEngineContext actionContext;
+    protected GameEngineContext engineContext;
 
     protected AbstractGameScene gameScene;
 
@@ -74,30 +74,30 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (actionContext != null) {
-                actionContext.soundManager().voice().stop();
-                actionContext.ui().shortMessage(actionContext.translationManager().translate("flash.shut_up"));
+            if (engineContext != null) {
+                engineContext.soundManager().voice().stop();
+                engineContext.ui().shortMessage(engineContext.translationManager().translate("flash.shut_up"));
             }
         }
     }
 
     @Override
     public void setEngineContext(GameEngineContext engineContext) {
-        this.actionContext = requireNonNull(engineContext);
+        this.engineContext = requireNonNull(engineContext);
         init(engineContext, config.gameVariant());
     }
 
     @Override
     public void onEnter() {
-        actionContext.gameVariantManager().selectVariant(gameVariantName);
+        engineContext.gameVariantManager().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        actionContext.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        engineContext.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        actionContext.soundManager().voice().stop();
+        engineContext.soundManager().voice().stop();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(GameEngineContext actionContext, String gameVariantName) {
+    private void init(GameEngineContext engineContext, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;
@@ -145,6 +145,6 @@ public class FlyerStartPage implements StartPage {
             }
         });
 
-        startButton = createStartButton(actionContext);
+        startButton = createStartButton(engineContext);
     }
 }

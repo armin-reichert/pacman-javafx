@@ -26,19 +26,19 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, GameEngineContext actionContext, GameScene gameScene) {
+    public static void render(GamePlayView playView, GameEngineContext engineContext, GameScene gameScene) {
         requireNonNull(playView);
-        requireNonNull(actionContext);
+        requireNonNull(engineContext);
         requireNonNull(gameScene);
 
-        final RenderManager renderManager = actionContext.renderManager();
+        final RenderManager renderManager = engineContext.renderManager();
 
         // --- Refill the render queue
 
         renderManager.clearRenderQueue();
 
         // HUD
-        final GameSession session = actionContext.currentGame().session();
+        final GameSession session = engineContext.currentGame().session();
         if (session.isHUDVisible()) {
             GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
                 .forEach(renderManager::addRenderable);
@@ -51,7 +51,7 @@ public class GamePlayViewRenderer {
         gameScene.renderables().forEach(renderManager::addRenderable);
 
         // Debug mode rendering?
-        final GameViewModel viewModel = actionContext.ui().viewModel();
+        final GameViewModel viewModel = engineContext.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
         if (debugMode) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
@@ -65,7 +65,7 @@ public class GamePlayViewRenderer {
 
         //TODO This should not be done in each render frame
 
-        final GameVariantRuntime runtime = actionContext.gameVariantManager().currentRuntime();
+        final GameVariantRuntime runtime = engineContext.gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final GameSceneView2D view2D = abstractGameScene.view2D();
@@ -110,7 +110,7 @@ public class GamePlayViewRenderer {
 
         // --- Render everything
 
-        renderManager.renderFrame(actionContext.clock().currentTick(), debugMode);
+        renderManager.renderFrame(engineContext.clock().currentTick(), debugMode);
     }
 
     private static void setRenderers(RenderManager renderManager, Renderer variantRenderer, Renderer debugRenderer) {

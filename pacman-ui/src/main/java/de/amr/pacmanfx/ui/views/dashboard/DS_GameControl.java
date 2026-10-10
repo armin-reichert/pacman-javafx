@@ -105,10 +105,10 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(game.playConfig().rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
-    private boolean canStartLevel(GameEngineContext actionContext, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(actionContext.gameVariantManager().currentVariantName());
+    private boolean canStartLevel(GameEngineContext engineContext, AbstractGameState gameState) {
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(engineContext.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !actionContext.currentGame().coinMechanism().isEmpty()
+        return !engineContext.currentGame().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 
