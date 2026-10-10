@@ -103,6 +103,7 @@ public class GameScenePane extends StackPane {
 
     private void embedDecoratedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsVM settingsViewModel) {
         final GameSceneView2D view2D = gameScene.assertComponent(GameSceneView2D.class);
+        final Color bgColor = settingsViewModel.canvasBackgroundColorProperty().get();
         final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);
 
         framedContainer.newRenderingSurface(); //TODO check if creating a new canvas is needed
@@ -116,7 +117,7 @@ public class GameScenePane extends StackPane {
         framedContainer.renderingSurface().scalingProperty().bind(framedContainer.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
-        framedContainer.renderingSurface().clear();
+        framedContainer.renderingSurface().fill(bgColor);
         framedContainer.stretchTo(availableWidth.doubleValue(), availableHeight.doubleValue());
 
         view2D.setRenderingSurface(framedContainer.renderingSurface());

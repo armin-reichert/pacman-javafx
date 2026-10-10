@@ -75,7 +75,6 @@ public class MiniPlaySceneView {
         this.viewModel = requireNonNull(viewModel);
 
         renderingSurface.canvas().heightProperty().bind(viewModel.miniViewSettings().heightProperty);
-        renderingSurface.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
 
         root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
         root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));

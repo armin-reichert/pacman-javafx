@@ -20,6 +20,8 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
@@ -66,8 +68,7 @@ public class GamePlayViewRenderer {
             playView.layers().miniViewLayer()
         );
 
-        // Clear canvases
-        playView.layers().miniViewLayer().renderingSurface().clear();
+        playView.layers().miniViewLayer().renderingSurface().fill(Color.BLACK);
 
         //TODO Rethink this (maybe add "clear canvas" command into queue?
         if (gameScene.view2D() != null && gameScene.view2D().autoClearCanvas()) {
@@ -86,31 +87,69 @@ public class GamePlayViewRenderer {
         GameSceneView2D sceneRendering, // can be null!
         MiniPlaySceneView miniView)
     {
-        if (sceneRendering != null) {
-            // A game scene that can be rendered in 2D
+        if (sceneRendering != null) { // A game scene that can be rendered in 2D
             renderManager.setClipRect(sceneRendering.clipRect());
-            final RenderingSurface sceneRenderingSurface = sceneRendering.renderingSurface();
-            if (sceneRenderingSurface != null) {
-                final Renderer variantRenderer = renderConfig.createVariantRenderer(animController, sceneRenderingSurface.canvas());
-                variantRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
-                variantRenderer.scalingProperty().bind(sceneRenderingSurface.scalingProperty());
-                renderManager.setVariantRenderer(variantRenderer);
-
-                final Renderer debugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneRenderingSurface.canvas());
-                debugRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
-                debugRenderer.scalingProperty().bind(sceneRenderingSurface.scalingProperty());
-                renderManager.setDebugRenderer(debugRenderer);
+            final RenderingSurface renderingSurface = sceneRendering.renderingSurface();
+            if (renderingSurface != null) {
+                setRenderers(renderManager,
+                    createVariantRenderer(
+                        renderConfig,
+                        animController,
+                        renderingSurface,
+                        viewModel.common2DSettings().canvasBackgroundColorProperty()
+                    ),
+                    createDebugRenderer(
+                        gameScene,
+                        renderConfig,
+                        animController,
+                        renderingSurface,
+                        viewModel.common2DSettings().canvasBackgroundColorProperty()
+                    )
+                );
             }
         }
-        else {
-            // Assume game scene is 3D scene and mini view is active
-            final Renderer variantRenderer = renderConfig.createVariantRenderer(animController, miniView.renderingSurface().canvas());
-            variantRenderer.backgroundColorProperty().bind(miniView.renderingSurface().backgroundColorProperty());
-            variantRenderer.scalingProperty().bind(miniView.renderingSurface().scalingProperty());
-            renderManager.setVariantRenderer(variantRenderer);
-
-            // No debug rendering in mini view
-            renderManager.setDebugRenderer(null);
+        else { // Assume game scene is 3D and mini view is active
+            setRenderers(renderManager,
+                createVariantRenderer(
+                    renderConfig,
+                    animController,
+                    miniView.renderingSurface(),
+                    viewModel.common2DSettings().canvasBackgroundColorProperty()
+                ),
+                // No debug rendering in mini view
+                null
+            );
         }
     }
+
+    private static void setRenderers(RenderManager renderManager, Renderer variantRenderer, Renderer debugRenderer) {
+        renderManager.setVariantRenderer(variantRenderer);
+        renderManager.setDebugRenderer(debugRenderer);
+    }
+
+    private static Renderer createVariantRenderer(
+        GameVariantRenderConfig renderConfig,
+        ActorSpriteAnimController animController,
+        RenderingSurface renderingSurface,
+        ObjectProperty<Color> backgroundColorProperty)
+    {
+        final Renderer renderer = renderConfig.createVariantRenderer(animController, renderingSurface.canvas());
+        renderer.backgroundColorProperty().bind(backgroundColorProperty);
+        renderer.scalingProperty().bind(renderingSurface.scalingProperty());
+        return renderer;
+    }
+
+    private static Renderer createDebugRenderer(
+        GameScene gameScene,
+        GameVariantRenderConfig renderConfig,
+        ActorSpriteAnimController animController,
+        RenderingSurface renderingSurface,
+        ObjectProperty<Color> backgroundColorProperty)
+    {
+        final Renderer renderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, renderingSurface.canvas());
+        renderer.backgroundColorProperty().bind(backgroundColorProperty);
+        renderer.scalingProperty().bind(renderingSurface.scalingProperty());
+        return renderer;
+    }
+
 }
