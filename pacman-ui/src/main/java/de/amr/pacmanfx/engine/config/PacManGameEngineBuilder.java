@@ -7,7 +7,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.Cartridge;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -96,11 +96,11 @@ public class PacManGameEngineBuilder {
         return this;
     }
 
-    public Optional<PacManGamesEngineImpl> buildEngine() {
+    public Optional<PacManGamesEngine> buildEngine() {
         try {
             validateConfigurationData();
 
-            final var engine = new PacManGamesEngineImpl();
+            final var engine = new PacManGamesEngine();
             engine.playStation().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);

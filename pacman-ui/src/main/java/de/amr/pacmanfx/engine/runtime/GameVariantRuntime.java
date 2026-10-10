@@ -30,7 +30,7 @@ public class GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(PlayStation playStation, Cartridge cartridge, PacManGamesEngineImpl engine)
+    public GameVariantRuntime(PlayStation playStation, Cartridge cartridge, PacManGamesEngine engine)
         throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         requireNonNull(playStation);

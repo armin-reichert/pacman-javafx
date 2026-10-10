@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -66,7 +66,7 @@ public class GameSceneManager {
         }
 
         //TODO This is crap and mus be changed
-        if (actionContext instanceof PacManGamesEngineImpl engine) {
+        if (actionContext instanceof PacManGamesEngine engine) {
             nextGameScene.setActionContext(engine);
         }
 

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.config.PacManGameEngineBuilder;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 
 public class PacManAllGamesApp extends Application {
 
-    private PacManGamesEngineImpl engine;
+    private PacManGamesEngine engine;
 
     private boolean includeTests;
 
@@ -50,18 +50,14 @@ public class PacManAllGamesApp extends Application {
             .window(stage)
             .screenArea(1.6, 0.8)
             .buildEngine()
-            .orElse(null);
+            .orElseThrow(IllegalStateException::new);
 
-        if (engine != null) {
-            engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
-            engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
-        }
+        engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
+        engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override
     public void stop() {
-        if (engine != null) {
-            engine.terminate();
-        }
+        engine.terminate();
     }
 }

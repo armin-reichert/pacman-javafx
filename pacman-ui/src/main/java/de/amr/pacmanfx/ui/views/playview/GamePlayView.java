@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;

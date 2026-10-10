@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
@@ -62,7 +62,7 @@ public class GameUI implements GameEventListener {
 
     private final GameUISettings uiSettings;
 
-    private PacManGamesEngineImpl engine;
+    private PacManGamesEngine engine;
 
     public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
         requireNonNull(stage);
@@ -79,7 +79,7 @@ public class GameUI implements GameEventListener {
         viewManager.registerView(GameViewID.EDITOR, new EditorView());
     }
 
-    public void connectEngine(PacManGamesEngineImpl engine, DashboardFactory dashboardFactory) {
+    public void connectEngine(PacManGamesEngine engine, DashboardFactory dashboardFactory) {
         this.engine = requireNonNull(engine);
 
         // Build dashboard

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -27,7 +27,7 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void connectEngine(PacManGamesEngineImpl engine) {
+    public void connectEngine(PacManGamesEngine engine) {
         requireNonNull(engine);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {

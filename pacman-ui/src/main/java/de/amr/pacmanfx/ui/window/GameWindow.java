@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngineImpl;
+import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -47,7 +47,7 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void connectEngine(PacManGamesEngineImpl engine) {
+    public void connectEngine(PacManGamesEngine engine) {
         mainScene.setGameApp(engine);
 
         titleBinding = createStageTitleBinding(engine);
@@ -83,7 +83,7 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(PacManGamesEngineImpl engine) {
+    private StringBinding createStageTitleBinding(PacManGamesEngine engine) {
         return createStringBinding(
             () -> switch (engine.ui().viewManager().currentViewID()) {
                 case null -> ""; // happens initially, don't mind
@@ -126,7 +126,7 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(PacManGamesEngineImpl engine) {
+    private String titleForCurrentGameScene(PacManGamesEngine engine) {
         final GameScene gameScene = engine.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = engine.ui().viewModel();
 
