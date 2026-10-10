@@ -32,17 +32,13 @@ public class TengenMsPacMan_App extends Application {
             .window(stage)
             .screenArea(NES_SCREEN_ASPECT_RATIO, 0.8)
             .buildEngine()
-            .orElse(null);
+            .orElseThrow(IllegalStateException::new);
 
-        if (engine != null) {
-            engine.showGameVariant(TENGEN_MS_PACMAN);
-        }
+        engine.showGameVariant(TENGEN_MS_PACMAN);
     }
 
     @Override
     public void stop() {
-        if (engine != null) {
-            engine.terminate();
-        }
+        engine.terminate();
     }
 }

@@ -31,18 +31,14 @@ public class PacManXXL_App extends Application {
             .window(stage)
             .screenArea(1.6, 0.8)
             .buildEngine()
-            .orElse(null);
+            .orElseThrow(IllegalStateException::new);
 
-        if (engine != null) {
-            engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
-            engine.showGameVariant(GameVariantID.ARCADE_PACMAN_XXL);
-        }
+        engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
+        engine.showGameVariant(GameVariantID.ARCADE_PACMAN_XXL);
     }
 
     @Override
     public void stop() {
-        if (engine != null) {
-            engine.terminate();
-        }
+        engine.terminate();
     }
 }

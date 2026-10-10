@@ -28,17 +28,13 @@ public class ArcadeMsPacMan_App extends Application {
             .window(stage)
             .screenArea(1.2, 0.8)
             .buildEngine()
-            .orElse(null);
+            .orElseThrow(IllegalStateException::new);
 
-        if (engine != null) {
-            engine.showGameVariant(GameVariantID.ARCADE_MS_PACMAN);
-        }
+        engine.showGameVariant(GameVariantID.ARCADE_MS_PACMAN);
     }
 
     @Override
     public void stop() {
-        if (engine != null) {
-            engine.terminate();
-        }
+        engine.terminate();
     }
 }
