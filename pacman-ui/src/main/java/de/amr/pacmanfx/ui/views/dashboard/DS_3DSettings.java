@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.GameScene;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;

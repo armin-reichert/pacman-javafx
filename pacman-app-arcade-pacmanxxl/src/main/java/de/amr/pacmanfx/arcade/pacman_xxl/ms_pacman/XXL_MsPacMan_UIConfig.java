@@ -18,7 +18,7 @@ import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
-import de.amr.pacmanfx.engine.GameSceneConfig;
+import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;

@@ -2,12 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine;
+package de.amr.pacmanfx.engine.gamescene;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
+import de.amr.pacmanfx.engine.QuitHandler;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;

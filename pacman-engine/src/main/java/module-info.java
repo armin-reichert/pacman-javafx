@@ -11,5 +11,6 @@ module de.amr.pacmanfx.engine {
     requires de.amr.pacmanfx.uilib;
 
     exports de.amr.pacmanfx.engine;
+    exports de.amr.pacmanfx.engine.gamescene;
     exports de.amr.pacmanfx.engine.input;
 }

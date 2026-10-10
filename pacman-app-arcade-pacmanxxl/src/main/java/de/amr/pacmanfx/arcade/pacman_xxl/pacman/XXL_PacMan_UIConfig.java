@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
-import de.amr.pacmanfx.engine.GameSceneConfig;
+import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;

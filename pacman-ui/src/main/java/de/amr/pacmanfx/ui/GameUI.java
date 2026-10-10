@@ -16,7 +16,7 @@ import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.GameScene;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;

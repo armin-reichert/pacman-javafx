@@ -6,6 +6,8 @@ package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

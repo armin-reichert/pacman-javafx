@@ -8,7 +8,7 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.engine.GameScene;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.beans.binding.StringBinding;
