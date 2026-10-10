@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.PacManGameEngineBuilder;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -30,18 +31,18 @@ public class PacManAllGamesApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
+        PlayStation.instance().insertCartridges(
+            ArcadePacMan_Cartridge.CARTRIDGE,
+            ArcadeMsPacMan_Cartridge.CARTRIDGE,
+            TengenMsPacMan_Cartridge.CARTRIDGE,
+            XXL_PacMan_Cartridge.CARTRIDGE,
+            XXL_MsPacMan_Cartridge.CARTRIDGE
+        );
     }
 
     @Override
     public void start(Stage stage) {
         engine = new PacManGameEngineBuilder()
-            .cartridges(
-                ArcadePacMan_Cartridge.CARTRIDGE,
-                ArcadeMsPacMan_Cartridge.CARTRIDGE,
-                TengenMsPacMan_Cartridge.CARTRIDGE,
-                XXL_PacMan_Cartridge.CARTRIDGE,
-                XXL_MsPacMan_Cartridge.CARTRIDGE
-            )
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(ArcadePacMan_StartPage::new)
             .startPage(ArcadeMsPacMan_StartPage::new)

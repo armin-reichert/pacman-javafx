@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.PacManGameEngineBuilder;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -19,9 +20,13 @@ public class TengenMsPacMan_App extends Application {
     private PacManGamesEngine engine;
 
     @Override
+    public void init() {
+        PlayStation.instance().insertCartridges(TengenMsPacMan_Cartridge.CARTRIDGE);
+    }
+
+    @Override
     public void start(Stage stage) {
         engine = new PacManGameEngineBuilder()
-            .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)

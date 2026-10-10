@@ -6,8 +6,6 @@ package de.amr.pacmanfx.engine.config;
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.engine.Cartridge;
-import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.GameActionContext;
 import de.amr.pacmanfx.ui.GameUI;
@@ -23,7 +21,9 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -32,8 +32,6 @@ import static java.util.Objects.requireNonNull;
  * Builder for constructing and configuring a Pac-Man game "engine".
  */
 public class PacManGameEngineBuilder {
-
-    private final Set<Cartridge> cartridgeSet = new HashSet<>();
 
     private GameUISettings uiSettings;
 
@@ -53,11 +51,6 @@ public class PacManGameEngineBuilder {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
         height = Math.min(600, (int) bounds.getHeight() * 2 / 3);
         width = height * 28 / 32;
-    }
-
-    public PacManGameEngineBuilder cartridges(Cartridge... cartridges) {
-        cartridgeSet.addAll(List.of(cartridges));
-        return this;
     }
 
     public PacManGameEngineBuilder size(int width, int height) {
@@ -98,7 +91,6 @@ public class PacManGameEngineBuilder {
     }
 
     public Optional<PacManGamesEngine> buildEngine() {
-        PlayStation.instance().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
         try {
             validateConfigurationData();
 
@@ -131,9 +123,6 @@ public class PacManGameEngineBuilder {
     }
 
     private void validateConfigurationData() {
-        if (cartridgeSet.isEmpty()) {
-            error("No cartridges have been inserted into game machine");
-        }
         if (stage == null) {
             error("No stage has been specified");
         }
