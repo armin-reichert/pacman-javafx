@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
@@ -83,9 +82,9 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setActionContext(GameEngineContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
-        init(actionContext, config.gameVariant());
+    public void setEngineContext(GameEngineContext engineContext) {
+        this.actionContext = requireNonNull(engineContext);
+        init(engineContext, config.gameVariant());
     }
 
     @Override
@@ -115,10 +114,10 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(GameEngineContext actionContext) {
+    protected GameStartButton createStartButton(GameEngineContext engineContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), actionContext);
+            engineContext.runAction(CommonGameActions.instance().gameFlowActions().actionStartGame());
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);

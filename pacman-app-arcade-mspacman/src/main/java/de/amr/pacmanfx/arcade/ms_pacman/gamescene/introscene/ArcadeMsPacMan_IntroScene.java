@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime runtime = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime runtime = engineContext().gameVariantManager().currentRuntime();
 
         final Arcade_Actions arcadeActions = runtime.extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
         actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
@@ -77,21 +77,21 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
         view = new IntroSceneView(runtime);
 
-        final ActorSpriteAnimController animController = actionContext().gameVariantManager().currentRuntime()
+        final ActorSpriteAnimController animController = engineContext().gameVariantManager().currentRuntime()
             .playConfig().systems().actorSpriteAnimController();
 
         ghostInSpotlight = 0;
         numTicksBeforeRising = 0;
 
         startAnimations(animController, view.msPacMan(), view.ghosts());
-        actionContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        engineContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }
 
     @Override
     public void onDeactivate() {
-        actionContext().soundManager().voice().stop();
+        engineContext().soundManager().voice().stop();
         actionBindingsRegistry().dispose();
     }
 
@@ -136,7 +136,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letGhostWalkIn(Ghost ghost) {
-        final GameSystems systems = actionContext().currentGame().playConfig().systems();
+        final GameSystems systems = engineContext().currentGame().playConfig().systems();
         final WorldNavigationSystem nav = systems.navigator();
         final MovementSystem motor = systems.motor();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
@@ -170,7 +170,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letMsPacManWalkIn(Pac msPacMan) {
-        final GameSystems systems = actionContext().currentGame().playConfig().systems();
+        final GameSystems systems = engineContext().currentGame().playConfig().systems();
         final WorldNavigationSystem nav = systems.navigator();
         final MovementSystem motor = systems.motor();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();

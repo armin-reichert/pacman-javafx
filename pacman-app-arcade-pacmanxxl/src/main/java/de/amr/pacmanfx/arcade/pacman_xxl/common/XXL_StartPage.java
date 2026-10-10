@@ -25,8 +25,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
-
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
@@ -44,7 +42,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private GameEngineContext actionContext;
+    private GameEngineContext engineContext;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
@@ -68,12 +66,12 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setActionContext(GameEngineContext actionContext) {
-        this.actionContext = actionContext;
+    public void setEngineContext(GameEngineContext engineContext) {
+        this.engineContext = engineContext;
 
         // Ensure both game variants are available
-        actionContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
-        actionContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
+        engineContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
+        engineContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
     }
 
     @Override
@@ -81,16 +79,16 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), actionContext);
+            engineContext.runAction(CommonGameActions.instance().editorActions().actionOpenEditor());
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
             XXL_WorldMapManager.instance().setSelectionMode(mode);
-            actionContext.engineLife().startGame();
+            engineContext.engineLife().startGame();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            actionContext.ui().shortMessage("OK, I shut my mouth");
+            engineContext.ui().shortMessage("OK, I shut my mouth");
             stopTalking();
         }
     }
@@ -99,13 +97,13 @@ public class XXL_StartPage implements StartPage {
     public void onEnter() {
         final GameVariantID selectedGameVariantID = menu.selectedGameVariantID();
         switch (selectedGameVariantID) {
-            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> actionContext.gameVariantManager().selectVariant(selectedGameVariantID.name());
+            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> engineContext.gameVariantManager().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
 
-        menu.init(actionContext);
+        menu.init(engineContext);
         menu.bindEntries();
-        menu.restartChaseAnimation(actionContext.gameVariantManager().currentRuntime());
+        menu.restartChaseAnimation(engineContext.gameVariantManager().currentRuntime());
 
         Platform.runLater(() -> {
             menu.requestFocus();
@@ -134,14 +132,14 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        actionContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+        engineContext.ui().viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
     }
 
     private void startTalking() {
-        actionContext.soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
+        engineContext.soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
     }
 
     private void stopTalking() {
-        actionContext.soundManager().voice().stop();
+        engineContext.soundManager().voice().stop();
     }
 }

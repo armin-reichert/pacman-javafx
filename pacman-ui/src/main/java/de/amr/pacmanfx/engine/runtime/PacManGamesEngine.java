@@ -19,6 +19,7 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
@@ -32,34 +33,14 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 /**
  * The Pac-Man games "engine".
  */
 public final class PacManGamesEngine implements EngineLifecycle, GameEngineContext {
-
-    public static boolean runAction(GameAction<GameEngineContext> gameAction, GameEngineContext context) {
-        boolean success = false;
-        if (gameAction.isEnabled(context)) {
-            try {
-                gameAction.execute(context);
-                success = true;
-                Logger.trace("Action '{}' executed successfully", gameAction.id());
-            }
-            catch (Exception x) {
-                Logger.error(x, "An error occurred executing action '{}'", gameAction.id());
-            }
-        } else {
-            Logger.warn("Action {}' not executed (disabled)", gameAction.id());
-        }
-
-        //TODO This is dubious!
-        // Clear the input that triggered this action
-        context.input().keyboard().clearState();
-
-        return success;
-    }
 
     private final RenderManager renderManager;
 

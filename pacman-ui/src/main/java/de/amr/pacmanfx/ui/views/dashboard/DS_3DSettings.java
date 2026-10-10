@@ -17,8 +17,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
-
 /**
  * Infobox with 3D related settings.
  */
@@ -39,8 +37,8 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
-        final GameViewModel viewModel = context.ui().viewModel();
+    public void setExecutionContext(GameEngineContext engineContext) {
+        final GameViewModel viewModel = engineContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
 
@@ -50,11 +48,11 @@ public class DS_3DSettings extends GameDashboardSection {
 
         colorPicker("Floor Color", viewModel.maze3DSettings().floorColorProperty());
 
-        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(context)));
+        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(engineContext)));
 
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(context)));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(engineContext)));
 
-        addDynamicInfo("Scene Size", () -> sceneSizeInfo(context.gameSceneManager().optCurrentGameScene().orElse(null)));
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(engineContext.gameSceneManager().optCurrentGameScene().orElse(null)));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty);
 
@@ -99,8 +97,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3DSettings().wallOpacityProperty());
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), context));
-        cbWireframeMode .setOnAction(_ -> runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode(), context));
+        cbUsePlayScene3D.setOnAction(_ -> engineContext.runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D()));
+        cbWireframeMode .setOnAction(_ -> engineContext.runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode()));
     }
 
     @Override

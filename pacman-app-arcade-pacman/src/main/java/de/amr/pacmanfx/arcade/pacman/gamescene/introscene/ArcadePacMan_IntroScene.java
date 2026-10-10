@@ -58,7 +58,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = actionContext().gameVariantManager().currentRuntime()
+        final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
@@ -70,7 +70,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         view.pulse.stop();
-        actionContext().soundManager().voice().stop();
+        engineContext().soundManager().voice().stop();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void initState() {
-        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
         view.createPacManAndGhosts(
             variant.uiConfig().renderConfig(),
             variant.playConfig().systems().actorSpriteAnimController(),
@@ -91,7 +91,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        actionContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        engineContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     void startChasingPacMan(GameContext game) {
@@ -116,7 +116,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chasePacMan(long tick) {
-        final GameSystems systems = actionContext().currentGame().playConfig().systems();
+        final GameSystems systems = engineContext().currentGame().playConfig().systems();
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 

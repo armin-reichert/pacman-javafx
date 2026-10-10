@@ -18,7 +18,7 @@ import java.util.Set;
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
+public class EmptyActionBindingsRegistry implements ActionBindingsRegistry<Object> {
 
     @Override
     public String name() {
@@ -29,21 +29,21 @@ public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<Object>> actionBindings() {
         return Map.of();
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding> bindings) {}
+    public void selectAnyMatchingBinding(GameAction<Object> action, Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination) {}
+    public void bindActionToKeyCombination(GameAction<Object> action, KeyCodeCombination combination) {}
 
     @Override
     public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<Object>> findActionMatchingPressedKeys(Keyboard keyboard) {
         return Optional.empty();
     }
 }

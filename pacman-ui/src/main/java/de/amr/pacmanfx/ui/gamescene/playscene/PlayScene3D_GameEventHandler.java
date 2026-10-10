@@ -70,7 +70,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private GameContext game() {
-        return playScene3D.actionContext().currentGame();
+        return playScene3D.engineContext().currentGame();
     }
 
     private Optional<PacManGameSoundEffects> optSoundEffects() {
@@ -202,7 +202,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevelView3D level3D = assertLevel3D();
-        final long tick = playScene3D.actionContext().clock().currentTick();
+        final long tick = playScene3D.engineContext().clock().currentTick();
 
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
@@ -319,7 +319,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevelView3D level3D) {
         final GameSession session = game().session();
-        final GameVariantUIConfig uiConfig = playScene3D.actionContext().gameVariantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = playScene3D.engineContext().gameVariantManager().currentRuntime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, uiConfig, index);
@@ -414,7 +414,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        playScene3D.actionContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
+        playScene3D.engineContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

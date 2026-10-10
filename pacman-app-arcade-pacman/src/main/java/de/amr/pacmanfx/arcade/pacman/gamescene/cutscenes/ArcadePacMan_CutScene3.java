@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
@@ -76,7 +76,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
         switch (sceneTick) {
             case TICK_ANIMATION_START      -> startAnimation(sys);
             case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(sys);
-            case TICK_ANIMATION_ENDS       -> actionContext().currentGame().state().triggerTimeout();
+            case TICK_ANIMATION_ENDS       -> engineContext().currentGame().state().triggerTimeout();
         }
 
         sys.motor().move(pacMan);
@@ -84,7 +84,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
     }
 
     private void startAnimation(GameSystems systems) {
-        actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
+        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
         startBlinkyChasingPacMan(systems);
     }
 

@@ -8,16 +8,14 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 
 public class GameDashboardSection extends DashboardSection implements DashboardSectionCreator<GameDashboardSection> {
 
@@ -58,7 +56,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameEngineContext actionContext, Button button, GameAction<GameEngineContext> gameAction) {
-        button.setOnAction(_ -> runAction(gameAction, actionContext));
+    protected void setGameAction(GameEngineContext engineContext, Button button, GameAction<GameEngineContext> action) {
+        button.setOnAction(_ -> engineContext.runAction(action));
     }
 }

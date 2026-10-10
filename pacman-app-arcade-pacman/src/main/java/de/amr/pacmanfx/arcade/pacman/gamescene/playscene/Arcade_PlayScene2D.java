@@ -40,7 +40,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**
@@ -68,12 +67,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameLevel level = actionContext().currentGame().session().optLevel().orElse(null);
+        final GameLevel level = engineContext().currentGame().session().optLevel().orElse(null);
         if (level == null) {
             return Stream.empty();
         }
 
-        final GameVariantRenderConfig renderConfig = actionContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
@@ -102,21 +101,21 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     @Override
     protected void onActivate() {
         levelCompletedAnimation = new LevelCompletedAnimation();
-        levelCompletedAnimation.setOnFinished(() -> actionContext().currentGame().state().triggerTimeout());
+        levelCompletedAnimation.setOnFinished(() -> engineContext().currentGame().state().triggerTimeout());
     }
 
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(
-            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(actionContext().currentGame(), level)));
+            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(engineContext().currentGame(), level)));
     }
 
     @Override
     public void onQuit() {
         onDeactivate();
         // Avoid game over sound being played
-        actionContext().soundManager().setEnabled(false);
-        actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow().enterGameState(actionContext().currentGame(), CommonGameStateID.GAME_OVER);
+        engineContext().soundManager().setEnabled(false);
+        engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow().enterGameState(engineContext().currentGame(), CommonGameStateID.GAME_OVER);
     }
 
     @Override
@@ -124,35 +123,35 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final CheatActions cheatActions = CommonGameActions.instance().cheatActions();
 
         final var contextMenu = new ContextMenu();
-        addLocalizedTitleItem(contextMenu, actionContext().translationManager(), "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, actionContext().translationManager(),
-            actionContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
+        addLocalizedTitleItem(contextMenu, engineContext().translationManager(), "context_menu.pacman");
+        addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
+            engineContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                runAction(cheatActions.actionActivateAutopilot(), actionContext());
+                engineContext().runAction(cheatActions.actionActivateAutopilot());
             } else {
-                runAction(cheatActions.actionDeactivateAutopilot(), actionContext());
+                engineContext().runAction(cheatActions.actionDeactivateAutopilot());
             }
         });
-        addLocalizedCheckBox(contextMenu, actionContext().translationManager(),
-            actionContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
+        addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
+            engineContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                runAction(cheatActions.actionActivateImmunity(), actionContext());
+                engineContext().runAction(cheatActions.actionActivateImmunity());
             } else {
-                runAction(cheatActions.actionDeactivateImmunity(), actionContext());
+                engineContext().runAction(cheatActions.actionDeactivateImmunity());
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, actionContext().translationManager(), ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(actionContext(), contextMenu, actionContext().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, engineContext().translationManager(), ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(engineContext(), contextMenu, engineContext().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = actionContext().currentGame().session();
+        final GameSession session = engineContext().currentGame().session();
         session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
     }
 
@@ -166,22 +165,22 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindingsRegistry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = actionContext().gameVariantManager().currentRuntime()
+            final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
-            actionContext().soundManager().setEnabled(false);
+            engineContext().soundManager().setEnabled(false);
         }
         else {
             bindingsRegistry.registerAllBindings(CommonGameActions.instance().steeringActions().bindings());
             bindingsRegistry.registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
-            actionContext().soundManager().setEnabled(true);
+            engineContext().soundManager().setEnabled(true);
         }
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(actionContext().gameVariantManager().currentRuntime(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(engineContext().gameVariantManager().currentRuntime(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {

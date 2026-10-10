@@ -43,12 +43,12 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    private final ActionBindingsRegistry actionBindings;
+    private final ActionBindingsRegistry<GameEngineContext> actionBindings;
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private GameEngineContext actionContext;
+    private GameEngineContext engineContext;
 
     private ContextMenuManager contextMenuManager;
 
@@ -110,8 +110,8 @@ public class GamePlayView implements GameView {
 
         // Level changed: adjust game scene size by reembedding
         layers.gameSceneLayer().embedGameScene(
-            actionContext.ui(),
-            actionContext.gameVariantManager().currentRuntime().uiConfig(),
+            engineContext.ui(),
+            engineContext.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
@@ -130,15 +130,15 @@ public class GamePlayView implements GameView {
         nextGameScene.onBeforeEmbedded();
 
         layers.gameSceneLayer().embedGameScene(
-            actionContext.ui(),
-            actionContext.gameVariantManager().currentRuntime().uiConfig(),
+            engineContext.ui(),
+            engineContext.gameVariantManager().currentRuntime().uiConfig(),
             (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }
 
     public void render() {
-        GamePlayViewRenderer.render(this, actionContext, actionContext.gameSceneManager().currentGameScene());
+        GamePlayViewRenderer.render(this, engineContext, engineContext.gameSceneManager().currentGameScene());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -146,20 +146,20 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setActionContext(GameEngineContext actionContext) {
-        this.actionContext = actionContext;
+    public void setEngineContext(GameEngineContext engineContext) {
+        this.engineContext = engineContext;
 
-        final GameViewModel viewModel = actionContext.ui().viewModel();
-        final GameMainScene mainScene = actionContext.ui().window().mainScene();
+        final GameViewModel viewModel = engineContext.ui().viewModel();
+        final GameMainScene mainScene = engineContext.ui().window().mainScene();
 
-        contextMenuManager = new ContextMenuManager(actionContext);
+        contextMenuManager = new ContextMenuManager(engineContext);
         root.setOnContextMenuRequested(contextMenuManager);
 
-        dashboard.setExecutionContext(actionContext);
+        dashboard.setExecutionContext(engineContext);
 
         layers.miniViewLayer().setViewModel(viewModel);
 
-        layers.iconLayer().visibleProperty().bind(actionContext.clock().updatesDisabledProperty());
+        layers.iconLayer().visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
 
         layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
 
@@ -170,13 +170,13 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public ActionBindingsRegistry actionBindings() {
+    public ActionBindingsRegistry<GameEngineContext> actionBindings() {
         return actionBindings;
     }
 
     @Override
     public GameEngineContext actionContext() {
-        return actionContext;
+        return engineContext;
     }
 
     @Override
@@ -189,25 +189,25 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onExit() {
-        actionContext.engineLife().suspendGame();
-        actionContext.soundManager().stopAll();
-        actionContext.soundManager().voice().stop();
+        engineContext.engineLife().suspendGame();
+        engineContext.soundManager().stopAll();
+        engineContext.soundManager().voice().stop();
         actionBindings.dispose();
         layers.gameSceneLayer().uninstallKeyBindings();
     }
 
     @Override
     public void onQuit() {
-        actionContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        actionContext.ui().viewManager().selectStartPagesView();
+        engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
+        engineContext.ui().viewManager().selectStartPagesView();
     }
 
     @Override
     public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (actionBindings.executeMatchingAction(actionContext).isEmpty()) {
-            actionContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+        if (engineContext.executeMatchingAction(actionBindings).isEmpty()) {
+            engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -225,12 +225,12 @@ public class GamePlayView implements GameView {
 
     private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
-            dashboard.update(actionContext);
+            dashboard.update(engineContext);
         }
     }
 
     private void updateMiniView() {
-        final boolean playScene3DActive = actionContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        final boolean playScene3DActive = engineContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         layers.miniViewLayer().update(playScene3DActive);
     }
 

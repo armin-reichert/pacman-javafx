@@ -42,10 +42,10 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public ActionBindingsRegistry actionBindings() { return ActionBindingsRegistry.NO_BINDINGS; }
+    public ActionBindingsRegistry<GameEngineContext> actionBindings() { return ActionBindingsRegistry.empty(); }
 
     @Override
-    public void setActionContext(GameEngineContext actionContext) {}
+    public void setEngineContext(GameEngineContext engineContext) {}
 
     @Override
     public GameEngineContext actionContext() {

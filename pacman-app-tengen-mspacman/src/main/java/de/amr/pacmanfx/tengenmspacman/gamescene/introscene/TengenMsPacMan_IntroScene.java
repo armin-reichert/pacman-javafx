@@ -126,13 +126,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = actionContext().gameVariantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig variantConfig = engineContext().gameVariantManager().currentRuntime().uiConfig();
 
-        actionContext().currentGame().session().setHudVisible(false);
+        engineContext().currentGame().session().setHudVisible(false);
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = actionContext().gameVariantManager().currentRuntime()
+        final var actions = engineContext().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
@@ -234,7 +234,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
         marqueeTextView2.show();
 
-        final GameVariantRuntime runtime = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime runtime = engineContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
@@ -300,7 +300,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantRuntime variant = scene.actionContext().gameVariantManager().currentRuntime();
+                final GameVariantRuntime variant = scene.engineContext().gameVariantManager().currentRuntime();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
                 final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem nav = systems.navigator();
@@ -382,7 +382,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.actionContext().currentGame().playConfig().systems();
+                final GameSystems systems = scene.engineContext().currentGame().playConfig().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();
 
@@ -426,7 +426,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                final GameContext game = scene.actionContext().currentGame();
+                final GameContext game = scene.engineContext().currentGame();
                 final GameFlow flow = game.playConfig().gameFlow();
                 final GameSystems systems = game.playConfig().systems();
                 final ActorSpriteAnimController animController = systems.actorSpriteAnimController();

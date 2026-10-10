@@ -99,7 +99,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final var actions = actionContext().gameVariantManager().currentRuntime()
+        final var actions = engineContext().gameVariantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
@@ -107,14 +107,14 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
         fadeProgress = 0;
         displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
-        actionContext().currentGame().session().setHudVisible(false);
+        engineContext().currentGame().session().setHudVisible(false);
     }
 
     @Override
     public void onTick(GameContext game) {
-        final TickTimer stateTimer = actionContext().currentGame().state().timer();
+        final TickTimer stateTimer = engineContext().currentGame().state().timer();
         if (stateTimer.tickCount() == DISPLAY_TICKS) {
-            actionContext().currentGame().state().triggerTimeout();
+            engineContext().currentGame().state().triggerTimeout();
             return;
         }
         if (stateTimer.tickCount() == DISPLAY_TICKS / 2) {

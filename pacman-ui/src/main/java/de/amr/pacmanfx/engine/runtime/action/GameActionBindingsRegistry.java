@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameActionBindingsRegistry implements ActionBindingsRegistry {
+public class GameActionBindingsRegistry implements ActionBindingsRegistry<GameEngineContext> {
 
     private final String name;
     private final Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindingsMap = new HashMap<>();

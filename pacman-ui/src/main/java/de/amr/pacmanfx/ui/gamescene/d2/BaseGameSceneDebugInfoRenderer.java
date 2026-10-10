@@ -76,12 +76,12 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     }
 
     public void render(AbstractGameScene gameScene) {
-        final GameSession session = gameScene.actionContext().currentGame().session();
+        final GameSession session = gameScene.engineContext().currentGame().session();
         final GameSceneView2D canvasRendering = gameScene.assertComponent(GameSceneView2D.class);
 
         ctx.save();
         drawDebugGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
-        drawGameStateInfo(gameScene.actionContext().currentGame());
+        drawGameStateInfo(gameScene.engineContext().currentGame());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
             level.entitySet().all().forEach(actor -> drawMovingActorInfo(animController, actor));

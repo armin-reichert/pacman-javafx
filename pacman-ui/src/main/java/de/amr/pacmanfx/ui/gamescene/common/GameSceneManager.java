@@ -79,7 +79,7 @@ public class GameSceneManager {
             throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
 
-        nextScene.setActionContext(actionContext);
+        nextScene.setEngineContext(actionContext);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {

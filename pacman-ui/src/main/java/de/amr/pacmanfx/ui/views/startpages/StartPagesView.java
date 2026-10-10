@@ -64,8 +64,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setActionContext(GameEngineContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setEngineContext(GameEngineContext engineContext) {
+        this.actionContext = requireNonNull(engineContext);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class StartPagesView implements GameView {
     public void onQuit() {}
 
     @Override
-    public ActionBindingsRegistry actionBindings() {
-        return ActionBindingsRegistry.NO_BINDINGS;
+    public ActionBindingsRegistry<GameEngineContext> actionBindings() {
+        return ActionBindingsRegistry.empty();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setActionContext(actionContext);
+        startPage.setEngineContext(actionContext);
     }
 
     // Private area

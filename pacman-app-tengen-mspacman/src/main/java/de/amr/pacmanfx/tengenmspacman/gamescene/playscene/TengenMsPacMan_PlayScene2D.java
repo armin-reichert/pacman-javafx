@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameSession session = actionContext().currentGame().session();
+        final GameSession session = engineContext().currentGame().session();
         final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return session.optLevel()
             .map(level -> Ufx.<Renderable>streamOf(
@@ -123,7 +123,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = actionContext().currentGame().session();
+        final GameSession session = engineContext().currentGame().session();
 
         final HUD hud = session.hud();
         hud.levelCounter().show();
@@ -135,7 +135,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameSession session = actionContext().currentGame().session();
+        final GameSession session = engineContext().currentGame().session();
         final HUD hud = session.hud();
 
         hud.gameScore().show();
@@ -155,7 +155,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             ensureActorAnimationsCreated(level, gameOptionValues(session).boosterEnabled());
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
-                soundEffects.playAmbientGameLevelSound(actionContext().currentGame(), level);
+                soundEffects.playAmbientGameLevelSound(engineContext().currentGame(), level);
             });
         });
     }
@@ -163,15 +163,15 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     @Override
     public void onQuit() {
         onDeactivate();
-        actionContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-            .enterGameState(actionContext().currentGame(), CommonGameStateID.GAME_OVER);
+        engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
+            .enterGameState(engineContext().currentGame(), CommonGameStateID.GAME_OVER);
     }
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = actionContext().translationManager();
+        final TranslationManager translations = engineContext().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -188,11 +188,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         miScrolling.setToggleGroup(toggleGroup);
 
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, translations, actionContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(contextMenu, translations, actionContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(contextMenu, translations, engineContext().currentGame().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(contextMenu, translations, engineContext().currentGame().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(actionContext(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(engineContext(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -232,15 +232,15 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     // private area, do NOT enter!
 
     private TengenMsPacMan_Actions actions() {
-        return actionContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        return engineContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return actionContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        return engineContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {
-        actionContext().soundManager().setEnabled(true); //TODO needed?
+        engineContext().soundManager().setEnabled(true); //TODO needed?
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindingsRegistry().registerAllBindings(actions().steeringBindings());
@@ -252,19 +252,19 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void acceptDemoLevel() {
-        actionContext().soundManager().setEnabled(false); //TODO needed?
+        engineContext().soundManager().setEnabled(false); //TODO needed?
         actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
         actionBindingsRegistry().selectAnyMatchingBinding(actions().actionQuitDemoLevel(), actions().localBindings());
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
         levelCompletedAnimation = new LevelCompletedAnimation();
-        levelCompletedAnimation.setOnFinished(() -> actionContext().currentGame().state().triggerTimeout());
+        levelCompletedAnimation.setOnFinished(() -> engineContext().currentGame().state().triggerTimeout());
         levelCompletedAnimation.play(level, numFlashes);
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variantConfig = engineContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();
@@ -323,7 +323,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private Stream<GameEntityView> createEntityViews(GameLevel level, Vector2f offset) {
-        final GameVariantRenderConfig renderConfig = actionContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
         final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
             level.entitySet().all()

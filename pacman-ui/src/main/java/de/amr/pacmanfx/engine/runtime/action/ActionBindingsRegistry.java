@@ -13,27 +13,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.engine.runtime.PacManGamesEngine.runAction;
+public interface ActionBindingsRegistry<C> extends Disposable {
 
-public interface ActionBindingsRegistry extends Disposable {
+    ActionBindingsRegistry<?> NO_BINDINGS = new EmptyActionBindingsRegistry();
 
-    ActionBindingsRegistry NO_BINDINGS = new EmptyActionBindingsRegistry();
+    @SuppressWarnings("unchecked")
+    static <C> ActionBindingsRegistry<C> empty() {
+        return (ActionBindingsRegistry<C>) NO_BINDINGS;
+    }
 
     String name();
 
-    Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings();
+    Map<KeyCodeCombination, GameAction<C>> actionBindings();
 
-    Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard);
+    Optional<GameAction<C>> findActionMatchingPressedKeys(Keyboard keyboard);
 
-    default Optional<GameAction<GameEngineContext>> executeMatchingAction(GameEngineContext context) {
-        final Optional<GameAction<GameEngineContext>> matchingAction = findActionMatchingPressedKeys(context.input().keyboard());
-        matchingAction.ifPresent(action -> runAction(action, context));
-        return matchingAction;
-    }
+    void bindActionToKeyCombination(GameAction<C> action, KeyCodeCombination combination);
 
-    void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination);
-
-    void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding> bindings);
+    void selectAnyMatchingBinding(GameAction<C> action, Set<ActionKeyBinding> bindings);
 
     void registerAllBindings(Set<ActionKeyBinding> bindings);
 }

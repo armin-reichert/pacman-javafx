@@ -10,13 +10,14 @@ import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -58,7 +59,7 @@ public class GameUI implements GameEventListener {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
+    private final ActionBindingsRegistry<GameEngineContext> actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
 
     private final GameUISettings uiSettings;
 
@@ -178,7 +179,7 @@ public class GameUI implements GameEventListener {
             final GameViewID currentViewID = viewManager.currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
-                if (actionBindings.executeMatchingAction(engine).isEmpty()) {
+                if (engine.executeMatchingAction(actionBindings).isEmpty()) {
                     viewManager.reqView(currentViewID).onInput(engine.input());
                 }
             }

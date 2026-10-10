@@ -15,12 +15,12 @@ import java.util.function.Supplier;
 
 public interface GameView extends QuitHandler {
 
-    ActionBindingsRegistry actionBindings();
+    ActionBindingsRegistry<GameEngineContext> actionBindings();
 
     GameEngineContext actionContext();
 
     default void onInput(Input input) {
-        actionBindings().executeMatchingAction(actionContext());
+        actionContext().executeMatchingAction(actionBindings());
     }
 
     Node rootPane();
@@ -33,5 +33,5 @@ public interface GameView extends QuitHandler {
 
     void onExit();
 
-    void setActionContext(GameEngineContext actionContext);
+    void setEngineContext(GameEngineContext engineContext);
 }

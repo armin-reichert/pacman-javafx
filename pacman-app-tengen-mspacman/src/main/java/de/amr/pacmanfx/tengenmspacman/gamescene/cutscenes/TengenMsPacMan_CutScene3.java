@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
@@ -75,16 +76,16 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
+        final GameAction<GameEngineContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
-        actionBindingsRegistry().bindActionToKeyCombination(quitAction, actionContext().input().joypad().keyForButton(JoypadButton.START));
+        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engineContext().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
         darkness = false;
     }
     
     private void createActors() {
-        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
@@ -107,11 +108,11 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     }
     
     private void playMusic() {
-        actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_3);
+        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_3);
     }
     
     private void stopMusic() {
-        actionContext().soundManager().stop(PacManGameSoundID.INTERMISSION_3);
+        engineContext().soundManager().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override

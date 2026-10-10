@@ -40,7 +40,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return gameScene.actionContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return gameScene.engineContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
@@ -61,7 +61,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        final GameContext game = gameScene.actionContext().currentGame();
+        final GameContext game = gameScene.engineContext().currentGame();
         //TODO Does not belong here
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
         game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
@@ -69,7 +69,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final GameContext game = gameScene.actionContext().currentGame();
+        final GameContext game = gameScene.engineContext().currentGame();
         final GameSession session = game.session();
         final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
@@ -83,7 +83,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
         Logger.info("Entering game state '{}'", newState.name());
 
-        final GameContext game = gameScene.actionContext().currentGame();
+        final GameContext game = gameScene.engineContext().currentGame();
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
@@ -103,13 +103,13 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        final GameContext game = gameScene.actionContext().currentGame();
+        final GameContext game = gameScene.engineContext().currentGame();
         gameScene.onAcceptGameLevel(game.session(), e.level());
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        final GameContext game = gameScene.actionContext().currentGame();
+        final GameContext game = gameScene.engineContext().currentGame();
         // Trigger end of game state PACMAN_DYING after dying animation has finished
         game.state().triggerTimeout();
     }
@@ -121,7 +121,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = gameScene.actionContext().clock().currentTick();
+        final long tick = gameScene.engineContext().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

@@ -46,7 +46,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
     
     @Override
     public void onActivate() {
-        final GameVariantRuntime variant = actionContext().gameVariantManager().currentRuntime();
+        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
@@ -77,7 +77,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         }
 
         if (timing.tick() == timing.animationStartTick()) {
-            actionContext().soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
+            engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan(systems);
         }
         else if (timing.tick() == timing.animationStartTick() + 260) {
@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
             startBigPacManChasingBlinky(systems);
         }
         else if (timing.tick() == timing.animationStartTick() + 632) {
-            actionContext().currentGame().state().triggerTimeout();
+            engineContext().currentGame().state().triggerTimeout();
         }
         if (timing.tick() >= timing.animationStartTick()) {
             systems.motor().move(pacMan);
