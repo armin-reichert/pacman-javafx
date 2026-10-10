@@ -71,6 +71,7 @@ public class GamePlayView implements GameView {
 
         // Layer 5: "Paused" icon
         final StackPane iconLayer = new StackPane();
+        iconLayer.setMouseTransparent(true);
         final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
         pausedIcon.setId("paused-icon");
         iconLayer.getChildren().add(pausedIcon);
