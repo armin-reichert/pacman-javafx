@@ -50,7 +50,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private void onPacEatsPellet(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
         final Pac pac = e.pac();
 
         // Eating a pellet earns 10 points in Arcade Pac-Man
@@ -69,7 +69,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private void onPacEatsEnergizer(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
         final Pac pac = e.pac();
 
         // Eating an energizer earns 50 points in Arcade Pac-Man
@@ -98,7 +98,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
         final GamePlay gamePlay = game.playConfig().gamePlay();
 
         final GameSession session = game.session();

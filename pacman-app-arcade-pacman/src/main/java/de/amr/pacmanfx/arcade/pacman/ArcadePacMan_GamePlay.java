@@ -128,7 +128,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
         final GameSystems systems = game.playConfig().systems();
         final WorldMap worldMap = game.playConfig().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntitySet();
@@ -255,7 +255,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(level);
 
         final GameSystems systems = game.playConfig().systems();
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
 
         level.selectNextBonus();
 

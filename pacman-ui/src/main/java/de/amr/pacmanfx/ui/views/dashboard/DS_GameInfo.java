@@ -93,7 +93,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(EngineUIContext context) {
-        return context.optCurrentGame().get().playConfig().rules();
+        return context.optCurrentGame().get().playConfig().gameRules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
@@ -101,7 +101,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = context.optCurrentGame().get();
-            final ActorSpeedRules speedRules = game.playConfig().rules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.playConfig().gameRules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

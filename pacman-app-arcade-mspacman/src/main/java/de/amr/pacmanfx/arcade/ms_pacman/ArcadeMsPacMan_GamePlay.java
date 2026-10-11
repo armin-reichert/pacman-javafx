@@ -173,7 +173,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         }
 
         final GameSystems systems = game.playConfig().systems();
-        final GameRules rules = game.playConfig().rules();
+        final GameRules rules = game.playConfig().gameRules();
 
         final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
         systems.bonusState().setEdible(movingBonus);

@@ -139,7 +139,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
         final GameVariantUIConfig uiConfig = runtime.uiConfig();
 
         final GameLevel level = level3D.level();
-        final int numFlashes = config.rules().numLevelFlashes(level.number());
+        final int numFlashes = config.gameRules().numLevelFlashes(level.number());
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
         final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), uiConfig.worldSettings());
 

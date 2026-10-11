@@ -52,7 +52,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<String> fnRulesInfo(EngineUIContext context, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(context.optCurrentGame().orElseThrow().playConfig().rules());
+        return () -> fnInfo.apply(context.optCurrentGame().orElseThrow().playConfig().gameRules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

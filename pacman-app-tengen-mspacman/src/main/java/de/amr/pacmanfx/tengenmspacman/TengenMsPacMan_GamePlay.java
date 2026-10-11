@@ -187,7 +187,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final MapCategory mapCategory = gameOptionValues(session).mapCategory();
 
-        final var rules = (TengenMsPacMan_GameRules) game.playConfig().rules();
+        final var rules = (TengenMsPacMan_GameRules) game.playConfig().gameRules();
         final GameSystems systems = game.playConfig().systems();
         final var entities = new GameLevelEntitySet();
 
@@ -351,7 +351,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final float speed = game.playConfig().rules().actorSpeedRules().bonusSpeed(game, level);
+        final float speed = game.playConfig().gameRules().actorSpeedRules().bonusSpeed(game, level);
 
         final Bonus oldBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (oldBonus != null) {

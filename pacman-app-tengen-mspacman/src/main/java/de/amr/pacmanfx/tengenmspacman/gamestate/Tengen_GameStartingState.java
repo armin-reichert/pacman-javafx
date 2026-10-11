@@ -62,7 +62,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         final Pac pac = level.entitySet().pac();
 
         if (stateTick == 0) {
-            game.playConfig().systems().pacAnimation().update(pac, game.playConfig().rules());
+            game.playConfig().systems().pacAnimation().update(pac, game.playConfig().gameRules());
             lockGhosts(level.entitySet(), true);
         }
 

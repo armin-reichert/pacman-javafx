@@ -133,7 +133,7 @@ public final class CheatActions {
                 if (normalLevel == null) return false;
 
                 return CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(game.state())
-                    && normalLevel.number() < game.playConfig().rules().lastLevelNumber();
+                    && normalLevel.number() < game.playConfig().gameRules().lastLevelNumber();
             }
         };
 
