@@ -61,13 +61,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public GameEngine(
         RenderManager renderManager,
         GameSceneManager gameSceneManager,
-        SoundManager soundManager
-    ) {
+        SoundManager soundManager,
+        TranslationManager translationManager)
+    {
         this.renderManager = requireNonNull(renderManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
         this.soundManager = requireNonNull(soundManager);
+        this.translationManager = requireNonNull(translationManager);
         spriteAnimationTimer = new SpriteAnimationTimer();
-        translationManager = new DefaultTranslationManager();
 
         clock().setUpdateAction(this::simulate);
         clock().setPermanentAction(this::render);

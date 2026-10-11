@@ -11,6 +11,7 @@ import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -100,7 +101,8 @@ public class PacManGameEngineBuilder {
             final var engine = new GameEngine(
                 new DefaultRenderManager(),
                 new DefaultGameSceneManager(),
-                new DefaultSoundManager()
+                new DefaultSoundManager(),
+                new DefaultTranslationManager()
             );
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
