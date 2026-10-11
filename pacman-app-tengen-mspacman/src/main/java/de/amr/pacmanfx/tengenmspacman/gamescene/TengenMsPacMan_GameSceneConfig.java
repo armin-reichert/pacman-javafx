@@ -25,13 +25,13 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySce
 import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.gamescene.common.GameSceneManager.cutSceneID;
+import static de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager.cutSceneID;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
@@ -88,7 +88,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
-        return GameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
+        return DefaultGameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
     }
 
     @Override

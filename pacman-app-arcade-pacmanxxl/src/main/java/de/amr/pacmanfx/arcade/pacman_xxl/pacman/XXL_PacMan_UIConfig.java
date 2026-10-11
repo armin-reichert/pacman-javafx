@@ -20,14 +20,14 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.mediaPlayer;
 
 public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
@@ -36,7 +36,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
-    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+    private static final List<DefaultSoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         audioClip    (PacManGameSoundID.BONUS_EATEN,           ARCADE_PACMAN_RM.url("sound/eat_fruit.mp3")),
         audioClip    (PacManGameSoundID.COIN_INSERTED,         ARCADE_PACMAN_RM.url("sound/credit.wav")),
         audioClip    (PacManGameSoundID.ENERGIZER_EXPLOSION_1, XXL_RM.url(XXL_PATH + "sound/explosion1.mp3")),
@@ -142,8 +142,8 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
         return WorldSettings.DEFAULT_SETTINGS;
     }
 
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+    private void loadSounds(DefaultSoundManager soundManager) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
         soundEffects = new PacManGameSoundEffects(soundManager);
@@ -157,9 +157,9 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
         soundEffects.setSirenVolume(0.33f);
     }
 
-    private void unloadSounds(SoundManager soundManager) {
+    private void unloadSounds(DefaultSoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {

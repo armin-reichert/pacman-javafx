@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SoundManager implements Disposable {
+public class DefaultSoundManager implements Disposable {
 
     public sealed interface SoundResource permits AudioClipResource, MediaPlayerResource {}
 
@@ -49,7 +49,7 @@ public class SoundManager implements Disposable {
 
     private final Voice voice = new Voice();
 
-    public SoundManager() {
+    public DefaultSoundManager() {
         voice.muteProperty().bind(Bindings.createBooleanBinding(
             () -> mute.get() || !enabled.get(),
             mute, enabled

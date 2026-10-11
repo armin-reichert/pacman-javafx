@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
@@ -22,6 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
@@ -49,7 +50,8 @@ public class PacManAllGamesNoBuilder extends Application {
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
         engine = new GameEngine(
-            new RenderManager()
+            new DefaultRenderManager(),
+            new DefaultGameSceneManager()
         );
     }
 

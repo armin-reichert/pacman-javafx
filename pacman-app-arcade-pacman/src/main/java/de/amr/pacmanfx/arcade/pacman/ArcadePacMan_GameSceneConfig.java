@@ -21,14 +21,14 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneEmbedding;
 import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.gamescene.common.GameSceneManager.cutSceneID;
+import static de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager.cutSceneID;
 
 public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
@@ -78,7 +78,7 @@ public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
-        return GameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
+        return DefaultGameSceneManager.cutSceneID(cutSceneNumber.getAsInt());
     }
 
     @Override

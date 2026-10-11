@@ -7,11 +7,11 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.engine.EngineContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 
 public interface EngineUIContext extends EngineContext {
 
-    GameSceneManager gameSceneManager();
+    DefaultGameSceneManager gameSceneManager();
 
     RenderManager renderManager();
 

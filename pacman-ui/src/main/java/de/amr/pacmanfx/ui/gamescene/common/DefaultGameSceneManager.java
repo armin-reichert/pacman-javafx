@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneManager {
+public class DefaultGameSceneManager {
 
     public static Named cutSceneID(int n) {
         return switch (n) {
@@ -45,7 +45,7 @@ public class GameSceneManager {
 
     private GameSceneConfig gameSceneConfig;
 
-    public GameSceneManager() {}
+    public DefaultGameSceneManager() {}
 
     public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);

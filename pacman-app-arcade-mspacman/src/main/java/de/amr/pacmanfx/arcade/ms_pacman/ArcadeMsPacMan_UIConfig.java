@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -34,8 +34,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.mediaPlayer;
 
 public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private static final ResourceManager RM = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+    private static final List<DefaultSoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         mediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3")),
         audioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3")),
         audioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav")),
@@ -175,7 +175,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     // Private
 
-    private void loadSounds(SoundManager soundManager) {
+    private void loadSounds(DefaultSoundManager soundManager) {
         soundManager.addMediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3"));
         soundManager.addAudioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3"));
         soundManager.addAudioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav"));
@@ -203,9 +203,9 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         );
     }
 
-    private void unloadSounds(SoundManager soundManager) {
+    private void unloadSounds(DefaultSoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {

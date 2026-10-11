@@ -6,7 +6,7 @@ package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
@@ -19,11 +19,11 @@ import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.app.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.assets.CommonTranslationManager;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -41,13 +41,13 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
-    private final RenderManager renderManager;
+    private final DefaultRenderManager renderManager;
 
-    private final SoundManager soundManager;
+    private final DefaultSoundManager soundManager;
 
     private final TranslationManager translationManager;
 
-    private final GameSceneManager gameSceneManager;
+    private final DefaultGameSceneManager gameSceneManager;
 
     private final SpriteAnimationTimer spriteAnimationTimer;
 
@@ -59,12 +59,15 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public GameEngine(RenderManager renderManager) {
+    public GameEngine(
+        DefaultRenderManager renderManager,
+        DefaultGameSceneManager gameSceneManager
+    ) {
         this.renderManager = requireNonNull(renderManager);
-        gameSceneManager = new GameSceneManager();
-        soundManager = new SoundManager();
+        this.gameSceneManager = requireNonNull(gameSceneManager);
+        soundManager = new DefaultSoundManager();
         spriteAnimationTimer = new SpriteAnimationTimer();
-        translationManager = new CommonTranslationManager();
+        translationManager = new DefaultTranslationManager();
 
         clock().setUpdateAction(this::simulate);
         clock().setPermanentAction(this::render);
@@ -153,7 +156,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public GameSceneManager gameSceneManager() {
+    public DefaultGameSceneManager gameSceneManager() {
         return gameSceneManager;
     }
 
@@ -168,12 +171,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public RenderManager renderManager() {
+    public DefaultRenderManager renderManager() {
         return renderManager;
     }
 
     @Override
-    public SoundManager soundManager() {
+    public DefaultSoundManager soundManager() {
         return soundManager;
     }
 

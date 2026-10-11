@@ -11,7 +11,7 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
@@ -25,8 +25,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_ACTIONS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_UI_SETTINGS;
 
@@ -35,7 +35,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager RM = TengenMsPacMan_ResourceManager.instance();
 
-    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+    private static final List<DefaultSoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         mediaPlayer  (PacManGameSoundID.BONUS_ACTIVE,                RM.url("sound/fruitbounce.wav")),
         audioClip    (PacManGameSoundID.BONUS_EATEN,                 RM.url("sound/ms-fruit.wav")),
         audioClip    (PacManGameSoundID.EXTRA_LIFE,                  RM.url("sound/ms-extralife.wav")),
@@ -168,8 +168,8 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         return WORLD_SETTINGS;
     }
 
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+    private void loadSounds(DefaultSoundManager soundManager) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
 
@@ -190,9 +190,9 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         soundEffects.setSirenVolume(1.0f);
     }
 
-    private void unloadSounds(SoundManager soundManager) {
+    private void unloadSounds(DefaultSoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {

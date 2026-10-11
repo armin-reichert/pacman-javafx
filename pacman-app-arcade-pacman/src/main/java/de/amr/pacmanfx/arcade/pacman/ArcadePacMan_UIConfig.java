@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -29,8 +29,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.engine.sound.SoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.mediaPlayer;
 
 /**
  * The Arcade Pac‑Man game variant.
@@ -51,7 +51,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
-    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+    private static final List<DefaultSoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         audioClip   (PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3")),
         audioClip   (PacManGameSoundID.COIN_INSERTED,    RM.url("sound/credit.wav")),
         audioClip   (PacManGameSoundID.EXTRA_LIFE,       RM.url("sound/extend.mp3")),
@@ -157,8 +157,8 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     // private
 
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+    private void loadSounds(DefaultSoundManager soundManager) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
         soundEffects = new PacManGameSoundEffects(soundManager);
@@ -172,9 +172,9 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         soundEffects.setSirenVolume(0.33f);
     }
 
-    private void unloadSounds(SoundManager soundManager) {
+    private void unloadSounds(DefaultSoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {

@@ -8,11 +8,11 @@ import de.amr.basics.ui.assets.TranslationManager;
 
 import java.util.ResourceBundle;
 
-public class CommonTranslationManager implements TranslationManager {
+public class DefaultTranslationManager implements TranslationManager {
 
     static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
         "de.amr.pacmanfx.ui.localized_texts",
-        CommonTranslationManager.class.getModule());
+        DefaultTranslationManager.class.getModule());
 
     @Override
     public ResourceBundle textBundle() {

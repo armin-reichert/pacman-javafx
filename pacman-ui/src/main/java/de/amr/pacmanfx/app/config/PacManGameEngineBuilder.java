@@ -5,11 +5,12 @@ package de.amr.pacmanfx.app.config;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -96,7 +97,8 @@ public class PacManGameEngineBuilder {
             validateConfigurationData();
 
             final var engine = new GameEngine(
-                new RenderManager()
+                new DefaultRenderManager(),
+                new DefaultGameSceneManager()
             );
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
