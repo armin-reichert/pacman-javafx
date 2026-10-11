@@ -15,8 +15,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
+import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
@@ -26,9 +27,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
@@ -85,9 +84,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     }
     
     private void createActors() {
-        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
+        final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime().spriteAnimContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * TS, 10 * TS);

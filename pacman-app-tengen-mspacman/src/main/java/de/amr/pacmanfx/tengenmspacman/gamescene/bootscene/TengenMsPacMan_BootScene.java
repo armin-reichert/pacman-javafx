@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -66,10 +65,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engineContext().optCurrentGame().ifPresent(game -> {
-            final GameVariantRuntime gameVariantRuntime = engineContext().gameVariantManager().currentRuntime();
-            ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
-                gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
-                gameVariantRuntime.spriteAnimContainer(),
+            ghost = runtime().uiConfig().renderConfig().createAnimatedGhost(
+                runtime().playConfig().systems().actorSpriteAnimController(),
+                runtime().spriteAnimContainer(),
                 GhostPersonality.RED_GHOST_SHADOW);
 
             final GameSession session = game.session();
@@ -127,7 +125,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUDStyleComp hudStyle = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUDStyleComp hudStyle = runtime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.livesCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.gameScore().setComponent(HUDStyleComp.class, hudStyle);

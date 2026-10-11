@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -97,6 +98,7 @@ public class XXL_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
         final GameVariantID selectedGameVariantID = menu.selectedGameVariantID();
         switch (selectedGameVariantID) {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> engineContext.gameVariantManager().selectVariant(selectedGameVariantID.name());
@@ -105,7 +107,7 @@ public class XXL_StartPage implements StartPage {
 
         menu.init(engineContext);
         menu.bindEntries();
-        menu.restartChaseAnimation(engineContext.gameVariantManager().currentRuntime());
+        menu.restartChaseAnimation(runtime);
 
         Platform.runLater(() -> {
             menu.requestFocus();

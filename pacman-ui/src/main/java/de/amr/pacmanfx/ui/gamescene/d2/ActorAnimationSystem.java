@@ -11,12 +11,12 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 
 //TODO make individual animation systems for ghosts and Pac-Man?
 public class ActorAnimationSystem {
 
-    public static void ensureActorAnimationsCreated(GameVariantRuntime runtime, GameLevel level) {
+    public static void ensureActorAnimationsCreated(DefaultGameVariantRuntime runtime, GameLevel level) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = runtime.spriteAnimContainer();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();

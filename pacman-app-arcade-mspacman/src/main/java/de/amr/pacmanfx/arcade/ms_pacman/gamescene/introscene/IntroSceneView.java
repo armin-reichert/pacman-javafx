@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.basics.ui.assets.ArcadeColor;
@@ -51,7 +51,7 @@ public class IntroSceneView {
     private Pac msPacMan;
     private List<Ghost> ghosts;
 
-    public IntroSceneView(GameVariantRuntime runtime) {
+    public IntroSceneView(DefaultGameVariantRuntime runtime) {
         createTitleText();
         createMarquee();
         createMsPacManAndTheGhosts(runtime);
@@ -125,7 +125,7 @@ public class IntroSceneView {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
     }
 
-    private void createCopyright(GameVariantRuntime runtime) {
+    private void createCopyright(DefaultGameVariantRuntime runtime) {
         final AssetMap assets = runtime.uiConfig().assets();
 
         copyrightImageView = new ImageView();
@@ -139,7 +139,7 @@ public class IntroSceneView {
         copyrightTexts.forEach(TextView::show);
     }
 
-    private void createMsPacManAndTheGhosts(GameVariantRuntime runtime) {
+    private void createMsPacManAndTheGhosts(DefaultGameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();

@@ -29,7 +29,6 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -171,8 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public void onQuit() {
         engineContext().optCurrentGame().ifPresent(game -> {
             onDeactivate();
-            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-                .enterGameState(game, CommonGameStateID.GAME_OVER);
+            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
 
@@ -244,11 +242,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     // private area, do NOT enter!
 
     private TengenMsPacMan_Actions actions() {
-        return engineContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return engineContext().gameVariantManager().currentRuntime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {
@@ -276,10 +274,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = engineContext().gameVariantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
-        final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();
+        final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer   = runtime().spriteAnimContainer();
+        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
@@ -335,7 +332,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private Stream<GameEntityView> createEntityViews(GameLevel level, Vector2f offset) {
-        final GameVariantRenderConfig renderConfig = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
         final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
             level.entitySet().all()

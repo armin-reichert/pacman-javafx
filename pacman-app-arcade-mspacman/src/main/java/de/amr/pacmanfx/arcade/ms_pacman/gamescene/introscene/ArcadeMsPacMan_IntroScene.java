@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
@@ -18,11 +19,9 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -69,16 +68,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime runtime = engineContext().gameVariantManager().currentRuntime();
-
-        final Arcade_Actions arcadeActions = runtime.extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions arcadeActions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
         actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
-        view = new IntroSceneView(runtime);
+        view = new IntroSceneView(runtime());
 
-        final ActorSpriteAnimController animController = engineContext().gameVariantManager().currentRuntime()
-            .playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         ghostInSpotlight = 0;
         numTicksBeforeRising = 0;

@@ -27,7 +27,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext context) {
         final var readmeText = new Text();
         readmeText.setText(context.translationManager().translate("infobox.readme.content"));
 

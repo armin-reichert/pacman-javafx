@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -117,7 +118,8 @@ public class GameWindow {
     }
 
     private void updateStageIcon(GameEngineContext engineContext) {
-        final Image icon = engineContext.gameVariantManager().currentRuntime().uiConfig().assets().image("app_icon");
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        final Image icon = runtime.uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -152,11 +154,12 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = engineContext.gameVariantManager().currentRuntime().uiConfig().translations();
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        final TranslationManager variantTranslationManager = runtime.uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
-        if (variantTranslations.textBundle() != null
-            && variantTranslations.textBundle().containsKey(titleKey)) {
-            return variantTranslations.translate(titleKey, viewModeKey);
+        if (variantTranslationManager.textBundle() != null
+            && variantTranslationManager.textBundle().containsKey(titleKey)) {
+            return variantTranslationManager.translate(titleKey, viewModeKey);
         } else {
             return "Unspecified Pac-Man Game Variant";
         }

@@ -33,7 +33,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext context) {
         addDynamicInfo("Pac Name",  supplyPacStateAndName(context));
         addDynamicInfo("Lives",     supplyLivesCount(context));
         addDynamicInfo("Visible",   supplyPacText(context, this::actorVisibilityText));

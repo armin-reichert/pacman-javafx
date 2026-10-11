@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import javafx.beans.property.IntegerProperty;
@@ -43,7 +44,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext engineContext) {
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 
@@ -53,41 +54,43 @@ public class DS_GameControl extends GameDashboardSection {
 
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
 
-        addDynamicInfo("Collision Mode", fnRulesInfo(context, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", fnRulesInfo(engineContext, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
 
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives,
             () -> {
+            final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                context.gameVariantManager().currentRuntime().playConfig().setInitialLifeCount(lifeCount);
+                runtime.playConfig().setInitialLifeCount(lifeCount);
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
-        setGameAction(context, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
-        setGameAction(context, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
-        setGameAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
-        setGameAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engineContext, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engineContext, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
+        setGameAction(engineContext, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
+        setGameAction(engineContext, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            context.optCurrentGame().get().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            engineContext.optCurrentGame().get().playConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> context.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> engineContext.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
     public void update(GameEngineContext engineContext) {
         super.update(engineContext);
 
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
         final GameContext game = engineContext.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(engineContext.gameVariantManager().currentRuntime().playConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(runtime.playConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

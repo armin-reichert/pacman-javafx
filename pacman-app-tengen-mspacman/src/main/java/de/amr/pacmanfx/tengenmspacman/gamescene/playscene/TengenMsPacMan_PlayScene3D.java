@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
         final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
-        final var renderer = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
+        final var renderer = runtime().uiConfig().renderConfig().createVariantRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -120,10 +120,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
-        actionBindingsRegistry().dispose();
+        final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        final var actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        actionBindingsRegistry().dispose();
 
         if (session.isAttractMode()) {
             // In demo level, allow going back to options screen

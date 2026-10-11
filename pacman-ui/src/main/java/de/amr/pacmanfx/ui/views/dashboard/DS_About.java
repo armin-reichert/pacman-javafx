@@ -24,7 +24,7 @@ public class DS_About extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext context) {
         final var myImage = new ImageView(ARMIN_1970);
         myImage.setFitWidth(250);
         myImage.setPreserveRatio(true);

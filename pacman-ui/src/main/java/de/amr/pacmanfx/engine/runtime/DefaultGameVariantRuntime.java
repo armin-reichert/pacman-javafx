@@ -9,7 +9,9 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.engine.Cartridge;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import org.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,18 +20,19 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameVariantRuntime {
+public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
    private final CoinMechanism coinMechanism = new CoinMechanism(99);
 
     private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
 
     private final GameVariantPlayConfig playConfig;
+
     private final GameVariantUIConfig uiConfig;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public GameVariantRuntime(Cartridge cartridge, PacManGamesEngine engine)
+    public DefaultGameVariantRuntime(Cartridge cartridge, GameEngineContext engineContext)
         throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         requireNonNull(cartridge);
@@ -45,7 +48,7 @@ public class GameVariantRuntime {
         //TODO Workaround until dependencies have been fixed
         uiConfig = (GameVariantUIConfig) cartridge.uiConfigFactory().getConstructor().newInstance();
 
-        extensions.putAll(uiConfig.createExtensions(engine));
+        extensions.putAll(uiConfig.createExtensions(engineContext));
         Logger.info("Added {} extension(s) to game variant:", extensions.size());
         extensions.forEach((name, ext) -> Logger.info("- Name: {}, type: {}", name, ext.getClass().getSimpleName()));
     }

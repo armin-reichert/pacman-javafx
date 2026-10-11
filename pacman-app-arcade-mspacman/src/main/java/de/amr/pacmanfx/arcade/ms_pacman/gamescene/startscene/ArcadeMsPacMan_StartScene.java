@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textview.TextView;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import de.amr.basics.ui.assets.ArcadeColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     protected void onEngineConnected() {
-        final AssetMap assets = engineContext().gameVariantManager().currentRuntime().uiConfig().assets();
+        final AssetMap assets = runtime().uiConfig().assets();
 
         msPacManImageView = new ImageView();
         msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
@@ -75,8 +75,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Bind "insert coin" + "start game" actions
-        final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings());
     }

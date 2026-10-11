@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.engine.config;
 
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 

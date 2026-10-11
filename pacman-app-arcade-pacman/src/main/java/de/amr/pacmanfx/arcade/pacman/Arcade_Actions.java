@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
@@ -32,13 +33,13 @@ public final class Arcade_Actions {
             @Override
             public void execute(GameEngineContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> {
+                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
                     engineContext.soundManager().voice().stop();
                     engineContext.soundManager().setEnabled(true);
                     game.coinMechanism().insertCoin();
                     game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                     game.eventManager().publishEvent(new CreditAddedEvent(1));
-                    engineContext.gameVariantManager().currentRuntime().uiConfig().optSoundEffects()
-                        .ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
+                    runtime.uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
                 });
             }
 
@@ -86,8 +87,8 @@ public final class Arcade_Actions {
         };
 
         gameStartActionBindings = Set.of(
-            new ActionKeyBinding(actionInsertCoin,   bareKey(KeyCode.DIGIT5), bareKey(KeyCode.NUMPAD5)),
-            new ActionKeyBinding(actionStartPlaying, bareKey(KeyCode.DIGIT1), bareKey(KeyCode.NUMPAD1))
+            new ActionKeyBinding(actionInsertCoin(),   bareKey(KeyCode.DIGIT5), bareKey(KeyCode.NUMPAD5)),
+            new ActionKeyBinding(actionStartPlaying(), bareKey(KeyCode.DIGIT1), bareKey(KeyCode.NUMPAD1))
         );
     }
 

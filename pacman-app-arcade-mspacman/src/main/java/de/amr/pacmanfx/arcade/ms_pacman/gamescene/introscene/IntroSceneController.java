@@ -83,7 +83,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.engineContext().optCurrentGame().ifPresent(game -> {
-                    final GameFlow gameFlow = scene.engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow();
+                    final GameFlow gameFlow = scene.runtime().playConfig().gameFlow();
                     final boolean canPlay = !game.coinMechanism().isEmpty();
                     if (timer.atSecond(2.0) && !canPlay) {
                         gameFlow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds

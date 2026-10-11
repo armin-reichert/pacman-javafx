@@ -10,10 +10,10 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -67,7 +67,7 @@ public class GamePlayViewRenderer {
 
         //TODO This should not be done in each render frame
 
-        final GameVariantRuntime runtime = engineContext.gameVariantManager().currentRuntime();
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final GameSceneView2D view2D = abstractGameScene.view2D();

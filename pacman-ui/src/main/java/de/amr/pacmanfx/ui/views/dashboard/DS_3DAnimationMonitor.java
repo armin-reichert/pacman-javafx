@@ -99,7 +99,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext context) {
         tableView.prefHeightProperty().bind(context.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }

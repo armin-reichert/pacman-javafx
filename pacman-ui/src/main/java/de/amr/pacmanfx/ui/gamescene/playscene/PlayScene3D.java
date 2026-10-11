@@ -266,8 +266,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         onDeactivate();
         engineContext().soundManager().setEnabled(false);
         engineContext().optCurrentGame().ifPresent(game ->
-            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-                .enterGameState(game, CommonGameStateID.GAME_OVER));
+            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER));
     }
 
     // Other stuff
@@ -312,7 +311,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         } else {
             scoresView.showTextForScore(
                 engineContext().translationManager().translate("score.game_over"),
-                engineContext().gameVariantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
+                runtime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -344,7 +343,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig uiConfig = engineContext().gameVariantManager().currentRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = runtime().uiConfig();
         final GameViewModel viewModel      = ui().viewModel();
         final GameSession session          = game.session();
 
@@ -360,7 +359,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(engineContext().gameVariantManager().currentRuntime(), game.session(), level3D);
+        animationSystem.createAnimations(runtime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();

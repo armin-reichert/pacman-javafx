@@ -24,7 +24,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
 
     public void setExecutionContext(GameEngineContext context) {
         requireNonNull(context);
-        sections().forEach(section -> section.setExecutionContext(context));
+        sections().forEach(section -> section.setEngineContext(context));
     }
 
     public void populate(

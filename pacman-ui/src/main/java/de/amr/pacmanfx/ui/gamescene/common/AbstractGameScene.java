@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
@@ -30,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    private GameEngineContext engineContext;
+    protected GameEngineContext engineContext;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -53,7 +54,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return engineContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return runtime().uiConfig().optSoundEffects();
     }
 
     // Events
@@ -81,6 +82,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     // Convenience
+
     public GameEngineContext engineContext() {
         return engineContext;
     }
@@ -92,12 +94,16 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     public final void setEngineContext(GameEngineContext engineContext) {
         requireNonNull(engineContext);
         if (this.engineContext != null) {
-            Logger.debug("Engine already assigned to game scene {}", this);
+            Logger.debug("Engine context already assigned to game scene {}", this);
             return;
         }
         this.engineContext = engineContext;
         onEngineConnected();
-        Logger.info("Game scene {} connected with app", getClass().getSimpleName());
+        Logger.info("Game scene {} connected with engine", getClass().getSimpleName());
+    }
+
+    public DefaultGameVariantRuntime runtime() {
+        return (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
     }
 
     // Interface GameScene

@@ -20,7 +20,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -58,8 +57,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
@@ -79,11 +77,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void initState() {
-        final GameVariantRuntime variant = engineContext().gameVariantManager().currentRuntime();
         view.createPacManAndGhosts(
-            variant.uiConfig().renderConfig(),
-            variant.playConfig().systems().actorSpriteAnimController(),
-            variant.spriteAnimContainer()
+            runtime().uiConfig().renderConfig(),
+            runtime().playConfig().systems().actorSpriteAnimController(),
+            runtime().spriteAnimContainer()
         );
         view.hideEverything();
 

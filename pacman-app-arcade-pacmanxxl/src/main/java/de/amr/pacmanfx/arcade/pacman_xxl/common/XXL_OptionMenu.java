@@ -8,7 +8,7 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -68,8 +68,8 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meMapOrder);
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
+            final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
             if (animationDirty) {
-                final var runtime = engineContext.gameVariantManager().currentRuntime();
                 stopChaseAnimation();
                 createNewChaseAnimation(runtime, canvas);
                 animationDirty = false;
@@ -112,7 +112,7 @@ public class XXL_OptionMenu extends OptionMenu {
         this.engineContext = engineContext;
 
         final String variantName = engineContext.gameVariantManager().currentVariantName();
-        final GameVariantRuntime runtime = engineContext.gameVariantManager().currentRuntime();
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
@@ -139,20 +139,20 @@ public class XXL_OptionMenu extends OptionMenu {
         engineContext.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
             engineContext.engineLife().exitGameVariant(oldVariantName);
 
-            final GameVariantRuntime newRuntime = engineContext.gameVariantManager().variantRuntimeByName(newVariantName);
+            final DefaultGameVariantRuntime newRuntime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().variantRuntimeByName(newVariantName);
             engineContext.engineLife().enterGameVariant(newVariantName);
             restartChaseAnimation(newRuntime);
         });
     }
 
-    public void restartChaseAnimation(GameVariantRuntime runtime) {
+    public void restartChaseAnimation(DefaultGameVariantRuntime runtime) {
         chaseAnimationTimer.stop();
         createNewChaseAnimation(runtime, canvas);
         chaseAnimation.startGhostsChasePacMan();
         chaseAnimationTimer.playFromStart();
     }
 
-    private void createNewChaseAnimation(GameVariantRuntime runtime, Canvas canvas) {
+    private void createNewChaseAnimation(DefaultGameVariantRuntime runtime, Canvas canvas) {
         chaseAnimation = new XXL_ChaseAnimation(
             settings.numTilesX(),
             (settings.numTilesY() - 12) * TS,

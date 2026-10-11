@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             return Stream.empty();
         }
 
-        final GameVariantRenderConfig renderConfig = engineContext().gameVariantManager().currentRuntime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
@@ -123,8 +123,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             onDeactivate();
             // Avoid game over sound being played
             engineContext().soundManager().setEnabled(false);
-            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-                .enterGameState(game, CommonGameStateID.GAME_OVER);
+            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
 
@@ -181,8 +180,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindingsRegistry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
-                .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
             engineContext().soundManager().setEnabled(false);
@@ -196,7 +194,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(engineContext().gameVariantManager().currentRuntime(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(runtime(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {

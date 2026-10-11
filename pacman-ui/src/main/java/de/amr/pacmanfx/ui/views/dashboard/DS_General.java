@@ -26,7 +26,7 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext context) {
+    public void setEngineContext(GameEngineContext context) {
         final GameViewModel viewModel = context.ui().viewModel();
 
         info("Java Version",   Runtime.version().toString());

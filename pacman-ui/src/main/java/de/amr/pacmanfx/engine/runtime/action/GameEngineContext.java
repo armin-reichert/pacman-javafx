@@ -10,13 +10,11 @@ import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.engine.EngineLifecycle;
-import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -34,13 +32,16 @@ public interface GameEngineContext {
 
     Input input();
 
-    RenderManager renderManager();
-
     SoundManager soundManager();
+
+    DirectoryWatchdog watchdog();
+
+    //TODO extract UI-specific part
+
+    RenderManager renderManager();
 
     TranslationManager translationManager();
 
     GameUI ui();
 
-    DirectoryWatchdog watchdog();
 }

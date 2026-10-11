@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
-import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -36,7 +35,7 @@ public class SimulationActions {
 
     public SimulationActions() {
 
-        actionFaster = new GameAction<GameEngineContext>("simulation_faster") {
+        actionFaster = new GameAction<>("simulation_faster") {
             @Override
             public void execute(GameEngineContext context) {
                 final GameClock clock = context.clock();
@@ -49,7 +48,7 @@ public class SimulationActions {
             }
         };
 
-        actionFastest = new GameAction<GameEngineContext>("simulation_fastest") {
+        actionFastest = new GameAction<>("simulation_fastest") {
             @Override
             public void execute(GameEngineContext context) {
                 context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
@@ -58,7 +57,7 @@ public class SimulationActions {
             }
         };
 
-        actionSlower = new GameAction<GameEngineContext>("simulation_slower") {
+        actionSlower = new GameAction<>("simulation_slower") {
             @Override
             public void execute(GameEngineContext context) {
                 final GameClock clock = context.clock();
@@ -71,7 +70,7 @@ public class SimulationActions {
             }
         };
 
-        actionSlowest = new GameAction<GameEngineContext>("simulation_slowest") {
+        actionSlowest = new GameAction<>("simulation_slowest") {
             @Override
             public void execute(GameEngineContext context) {
                 context.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
@@ -80,7 +79,7 @@ public class SimulationActions {
             }
         };
 
-        actionOneStep = new GameAction<GameEngineContext>("simulation_one_step") {
+        actionOneStep = new GameAction<>("simulation_one_step") {
             @Override
             public void execute(GameEngineContext context) {
                 final boolean failure = !context.clock().makeOneStep(true);
@@ -90,10 +89,12 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) { return context.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameEngineContext context) {
+                return context.clock().getUpdatesDisabled();
+            }
         };
 
-        actionTenSteps = new GameAction<GameEngineContext>("simulation_ten_steps") {
+        actionTenSteps = new GameAction<>("simulation_ten_steps") {
             @Override
             public void execute(GameEngineContext context) {
                 final boolean failure = !context.clock().makeSteps(10, true);
@@ -103,10 +104,12 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineContext context) { return context.clock().getUpdatesDisabled(); }
+            public boolean isEnabled(GameEngineContext context) {
+                return context.clock().getUpdatesDisabled();
+            }
         };
 
-        actionReset = new GameAction<GameEngineContext>("simulation_reset") {
+        actionReset = new GameAction<>("simulation_reset") {
             @Override
             public void execute(GameEngineContext context) {
                 final GameClock gameClock = context.clock();
@@ -115,15 +118,15 @@ public class SimulationActions {
             }
         };
 
-        actionTogglePaused = new GameAction<GameEngineContext>("toggle_paused") {
+        actionTogglePaused = new GameAction<>("toggle_paused") {
             @Override
-            public void execute(GameEngineContext context) {
-                final GameClock gameClock = context.clock();
+            public void execute(GameEngineContext engineContext) {
+                final GameClock gameClock = engineContext.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {
-                    context.soundManager().stopAll();
-                    context.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+                    engineContext.soundManager().stopAll();
+                    //engineContext.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
                 }
             }
 
@@ -133,7 +136,7 @@ public class SimulationActions {
             }
         };
 
-        actionToggleMuted = new GameAction<GameEngineContext>("toggle_muted") {
+        actionToggleMuted = new GameAction<>("toggle_muted") {
             @Override
             public void execute(GameEngineContext context) {
                 toggleBooleanProperty(context.ui().viewModel().muteProperty());
@@ -141,15 +144,15 @@ public class SimulationActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionSlower,       combine().alt().key(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSlowest,      combine().alt().shift().key(KeyCode.MINUS)),
-            new ActionKeyBinding(actionFaster,       combine().alt().key(KeyCode.PLUS)),
-            new ActionKeyBinding(actionFastest,      combine().alt().shift().key(KeyCode.PLUS)),
-            new ActionKeyBinding(actionReset,        combine().alt().key(KeyCode.DIGIT0)),
-            new ActionKeyBinding(actionOneStep,      combine().shift().key(KeyCode.P), combine().shift().key(KeyCode.F5)),
-            new ActionKeyBinding(actionTenSteps,     combine().shift().key(KeyCode.SPACE)),
-            new ActionKeyBinding(actionTogglePaused, bareKey(KeyCode.P), bareKey(KeyCode.F5)),
-            new ActionKeyBinding(actionToggleMuted,  combine().alt().key(KeyCode.M))
+            new ActionKeyBinding(actionSlower(),       combine().alt().key(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSlowest(),      combine().alt().shift().key(KeyCode.MINUS)),
+            new ActionKeyBinding(actionFaster(),       combine().alt().key(KeyCode.PLUS)),
+            new ActionKeyBinding(actionFastest(),      combine().alt().shift().key(KeyCode.PLUS)),
+            new ActionKeyBinding(actionReset(),        combine().alt().key(KeyCode.DIGIT0)),
+            new ActionKeyBinding(actionOneStep(),      combine().shift().key(KeyCode.P), combine().shift().key(KeyCode.F5)),
+            new ActionKeyBinding(actionTenSteps(),     combine().shift().key(KeyCode.SPACE)),
+            new ActionKeyBinding(actionTogglePaused(), bareKey(KeyCode.P), bareKey(KeyCode.F5)),
+            new ActionKeyBinding(actionToggleMuted(),  combine().alt().key(KeyCode.M))
         );
     }
 

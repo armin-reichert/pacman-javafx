@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
@@ -109,10 +110,12 @@ public class GamePlayView implements GameView {
         requireNonNull(currentGameScene);
         requireNonNull(level);
 
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+
         // Level changed: adjust game scene size by reembedding
         layers.gameSceneLayer().embedGameScene(
             engineContext.ui(),
-            engineContext.gameVariantManager().currentRuntime().uiConfig(),
+            runtime.uiConfig(),
             (AbstractGameScene) currentGameScene);
 
         layers.miniViewLayer().setLevel(level);
@@ -130,10 +133,8 @@ public class GamePlayView implements GameView {
 
         nextGameScene.onBeforeEmbedded();
 
-        layers.gameSceneLayer().embedGameScene(
-            engineContext.ui(),
-            engineContext.gameVariantManager().currentRuntime().uiConfig(),
-            (AbstractGameScene) nextGameScene);
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        layers.gameSceneLayer().embedGameScene(engineContext.ui(), runtime.uiConfig(), (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }

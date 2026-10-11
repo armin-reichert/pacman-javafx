@@ -26,7 +26,6 @@ import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -127,19 +126,17 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engineContext().optCurrentGame().ifPresent(game -> {
-            final GameVariantUIConfig variantConfig = engineContext().gameVariantManager().currentRuntime().uiConfig();
+            final GameVariantUIConfig uiConfig = runtime().uiConfig();
+            final var tengenAction = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
             game.session().setHudVisible(false);
 
             spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-            final var actions = engineContext().gameVariantManager().currentRuntime()
-                .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+            actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionEnterStartScreen(), tengenAction.localBindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionToggleJoypadBindingsDisplayed(), tengenAction.localBindings());
 
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
-
-            final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
+            final List<GhostSettings> ghostSettings = uiConfig.worldSettings().ghosts();
             ghostColors = Stream.of(
                     GhostPersonality.RED_GHOST_SHADOW,
                     GhostPersonality.PINK_GHOST_SPEEDY,
@@ -236,10 +233,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
         marqueeTextView2.show();
 
-        final GameVariantRuntime runtime = engineContext().gameVariantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer   = runtime().spriteAnimContainer();
+        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
@@ -302,9 +298,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantRuntime variant = scene.engineContext().gameVariantManager().currentRuntime();
-                final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
-                final GameSystems systems = variant.playConfig().systems();
+                final GameSystems systems = scene.runtime().playConfig().systems();
+                final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                 final WorldNavigationSystem nav = systems.navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);

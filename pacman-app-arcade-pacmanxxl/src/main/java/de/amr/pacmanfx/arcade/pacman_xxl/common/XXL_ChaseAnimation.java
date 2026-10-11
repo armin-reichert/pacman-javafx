@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
 import java.util.*;
@@ -43,7 +43,7 @@ class XXL_ChaseAnimation {
     public static final float PAC_FLEEING_SPEED = 1.0f;
     public static final float GHOST_CHASE_SPEED = 1.05f;
 
-    private final GameVariantRuntime runtime;
+    private final DefaultGameVariantRuntime runtime;
 
     private final int numTilesX;
     private final float offsetY;
@@ -59,7 +59,7 @@ class XXL_ChaseAnimation {
     private ChasingState state;
     private int collisionCount;
 
-    public XXL_ChaseAnimation(int numTilesX, float offsetY, GameVariantRuntime runtime) {
+    public XXL_ChaseAnimation(int numTilesX, float offsetY, DefaultGameVariantRuntime runtime) {
         this.numTilesX = numTilesX;
         this.offsetY = offsetY;
         this.runtime = requireNonNull(runtime);

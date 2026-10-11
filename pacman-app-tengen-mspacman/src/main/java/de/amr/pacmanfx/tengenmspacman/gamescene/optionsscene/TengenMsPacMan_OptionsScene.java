@@ -20,6 +20,8 @@ import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.engine.input.Joypad;
+import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -34,8 +36,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.engine.input.Joypad;
-import de.amr.pacmanfx.engine.input.JoypadButton;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -44,10 +44,10 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
+import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
@@ -162,8 +162,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             final GameSession session = game.session();
             session.setHudVisible(false);
 
-            final var actions = engineContext().gameVariantManager().currentRuntime()
-                .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+            final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
             actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
             actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
@@ -187,8 +186,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            engineContext().gameVariantManager().currentRuntime().playConfig().gameFlow()
-                .enterGameState(game, CommonGameStateID.GAME_INTRO);
+            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
         updateOptions(game.session());
     }
@@ -345,12 +343,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private JoypadKeyBindingsView createJoypadKeyBindingsView(Input input) {
-        final Joypad joypad = input.joypad();
-        final var uiSettings = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-        final boolean visible = uiSettings.joypadBindingsDisplayed.get();
-        return visible ?
-            new JoypadKeyBindingsView(joypad.currentKeyBinding(), new Vector2f(0,0))
-            : null;
+        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final boolean showBindings = uiSettings.joypadBindingsDisplayed.get();
+        return showBindings ? new JoypadKeyBindingsView(input.joypad().currentKeyBinding(), Vector2f.ZERO) : null;
     }
 }

@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setExecutionContext(GameEngineContext engineContext) {
+    public void setEngineContext(GameEngineContext engineContext) {
         final GameViewModel viewModel = engineContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");

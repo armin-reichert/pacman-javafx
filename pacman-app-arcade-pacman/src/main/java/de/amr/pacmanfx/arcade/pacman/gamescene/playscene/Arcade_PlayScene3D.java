@@ -20,8 +20,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameSession session, GameLevel level) {
         actionBindingsRegistry().dispose();
 
-        final Arcade_Actions actions = engineContext().gameVariantManager().currentRuntime()
-            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {
             actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings());

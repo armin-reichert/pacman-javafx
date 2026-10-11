@@ -89,7 +89,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
     }
 
     //TODO This method is messy and needs a cleanup!
-    public void enterGameVariant(GameVariantRuntime runtime) {
+    public void enterGameVariant(DefaultGameVariantRuntime runtime) {
         requireNonNull(runtime);
 
         final GameEventManager gameEventManager = new DefaultGameEventManager();
@@ -121,7 +121,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
         ui.viewModel().maze3DSettings().init(runtime.uiConfig().worldSettings().maze());
     }
 
-    public void exitGameVariant(GameVariantRuntime variantRuntime) {
+    public void exitGameVariant(DefaultGameVariantRuntime variantRuntime) {
         requireNonNull(variantRuntime);
 
         variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);

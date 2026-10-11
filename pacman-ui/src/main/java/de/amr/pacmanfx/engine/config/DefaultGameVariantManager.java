@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.engine.runtime.GameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -26,16 +26,16 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private final PacManGamesEngine engine;
+    private final GameEngineContext engineContext;
 
-    private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
+    private final Map<String, DefaultGameVariantRuntime> configsByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(PacManGamesEngine engine, GameViewModel viewModel) {
-        this.engine = requireNonNull(engine);
+    public DefaultGameVariantManager(GameEngineContext engineContext, GameViewModel viewModel) {
+        this.engineContext = requireNonNull(engineContext);
         this.viewModel = requireNonNull(viewModel);
     }
 
@@ -43,9 +43,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantRuntime gameVariantRuntime;
+        final DefaultGameVariantRuntime gameVariantRuntime;
         try {
-            gameVariantRuntime = createGameVariantRuntime(engine, variantName, includeInteractiveTests);
+            gameVariantRuntime = createGameVariantRuntime(engineContext, variantName, includeInteractiveTests);
             configsByName.put(variantName, gameVariantRuntime);
         } catch (Exception x) {
             throw new RuntimeException("Game variant could not be registered", x);
@@ -69,12 +69,12 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariantRuntime currentRuntime() {
+    public DefaultGameVariantRuntime currentRuntime() {
         return variantRuntimeByName(currentVariantName());
     }
 
     @Override
-    public GameVariantRuntime variantRuntimeByName(String variantName) {
+    public DefaultGameVariantRuntime variantRuntimeByName(String variantName) {
         requireNonNull(variantName);
         return configsByName.get(variantName);
     }
@@ -97,11 +97,11 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(PacManGamesEngine engine, String variantName, boolean includeInteractiveTests)
+    private DefaultGameVariantRuntime createGameVariantRuntime(GameEngineContext engineContext, String variantName, boolean includeInteractiveTests)
         throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
-        final var variantRuntime = new GameVariantRuntime(cartridge, engine);
+        final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engineContext);
         if (includeInteractiveTests) {
             final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

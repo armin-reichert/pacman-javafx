@@ -40,7 +40,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return gameScene.engineContext().gameVariantManager().currentRuntime().uiConfig().optSoundEffects();
+        return gameScene.runtime().uiConfig().optSoundEffects();
     }
 
     @Override
