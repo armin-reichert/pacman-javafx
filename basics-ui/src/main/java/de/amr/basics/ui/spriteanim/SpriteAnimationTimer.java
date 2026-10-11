@@ -17,11 +17,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimationTimer {
 
-    private static final int FPS = 60;
-
     private final Timeline animationTimer = new Timeline();
 
-    public SpriteAnimationTimer() {
+    private final int fps;
+
+    public SpriteAnimationTimer(int fps) {
+        this.fps = fps;
         animationTimer.setCycleCount(Animation.INDEFINITE);
     }
 
@@ -29,7 +30,7 @@ public class SpriteAnimationTimer {
         requireNonNull(animContainer);
 
         detachAnimationContainer();
-        final var frame = new KeyFrame(Duration.seconds(1.0 / FPS), _ -> {
+        final var frame = new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
             for (SpriteAnimation animation : animContainer.activeAnimations()) {
                 animation.tick();
             }
