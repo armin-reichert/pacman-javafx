@@ -21,6 +21,8 @@ public interface GameEngineBaseContext {
 
     EngineLifecycle engineLife();
 
+    GameVariantManager gameVariantManager();
+
     Input input();
 
     SoundManager soundManager();
