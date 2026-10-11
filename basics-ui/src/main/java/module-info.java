@@ -8,6 +8,7 @@ module de.amr.basics.ui {
     requires javafx.controls;
     requires javafx.media;
 
+    exports de.amr.basics.ui;
     exports de.amr.basics.ui.animation;
     exports de.amr.basics.ui.assets;
     exports de.amr.basics.ui.ecs.comp;

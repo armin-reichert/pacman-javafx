@@ -8,7 +8,6 @@ module de.amr.pacmanfx.engine {
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
-    requires de.amr.pacmanfx.uilib;
 
     exports de.amr.pacmanfx.engine;
     exports de.amr.pacmanfx.engine.action;

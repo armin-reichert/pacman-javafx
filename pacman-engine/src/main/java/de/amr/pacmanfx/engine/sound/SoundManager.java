@@ -6,7 +6,7 @@ package de.amr.pacmanfx.engine.sound;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
-import de.amr.pacmanfx.uilib.widgets.Voice;
+import de.amr.basics.ui.Voice;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
