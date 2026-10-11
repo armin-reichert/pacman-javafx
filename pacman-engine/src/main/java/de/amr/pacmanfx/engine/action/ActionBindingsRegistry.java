@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.engine.action;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.engine.GameEngineContext;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -16,12 +16,12 @@ import java.util.Set;
 /**
  * @param <C> Engine or UI context
  */
-public interface ActionBindingsRegistry<C extends GameEngineContext> extends Disposable {
+public interface ActionBindingsRegistry<C extends EngineContext> extends Disposable {
 
     ActionBindingsRegistry<?> NO_BINDINGS = new EmptyActionBindingsRegistry();
 
     @SuppressWarnings("unchecked")
-    static <C extends GameEngineContext> ActionBindingsRegistry<C> empty() {
+    static <C extends EngineContext> ActionBindingsRegistry<C> empty() {
         return (ActionBindingsRegistry<C>) NO_BINDINGS;
     }
 

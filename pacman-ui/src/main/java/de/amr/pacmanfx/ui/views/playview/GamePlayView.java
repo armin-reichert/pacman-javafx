@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -91,7 +91,7 @@ public class GamePlayView implements GameView {
         StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
 
-        actionBindings = new GameActionBindingsRegistry<>("Action Bindings for GamePlayView");
+        actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
     }
 
     public Layers layers() {

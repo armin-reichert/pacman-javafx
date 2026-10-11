@@ -4,15 +4,14 @@
 
 package de.amr.pacmanfx.engine.action;
 
-import de.amr.pacmanfx.engine.GameEngineContext;
-import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.engine.EngineContext;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 public class ActionExecutor {
 
-    public static <C extends GameEngineContext> Optional<GameAction<C>> executeMatchingAction(
+    public static <C extends EngineContext> Optional<GameAction<C>> executeMatchingAction(
         ActionBindingsRegistry<C> registry,
         C context)
     {
@@ -21,7 +20,7 @@ public class ActionExecutor {
         return matchingAction;
     }
 
-    public static <C extends GameEngineContext> boolean runAction(GameAction<C> gameAction, C context) {
+    public static <C extends EngineContext> boolean runAction(GameAction<C> gameAction, C context) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {

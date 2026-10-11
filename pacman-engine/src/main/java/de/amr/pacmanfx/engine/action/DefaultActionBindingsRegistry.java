@@ -2,12 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.runtime.action;
+package de.amr.pacmanfx.engine.action;
 
-import de.amr.pacmanfx.engine.GameEngineContext;
-import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -17,12 +14,13 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameActionBindingsRegistry<C extends GameEngineContext> implements ActionBindingsRegistry<C> {
+public class DefaultActionBindingsRegistry<C extends EngineContext> implements ActionBindingsRegistry<C> {
 
     private final String name;
+
     private final Map<KeyCodeCombination, GameAction<C>> actionBindingsMap = new HashMap<>();
 
-    public GameActionBindingsRegistry(String name) {
+    public DefaultActionBindingsRegistry(String name) {
         this.name = requireNonNull(name);
     }
 

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
@@ -39,7 +39,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComponent(GameSceneView2D.class, view2D);
 
-        setComponent(ActionBindingsRegistry.class, new GameActionBindingsRegistry<>("Action Bindings for '%s'".formatted(this)));
+        setComponent(ActionBindingsRegistry.class, new DefaultActionBindingsRegistry<>("Action Bindings for '%s'".formatted(this)));
     }
 
     // Typed game scene component access

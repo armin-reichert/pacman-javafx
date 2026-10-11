@@ -14,7 +14,7 @@ import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -58,7 +58,7 @@ public class GameUI implements GameEventListener {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry<EngineUIContext> actionBindings = new GameActionBindingsRegistry<>("Global Action Bindings");
+    private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
     private final GameUISettings uiSettings;
 
