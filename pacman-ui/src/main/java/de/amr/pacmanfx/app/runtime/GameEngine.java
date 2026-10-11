@@ -6,8 +6,9 @@ package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.basics.ui.rendering.DefaultRenderManager;
+import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
+import de.amr.pacmanfx.app.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -15,9 +16,8 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
-import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.app.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.GameVariantManager;
+import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
-    private final DefaultRenderManager renderManager;
+    private final RenderManager renderManager;
 
     private final DefaultSoundManager soundManager;
 
@@ -60,7 +60,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private DefaultGameVariantManager gameVariantManager;
 
     public GameEngine(
-        DefaultRenderManager renderManager,
+        RenderManager renderManager,
         DefaultGameSceneManager gameSceneManager
     ) {
         this.renderManager = requireNonNull(renderManager);
@@ -171,7 +171,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public DefaultRenderManager renderManager() {
+    public RenderManager renderManager() {
         return renderManager;
     }
 

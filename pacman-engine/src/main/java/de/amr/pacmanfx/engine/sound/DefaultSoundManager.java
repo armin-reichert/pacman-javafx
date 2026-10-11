@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultSoundManager implements Disposable {
+public class DefaultSoundManager implements SoundManager, Disposable {
 
     public sealed interface SoundResource permits AudioClipResource, MediaPlayerResource {}
 
