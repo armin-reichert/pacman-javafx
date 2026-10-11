@@ -21,6 +21,7 @@ open module de.amr.pacmanfx.ui {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.engine;
     requires de.amr.pacmanfx.mapeditor;
+    requires java.security.jgss;
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;

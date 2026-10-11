@@ -12,6 +12,7 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.input.KeyCode;
@@ -53,7 +54,7 @@ public class UISettingsActions {
             public boolean isEnabled(EngineUIContext context) {
                 final String variantName = context.gameVariantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
-                final DefaultGameSceneManager gameSceneManager = context.gameSceneManager();
+                final GameSceneManager gameSceneManager = context.gameSceneManager();
                 return isArcadeGame &&
                       (gameSceneManager.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
                     || gameSceneManager.currentGameSceneHasID(CommonGameSceneID.START_SCENE)
@@ -123,7 +124,7 @@ public class UISettingsActions {
                 return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
-            private boolean isPlaySceneRunning(DefaultGameSceneManager gameSceneManager) {
+            private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {
                 return gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
                     || gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }

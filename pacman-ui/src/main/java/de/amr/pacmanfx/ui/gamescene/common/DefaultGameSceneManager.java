@@ -7,14 +7,14 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Named;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultGameSceneManager {
+public class DefaultGameSceneManager implements GameSceneManager {
 
     public static Named cutSceneID(int n) {
         return switch (n) {

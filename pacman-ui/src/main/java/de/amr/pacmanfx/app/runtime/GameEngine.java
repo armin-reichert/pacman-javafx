@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -47,7 +48,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final TranslationManager translationManager;
 
-    private final DefaultGameSceneManager gameSceneManager;
+    private final GameSceneManager gameSceneManager;
 
     private final SpriteAnimationTimer spriteAnimationTimer;
 
@@ -61,7 +62,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public GameEngine(
         RenderManager renderManager,
-        DefaultGameSceneManager gameSceneManager,
+        GameSceneManager gameSceneManager,
         SoundManager soundManager
     ) {
         this.renderManager = requireNonNull(renderManager);
@@ -157,7 +158,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public DefaultGameSceneManager gameSceneManager() {
+    public GameSceneManager gameSceneManager() {
         return gameSceneManager;
     }
 
