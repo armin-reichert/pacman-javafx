@@ -26,15 +26,12 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     private final Map<Named, GameView> views = new HashMap<>();
 
-    public DefaultGameViewManager() {
+    public DefaultGameViewManager(EngineUIContext engineContext) {
+        requireNonNull(engineContext);
+
         registerView(GameViewID.START_PAGES, new StartPagesView());
         registerView(GameViewID.GAMEPLAY, new GamePlayView());
         registerView(GameViewID.EDITOR, new EditorView());
-    }
-
-    @Override
-    public void setEngineContext(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
             engineContext.ui().clearMessage();

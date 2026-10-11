@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface GameViewManager {
 
-    void setEngineContext(EngineUIContext engineContext);
-
     <V extends GameView> V assertView(Named id, Class<V> viewClass);
 
     default GameView assertView(Named viewID) {

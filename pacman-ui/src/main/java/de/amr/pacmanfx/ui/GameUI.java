@@ -55,11 +55,11 @@ public class GameUI implements GameEventListener {
 
     private final GameWindow window;
 
-    private final GameViewManager viewManager;
-
     private final GameViewModel viewModel;
 
     private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
+
+    private GameViewManager viewManager;
 
     private final GameUISettings uiSettings;
 
@@ -74,14 +74,14 @@ public class GameUI implements GameEventListener {
         viewModel = new GameViewModel();
         viewModel.init(uiSettings);
 
-        viewManager = new DefaultGameViewManager();
     }
 
     public void setEngineContext(EngineUIContext engineContext, DashboardFactory dashboardFactory) {
         this.engineContext = requireNonNull(engineContext);
 
+        viewManager = new DefaultGameViewManager(engineContext);
+
         window.setEngineContext(engineContext);
-        viewManager.setEngineContext(engineContext);
 
         engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
 
