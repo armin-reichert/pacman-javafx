@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
+import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneEmbedding;
 import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
@@ -23,7 +24,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_Opti
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene3D;
 import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
-import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 

@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.allgames.app;
 
+import de.amr.pacmanfx.app.config.PacManGameEngineBuilder;
+import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
@@ -14,8 +16,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.app.config.PacManGameEngineBuilder;
-import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;

@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;

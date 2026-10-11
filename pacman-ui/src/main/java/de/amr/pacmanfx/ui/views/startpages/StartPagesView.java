@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
-import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.view3d.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

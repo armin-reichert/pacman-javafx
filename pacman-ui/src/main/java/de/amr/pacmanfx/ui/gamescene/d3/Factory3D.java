@@ -7,13 +7,13 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 

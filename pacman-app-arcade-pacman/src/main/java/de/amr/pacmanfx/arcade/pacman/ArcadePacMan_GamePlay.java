@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterBehavior;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
@@ -43,7 +44,6 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.basics.ui.assets.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.List;

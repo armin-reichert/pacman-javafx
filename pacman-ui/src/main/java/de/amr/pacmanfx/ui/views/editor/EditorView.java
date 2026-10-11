@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;

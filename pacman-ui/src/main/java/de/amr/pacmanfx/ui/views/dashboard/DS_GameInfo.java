@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -15,8 +17,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.paint.Color;
 

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostComponentColors;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
