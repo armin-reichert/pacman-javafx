@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationSystem;
+import de.amr.pacmanfx.ui.gamescene.animation.ActorAnimationSystem;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
 

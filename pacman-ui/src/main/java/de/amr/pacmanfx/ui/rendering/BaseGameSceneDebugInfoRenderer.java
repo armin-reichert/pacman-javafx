@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d2;
+package de.amr.pacmanfx.ui.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.ecs.GameEntity;

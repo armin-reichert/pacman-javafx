@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

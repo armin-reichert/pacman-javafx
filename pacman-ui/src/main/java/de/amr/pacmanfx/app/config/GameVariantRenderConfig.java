@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

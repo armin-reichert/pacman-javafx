@@ -26,7 +26,7 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.views.dashboard;
-    exports de.amr.pacmanfx.ui.gamescene.d2;
+    exports de.amr.pacmanfx.ui.gamescene.animation;
     exports de.amr.pacmanfx.ui.gamescene.d3;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;

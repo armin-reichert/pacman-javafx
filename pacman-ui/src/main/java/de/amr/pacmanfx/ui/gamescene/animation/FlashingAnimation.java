@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.gamescene.d2;
+package de.amr.pacmanfx.ui.gamescene.animation;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

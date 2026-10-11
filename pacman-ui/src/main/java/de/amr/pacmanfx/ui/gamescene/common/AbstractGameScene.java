@@ -17,7 +17,7 @@ import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
+import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
 

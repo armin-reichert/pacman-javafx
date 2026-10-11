@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.gamescene.d2;
+package de.amr.pacmanfx.ui.gamescene.animation;
 
 /**
  * State of the flashing part of the level-complete animation. Used by renderers to query the current flashing status.

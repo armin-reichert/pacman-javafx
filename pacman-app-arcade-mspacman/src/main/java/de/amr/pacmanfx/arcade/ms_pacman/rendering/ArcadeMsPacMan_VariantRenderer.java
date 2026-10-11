@@ -40,7 +40,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
+import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

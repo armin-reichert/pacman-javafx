@@ -15,8 +15,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_VariantRenderer
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.d2.GameLevelView;
-import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
+import de.amr.pacmanfx.ui.rendering.GameLevelView;
+import de.amr.pacmanfx.ui.rendering.GenericLevelRenderer;
 import javafx.scene.canvas.Canvas;
 
 public class XXL_MsPacMan_VariantRenderer extends ArcadeMsPacMan_VariantRenderer {
