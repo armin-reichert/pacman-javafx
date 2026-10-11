@@ -9,7 +9,7 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.engine.Cartridge;
+import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import org.tinylog.Logger;

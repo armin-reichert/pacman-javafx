@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
-import de.amr.pacmanfx.engine.AbstractGameSceneConfig;
+import de.amr.pacmanfx.engine.config.AbstractGameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;

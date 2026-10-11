@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
-import de.amr.pacmanfx.engine.Cartridge;
+import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.ui.EngineUIContext;

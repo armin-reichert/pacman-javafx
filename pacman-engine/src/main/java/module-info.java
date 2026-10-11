@@ -11,6 +11,7 @@ module de.amr.pacmanfx.engine {
 
     exports de.amr.pacmanfx.engine;
     exports de.amr.pacmanfx.engine.action;
+    exports de.amr.pacmanfx.engine.config;
     exports de.amr.pacmanfx.engine.gamescene;
     exports de.amr.pacmanfx.engine.input;
     exports de.amr.pacmanfx.engine.sound;
