@@ -5,6 +5,7 @@ package de.amr.pacmanfx.app.config;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -94,7 +95,9 @@ public class PacManGameEngineBuilder {
         try {
             validateConfigurationData();
 
-            final var engine = new GameEngine();
+            final var engine = new GameEngine(
+                new RenderManager()
+            );
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
             engine.setUI(ui, dashboardFactory);

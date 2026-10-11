@@ -14,6 +14,7 @@ public class RenderManager {
     private final RenderQueue renderQueue = new RenderQueue();
 
     private Renderer variantRenderer;
+
     private Renderer debugRenderer;
 
     private RectShort clipRect;

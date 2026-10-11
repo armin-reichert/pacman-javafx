@@ -18,5 +18,4 @@ public interface EngineUIContext extends EngineContext {
     TranslationManager translationManager();
 
     GameUI ui();
-
 }

@@ -59,8 +59,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public GameEngine() {
-        renderManager = new RenderManager();
+    public GameEngine(RenderManager renderManager) {
+        this.renderManager = requireNonNull(renderManager);
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
         spriteAnimationTimer = new SpriteAnimationTimer();
