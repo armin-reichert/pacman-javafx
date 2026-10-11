@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.GameEngine;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
@@ -98,7 +99,8 @@ public class PacManGameEngineBuilder {
 
             final var engine = new GameEngine(
                 new DefaultRenderManager(),
-                new DefaultGameSceneManager()
+                new DefaultGameSceneManager(),
+                new DefaultSoundManager()
             );
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);

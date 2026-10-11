@@ -19,7 +19,7 @@ import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
@@ -43,7 +43,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final RenderManager renderManager;
 
-    private final DefaultSoundManager soundManager;
+    private final SoundManager soundManager;
 
     private final TranslationManager translationManager;
 
@@ -61,11 +61,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public GameEngine(
         RenderManager renderManager,
-        DefaultGameSceneManager gameSceneManager
+        DefaultGameSceneManager gameSceneManager,
+        SoundManager soundManager
     ) {
         this.renderManager = requireNonNull(renderManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
-        soundManager = new DefaultSoundManager();
+        this.soundManager = requireNonNull(soundManager);
         spriteAnimationTimer = new SpriteAnimationTimer();
         translationManager = new DefaultTranslationManager();
 
@@ -176,7 +177,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public DefaultSoundManager soundManager() {
+    public SoundManager soundManager() {
         return soundManager;
     }
 

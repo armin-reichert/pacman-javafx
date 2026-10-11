@@ -6,10 +6,13 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -18,24 +21,22 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
+import de.amr.pacmanfx.engine.sound.SoundEntry;
+import de.amr.pacmanfx.engine.sound.SoundManager;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
-import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
-import de.amr.basics.ui.assets.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.audioClip;
-import static de.amr.pacmanfx.engine.sound.DefaultSoundManager.SoundEntry.mediaPlayer;
+import static de.amr.pacmanfx.engine.sound.SoundEntry.audioClip;
+import static de.amr.pacmanfx.engine.sound.SoundEntry.mediaPlayer;
 
 public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -51,7 +52,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private static final ResourceManager RM = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private static final List<DefaultSoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+    private static final List<SoundEntry> SOUND_ENTRIES = Arrays.asList(
         mediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3")),
         audioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3")),
         audioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav")),
@@ -175,7 +176,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     // Private
 
-    private void loadSounds(DefaultSoundManager soundManager) {
+    private void loadSounds(SoundManager soundManager) {
         soundManager.addMediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3"));
         soundManager.addAudioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3"));
         soundManager.addAudioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav"));
@@ -203,9 +204,9 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         );
     }
 
-    private void unloadSounds(DefaultSoundManager soundManager) {
+    private void unloadSounds(SoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (DefaultSoundManager.SoundEntry entry : SOUND_ENTRIES) {
+        for (SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {

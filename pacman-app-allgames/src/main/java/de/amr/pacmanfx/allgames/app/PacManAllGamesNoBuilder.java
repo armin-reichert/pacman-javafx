@@ -7,6 +7,7 @@ package de.amr.pacmanfx.allgames.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
@@ -17,7 +18,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.app.runtime.GameEngine;
+import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -51,7 +52,8 @@ public class PacManAllGamesNoBuilder extends Application {
         );
         engine = new GameEngine(
             new DefaultRenderManager(),
-            new DefaultGameSceneManager()
+            new DefaultGameSceneManager(),
+            new DefaultSoundManager()
         );
     }
 

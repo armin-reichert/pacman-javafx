@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
@@ -38,7 +38,7 @@ public class PacManGameSoundEffects implements Disposable {
 
     private static final int NO_SIREN = 0;
 
-    private final DefaultSoundManager soundManager;
+    private final SoundManager soundManager;
 
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
@@ -58,7 +58,7 @@ public class PacManGameSoundEffects implements Disposable {
      *
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public PacManGameSoundEffects(DefaultSoundManager soundManager) {
+    public PacManGameSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 

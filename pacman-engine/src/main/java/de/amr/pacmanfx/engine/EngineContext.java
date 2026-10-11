@@ -8,7 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
+import de.amr.pacmanfx.engine.sound.SoundManager;
 
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ public interface EngineContext {
 
     Input input();
 
-    DefaultSoundManager soundManager();
+    SoundManager soundManager();
 
     DirectoryWatchdog watchdog();
 }

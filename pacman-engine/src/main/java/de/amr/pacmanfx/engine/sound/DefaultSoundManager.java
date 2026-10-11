@@ -30,17 +30,6 @@ public class DefaultSoundManager implements SoundManager, Disposable {
 
     public record MediaPlayerResource(MediaPlayer player) implements SoundResource {}
 
-    public record SoundEntry(Class<? extends SoundResource> type, Named id, URL url) {
-
-        public static SoundEntry audioClip(Named id, URL url) {
-            return new SoundEntry(AudioClipResource.class, id, url);
-        }
-
-        public static SoundEntry mediaPlayer(Named id, URL url) {
-            return new SoundEntry(MediaPlayerResource.class, id, url);
-        }
-    }
-
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     private final BooleanProperty mute = new SimpleBooleanProperty(false);
