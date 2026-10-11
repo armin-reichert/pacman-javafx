@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -51,18 +51,18 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void setGameApp(PacManGamesEngine engine) {
+    public void setEngineContext(GameEngineContext engineContext) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> engineContext.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> selectBackground(engine.gameSceneManager()),
-            engine.ui().viewManager().currentViewIDProperty(),
-            engine.gameSceneManager().currentGameSceneProperty()
+            () -> selectBackground(engineContext.gameSceneManager()),
+            engineContext.ui().viewManager().currentViewIDProperty(),
+            engineContext.gameSceneManager().currentGameSceneProperty()
         ));
 
-        statusIconBox.connectEngine(engine);
-        keyboardInfoPopup.setGameApp(engine);
+        statusIconBox.setEngineContext(engineContext);
+        keyboardInfoPopup.setEngineContext(engineContext);
 
         rootPane().getChildren().addAll(
             gameViewHolder,

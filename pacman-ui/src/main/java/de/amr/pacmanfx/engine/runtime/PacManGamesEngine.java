@@ -73,7 +73,7 @@ public final class PacManGamesEngine implements EngineLifecycle, GameEngineConte
     public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
         this.ui = requireNonNull(ui);
         createGameVariantManager(ui);
-        ui.connectEngine(this, dashboardFactory);
+        ui.setEngineContext(this, dashboardFactory);
     }
 
     public void showGameVariant(GameVariantID variantID) {

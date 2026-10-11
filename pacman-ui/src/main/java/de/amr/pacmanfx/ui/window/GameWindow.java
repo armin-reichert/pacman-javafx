@@ -5,10 +5,9 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.beans.binding.StringBinding;
@@ -47,17 +46,17 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void connectEngine(PacManGamesEngine engine) {
-        mainScene.setGameApp(engine);
+    public void connectEngine(GameEngineContext engineContext) {
+        mainScene.setEngineContext(engineContext);
 
-        titleBinding = createStageTitleBinding(engine);
+        titleBinding = createStageTitleBinding(engineContext);
         stage.titleProperty().bind(titleBinding);
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        engine.ui().viewManager().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitleBinding(engine.ui(), viewID));
+        engineContext.ui().viewManager().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitleBinding(engineContext.ui(), viewID));
 
-        engine.gameVariantManager().addVariantListener((_, _, _) -> updateStageIcon(engine));
+        engineContext.gameVariantManager().addVariantListener((_, _, _) -> updateStageIcon(engineContext));
 
         // Triggers title update
         connected.set(true);
@@ -83,21 +82,21 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(PacManGamesEngine engine) {
+    private StringBinding createStageTitleBinding(GameEngineContext engineContext) {
         return createStringBinding(
-            () -> switch (engine.ui().viewManager().currentViewID()) {
+            () -> switch (engineContext.ui().viewManager().currentViewID()) {
                 case null -> ""; // happens initially, don't mind
-                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(engine.ui()).orElse(titleForCurrentGameScene(engine));
+                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(engineContext.ui()).orElse(titleForCurrentGameScene(engineContext));
                 // Editor has its own title supplier → use it directly
-                case EDITOR -> optCurrentViewTitle(engine.ui()).orElse(("Map Editor"));
+                case EDITOR -> optCurrentViewTitle(engineContext.ui()).orElse(("Map Editor"));
             },
             connected,
-            engine.gameVariantManager().selectedVariantNameProperty(),
-            engine.gameSceneManager().currentGameSceneProperty(),
-            engine.clock().updatesDisabledProperty(),
-            engine.ui().viewModel().debugModeOnProperty(),
-            engine.ui().viewModel().common3DSettings().view3DEnabledProperty(),
-            engine.ui().viewManager().currentViewIDProperty()
+            engineContext.gameVariantManager().selectedVariantNameProperty(),
+            engineContext.gameSceneManager().currentGameSceneProperty(),
+            engineContext.clock().updatesDisabledProperty(),
+            engineContext.ui().viewModel().debugModeOnProperty(),
+            engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty(),
+            engineContext.ui().viewManager().currentViewIDProperty()
         );
     }
 
@@ -126,15 +125,15 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(PacManGamesEngine engine) {
-        final GameScene gameScene = engine.gameSceneManager().optCurrentGameScene().orElse(null);
-        final GameViewModel viewModel = engine.ui().viewModel();
+    private String titleForCurrentGameScene(GameEngineContext engineContext) {
+        final GameScene gameScene = engineContext.gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameViewModel viewModel = engineContext.ui().viewModel();
 
         final boolean debug  = viewModel.debugModeOnProperty().get();
         final boolean is3D   = viewModel.common3DSettings().view3DEnabledProperty().get();
-        final boolean paused = engine.clock().getUpdatesDisabled();
+        final boolean paused = engineContext.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(engine, paused, is3D);
+        final String normalTitle = stageTitle(engineContext, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());

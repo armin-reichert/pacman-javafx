@@ -25,6 +25,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
@@ -79,7 +81,7 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            engineContext.runAction(CommonGameActions.instance().editorActions().actionOpenEditor());
+            runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), engineContext, keyboard);
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();

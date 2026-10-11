@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
 import static java.util.Objects.requireNonNull;
 
 public class DS_CustomMapMonitor extends GameDashboardSection {
@@ -68,8 +69,8 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     public void setExecutionContext(GameEngineContext engineContext) {
         requireNonNull(engineContext);
         setCustomDirWatchDog(engineContext.watchdog());
-        setMapEditFunction(mapFile -> engineContext.runAction(
-            CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile)));
+        setMapEditFunction(mapFile -> runAction(CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile),
+            engineContext, engineContext.input().keyboard()));
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

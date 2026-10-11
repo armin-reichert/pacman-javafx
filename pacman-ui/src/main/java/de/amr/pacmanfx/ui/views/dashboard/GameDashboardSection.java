@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+
 public class GameDashboardSection extends DashboardSection implements DashboardSectionCreator<GameDashboardSection> {
 
     public static final String NO_INFO = "n/a";
@@ -60,6 +62,6 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected void setGameAction(GameEngineContext engineContext, Button button, GameAction<GameEngineContext> action) {
-        button.setOnAction(_ -> engineContext.runAction(action));
+        button.setOnAction(_ -> runAction(action, engineContext, engineContext.input().keyboard()));
     }
 }

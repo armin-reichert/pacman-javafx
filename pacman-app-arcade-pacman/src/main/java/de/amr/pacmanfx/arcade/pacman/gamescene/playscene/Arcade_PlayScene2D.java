@@ -40,6 +40,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**
@@ -139,18 +140,18 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
-                    engineContext().runAction(cheatActions.actionActivateAutopilot());
+                    runAction(cheatActions.actionActivateAutopilot(), engineContext(), engineContext().input().keyboard());
                 } else {
-                    engineContext().runAction(cheatActions.actionDeactivateAutopilot());
+                    runAction(cheatActions.actionDeactivateAutopilot(), engineContext(), engineContext().input().keyboard());
                 }
             });
             addLocalizedCheckBox(contextMenu, engineContext().translationManager(),
                 game.session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
-                    engineContext().runAction(cheatActions.actionActivateImmunity());
+                    runAction(cheatActions.actionActivateImmunity(), engineContext(), engineContext().input().keyboard());
                 } else {
-                    engineContext().runAction(cheatActions.actionDeactivateImmunity());
+                    runAction(cheatActions.actionDeactivateImmunity(), engineContext(), engineContext().input().keyboard());
                 }
             });
             addSeparator(contextMenu);

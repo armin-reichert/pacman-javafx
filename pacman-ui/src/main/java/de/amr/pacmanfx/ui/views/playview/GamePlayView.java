@@ -28,6 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -206,7 +207,7 @@ public class GamePlayView implements GameView {
     public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (engineContext.executeMatchingAction(actionBindings).isEmpty()) {
+        if (executeMatchingAction(actionBindings, engineContext, engineContext.input().keyboard()).isEmpty()) {
             engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }

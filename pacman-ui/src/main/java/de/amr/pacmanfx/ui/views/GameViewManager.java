@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -27,23 +26,23 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void connectEngine(PacManGamesEngine engine) {
-        requireNonNull(engine);
+    public void connectEngine(GameEngineContext engineContext) {
+        requireNonNull(engineContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
-            engine.ui().clearMessage();
+            engineContext.ui().clearMessage();
 
             if (oldID != null) {
                 reqView(oldID).onExit();
             }
 
             final GameView newView = reqView(newID);
-            engine.ui().window().mainScene().replaceGameView(newView);
+            engineContext.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.setEngineContext(engine));
+        views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {

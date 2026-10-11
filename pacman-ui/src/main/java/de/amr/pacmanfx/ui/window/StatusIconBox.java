@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -65,15 +65,15 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void connectEngine(PacManGamesEngine app) {
-        final GameViewModel vm = app.ui().viewModel();
-        final GameViewManager views = app.ui().viewManager();
+    public void setEngineContext(GameEngineContext engineContext) {
+        final GameViewModel viewModel = engineContext.ui().viewModel();
+        final GameViewManager views = engineContext.ui().viewManager();
 
-        setTooltip(iconMuted,     app.translationManager().translate("status_icon.muted"));
-        setTooltip(icon3D,        app.translationManager().translate("status_icon.3d"));
-        setTooltip(iconAutopilot, app.translationManager().translate("status_icon.autopilot"));
-        setTooltip(iconImmune,    app.translationManager().translate("status_icon.immune"));
-        setTooltip(iconCheated,   app.translationManager().translate("status_icon.cheated"));
+        setTooltip(iconMuted,     engineContext.translationManager().translate("status_icon.muted"));
+        setTooltip(icon3D,        engineContext.translationManager().translate("status_icon.3d"));
+        setTooltip(iconAutopilot, engineContext.translationManager().translate("status_icon.autopilot"));
+        setTooltip(iconImmune,    engineContext.translationManager().translate("status_icon.immune"));
+        setTooltip(iconCheated,   engineContext.translationManager().translate("status_icon.cheated"));
 
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
@@ -81,8 +81,8 @@ public class StatusIconBox implements Disposable {
                 views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
         );
 
-        iconMuted.visibleProperty().bind(vm.muteProperty());
-        icon3D.visibleProperty().bind(vm.common3DSettings().view3DEnabledProperty());
+        iconMuted.visibleProperty().bind(viewModel.muteProperty());
+        icon3D.visibleProperty().bind(viewModel.common3DSettings().view3DEnabledProperty());
     }
 
     public void bind(GameCheats cheats) {

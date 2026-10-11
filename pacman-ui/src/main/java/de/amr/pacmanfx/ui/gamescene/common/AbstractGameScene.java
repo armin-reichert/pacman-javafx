@@ -22,6 +22,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -115,7 +116,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public void onInput() {
         if (engineContext != null) {
-            engineContext.executeMatchingAction(actionBindingsRegistry());
+            executeMatchingAction(actionBindingsRegistry(), engineContext, engineContext.input().keyboard());
         }
     }
 

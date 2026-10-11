@@ -55,6 +55,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
@@ -190,7 +191,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction<GameEngineContext>> executedAction = engineContext().executeMatchingAction(actionBindingsRegistry());
+        final Optional<GameAction<GameEngineContext>> executedAction =
+            executeMatchingAction(actionBindingsRegistry(), engineContext(), engineContext().input().keyboard());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {

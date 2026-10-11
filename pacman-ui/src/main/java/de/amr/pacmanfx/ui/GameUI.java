@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
@@ -34,6 +33,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Set;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
@@ -63,7 +63,7 @@ public class GameUI implements GameEventListener {
 
     private final GameUISettings uiSettings;
 
-    private PacManGamesEngine engine;
+    private GameEngineContext engineContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
         requireNonNull(stage);
@@ -80,18 +80,18 @@ public class GameUI implements GameEventListener {
         viewManager.registerView(GameViewID.EDITOR, new EditorView());
     }
 
-    public void connectEngine(PacManGamesEngine engine, DashboardFactory dashboardFactory) {
-        this.engine = requireNonNull(engine);
+    public void setEngineContext(GameEngineContext engineContext, DashboardFactory dashboardFactory) {
+        this.engineContext = requireNonNull(engineContext);
 
         // Build dashboard
-        viewManager.gamePlayView().dashboard().populate(dashboardFactory, uiSettings.dashboard(), engine.translationManager());
+        viewManager.gamePlayView().dashboard().populate(dashboardFactory, uiSettings.dashboard(), engineContext.translationManager());
 
-        viewManager.connectEngine(engine);
-        window.connectEngine(engine);
+        viewManager.connectEngine(engineContext);
+        window.connectEngine(engineContext);
 
-        engine.soundManager().muteProperty().bind(viewModel.muteProperty());
+        engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
 
-        connectKeyboard(engine.input().keyboard());
+        connectKeyboard(engineContext.input().keyboard());
         bindCommonActions();
 
         Logger.info("UI connected with engine");
@@ -103,7 +103,7 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
-                final GameScene currentGameScene = engine.gameSceneManager().currentGameScene();
+                final GameScene currentGameScene = engineContext.gameSceneManager().currentGameScene();
                 viewManager.gamePlayView().acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -117,8 +117,8 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        engine.gameSceneManager().updateGameSceneAndForceReload(engine, forceGameSceneReload);
-        engine.gameSceneManager().optCurrentGameScene()
+        engineContext.gameSceneManager().updateGameSceneAndForceReload(engineContext, forceGameSceneReload);
+        engineContext.gameSceneManager().optCurrentGameScene()
             .flatMap(GameScene::optGameEventHandler)
             .ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
@@ -179,8 +179,8 @@ public class GameUI implements GameEventListener {
             final GameViewID currentViewID = viewManager.currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
-                if (engine.executeMatchingAction(actionBindings).isEmpty()) {
-                    viewManager.reqView(currentViewID).onInput(engine.input());
+                if (executeMatchingAction(actionBindings, engineContext, engineContext.input().keyboard()).isEmpty()) {
+                    viewManager.reqView(currentViewID).onInput(engineContext.input());
                 }
             }
         }

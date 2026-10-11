@@ -13,6 +13,8 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
+
 public interface GameView extends QuitHandler {
 
     ActionBindingsRegistry<GameEngineContext> actionBindings();
@@ -22,7 +24,7 @@ public interface GameView extends QuitHandler {
     GameEngineContext engineContext();
 
     default void onInput(Input input) {
-        engineContext().executeMatchingAction(actionBindings());
+        executeMatchingAction(actionBindings(), engineContext(), engineContext().input().keyboard());
     }
 
     Node rootPane();
