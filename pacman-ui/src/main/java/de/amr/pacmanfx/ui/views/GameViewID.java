@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui.views;
 
-public enum GameViewID {
+import de.amr.basics.Named;
+
+public enum GameViewID implements Named {
     START_PAGES, GAMEPLAY, EDITOR
 }

@@ -23,6 +23,8 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSyste
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
+import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -78,7 +80,9 @@ public class DefaultGameSceneManager implements GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
         nextGameScene.activate();
-        engineContext.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
+
+        final GamePlayView playView = engineContext.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        playView.replaceGameScene(currentGameScene(), nextGameScene);
 
         session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));
 

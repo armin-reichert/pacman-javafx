@@ -9,7 +9,9 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -119,7 +121,8 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(viewModel.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final MiniPlaySceneView miniView = context.ui().viewManager().gamePlayView().layers().miniViewLayer();
+        final GamePlayView playView = context.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final MiniPlaySceneView miniView = playView.layers().miniViewLayer();
         cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }

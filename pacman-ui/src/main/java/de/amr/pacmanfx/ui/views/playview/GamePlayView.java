@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
@@ -201,7 +202,7 @@ public class GamePlayView implements GameView {
     @Override
     public void onQuit() {
         engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        engineContext.ui().viewManager().selectStartPagesView();
+        engineContext.ui().viewManager().currentViewIDProperty().set(GameViewID.START_PAGES);
     }
 
     @Override

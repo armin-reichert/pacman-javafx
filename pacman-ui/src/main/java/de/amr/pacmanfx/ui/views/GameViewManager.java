@@ -1,160 +1,38 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-
 package de.amr.pacmanfx.ui.views;
 
+import de.amr.basics.Named;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.views.editor.EditorView;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import org.tinylog.Logger;
 
-import java.util.EnumMap;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+public interface GameViewManager {
 
-public final class GameViewManager {
+    void setEngineContext(EngineUIContext engineContext);
 
-    private final ObjectProperty<GameViewID> currentViewID = new SimpleObjectProperty<>();
+    <V extends GameView> V assertView(Named id, Class<V> viewClass);
 
-    private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
-
-    public GameViewManager() {}
-
-    public void connectEngine(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
-
-        currentViewIDProperty().addListener((_, oldID, newID) -> {
-            engineContext.ui().clearMessage();
-
-            if (oldID != null) {
-                reqView(oldID).onExit();
-            }
-
-            final GameView newView = reqView(newID);
-            engineContext.ui().window().mainScene().replaceGameView(newView);
-
-            newView.onEnter();
-        });
-
-        views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
+    default GameView assertView(Named viewID) {
+        return assertView(viewID, GameView.class);
     }
 
-    public void registerView(GameViewID viewID, GameView gameView) {
-        requireNonNull(viewID);
-        requireNonNull(gameView);
-        views.put(viewID, gameView);
-        Logger.info("Game view registered. ID='{}': {}", viewID, gameView);
+    <V extends GameView> Optional<V> optView(Named id, Class<V> viewClass);
+
+    ObjectProperty<Named> currentViewIDProperty();
+
+    Named currentViewID();
+
+    Optional<GameView> optCurrentView();
+
+    default GameView assertCurrentView() {
+        return assertView(currentViewID());
     }
 
-    public GameView reqView(GameViewID viewID) {
-        return reqView(viewID, GameView.class);
-    }
+    //TODO dubious!
+    void onGameVariantChanged();
 
-    @SuppressWarnings("unchecked")
-    public <T extends GameView> T reqView(GameViewID viewID, Class<T> viewClass) {
-        final GameView view = views.get(viewID);
-        if (view == null) {
-            throw new IllegalStateException("No view found for ID: " + viewID);
-        }
-        if (!viewClass.isInstance(view)) {
-            throw new IllegalStateException(
-                "View for ID " + viewID + " is not of expected type " + viewClass.getName() +
-                    " but was " + view.getClass().getName()
-            );
-        }
-        return (T) view;
-    }
+    void onGameSuspended(GameScene gameScene);
 
-    public void onGameVariantChanged() {
-        selectStartPagesView();
-        startPagesView().rootPane().setSelectedIndex(0);
-    }
-
-    public void onGameSuspended(GameScene currentGameScene) {
-        currentGameScene.deactivate();
-    }
-
-    public ObjectProperty<GameViewID> currentViewIDProperty() {
-        return currentViewID;
-    }
-
-    public GameViewID currentViewID() {
-        return currentViewID.get();
-    }
-
-    public GameView assertCurrentView() {
-        return reqView(currentViewID());
-    }
-
-    public Optional<GameView> optCurrentView() {
-        if (currentViewID() == null) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(views.get(currentViewID()));
-    }
-
-    public boolean isSelected(GameViewID viewID) {
-        requireNonNull(viewID);
-        return currentViewID() == viewID;
-    }
-
-    // Start pages view
-
-    public void selectStartPagesView() {
-        currentViewIDProperty().set(GameViewID.START_PAGES);
-    }
-
-    public StartPagesView startPagesView() {
-        return (StartPagesView) reqView(GameViewID.START_PAGES);
-    }
-
-    // Game play view
-
-    public void selectGamePlayView() {
-        currentViewIDProperty().set(GameViewID.GAMEPLAY);
-    }
-
-    public GamePlayView gamePlayView() {
-        return (GamePlayView) reqView(GameViewID.GAMEPLAY);
-    }
-
-    // Editor view
-
-    public Optional<EditorView> optEditorView() {
-        final EditorView editorView = (EditorView) views.get(GameViewID.EDITOR);
-        return Optional.ofNullable(editorView);
-    }
-
-    public boolean trySelectEditorView(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
-        if (views.get(GameViewID.EDITOR) == null) {
-            Logger.info("Editor view has not been created yet");
-            return false;
-        }
-        if (canOpenEditor(engineContext)) {
-            currentViewIDProperty().set(GameViewID.EDITOR);
-            return true;
-        }
-        else {
-            Logger.info("Editor cannot open in current state");
-            return false;
-        }
-    }
-
-    private boolean canOpenEditor(EngineUIContext engineContext) {
-        if (isSelected(GameViewID.START_PAGES)) {
-            return true;
-        }
-        if (isSelected(GameViewID.GAMEPLAY)) {
-            if (engineContext.optCurrentGame().isEmpty()) return true;
-            return !engineContext.optCurrentGame().get().session().isGameRunning();
-        }
-        return false;
-    }
+    boolean isSelected(Named viewID);
 }

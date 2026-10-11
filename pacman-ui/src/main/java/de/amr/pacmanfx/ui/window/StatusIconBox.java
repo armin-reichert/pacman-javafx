@@ -67,7 +67,7 @@ public class StatusIconBox implements Disposable {
 
     public void setEngineContext(EngineUIContext engineContext) {
         final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameViewManager views = engineContext.ui().viewManager();
+        final GameViewManager viewManager = engineContext.ui().viewManager();
 
         setTooltip(iconMuted,     engineContext.translationManager().translate("status_icon.muted"));
         setTooltip(icon3D,        engineContext.translationManager().translate("status_icon.3d"));
@@ -77,8 +77,8 @@ public class StatusIconBox implements Disposable {
 
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
-            views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY).or(
-                views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
+            viewManager.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
+                .or(viewManager.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
         );
 
         iconMuted.visibleProperty().bind(viewModel.muteProperty());

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.Named;
 import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
@@ -19,12 +20,11 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
+import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
-import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -74,28 +74,28 @@ public class GameUI implements GameEventListener {
         viewModel = new GameViewModel();
         viewModel.init(uiSettings);
 
-        viewManager = new GameViewManager();
-        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
-        viewManager.registerView(GameViewID.GAMEPLAY, new GamePlayView());
-        viewManager.registerView(GameViewID.EDITOR, new EditorView());
+        viewManager = new DefaultGameViewManager();
     }
 
     public void setEngineContext(EngineUIContext engineContext, DashboardFactory dashboardFactory) {
         this.engineContext = requireNonNull(engineContext);
 
-        // Build dashboard
-        viewManager.gamePlayView().dashboard().populate(dashboardFactory, uiSettings.dashboard(), engineContext.translationManager());
-
-        viewManager.connectEngine(engineContext);
-        window.connectEngine(engineContext);
+        window.setEngineContext(engineContext);
+        viewManager.setEngineContext(engineContext);
 
         engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
 
+        buildDashboard(dashboardFactory);
         connectKeyboard(engineContext.input().keyboard());
         bindCommonActions();
 
         Logger.info("UI connected with engine");
         Logger.info(actionBindings);
+    }
+
+    private void buildDashboard(DashboardFactory dashboardFactory) {
+        final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        playView.dashboard().populate(dashboardFactory, uiSettings.dashboard(), engineContext.translationManager());
     }
 
     @Override
@@ -104,7 +104,8 @@ public class GameUI implements GameEventListener {
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameScene currentGameScene = engineContext.gameSceneManager().currentGameScene();
-                viewManager.gamePlayView().acceptLevel(currentGameScene, levelCreatedEvent.level());
+                final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
             case GenericChangeEvent _ -> forceGameSceneReload = true;
@@ -178,18 +179,18 @@ public class GameUI implements GameEventListener {
 
     private void handleKeyboardStateChange(Keyboard keyboard) {
         if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
-            final GameViewID currentViewID = viewManager.currentViewID();
+            final Named currentViewID = viewManager.currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (executeMatchingAction(actionBindings, engineContext).isEmpty()) {
-                    viewManager.reqView(currentViewID).onInput(engineContext.input());
+                    viewManager.assertView(currentViewID).onInput(engineContext.input());
                 }
             }
         }
     }
 
     //TODO improve
-    private static boolean viewAcceptsKeyboardInput(GameViewID viewID) {
+    private static boolean viewAcceptsKeyboardInput(Named viewID) {
         return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 

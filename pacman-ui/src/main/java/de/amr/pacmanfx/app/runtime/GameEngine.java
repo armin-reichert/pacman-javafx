@@ -16,15 +16,16 @@ import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -86,9 +87,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         requireNonNull(variantID);
         gameVariantManager.selectVariant(variantID.name());
 
-        //TODO rethink this
         ui.viewManager().onGameVariantChanged();
-
         ui.window().show(this);
 
         Platform.runLater(this::startBackgroundServices);
@@ -207,7 +206,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             currentGame.playConfig().gamePlay().startSession(currentGame);
 
             ui.window().mainScene().connect(currentGame.session());
-            ui.viewManager().selectGamePlayView();
+            ui.viewManager().currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
             clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
             clock().start();
@@ -312,8 +311,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         try {
             final GameViewManager viewManager = ui.viewManager();
             if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
-                viewManager.gamePlayView().render();
-                viewManager.gamePlayView().update();
+                final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                playView.render();
+                playView.update();
             }
         } catch (Exception x) {
             fatalError(x);

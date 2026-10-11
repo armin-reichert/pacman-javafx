@@ -61,11 +61,10 @@ public class PacManAllGamesNoBuilder extends Application {
 
     @Override
     public void start(Stage stage) {
-
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), GameUI.DEFAULT_UI_SETTINGS);
 
-        final StartPagesView startPages = ui.viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPages = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         startPages.addStartPage(engine, new ArcadePacMan_StartPage());
         startPages.addStartPage(engine, new ArcadeMsPacMan_StartPage());
         startPages.addStartPage(engine, new TengenMsPacMan_StartPage());

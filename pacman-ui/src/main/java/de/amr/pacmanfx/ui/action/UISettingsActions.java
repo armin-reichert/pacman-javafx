@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.input.KeyCode;
 
@@ -47,7 +48,7 @@ public class UISettingsActions {
         actionShowHelp = new GameAction<>("show_help") {
             @Override
             public void execute(EngineUIContext engineContext) {
-                engineContext.ui().viewManager().gamePlayView().showHelp(engineContext);
+                engineContext.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(engineContext);
             }
 
             @Override
@@ -65,7 +66,7 @@ public class UISettingsActions {
         actionToggleDashboard = new GameAction<>("toggle_dashboard") {
             @Override
             public void execute(EngineUIContext context) {
-                context.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
+                context.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
             }
 
             @Override

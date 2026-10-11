@@ -109,7 +109,7 @@ public class PacManGameEngineBuilder {
             engine.setUI(ui, dashboardFactory);
 
             // Can only be done after UI has been assigned to game!
-            final StartPagesView startPagesView = ui.viewManager().reqView(GameViewID.START_PAGES, StartPagesView.class);
+            final StartPagesView startPagesView = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
             addStartPages(engine, startPagesView);
 
             return Optional.of(engine);

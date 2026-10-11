@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
+import de.amr.basics.Named;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -11,6 +12,7 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -47,7 +49,7 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void connectEngine(EngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         mainScene.setEngineContext(engineContext);
 
         titleBinding = createStageTitleBinding(engineContext);
@@ -85,11 +87,15 @@ public class GameWindow {
 
     private StringBinding createStageTitleBinding(EngineUIContext engineContext) {
         return createStringBinding(
-            () -> switch (engineContext.ui().viewManager().currentViewID()) {
-                case null -> ""; // happens initially, don't mind
-                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(engineContext.ui()).orElse(titleForCurrentGameScene(engineContext));
-                // Editor has its own title supplier → use it directly
-                case EDITOR -> optCurrentViewTitle(engineContext.ui()).orElse(("Map Editor"));
+            () -> {
+                final Named id = engineContext.ui().viewManager().currentViewID();
+                if (id == GameViewID.START_PAGES || id == GameViewID.GAMEPLAY) {
+                    return optCurrentViewTitle(engineContext.ui()).orElse(titleForCurrentGameScene(engineContext));
+                }
+                if (id == GameViewID.EDITOR) {
+                    return optCurrentViewTitle(engineContext.ui()).orElse(("Map Editor"));
+                }
+                return "";
             },
             connected,
             engineContext.gameVariantManager().selectedVariantNameProperty(),
@@ -107,10 +113,12 @@ public class GameWindow {
             : ui.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
-    private void updateStageTitleBinding(GameUI ui, GameViewID viewID) {
-        switch (viewID) {
-            case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
-            case EDITOR -> ui.viewManager().optEditorView().ifPresent(editorView -> {
+    private void updateStageTitleBinding(GameUI ui, Named viewID) {
+        if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
+            stage.titleProperty().bind(titleBinding);
+        }
+        else if (viewID == GameViewID.EDITOR) {
+            ui.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
