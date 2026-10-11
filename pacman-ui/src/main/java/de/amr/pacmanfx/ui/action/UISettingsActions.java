@@ -11,7 +11,8 @@ import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.input.KeyCode;
@@ -112,8 +113,10 @@ public class UISettingsActions {
                         engineContext.ui().shortMessage(engineContext.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                     }
                     if (isLevelPlaying(game.state())) {
-                        //TODO This is dubious
-                        engineContext.gameSceneManager().forceGameSceneUpdate(engineContext);
+                        if (engineContext.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+                            //TODO This is dubious, must be revisited
+                            defaultGameSceneManager.forceGameSceneUpdate(engineContext);
+                        }
                     }
                 });
             }

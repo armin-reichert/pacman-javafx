@@ -16,6 +16,7 @@ import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -116,7 +117,9 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        engineContext.gameSceneManager().updateGameSceneAndForceReload(engineContext, forceGameSceneReload);
+        if (engineContext.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+            defaultGameSceneManager.updateGameSceneAndForceReload(engineContext, forceGameSceneReload);
+        }
         engineContext.gameSceneManager().optCurrentGameScene()
             .flatMap(GameScene::optGameEventHandler)
             .ifPresent(handler -> handler.onGameEvent(gameEvent));

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -46,22 +47,6 @@ public class DefaultGameSceneManager implements GameSceneManager {
     private GameSceneConfig gameSceneConfig;
 
     public DefaultGameSceneManager() {}
-
-    public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
-        this.gameSceneConfig = requireNonNull(gameSceneConfig);
-    }
-
-    public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return currentGameScene;
-    }
-
-    public Optional<GameScene> optCurrentGameScene() {
-        return Optional.ofNullable(currentGameScene.get());
-    }
-
-    public GameScene currentGameScene() {
-        return currentGameScene.get();
-    }
 
     public void forceGameSceneUpdate(EngineUIContext engineContext) {
         updateGameSceneAndForceReload(engineContext, true);
@@ -99,11 +84,26 @@ public class DefaultGameSceneManager implements GameSceneManager {
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    public boolean gameSceneHasID(GameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        requireNonNull(sceneID);
-        return gameSceneConfig.gameSceneHasID(gameScene, sceneID);
+    // --- GameSceneManager interface
+
+    @Override
+    public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
+        this.gameSceneConfig = requireNonNull(gameSceneConfig);
+    }
+
+    @Override
+    public ObjectProperty<GameScene> currentGameSceneProperty() {
+        return currentGameScene;
+    }
+
+    @Override
+    public Optional<GameScene> optCurrentGameScene() {
+        return Optional.ofNullable(currentGameScene.get());
+    }
+
+    @Override
+    public GameScene currentGameScene() {
+        return currentGameScene.get();
     }
 
     /**
@@ -112,14 +112,25 @@ public class DefaultGameSceneManager implements GameSceneManager {
      * @param id scene identifier
      * @return {@code true} if the active scene has the given ID
      */
+    @Override
     public boolean currentGameSceneHasID(Named id) {
         requireNonNull(id);
         final GameScene gameScene = currentGameSceneProperty().get();
         return gameScene != null && gameSceneHasID(gameSceneConfig, gameScene, id);
     }
 
+    @Override
     public void removeCurrentGameScene() {
         currentGameSceneProperty().set(null);
+    }
+
+    // --- Private area
+
+    private boolean gameSceneHasID(GameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
+        requireNonNull(sceneID);
+        return gameSceneConfig.gameSceneHasID(gameScene, sceneID);
     }
 
     // 2D-3D scene switch
