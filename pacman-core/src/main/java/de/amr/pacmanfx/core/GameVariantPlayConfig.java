@@ -4,7 +4,6 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.rules.GameRules;
-import org.tinylog.Logger;
 
 public class GameVariantPlayConfig {
 
@@ -13,8 +12,6 @@ public class GameVariantPlayConfig {
     private final GameFlow gameFlow;
     private final GameRules gameRules;
     private final WorldMapManager worldMapManager;
-
-    private int initialLifeCount = 3;
 
     public GameVariantPlayConfig(
         GameSystems systems,
@@ -28,15 +25,6 @@ public class GameVariantPlayConfig {
         this.gameFlow = gameFlow;
         this.gameRules = gameRules;
         this.worldMapManager = worldMapManager;
-    }
-
-    public int initialLifeCount() {
-        return initialLifeCount;
-    }
-
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
-        Logger.info("Initial life count: {}", initialLifeCount);
     }
 
     public GameSystems systems() {

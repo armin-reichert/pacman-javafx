@@ -8,7 +8,6 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
-import de.amr.pacmanfx.app.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -234,7 +233,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            game.playConfig().initialLifeCount()
+            3
         );
         game.setSession(session);
     }

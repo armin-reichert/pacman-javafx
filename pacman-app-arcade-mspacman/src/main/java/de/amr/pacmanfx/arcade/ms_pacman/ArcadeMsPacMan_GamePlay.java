@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             livesCounter.pos().set(2 * TS, bottom);
             levelCounter.pos().set(24 * TS, bottom);
         } else {
-            livesCounter.data().setNumLivesShown(game.playConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(3);
             livesCounter.data().setMaxLivesShown(5);
 
             /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

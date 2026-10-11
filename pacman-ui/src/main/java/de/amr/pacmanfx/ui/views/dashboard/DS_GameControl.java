@@ -62,7 +62,7 @@ public class DS_GameControl extends GameDashboardSection {
             () -> {
             final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                runtime.playConfig().setInitialLifeCount(lifeCount);
+                //TODO store value and use it when new session is created
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
@@ -90,7 +90,8 @@ public class DS_GameControl extends GameDashboardSection {
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(runtime.playConfig().initialLifeCount());
+        //TODO use stored (where?) value
+        choiceBoxInitialLives.setValue(3);
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

@@ -119,7 +119,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         options.setCanStartNewGame(false);
 
         session.setValue(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
-        session.setNumLives(game.playConfig().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -170,7 +169,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         else {
             // Called when session is started, initialize
 
-            livesCounter.data().setNumLivesShown(game.playConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(3);
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);

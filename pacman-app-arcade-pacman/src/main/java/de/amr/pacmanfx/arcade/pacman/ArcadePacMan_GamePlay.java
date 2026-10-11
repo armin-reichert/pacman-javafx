@@ -110,7 +110,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        session.setNumLives(game.playConfig().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -183,7 +182,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             livesCounter.pos().set(2 * TS, bottom);
             levelCounter.pos().set(24 * TS, bottom + 2);
         } else {
-            livesCounter.data().setNumLivesShown(game.playConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(3);
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setCapacity(7);

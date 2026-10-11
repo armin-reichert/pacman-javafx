@@ -29,7 +29,6 @@ public class GamePlayViewRenderer {
     public static void render(GamePlayView playView, EngineUIContext engineContext, GameScene gameScene) {
         requireNonNull(playView);
         requireNonNull(engineContext);
-        requireNonNull(gameScene);
 
         final RenderManager renderManager = engineContext.renderManager();
 
@@ -50,7 +49,9 @@ public class GamePlayViewRenderer {
         playView.layers().miniViewLayer().renderables().forEach(renderManager::addRenderable);
 
         // Game scene content
-        gameScene.renderables().forEach(renderManager::addRenderable);
+        if (gameScene != null) {
+            gameScene.renderables().forEach(renderManager::addRenderable);
+        }
 
         // Debug mode rendering?
         final GameViewModel viewModel = engineContext.ui().viewModel();

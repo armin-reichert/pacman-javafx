@@ -26,6 +26,8 @@ public class GameSession {
 
     private boolean gameRunning;
 
+    private final int initialNumLives;
+
     private int numLives;
 
     private final HUD hud;
@@ -42,15 +44,15 @@ public class GameSession {
 
     private boolean hudVisible;
 
-    public GameSession(String variantName, GameCheats cheats, int numLives) {
+    public GameSession(String variantName, GameCheats cheats, int initialNumLives) {
         requireNonNull(variantName);
         requireNonNull(cheats);
 
-        this.numLives = Validations.requireNonNegativeInt(numLives);
+        this.initialNumLives = initialNumLives;
         this.cheats = cheats;
-
         this.hud = new HUD(variantName);
 
+        numLives = initialNumLives;
         newFrameState(0);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
@@ -62,6 +64,10 @@ public class GameSession {
 
     public void newFrameState(long tick) {
         frameState = new FrameState(tick);
+    }
+
+    public int initialNumLives() {
+        return initialNumLives;
     }
 
     public int numLives() {
