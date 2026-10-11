@@ -14,7 +14,6 @@ import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import org.tinylog.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,20 +21,19 @@ import static java.util.Objects.requireNonNull;
 
 public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
-   private final CoinMechanism coinMechanism = new CoinMechanism(99);
-
-    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
+    private final Map<Named, Object> extensions = new HashMap<>();
 
     private final GameVariantPlayConfig playConfig;
 
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
+
+    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
+
     private final GameVariantUIConfig uiConfig;
 
-    private final Map<Named, Object> extensions = new HashMap<>();
-
-    public DefaultGameVariantRuntime(Cartridge cartridge, EngineUIContext engineContext)
-        throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-
+    public DefaultGameVariantRuntime(Cartridge cartridge, EngineUIContext engineContext) {
         requireNonNull(cartridge);
+        requireNonNull(engineContext);
 
         playConfig = new GameVariantPlayConfig(
             cartridge.systemsFactory().get(),
@@ -45,11 +43,14 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
             cartridge.worldMapManagerFactory().get()
         );
 
-        uiConfig = (GameVariantUIConfig) cartridge.uiConfigClass().getConstructor().newInstance();
-
-        extensions.putAll(uiConfig.createExtensions(engineContext));
-        Logger.info("Added {} extension(s) to game variant:", extensions.size());
-        extensions.forEach((name, ext) -> Logger.info("- Name: {}, type: {}", name, ext.getClass().getSimpleName()));
+        try {
+            uiConfig = (GameVariantUIConfig) cartridge.uiConfigClass().getConstructor().newInstance();
+            extensions.putAll(uiConfig.createExtensions(engineContext));
+            Logger.info("Added {} extension(s) to game variant (cartridge ID={}):", extensions.size(), cartridge.id());
+            extensions.forEach((name, ext) -> Logger.info("- Extension Name: {}, Type: {}", name, ext.getClass().getSimpleName()));
+        } catch (Exception cause) {
+            throw new RuntimeException("Could not create UI configuration from class " + cartridge.uiConfigClass(), cause);
+        }
     }
 
     public GameVariantUIConfig uiConfig() {
