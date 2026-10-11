@@ -14,19 +14,14 @@ public class ActionExecutor {
 
     public static <C extends GameEngineContext> Optional<GameAction<C>> executeMatchingAction(
         ActionBindingsRegistry<C> registry,
-        C context,
-        Keyboard keyboard)
+        C context)
     {
-        final var matchingAction = registry.findActionMatchingPressedKeys(keyboard);
-        matchingAction.ifPresent(action -> runAction(action, context, keyboard));
+        final var matchingAction = registry.findActionMatchingPressedKeys(context.input().keyboard());
+        matchingAction.ifPresent(action -> runAction(action, context));
         return matchingAction;
     }
 
-    public static <C extends GameEngineContext> boolean runAction(
-        GameAction<C> gameAction,
-        C context,
-        Keyboard keyboard)
-    {
+    public static <C extends GameEngineContext> boolean runAction(GameAction<C> gameAction, C context) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {
@@ -42,7 +37,7 @@ public class ActionExecutor {
         }
 
         //TODO This is dubious!
-        keyboard.clearState();
+        context.input().keyboard().clearState();
 
         return success;
     }

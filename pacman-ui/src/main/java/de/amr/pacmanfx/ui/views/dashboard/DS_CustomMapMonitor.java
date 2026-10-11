@@ -70,7 +70,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
         requireNonNull(engineContext);
         setCustomDirWatchDog(engineContext.watchdog());
         setMapEditFunction(mapFile -> runAction(CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile),
-            engineContext, engineContext.input().keyboard()));
+            engineContext));
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

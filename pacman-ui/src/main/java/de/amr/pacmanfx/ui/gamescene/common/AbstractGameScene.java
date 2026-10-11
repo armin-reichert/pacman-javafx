@@ -122,7 +122,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public void onInput() {
         if (engineContext != null) {
-            executeMatchingAction(actionBindingsRegistry(), engineContext, engineContext.input().keyboard());
+            executeMatchingAction(actionBindingsRegistry(), engineContext);
         }
     }
 

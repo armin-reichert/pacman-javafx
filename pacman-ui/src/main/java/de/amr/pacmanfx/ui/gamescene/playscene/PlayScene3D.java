@@ -192,7 +192,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onInput() {
         final Optional<GameAction<EngineUIContext>> executedAction =
-            executeMatchingAction(actionBindingsRegistry(), engineContext(), engineContext().input().keyboard());
+            executeMatchingAction(actionBindingsRegistry(), engineContext());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {

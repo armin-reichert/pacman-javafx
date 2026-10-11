@@ -24,7 +24,7 @@ public interface GameView extends QuitHandler {
     EngineUIContext engineContext();
 
     default void onInput(Input input) {
-        executeMatchingAction(actionBindings(), engineContext(), engineContext().input().keyboard());
+        executeMatchingAction(actionBindings(), engineContext());
     }
 
     Node rootPane();

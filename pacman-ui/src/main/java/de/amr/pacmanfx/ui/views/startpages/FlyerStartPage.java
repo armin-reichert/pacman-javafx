@@ -118,9 +118,7 @@ public class FlyerStartPage implements StartPage {
     protected GameStartButton createStartButton(EngineUIContext engineContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(),
-                engineContext, engineContext.input().keyboard());
-
+            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engineContext);
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);

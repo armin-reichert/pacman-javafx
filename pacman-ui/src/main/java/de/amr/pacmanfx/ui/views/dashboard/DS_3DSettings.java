@@ -100,10 +100,10 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
         cbUsePlayScene3D.setOnAction(_ -> runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(),
-                engineContext, engineContext.input().keyboard()));
+                engineContext));
 
         cbWireframeMode .setOnAction(_ -> runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode(),
-            engineContext, engineContext.input().keyboard()));
+            engineContext));
     }
 
     @Override

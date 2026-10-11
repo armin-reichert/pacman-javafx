@@ -208,7 +208,7 @@ public class GamePlayView implements GameView {
     public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (executeMatchingAction(actionBindings, engineContext, engineContext.input().keyboard()).isEmpty()) {
+        if (executeMatchingAction(actionBindings, engineContext).isEmpty()) {
             engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }

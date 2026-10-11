@@ -62,6 +62,6 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected void setGameAction(EngineUIContext engineContext, Button button, GameAction<EngineUIContext> action) {
-        button.setOnAction(_ -> runAction(action, engineContext, engineContext.input().keyboard()));
+        button.setOnAction(_ -> runAction(action, engineContext));
     }
 }

@@ -54,7 +54,7 @@ public final class ContextMenuSupport {
         Object... args)
     {
         var item = new MenuItem(translator.translate(globalAssetsKey, args));
-        item.setOnAction(_ -> runAction(action, engineContext, engineContext.input().keyboard()));
+        item.setOnAction(_ -> runAction(action, engineContext));
         return add(menu, item);
     }
 
