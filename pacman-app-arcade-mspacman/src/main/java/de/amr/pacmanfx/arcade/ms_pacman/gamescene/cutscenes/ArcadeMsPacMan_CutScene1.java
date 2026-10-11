@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 

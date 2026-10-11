@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.ui.EngineUIContext;

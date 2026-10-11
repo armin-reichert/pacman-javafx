@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.config;
+package de.amr.pacmanfx.app.config;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;

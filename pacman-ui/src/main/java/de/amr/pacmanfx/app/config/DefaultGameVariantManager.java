@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.config;
+package de.amr.pacmanfx.app.config;
 
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;

@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;

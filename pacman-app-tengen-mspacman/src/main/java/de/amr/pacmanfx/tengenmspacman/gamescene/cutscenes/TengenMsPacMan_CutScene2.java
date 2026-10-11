@@ -13,7 +13,7 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;

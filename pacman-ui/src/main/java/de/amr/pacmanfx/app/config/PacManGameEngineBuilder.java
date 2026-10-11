@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.engine.config;
+package de.amr.pacmanfx.app.config;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -90,11 +90,11 @@ public class PacManGameEngineBuilder {
         return this;
     }
 
-    public Optional<PacManGamesEngine> buildEngine() {
+    public Optional<GameEngine> buildEngine() {
         try {
             validateConfigurationData();
 
-            final var engine = new PacManGamesEngine();
+            final var engine = new GameEngine();
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
             engine.setUI(ui, dashboardFactory);

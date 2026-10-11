@@ -54,6 +54,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.playscene;
     exports de.amr.pacmanfx.ui.entities3D.pac.system;
-    exports de.amr.pacmanfx.engine.config;
-    exports de.amr.pacmanfx.engine.runtime;
+    exports de.amr.pacmanfx.app.config;
+    exports de.amr.pacmanfx.app.runtime;
 }

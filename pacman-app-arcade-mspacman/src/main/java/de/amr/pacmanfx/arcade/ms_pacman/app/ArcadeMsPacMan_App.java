@@ -7,14 +7,14 @@ package de.amr.pacmanfx.arcade.ms_pacman.app;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.engine.config.PacManGameEngineBuilder;
-import de.amr.pacmanfx.engine.runtime.PacManGamesEngine;
+import de.amr.pacmanfx.app.config.PacManGameEngineBuilder;
+import de.amr.pacmanfx.app.runtime.GameEngine;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private PacManGamesEngine engine;
+    private GameEngine engine;
 
     @Override
     public void init() {

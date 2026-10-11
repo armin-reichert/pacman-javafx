@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;

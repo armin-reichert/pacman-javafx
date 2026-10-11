@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;

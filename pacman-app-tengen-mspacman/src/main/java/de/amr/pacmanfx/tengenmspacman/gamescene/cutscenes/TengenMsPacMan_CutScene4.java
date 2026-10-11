@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
+import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;

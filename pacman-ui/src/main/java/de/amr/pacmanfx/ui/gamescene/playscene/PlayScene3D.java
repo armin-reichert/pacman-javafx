@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;

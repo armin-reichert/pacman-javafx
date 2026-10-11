@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;

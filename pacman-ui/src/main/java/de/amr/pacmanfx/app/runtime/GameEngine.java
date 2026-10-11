@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.runtime;
+package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
-import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
+import de.amr.pacmanfx.app.config.DefaultGameVariantManager;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class PacManGamesEngine implements EngineLifecycle, EngineUIContext {
+public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final RenderManager renderManager;
 
@@ -59,7 +59,7 @@ public final class PacManGamesEngine implements EngineLifecycle, EngineUIContext
 
     private DefaultGameVariantManager gameVariantManager;
 
-    public PacManGamesEngine() {
+    public GameEngine() {
         renderManager = new RenderManager();
         gameSceneManager = new GameSceneManager();
         soundManager = new SoundManager();
