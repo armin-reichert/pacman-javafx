@@ -7,25 +7,26 @@ package de.amr.pacmanfx.engine.runtime.action;
 
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 public class ActionExecutor {
 
-    public static Optional<GameAction<GameEngineContext>> executeMatchingAction(
-        ActionBindingsRegistry<GameEngineContext> registry,
-        GameEngineContext context,
+    public static Optional<GameAction<GameEngineUIContext>> executeMatchingAction(
+        ActionBindingsRegistry<GameEngineUIContext> registry,
+        GameEngineUIContext context,
         Keyboard keyboard)
     {
-        final Optional<GameAction<GameEngineContext>> matchingAction = registry.findActionMatchingPressedKeys(keyboard);
+        final Optional<GameAction<GameEngineUIContext>> matchingAction = registry.findActionMatchingPressedKeys(keyboard);
         matchingAction.ifPresent(action -> runAction(action, context, keyboard));
         return matchingAction;
     }
 
     public static boolean runAction(
-        GameAction<GameEngineContext> gameAction,
-        GameEngineContext context,
+        GameAction<GameEngineUIContext> gameAction,
+        GameEngineUIContext context,
         Keyboard keyboard) {
         boolean success = false;
         if (gameAction.isEnabled(context)) {

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import de.amr.pacmanfx.engine.QuitHandler;
 import javafx.scene.Node;
 
@@ -17,11 +17,11 @@ import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchi
 
 public interface GameView extends QuitHandler {
 
-    ActionBindingsRegistry<GameEngineContext> actionBindings();
+    ActionBindingsRegistry<GameEngineUIContext> actionBindings();
 
-    void setEngineContext(GameEngineContext engineContext);
+    void setEngineContext(GameEngineUIContext engineContext);
 
-    GameEngineContext engineContext();
+    GameEngineUIContext engineContext();
 
     default void onInput(Input input) {
         executeMatchingAction(actionBindings(), engineContext(), engineContext().input().keyboard());

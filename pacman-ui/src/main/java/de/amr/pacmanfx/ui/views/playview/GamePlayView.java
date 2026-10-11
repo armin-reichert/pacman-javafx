@@ -9,7 +9,7 @@ import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -45,12 +45,12 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    private final ActionBindingsRegistry<GameEngineContext> actionBindings;
+    private final ActionBindingsRegistry<GameEngineUIContext> actionBindings;
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private GameEngineContext engineContext;
+    private GameEngineUIContext engineContext;
 
     private ContextMenuManager contextMenuManager;
 
@@ -102,7 +102,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(GameEngineContext engineContext) {
+    public void showHelp(GameEngineUIContext engineContext) {
         layers.helpLayer().showHelpPopup(engineContext, 2, engineContext.gameVariantManager().currentVariantName());
     }
 
@@ -148,7 +148,7 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setEngineContext(GameEngineContext engineContext) {
+    public void setEngineContext(GameEngineUIContext engineContext) {
         this.engineContext = engineContext;
 
         final GameViewModel viewModel = engineContext.ui().viewModel();
@@ -172,12 +172,12 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public ActionBindingsRegistry<GameEngineContext> actionBindings() {
+    public ActionBindingsRegistry<GameEngineUIContext> actionBindings() {
         return actionBindings;
     }
 
     @Override
-    public GameEngineContext engineContext() {
+    public GameEngineUIContext engineContext() {
         return engineContext;
     }
 

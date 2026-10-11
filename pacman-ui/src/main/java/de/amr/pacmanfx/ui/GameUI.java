@@ -15,7 +15,6 @@ import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -59,11 +58,11 @@ public class GameUI implements GameEventListener {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry<GameEngineContext> actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
+    private final ActionBindingsRegistry<GameEngineUIContext> actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
 
     private final GameUISettings uiSettings;
 
-    private GameEngineContext engineContext;
+    private GameEngineUIContext engineContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
         requireNonNull(stage);
@@ -80,7 +79,7 @@ public class GameUI implements GameEventListener {
         viewManager.registerView(GameViewID.EDITOR, new EditorView());
     }
 
-    public void setEngineContext(GameEngineContext engineContext, DashboardFactory dashboardFactory) {
+    public void setEngineContext(GameEngineUIContext engineContext, DashboardFactory dashboardFactory) {
         this.engineContext = requireNonNull(engineContext);
 
         // Build dashboard

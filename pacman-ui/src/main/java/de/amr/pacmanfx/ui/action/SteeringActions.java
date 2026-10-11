@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.EnumMap;
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 public class SteeringActions {
 
-    public static class SteeringAction extends GameAction<GameEngineContext> {
+    public static class SteeringAction extends GameAction<GameEngineUIContext> {
 
         private static String createActionID(Direction dir) {
             return "steer_pac_%s".formatted(dir.name().toLowerCase());
@@ -35,7 +35,7 @@ public class SteeringActions {
         }
 
         @Override
-        public void execute(GameEngineContext engineContext) {
+        public void execute(GameEngineUIContext engineContext) {
             engineContext.optCurrentGame().ifPresent(game -> {
                 final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
                 game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
@@ -43,7 +43,7 @@ public class SteeringActions {
         }
 
         @Override
-        public boolean isEnabled(GameEngineContext engineContext) {
+        public boolean isEnabled(GameEngineUIContext engineContext) {
             final GameContext game = engineContext.optCurrentGame().orElse(null);
             return game != null
                 && game.session().optLevel().isPresent()
@@ -52,7 +52,7 @@ public class SteeringActions {
         }
     }
 
-    private final EnumMap<Direction, GameAction<GameEngineContext>> actions = new EnumMap<>(Direction.class);
+    private final EnumMap<Direction, GameAction<GameEngineUIContext>> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
     public SteeringActions() {
@@ -68,7 +68,7 @@ public class SteeringActions {
         );
     }
 
-    public GameAction<GameEngineContext> actionSteer(Direction dir) {
+    public GameAction<GameEngineUIContext> actionSteer(Direction dir) {
         requireNonNull(dir);
         return actions.get(dir);
     }

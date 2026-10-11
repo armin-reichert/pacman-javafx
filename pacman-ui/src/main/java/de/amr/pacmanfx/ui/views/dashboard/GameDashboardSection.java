@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;
@@ -34,24 +34,24 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setEngineContext(GameEngineContext context) {}
+    public void setEngineContext(GameEngineUIContext context) {}
 
-    public void update(GameEngineContext context) {
+    public void update(GameEngineUIContext context) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameEngineContext context, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(GameEngineUIContext context, Function<GameScene, String> fnInfo) {
         return () -> context.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(GameEngineContext context, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(GameEngineUIContext context, Function<GameLevel, Object> fnInfo) {
         return () -> context.optCurrentGame()
             .flatMap(game -> game.session().optLevel())
             .map(fnInfo)
             .orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(GameEngineContext context, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(GameEngineUIContext context, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(context.optCurrentGame().orElseThrow().playConfig().rules());
     }
 
@@ -61,7 +61,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameEngineContext engineContext, Button button, GameAction<GameEngineContext> action) {
+    protected void setGameAction(GameEngineUIContext engineContext, Button button, GameAction<GameEngineUIContext> action) {
         button.setOnAction(_ -> runAction(action, engineContext, engineContext.input().keyboard()));
     }
 }

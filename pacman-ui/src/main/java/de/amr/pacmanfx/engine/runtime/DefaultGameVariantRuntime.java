@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import org.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +32,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public DefaultGameVariantRuntime(Cartridge cartridge, GameEngineContext engineContext)
+    public DefaultGameVariantRuntime(Cartridge cartridge, GameEngineUIContext engineContext)
         throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         requireNonNull(cartridge);

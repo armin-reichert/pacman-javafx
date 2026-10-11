@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -26,7 +26,7 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void connectEngine(GameEngineContext engineContext) {
+    public void connectEngine(GameEngineUIContext engineContext) {
         requireNonNull(engineContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
@@ -131,7 +131,7 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(GameEngineContext engineContext) {
+    public boolean trySelectEditorView(GameEngineUIContext engineContext) {
         requireNonNull(engineContext);
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
@@ -147,7 +147,7 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(GameEngineContext engineContext) {
+    private boolean canOpenEditor(GameEngineUIContext engineContext) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
+import de.amr.pacmanfx.ui.GameEngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    protected GameEngineContext engineContext;
+    protected GameEngineUIContext engineContext;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -49,7 +49,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     @SuppressWarnings("unchecked")
-    public ActionBindingsRegistry<GameEngineContext> actionBindingsRegistry() {
+    public ActionBindingsRegistry<GameEngineUIContext> actionBindingsRegistry() {
         return assertComponent(ActionBindingsRegistry.class);
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     // Convenience
 
-    public GameEngineContext engineContext() {
+    public GameEngineUIContext engineContext() {
         return engineContext;
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return engineContext.ui();
     }
 
-    public final void setEngineContext(GameEngineContext engineContext) {
+    public final void setEngineContext(GameEngineUIContext engineContext) {
         requireNonNull(engineContext);
         if (this.engineContext != null) {
             Logger.debug("Engine context already assigned to game scene {}", this);
