@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -55,7 +55,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
@@ -191,7 +191,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction<GameEngineUIContext>> executedAction =
+        final Optional<GameAction<EngineUIContext>> executedAction =
             executeMatchingAction(actionBindingsRegistry(), engineContext(), engineContext().input().keyboard());
 
         //TODO Rethink this

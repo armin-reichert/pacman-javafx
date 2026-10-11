@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -29,7 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -45,12 +45,12 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    private final ActionBindingsRegistry<GameEngineUIContext> actionBindings;
+    private final ActionBindingsRegistry<EngineUIContext> actionBindings;
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private GameEngineUIContext engineContext;
+    private EngineUIContext engineContext;
 
     private ContextMenuManager contextMenuManager;
 
@@ -91,7 +91,7 @@ public class GamePlayView implements GameView {
         StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
 
-        actionBindings = new GameActionBindingsRegistry("Action Bindings for GamePlayView");
+        actionBindings = new GameActionBindingsRegistry<>("Action Bindings for GamePlayView");
     }
 
     public Layers layers() {
@@ -102,7 +102,7 @@ public class GamePlayView implements GameView {
         return dashboard;
     }
 
-    public void showHelp(GameEngineUIContext engineContext) {
+    public void showHelp(EngineUIContext engineContext) {
         layers.helpLayer().showHelpPopup(engineContext, 2, engineContext.gameVariantManager().currentVariantName());
     }
 
@@ -148,7 +148,7 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = engineContext;
 
         final GameViewModel viewModel = engineContext.ui().viewModel();
@@ -172,12 +172,12 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public ActionBindingsRegistry<GameEngineUIContext> actionBindings() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() {
         return actionBindings;
     }
 
     @Override
-    public GameEngineUIContext engineContext() {
+    public EngineUIContext engineContext() {
         return engineContext;
     }
 

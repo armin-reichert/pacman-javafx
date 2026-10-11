@@ -10,10 +10,10 @@ import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
+import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -32,7 +32,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Set;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
@@ -58,11 +58,11 @@ public class GameUI implements GameEventListener {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry<GameEngineUIContext> actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
+    private final ActionBindingsRegistry<EngineUIContext> actionBindings = new GameActionBindingsRegistry<>("Global Action Bindings");
 
     private final GameUISettings uiSettings;
 
-    private GameEngineUIContext engineContext;
+    private EngineUIContext engineContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
         requireNonNull(stage);
@@ -79,7 +79,7 @@ public class GameUI implements GameEventListener {
         viewManager.registerView(GameViewID.EDITOR, new EditorView());
     }
 
-    public void setEngineContext(GameEngineUIContext engineContext, DashboardFactory dashboardFactory) {
+    public void setEngineContext(EngineUIContext engineContext, DashboardFactory dashboardFactory) {
         this.engineContext = requireNonNull(engineContext);
 
         // Build dashboard
@@ -191,7 +191,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void bindCommonActions() {
-        final Set<ActionKeyBinding> commonActionBindings = CommonGameActions.instance().bindings();
+        final Set<ActionKeyBinding<EngineUIContext>> commonActionBindings = CommonGameActions.instance().bindings();
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionToggleKeyboardMonitor(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionEnterFullScreen(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().simulationActions().actionToggleMuted(), commonActionBindings);

@@ -2,32 +2,31 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.engine.runtime.action;
+package de.amr.pacmanfx.engine.action;
 
-
-import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.GameEngineContext;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 public class ActionExecutor {
 
-    public static Optional<GameAction<GameEngineUIContext>> executeMatchingAction(
-        ActionBindingsRegistry<GameEngineUIContext> registry,
-        GameEngineUIContext context,
+    public static <C extends GameEngineContext> Optional<GameAction<C>> executeMatchingAction(
+        ActionBindingsRegistry<C> registry,
+        C context,
         Keyboard keyboard)
     {
-        final Optional<GameAction<GameEngineUIContext>> matchingAction = registry.findActionMatchingPressedKeys(keyboard);
+        final var matchingAction = registry.findActionMatchingPressedKeys(keyboard);
         matchingAction.ifPresent(action -> runAction(action, context, keyboard));
         return matchingAction;
     }
 
-    public static boolean runAction(
-        GameAction<GameEngineUIContext> gameAction,
-        GameEngineUIContext context,
-        Keyboard keyboard) {
+    public static <C extends GameEngineContext> boolean runAction(
+        GameAction<C> gameAction,
+        C context,
+        Keyboard keyboard)
+    {
         boolean success = false;
         if (gameAction.isEnabled(context)) {
             try {
@@ -39,7 +38,7 @@ public class ActionExecutor {
                 Logger.error(x, "An error occurred executing action '{}'", gameAction.id());
             }
         } else {
-            Logger.warn("Action {}' not executed (disabled)", gameAction.id());
+            Logger.warn("Action '{}' not executed (disabled)", gameAction.id());
         }
 
         //TODO This is dubious!

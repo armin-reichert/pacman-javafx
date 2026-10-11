@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.EnumMap;
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 public class SteeringActions {
 
-    public static class SteeringAction extends GameAction<GameEngineUIContext> {
+    public static class SteeringAction extends GameAction<EngineUIContext> {
 
         private static String createActionID(Direction dir) {
             return "steer_pac_%s".formatted(dir.name().toLowerCase());
@@ -35,7 +35,7 @@ public class SteeringActions {
         }
 
         @Override
-        public void execute(GameEngineUIContext engineContext) {
+        public void execute(EngineUIContext engineContext) {
             engineContext.optCurrentGame().ifPresent(game -> {
                 final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
                 game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
@@ -43,7 +43,7 @@ public class SteeringActions {
         }
 
         @Override
-        public boolean isEnabled(GameEngineUIContext engineContext) {
+        public boolean isEnabled(EngineUIContext engineContext) {
             final GameContext game = engineContext.optCurrentGame().orElse(null);
             return game != null
                 && game.session().optLevel().isPresent()
@@ -52,8 +52,8 @@ public class SteeringActions {
         }
     }
 
-    private final EnumMap<Direction, GameAction<GameEngineUIContext>> actions = new EnumMap<>(Direction.class);
-    private final Set<ActionKeyBinding> bindings;
+    private final EnumMap<Direction, GameAction<EngineUIContext>> actions = new EnumMap<>(Direction.class);
+    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
 
     public SteeringActions() {
         for (Direction dir : Direction.values()) {
@@ -61,19 +61,19 @@ public class SteeringActions {
         }
 
         bindings = Set.of(
-            new ActionKeyBinding(actions.get(Direction.UP),    bareKey(KeyCode.UP),    combine().ctrl().key(KeyCode.UP)),
-            new ActionKeyBinding(actions.get(Direction.DOWN),  bareKey(KeyCode.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
-            new ActionKeyBinding(actions.get(Direction.LEFT),  bareKey(KeyCode.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
-            new ActionKeyBinding(actions.get(Direction.RIGHT), bareKey(KeyCode.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
+            new ActionKeyBinding<>(actions.get(Direction.UP),    bareKey(KeyCode.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding<>(actions.get(Direction.DOWN),  bareKey(KeyCode.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding<>(actions.get(Direction.LEFT),  bareKey(KeyCode.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding<>(actions.get(Direction.RIGHT), bareKey(KeyCode.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
     }
 
-    public GameAction<GameEngineUIContext> actionSteer(Direction dir) {
+    public GameAction<EngineUIContext> actionSteer(Direction dir) {
         requireNonNull(dir);
         return actions.get(dir);
     }
 
-    public Set<ActionKeyBinding> bindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
         return bindings;
     }
 }

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
 
 public class GameDashboardSection extends DashboardSection implements DashboardSectionCreator<GameDashboardSection> {
 
@@ -34,24 +34,24 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setEngineContext(GameEngineUIContext context) {}
+    public void setEngineContext(EngineUIContext context) {}
 
-    public void update(GameEngineUIContext context) {
+    public void update(EngineUIContext context) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameEngineUIContext context, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> fnGameSceneInfo(EngineUIContext context, Function<GameScene, String> fnInfo) {
         return () -> context.gameSceneManager().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<?> fnLevelInfo(GameEngineUIContext context, Function<GameLevel, Object> fnInfo) {
+    protected Supplier<?> fnLevelInfo(EngineUIContext context, Function<GameLevel, Object> fnInfo) {
         return () -> context.optCurrentGame()
             .flatMap(game -> game.session().optLevel())
             .map(fnInfo)
             .orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnRulesInfo(GameEngineUIContext context, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(EngineUIContext context, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(context.optCurrentGame().orElseThrow().playConfig().rules());
     }
 
@@ -61,7 +61,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(GameEngineUIContext engineContext, Button button, GameAction<GameEngineUIContext> action) {
+    protected void setGameAction(EngineUIContext engineContext, Button button, GameAction<EngineUIContext> action) {
         button.setOnAction(_ -> runAction(action, engineContext, engineContext.input().keyboard()));
     }
 }

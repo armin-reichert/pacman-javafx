@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, GameEngineUIContext engineContext, GameScene gameScene) {
+    public static void render(GamePlayView playView, EngineUIContext engineContext, GameScene gameScene) {
         requireNonNull(playView);
         requireNonNull(engineContext);
         requireNonNull(gameScene);

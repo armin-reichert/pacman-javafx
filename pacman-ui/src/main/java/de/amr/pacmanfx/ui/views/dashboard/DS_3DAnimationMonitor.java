@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -99,13 +99,13 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(GameEngineUIContext context) {
+    public void setEngineContext(EngineUIContext context) {
         tableView.prefHeightProperty().bind(context.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(GameEngineUIContext context) {
+    public void update(EngineUIContext context) {
         super.update(context);
 
         if (context.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {

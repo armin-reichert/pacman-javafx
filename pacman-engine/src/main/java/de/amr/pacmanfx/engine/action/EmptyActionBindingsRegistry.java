@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.engine.runtime.action;
+package de.amr.pacmanfx.engine.action;
 
-import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.GameEngineContext;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -18,7 +18,7 @@ import java.util.Set;
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class EmptyActionBindingsRegistry implements ActionBindingsRegistry<Object> {
+public class EmptyActionBindingsRegistry implements ActionBindingsRegistry<GameEngineContext> {
 
     @Override
     public String name() {
@@ -29,21 +29,21 @@ public class EmptyActionBindingsRegistry implements ActionBindingsRegistry<Objec
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction<Object>> actionBindings() {
+    public Map<KeyCodeCombination, GameAction<GameEngineContext>> actionBindings() {
         return Map.of();
     }
 
     @Override
-    public void selectAnyMatchingBinding(GameAction<Object> action, Set<ActionKeyBinding> bindings) {}
+    public void selectAnyMatchingBinding(GameAction<GameEngineContext> action, Set<ActionKeyBinding<GameEngineContext>> bindings) {}
 
     @Override
-    public void bindActionToKeyCombination(GameAction<Object> action, KeyCodeCombination combination) {}
+    public void bindActionToKeyCombination(GameAction<GameEngineContext> action, KeyCodeCombination combination) {}
 
     @Override
-    public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
+    public void registerAllBindings(Set<ActionKeyBinding<GameEngineContext>> bindings) {}
 
     @Override
-    public Optional<GameAction<Object>> findActionMatchingPressedKeys(Keyboard keyboard) {
+    public Optional<GameAction<GameEngineContext>> findActionMatchingPressedKeys(Keyboard keyboard) {
         return Optional.empty();
     }
 }

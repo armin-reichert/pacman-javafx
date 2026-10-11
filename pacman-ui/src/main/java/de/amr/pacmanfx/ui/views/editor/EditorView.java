@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
@@ -26,7 +26,7 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(GameEngineUIContext engineContext) {
+    public void ensureEditorCreated(EngineUIContext engineContext) {
         if (editor == null) {
             editor = new TileMapEditor(engineContext.ui().window().stage(), new Pac3DShapeFactory());
             editor.setOnQuit(_ -> engineContext.ui().viewManager().selectStartPagesView());
@@ -42,13 +42,13 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public ActionBindingsRegistry<GameEngineUIContext> actionBindings() { return ActionBindingsRegistry.empty(); }
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() { return ActionBindingsRegistry.empty(); }
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {}
+    public void setEngineContext(EngineUIContext engineContext) {}
 
     @Override
-    public GameEngineUIContext engineContext() {
+    public EngineUIContext engineContext() {
         return null;
     }
 

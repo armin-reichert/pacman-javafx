@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.pacmanfx.engine.GameEngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 
-public interface GameEngineUIContext extends GameEngineContext {
+public interface EngineUIContext extends GameEngineContext {
 
     GameSceneManager gameSceneManager();
 

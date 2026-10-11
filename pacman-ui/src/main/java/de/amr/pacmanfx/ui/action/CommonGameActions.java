@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -45,9 +45,9 @@ public final class CommonGameActions {
     private final TestActions sceneTestActions;
     private final UISettingsActions uiSettingsActions;
 
-    private final GameAction<GameEngineUIContext> actionToggleCollisionStrategy;
+    private final GameAction<EngineUIContext> actionToggleCollisionStrategy;
 
-    private final Set<ActionKeyBinding> commonBindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> commonBindings;
 
     private CommonGameActions() {
         simulationActions = new SimulationActions();
@@ -61,7 +61,7 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction<>("toggle_collision_strategy") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> {
                     final ActorCollisionRules collisionRules = game.playConfig().rules().actorCollisionRules();
                     final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
@@ -72,12 +72,12 @@ public final class CommonGameActions {
             }
         };
 
-        final Set<ActionKeyBinding> bindings = new HashSet<>();
+        final Set<ActionKeyBinding<EngineUIContext>> bindings = new HashSet<>();
         bindings.addAll(simulationActions.bindings());
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
-        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), combine().alt().key(KeyCode.S)));
+        bindings.add(new ActionKeyBinding<>(actionToggleCollisionStrategy(), combine().alt().key(KeyCode.S)));
 
         commonBindings = Collections.unmodifiableSet(bindings);
     }
@@ -114,11 +114,11 @@ public final class CommonGameActions {
         return uiSettingsActions;
     }
 
-    public GameAction<GameEngineUIContext> actionToggleCollisionStrategy() {
+    public GameAction<EngineUIContext> actionToggleCollisionStrategy() {
         return actionToggleCollisionStrategy;
     }
 
-    public Set<ActionKeyBinding> bindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
         return commonBindings;
     }
 }

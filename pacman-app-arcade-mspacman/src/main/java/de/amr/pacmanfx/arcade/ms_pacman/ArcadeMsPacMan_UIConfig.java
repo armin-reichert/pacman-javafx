@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.engine.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.engine.config.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(GameEngineUIContext engineContext) {
+    public void load(EngineUIContext engineContext) {
         assets = new AssetMap();
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
@@ -114,12 +114,12 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(GameEngineUIContext engineContext) {
+    public Map<Named, Object> createExtensions(EngineUIContext engineContext) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void unload(GameEngineUIContext engineContext) {
+    public void unload(EngineUIContext engineContext) {
         unloadSounds(engineContext.soundManager());
         dispose();
     }

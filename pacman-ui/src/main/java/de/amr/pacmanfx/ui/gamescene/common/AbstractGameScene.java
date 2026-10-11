@@ -13,9 +13,9 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.runtime.action.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.executeMatchingAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    protected GameEngineUIContext engineContext;
+    protected EngineUIContext engineContext;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -39,7 +39,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComponent(GameSceneView2D.class, view2D);
 
-        setComponent(ActionBindingsRegistry.class, new GameActionBindingsRegistry("Action Bindings for '%s'".formatted(this)));
+        setComponent(ActionBindingsRegistry.class, new GameActionBindingsRegistry<>("Action Bindings for '%s'".formatted(this)));
     }
 
     // Typed game scene component access
@@ -49,7 +49,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     @SuppressWarnings("unchecked")
-    public ActionBindingsRegistry<GameEngineUIContext> actionBindingsRegistry() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindingsRegistry() {
         return assertComponent(ActionBindingsRegistry.class);
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     // Convenience
 
-    public GameEngineUIContext engineContext() {
+    public EngineUIContext engineContext() {
         return engineContext;
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return engineContext.ui();
     }
 
-    public final void setEngineContext(GameEngineUIContext engineContext) {
+    public final void setEngineContext(EngineUIContext engineContext) {
         requireNonNull(engineContext);
         if (this.engineContext != null) {
             Logger.debug("Engine context already assigned to game scene {}", this);

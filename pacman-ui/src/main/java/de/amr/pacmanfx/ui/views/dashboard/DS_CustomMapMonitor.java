@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +23,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
 import static java.util.Objects.requireNonNull;
 
 public class DS_CustomMapMonitor extends GameDashboardSection {
@@ -66,7 +66,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         requireNonNull(engineContext);
         setCustomDirWatchDog(engineContext.watchdog());
         setMapEditFunction(mapFile -> runAction(CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile),

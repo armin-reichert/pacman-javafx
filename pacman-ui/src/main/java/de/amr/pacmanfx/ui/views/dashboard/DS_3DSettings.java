@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -17,7 +17,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
 
 /**
  * Infobox with 3D related settings.
@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         final GameViewModel viewModel = engineContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -107,7 +107,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameEngineUIContext context) {
+    public void update(EngineUIContext context) {
         super.update(context);
 
         final GameViewModel viewModel = context.ui().viewModel();
@@ -124,7 +124,7 @@ public class DS_3DSettings extends GameDashboardSection {
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 
-    private static SubScene currentSubSceneFX(GameEngineUIContext context) {
+    private static SubScene currentSubSceneFX(EngineUIContext context) {
         return context.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 

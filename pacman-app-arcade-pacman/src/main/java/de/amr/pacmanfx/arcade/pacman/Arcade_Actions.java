@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
 
@@ -22,16 +22,16 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public final class Arcade_Actions {
 
-    private final GameAction<GameEngineUIContext> actionInsertCoin;
-    private final GameAction<GameEngineUIContext> actionStartPlaying;
+    private final GameAction<EngineUIContext> actionInsertCoin;
+    private final GameAction<EngineUIContext> actionStartPlaying;
 
-    private final Set<ActionKeyBinding> gameStartActionBindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> gameStartActionBindings;
 
     public Arcade_Actions() {
 
         actionInsertCoin = new GameAction<>("insert_coin") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> {
                     final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
                     engineContext.soundManager().voice().stop();
@@ -44,7 +44,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -65,14 +65,14 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.soundManager().voice().stop();
                 engineContext.optCurrentGame().ifPresent(game ->
                     game.playConfig().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -87,20 +87,20 @@ public final class Arcade_Actions {
         };
 
         gameStartActionBindings = Set.of(
-            new ActionKeyBinding(actionInsertCoin(),   bareKey(KeyCode.DIGIT5), bareKey(KeyCode.NUMPAD5)),
-            new ActionKeyBinding(actionStartPlaying(), bareKey(KeyCode.DIGIT1), bareKey(KeyCode.NUMPAD1))
+            new ActionKeyBinding<>(actionInsertCoin(),   bareKey(KeyCode.DIGIT5), bareKey(KeyCode.NUMPAD5)),
+            new ActionKeyBinding<>(actionStartPlaying(), bareKey(KeyCode.DIGIT1), bareKey(KeyCode.NUMPAD1))
         );
     }
 
-    public GameAction<GameEngineUIContext> actionInsertCoin() {
+    public GameAction<EngineUIContext> actionInsertCoin() {
         return actionInsertCoin;
     }
 
-    public GameAction<GameEngineUIContext> actionStartPlaying() {
+    public GameAction<EngineUIContext> actionStartPlaying() {
         return actionStartPlaying;
     }
 
-    public Set<ActionKeyBinding> gameStartActionBindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> gameStartActionBindings() {
         return gameStartActionBindings;
     }
 }

@@ -8,7 +8,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -26,7 +26,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.engine.runtime.action.ActionExecutor.runAction;
+import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
@@ -47,7 +47,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected GameEngineUIContext engineContext;
+    protected EngineUIContext engineContext;
 
     protected AbstractGameScene gameScene;
 
@@ -83,7 +83,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
         init(engineContext, config.gameVariant());
     }
@@ -115,7 +115,7 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(GameEngineUIContext engineContext) {
+    protected GameStartButton createStartButton(EngineUIContext engineContext) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
             runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(),
@@ -131,7 +131,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(GameEngineUIContext engineContext, String gameVariantName) {
+    private void init(EngineUIContext engineContext, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;

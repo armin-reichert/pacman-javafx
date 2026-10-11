@@ -12,9 +12,9 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import javafx.scene.input.KeyCode;
@@ -28,24 +28,24 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public final class CheatActions {
 
-    private final GameAction<GameEngineUIContext> actionAddLives;
-    private final GameAction<GameEngineUIContext> actionEatAllPellets;
-    private final GameAction<GameEngineUIContext> actionKillGhosts;
-    private final GameAction<GameEngineUIContext> actionEnterNextLevel;
-    private final GameAction<GameEngineUIContext> actionToggleAutopilot;
-    private final GameAction<GameEngineUIContext> actionActivateAutopilot;
-    private final GameAction<GameEngineUIContext> actionDeactivateAutopilot;
-    private final GameAction<GameEngineUIContext> actionActivateImmunity;
-    private final GameAction<GameEngineUIContext> actionDeactivateImmunity;
-    private final GameAction<GameEngineUIContext> actionToggleImmunity;
+    private final GameAction<EngineUIContext> actionAddLives;
+    private final GameAction<EngineUIContext> actionEatAllPellets;
+    private final GameAction<EngineUIContext> actionKillGhosts;
+    private final GameAction<EngineUIContext> actionEnterNextLevel;
+    private final GameAction<EngineUIContext> actionToggleAutopilot;
+    private final GameAction<EngineUIContext> actionActivateAutopilot;
+    private final GameAction<EngineUIContext> actionDeactivateAutopilot;
+    private final GameAction<EngineUIContext> actionActivateImmunity;
+    private final GameAction<EngineUIContext> actionDeactivateImmunity;
+    private final GameAction<EngineUIContext> actionToggleImmunity;
 
-    private final Set<ActionKeyBinding> bindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
 
     public CheatActions() {
 
         actionAddLives = new GameAction<>("cheat_add_lives") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     session.setNumLives(session.numLives() + 3);
@@ -56,7 +56,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext context) {
+            public boolean isEnabled(EngineUIContext context) {
                 return context.optCurrentGame()
                     .flatMap(game -> normalLevel(game.session()))
                     .isPresent();            }
@@ -64,7 +64,7 @@ public final class CheatActions {
 
         actionEatAllPellets = new GameAction<>("cheat_eat_all_pellets") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     final GameLevel level = session.level();
@@ -76,7 +76,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext context) {
+            public boolean isEnabled(EngineUIContext context) {
                 if (context.optCurrentGame().isEmpty()) return false;
 
                 return context.optCurrentGame().flatMap(game -> normalLevel(game.session())).isPresent()
@@ -86,7 +86,7 @@ public final class CheatActions {
 
         actionKillGhosts = new GameAction<>("cheat_kill_ghosts") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     final GameLevel level = session.level();
@@ -107,7 +107,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext context) {
+            public boolean isEnabled(EngineUIContext context) {
                 if (context.optCurrentGame().isEmpty()) return false;
 
                 return context.optCurrentGame().flatMap(game -> normalLevel(game.session())).isPresent()
@@ -117,7 +117,7 @@ public final class CheatActions {
 
         actionEnterNextLevel = new GameAction<>("cheat_enter_next_level") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     game.session().cheats().notifyCheatUsed();
                     game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
@@ -125,7 +125,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -139,7 +139,7 @@ public final class CheatActions {
 
         actionToggleAutopilot = new GameAction<>("toggle_autopilot") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     final GameCheats cheats = game.session().cheats();
                     setAutopilot(context, game.session(), !cheats.isPacUsingAutopilot());
@@ -147,7 +147,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -158,12 +158,12 @@ public final class CheatActions {
 
         actionActivateAutopilot = new GameAction<>("activate_autopilot") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> setAutopilot(engineContext, game.session(), true));
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -174,12 +174,12 @@ public final class CheatActions {
 
         actionDeactivateAutopilot = new GameAction<>("deactivate_autopilot") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> setAutopilot(engineContext, game.session(), false));
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -190,12 +190,12 @@ public final class CheatActions {
 
         actionActivateImmunity = new GameAction<>("activate_immunity") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> setPacImmune(engineContext, game.session(), true));
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -206,12 +206,12 @@ public final class CheatActions {
 
         actionDeactivateImmunity = new GameAction<>("deactivate_immunity") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> setPacImmune(engineContext, game.session(), false));
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -222,7 +222,7 @@ public final class CheatActions {
 
         actionToggleImmunity = new GameAction<>("toggle_immunity") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> {
                     final GameCheats cheats = game.session().cheats();
                     setPacImmune(engineContext, game.session(), !cheats.isPacImmune());
@@ -230,7 +230,7 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(GameEngineUIContext engineContext) {
+            public boolean isEnabled(EngineUIContext engineContext) {
                 final GameContext game = engineContext.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -240,62 +240,62 @@ public final class CheatActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionToggleAutopilot(), combine().alt().key(KeyCode.A)),
-            new ActionKeyBinding(actionToggleImmunity(),  combine().alt().key(KeyCode.I)),
-            new ActionKeyBinding(actionEatAllPellets(),   combine().alt().key(KeyCode.E)),
-            new ActionKeyBinding(actionAddLives(),        combine().alt().key(KeyCode.L)),
-            new ActionKeyBinding(actionEnterNextLevel(),  combine().alt().key(KeyCode.N)),
-            new ActionKeyBinding(actionKillGhosts(),      combine().alt().key(KeyCode.X))
+            new ActionKeyBinding<>(actionToggleAutopilot(), combine().alt().key(KeyCode.A)),
+            new ActionKeyBinding<>(actionToggleImmunity(),  combine().alt().key(KeyCode.I)),
+            new ActionKeyBinding<>(actionEatAllPellets(),   combine().alt().key(KeyCode.E)),
+            new ActionKeyBinding<>(actionAddLives(),        combine().alt().key(KeyCode.L)),
+            new ActionKeyBinding<>(actionEnterNextLevel(),  combine().alt().key(KeyCode.N)),
+            new ActionKeyBinding<>(actionKillGhosts(),      combine().alt().key(KeyCode.X))
         );
     }
 
-    public GameAction<GameEngineUIContext> actionAddLives() {
+    public GameAction<EngineUIContext> actionAddLives() {
         return actionAddLives;
     }
 
-    public GameAction<GameEngineUIContext> actionEatAllPellets() {
+    public GameAction<EngineUIContext> actionEatAllPellets() {
         return actionEatAllPellets;
     }
 
-    public GameAction<GameEngineUIContext> actionKillGhosts() {
+    public GameAction<EngineUIContext> actionKillGhosts() {
         return actionKillGhosts;
     }
 
-    public GameAction<GameEngineUIContext> actionEnterNextLevel() {
+    public GameAction<EngineUIContext> actionEnterNextLevel() {
         return actionEnterNextLevel;
     }
 
-    public GameAction<GameEngineUIContext> actionToggleAutopilot() {
+    public GameAction<EngineUIContext> actionToggleAutopilot() {
         return actionToggleAutopilot;
     }
 
-    public GameAction<GameEngineUIContext> actionActivateAutopilot() {
+    public GameAction<EngineUIContext> actionActivateAutopilot() {
         return actionActivateAutopilot;
     }
 
-    public GameAction<GameEngineUIContext> actionDeactivateAutopilot() {
+    public GameAction<EngineUIContext> actionDeactivateAutopilot() {
         return actionDeactivateAutopilot;
     }
 
-    public GameAction<GameEngineUIContext> actionActivateImmunity() {
+    public GameAction<EngineUIContext> actionActivateImmunity() {
         return actionActivateImmunity;
     }
 
-    public GameAction<GameEngineUIContext> actionDeactivateImmunity() {
+    public GameAction<EngineUIContext> actionDeactivateImmunity() {
         return actionDeactivateImmunity;
     }
 
-    public GameAction<GameEngineUIContext> actionToggleImmunity() {
+    public GameAction<EngineUIContext> actionToggleImmunity() {
         return actionToggleImmunity;
     }
 
-    public Set<ActionKeyBinding> bindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
         return bindings;
     }
 
     // Helpers
 
-    private void setAutopilot(GameEngineUIContext context, GameSession session, boolean auto) {
+    private void setAutopilot(EngineUIContext context, GameSession session, boolean auto) {
         final GameCheats cheats = session.cheats();
         final GameUI ui = context.ui();
 
@@ -308,7 +308,7 @@ public final class CheatActions {
         context.soundManager().voice().playAfterSec(1, voice);
     }
 
-    private void setPacImmune(GameEngineUIContext context, GameSession session, boolean immune) {
+    private void setPacImmune(EngineUIContext context, GameSession session, boolean immune) {
         final GameCheats cheats = session.cheats();
         final GameUI ui = context.ui();
 

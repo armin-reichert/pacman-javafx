@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.engine.runtime.action.ActionKeyBinding;
+import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -20,25 +20,25 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public class GameFlowActions {
 
-    private final GameAction<GameEngineUIContext> actionStartGame;
-    private final GameAction<GameEngineUIContext> actionQuit;
-    private final GameAction<GameEngineUIContext> actionLetGameStateExpire;
-    private final GameAction<GameEngineUIContext> actionRestartIntro;
+    private final GameAction<EngineUIContext> actionStartGame;
+    private final GameAction<EngineUIContext> actionQuit;
+    private final GameAction<EngineUIContext> actionLetGameStateExpire;
+    private final GameAction<EngineUIContext> actionRestartIntro;
 
-    private final Set<ActionKeyBinding> bindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
 
     public GameFlowActions() {
 
         actionStartGame = new GameAction<>("start_game") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 context.engineLife().startGame();
             }
         };
 
         actionQuit = new GameAction<>("quit") {
             @Override
-            public void execute(GameEngineUIContext context) {
+            public void execute(EngineUIContext context) {
                 final GameUI ui = context.ui();
                 Logger.info("Call QUIT handler for {}:", ui.viewManager().assertCurrentView());
                 ui.viewManager().assertCurrentView().onQuit();
@@ -47,14 +47,14 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction<>("let_game_state_expire") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
             }
         };
 
         actionRestartIntro = new GameAction<>("restart_intro") {
             @Override
-            public void execute(GameEngineUIContext engineContext) {
+            public void execute(EngineUIContext engineContext) {
                 engineContext.optCurrentGame().ifPresent(game -> {
                     final AbstractGameState gameState = game.state();
 
@@ -70,28 +70,28 @@ public class GameFlowActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionStartGame, bareKey(KeyCode.F3)),
-            new ActionKeyBinding(actionQuit, bareKey(KeyCode.Q))
+            new ActionKeyBinding<>(actionStartGame, bareKey(KeyCode.F3)),
+            new ActionKeyBinding<>(actionQuit, bareKey(KeyCode.Q))
         );
     }
 
-    public GameAction<GameEngineUIContext> actionLetGameStateExpire() {
+    public GameAction<EngineUIContext> actionLetGameStateExpire() {
         return actionLetGameStateExpire;
     }
 
-    public GameAction<GameEngineUIContext> actionQuit() {
+    public GameAction<EngineUIContext> actionQuit() {
         return actionQuit;
     }
 
-    public GameAction<GameEngineUIContext> actionRestartIntro() {
+    public GameAction<EngineUIContext> actionRestartIntro() {
         return actionRestartIntro;
     }
 
-    public GameAction<GameEngineUIContext> actionStartGame() {
+    public GameAction<EngineUIContext> actionStartGame() {
         return actionStartGame;
     }
 
-    public Set<ActionKeyBinding> bindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
         return bindings;
     }
 }

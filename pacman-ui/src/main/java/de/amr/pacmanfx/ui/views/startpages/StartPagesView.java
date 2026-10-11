@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.engine.runtime.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -28,7 +28,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameEngineUIContext engineContext;
+    private EngineUIContext engineContext;
 
     private final Carousel carousel;
 
@@ -64,12 +64,12 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
     }
 
     @Override
-    public GameEngineUIContext engineContext() {
+    public EngineUIContext engineContext() {
         return engineContext;
     }
 
@@ -95,7 +95,7 @@ public class StartPagesView implements GameView {
     public void onQuit() {}
 
     @Override
-    public ActionBindingsRegistry<GameEngineUIContext> actionBindings() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() {
         return ActionBindingsRegistry.empty();
     }
 
@@ -107,7 +107,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(GameEngineUIContext engineContext, StartPage startPage) {
+    public void addStartPage(EngineUIContext engineContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");

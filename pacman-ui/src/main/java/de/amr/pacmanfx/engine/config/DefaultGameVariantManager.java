@@ -12,7 +12,7 @@ import de.amr.pacmanfx.engine.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private final GameEngineUIContext engineContext;
+    private final EngineUIContext engineContext;
 
     private final Map<String, DefaultGameVariantRuntime> configsByName = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(GameEngineUIContext engineContext, GameViewModel viewModel) {
+    public DefaultGameVariantManager(EngineUIContext engineContext, GameViewModel viewModel) {
         this.engineContext = requireNonNull(engineContext);
         this.viewModel = requireNonNull(viewModel);
     }
@@ -98,7 +98,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private DefaultGameVariantRuntime createGameVariantRuntime(GameEngineUIContext engineContext, String variantName, boolean includeInteractiveTests)
+    private DefaultGameVariantRuntime createGameVariantRuntime(EngineUIContext engineContext, String variantName, boolean includeInteractiveTests)
         throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);

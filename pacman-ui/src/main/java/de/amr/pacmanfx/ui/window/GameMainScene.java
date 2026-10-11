@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.ui.GameEngineUIContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -51,7 +51,7 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void setEngineContext(GameEngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engineContext) {
         // Delegate mouse scroll events to current game scene
         setOnScroll(e -> engineContext.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
