@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.engine;
+
+
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.engine.input.Input;
+
+import java.util.Optional;
+
+public interface GameEngineBaseContext {
+
+    GameClock clock();
+
+    Optional<GameContext> optCurrentGame();
+
+    EngineLifecycle engineLife();
+
+    Input input();
+}

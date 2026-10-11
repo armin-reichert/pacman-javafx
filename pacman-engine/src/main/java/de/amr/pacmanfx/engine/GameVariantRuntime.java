@@ -4,6 +4,5 @@
 
 package de.amr.pacmanfx.engine;
 
-
 public interface GameVariantRuntime {
 }

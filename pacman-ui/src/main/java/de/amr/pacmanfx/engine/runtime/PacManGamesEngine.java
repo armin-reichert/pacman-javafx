@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.DefaultGameVariantManager;
-import de.amr.pacmanfx.engine.config.GameVariantManager;
+import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.runtime.action.GameEngineContext;
 import de.amr.pacmanfx.engine.sound.SoundManager;
