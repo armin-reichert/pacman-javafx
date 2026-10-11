@@ -45,14 +45,18 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
             cartridge.worldMapManagerFactory().get()
         );
 
-        //TODO Workaround until dependencies have been fixed
-        uiConfig = (GameVariantUIConfig) cartridge.uiConfigFactory().getConstructor().newInstance();
+        uiConfig = (GameVariantUIConfig) cartridge.uiConfigClass().getConstructor().newInstance();
 
         extensions.putAll(uiConfig.createExtensions(engineContext));
         Logger.info("Added {} extension(s) to game variant:", extensions.size());
         extensions.forEach((name, ext) -> Logger.info("- Name: {}, type: {}", name, ext.getClass().getSimpleName()));
     }
 
+    public GameVariantUIConfig uiConfig() {
+        return uiConfig;
+    }
+
+    @Override
     public <T> T extensionValue(Named id, Class<T> type) {
         requireNonNull(id);
         requireNonNull(type);
@@ -63,18 +67,17 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
         throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
+    @Override
     public GameVariantPlayConfig playConfig() {
         return playConfig;
     }
 
-    public GameVariantUIConfig uiConfig() {
-        return uiConfig;
-    }
-
+    @Override
     public CoinMechanism coinMechanism() {
         return coinMechanism;
     }
 
+    @Override
     public SpriteAnimationContainer spriteAnimContainer() {
         return spriteAnimationContainer;
     }
