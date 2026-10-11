@@ -15,14 +15,13 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
-import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -46,6 +45,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final TranslationManager translationManager;
 
+    private final DefaultGameVariantManager gameVariantManager;
+
     private final GameSceneManager gameSceneManager;
 
     private final SpriteAnimationTimer spriteAnimationTimer;
@@ -55,8 +56,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private GameContext currentGame;
 
     private StateChangeEventMapper stateChangeEventMapper;
-
-    private DefaultGameVariantManager gameVariantManager;
 
     public GameEngine(
         RenderManager renderManager,
@@ -70,13 +69,16 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.translationManager = requireNonNull(translationManager);
         spriteAnimationTimer = new SpriteAnimationTimer();
 
+        gameVariantManager = new DefaultGameVariantManager();
+        gameVariantManager.setEngineContext(this);
+
         clock().setUpdateAction(this::simulate);
         clock().setPermanentAction(this::render);
     }
 
     public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
         this.ui = requireNonNull(ui);
-        createGameVariantManager(ui);
+        initGameVariantManager(ui.viewModel());
         ui.setEngineContext(this, dashboardFactory);
     }
 
@@ -162,7 +164,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public GameVariantManager gameVariantManager() {
+    public DefaultGameVariantManager gameVariantManager() {
         return gameVariantManager;
     }
 
@@ -260,8 +262,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     // Private area, no trespassing!
 
-    private void createGameVariantManager(GameUI ui) {
-        gameVariantManager = new DefaultGameVariantManager(this, ui.viewModel());
+    private void initGameVariantManager(GameViewModel viewModel) {
+        gameVariantManager.setViewModel(viewModel);
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 

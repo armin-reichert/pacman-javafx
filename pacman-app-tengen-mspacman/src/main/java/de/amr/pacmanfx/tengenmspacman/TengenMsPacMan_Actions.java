@@ -140,10 +140,17 @@ public final class TengenMsPacMan_Actions {
         final SteeringActions steeringActions = commonGameActions.steeringActions();
 
         steeringBindings = Set.of(
-            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.UP),    keyForJoypadButton(joypad, JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
-            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.DOWN),  keyForJoypadButton(joypad, JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
-            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.LEFT),  keyForJoypadButton(joypad, JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
-            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.RIGHT), keyForJoypadButton(joypad, JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
+            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.UP),
+                keyForJoypadButton(joypad, JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
+
+            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.DOWN),
+                keyForJoypadButton(joypad, JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+
+            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.LEFT),
+                keyForJoypadButton(joypad, JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+
+            new ActionKeyBinding<>(steeringActions.actionSteer(Direction.RIGHT),
+                keyForJoypadButton(joypad, JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
 
         localBindings = Set.of(

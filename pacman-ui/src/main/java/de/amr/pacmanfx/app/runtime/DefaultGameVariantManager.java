@@ -8,9 +8,9 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
-import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,16 +26,21 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private final EngineUIContext engineContext;
+    private EngineUIContext engineContext;
+
+    private GameViewModel viewModel;
 
     private final Map<String, DefaultGameVariantRuntime> configsByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
-    private final GameViewModel viewModel;
+    public DefaultGameVariantManager() {}
 
-    public DefaultGameVariantManager(EngineUIContext engineContext, GameViewModel viewModel) {
+    public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
+    }
+
+    public void setViewModel(GameViewModel viewModel) {
         this.viewModel = requireNonNull(viewModel);
     }
 
