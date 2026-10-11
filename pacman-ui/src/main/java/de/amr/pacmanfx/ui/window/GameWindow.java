@@ -9,7 +9,6 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -56,8 +55,8 @@ public class GameWindow {
         stage.titleProperty().bind(titleBinding);
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        engineContext.ui().viewManager().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitleBinding(engineContext.ui(), viewID));
+        engineContext.viewManager().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitleBinding(engineContext, viewID));
 
         engineContext.gameVariantManager().addVariantListener((_, _, _) -> updateStageIcon(engineContext));
 
@@ -88,12 +87,12 @@ public class GameWindow {
     private StringBinding createStageTitleBinding(EngineUIContext engineContext) {
         return createStringBinding(
             () -> {
-                final Named id = engineContext.ui().viewManager().currentViewID();
+                final Named id = engineContext.viewManager().currentViewID();
                 if (id == GameViewID.START_PAGES || id == GameViewID.GAMEPLAY) {
-                    return optCurrentViewTitle(engineContext.ui()).orElse(titleForCurrentGameScene(engineContext));
+                    return optCurrentViewTitle(engineContext).orElse(titleForCurrentGameScene(engineContext));
                 }
                 if (id == GameViewID.EDITOR) {
-                    return optCurrentViewTitle(engineContext.ui()).orElse(("Map Editor"));
+                    return optCurrentViewTitle(engineContext).orElse(("Map Editor"));
                 }
                 return "";
             },
@@ -103,22 +102,22 @@ public class GameWindow {
             engineContext.clock().updatesDisabledProperty(),
             engineContext.ui().viewModel().debugModeOnProperty(),
             engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty(),
-            engineContext.ui().viewManager().currentViewIDProperty()
+            engineContext.viewManager().currentViewIDProperty()
         );
     }
 
-    private Optional<String> optCurrentViewTitle(GameUI ui) {
-        return ui.viewManager().optCurrentView().isEmpty()
+    private Optional<String> optCurrentViewTitle(EngineUIContext engineContext) {
+        return engineContext.viewManager().optCurrentView().isEmpty()
             ? Optional.of("No View present")
-            : ui.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
+            : engineContext.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
-    private void updateStageTitleBinding(GameUI ui, Named viewID) {
+    private void updateStageTitleBinding(EngineUIContext engineContext, Named viewID) {
         if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
             stage.titleProperty().bind(titleBinding);
         }
         else if (viewID == GameViewID.EDITOR) {
-            ui.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
+            engineContext.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });

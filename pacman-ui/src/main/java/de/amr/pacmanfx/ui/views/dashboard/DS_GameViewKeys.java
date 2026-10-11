@@ -21,12 +21,12 @@ public class DS_GameViewKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(EngineUIContext context) {
-        super.update(context);
-        context.ui().viewManager().optCurrentView().ifPresent(view -> updateInfo(context, view));
+    public void update(EngineUIContext engineContext) {
+        super.update(engineContext);
+        engineContext.viewManager().optCurrentView().ifPresent(view -> updateInfo(engineContext, view));
     }
 
-    private void updateInfo(EngineUIContext context, GameView view) {
+    private void updateInfo(EngineUIContext engineContext, GameView view) {
         clearSection();
 
         final Map<KeyCodeCombination, GameAction<EngineUIContext>> currentBindingMap = view.actionBindings().actionBindings();
@@ -38,8 +38,8 @@ public class DS_GameViewKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction<EngineUIContext> action = currentBindingMap.get(key);
-                    final String actionText = context.translationManager().translate(action.resourceBundleKey());
-                    final Label label = createLabel(actionText, action.isEnabled(context));
+                    final String actionText = engineContext.translationManager().translate(action.resourceBundleKey());
+                    final Label label = createLabel(actionText, action.isEnabled(engineContext));
                     addRow(key.getDisplayText(), label);
                 });
         }

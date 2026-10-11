@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -38,10 +37,9 @@ public class GameFlowActions {
 
         actionQuit = new GameAction<>("quit") {
             @Override
-            public void execute(EngineUIContext context) {
-                final GameUI ui = context.ui();
-                Logger.info("Call QUIT handler for {}:", ui.viewManager().assertCurrentView());
-                ui.viewManager().assertCurrentView().onQuit();
+            public void execute(EngineUIContext engineContext) {
+                Logger.info("Call QUIT handler for {}:", engineContext.viewManager().assertCurrentView());
+                engineContext.viewManager().assertCurrentView().onQuit();
             }
         };
 

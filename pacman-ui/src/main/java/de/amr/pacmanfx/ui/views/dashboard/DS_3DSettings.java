@@ -109,10 +109,10 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(EngineUIContext context) {
-        super.update(context);
+    public void update(EngineUIContext engineContext) {
+        super.update(engineContext);
 
-        final GameViewModel viewModel = context.ui().viewModel();
+        final GameViewModel viewModel = engineContext.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3DSettings().cameraPerspectiveIDProperty().get());
 
@@ -121,7 +121,7 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(viewModel.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final GamePlayView playView = context.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         final MiniPlaySceneView miniView = playView.layers().miniViewLayer();
         cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());

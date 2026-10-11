@@ -67,7 +67,7 @@ public class StatusIconBox implements Disposable {
 
     public void setEngineContext(EngineUIContext engineContext) {
         final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameViewManager viewManager = engineContext.ui().viewManager();
+        final GameViewManager viewManager = engineContext.viewManager();
 
         setTooltip(iconMuted,     engineContext.translationManager().translate("status_icon.muted"));
         setTooltip(icon3D,        engineContext.translationManager().translate("status_icon.3d"));

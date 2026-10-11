@@ -136,7 +136,7 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        final StartPagesView startPagesView = engineContext.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPagesView = engineContext.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         startPagesView.rootPane().pauseProgress();
     }
 

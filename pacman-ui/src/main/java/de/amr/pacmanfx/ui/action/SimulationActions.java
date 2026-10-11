@@ -131,8 +131,8 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext context) {
-                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(EngineUIContext engineContext) {
+                return engineContext.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 

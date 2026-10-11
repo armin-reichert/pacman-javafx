@@ -81,7 +81,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         }
         nextGameScene.activate();
 
-        final GamePlayView playView = engineContext.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         playView.replaceGameScene(currentGameScene(), nextGameScene);
 
         session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));

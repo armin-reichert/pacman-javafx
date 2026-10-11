@@ -20,9 +20,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.GameWindow;
@@ -59,8 +57,6 @@ public class GameUI implements GameEventListener {
 
     private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
-    private GameViewManager viewManager;
-
     private final GameUISettings uiSettings;
 
     private EngineUIContext engineContext;
@@ -79,8 +75,6 @@ public class GameUI implements GameEventListener {
     public void setEngineContext(EngineUIContext engineContext, DashboardFactory dashboardFactory) {
         this.engineContext = requireNonNull(engineContext);
 
-        viewManager = new DefaultGameViewManager(engineContext);
-
         window.setEngineContext(engineContext);
 
         engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
@@ -94,7 +88,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void buildDashboard(DashboardFactory dashboardFactory) {
-        final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         playView.dashboard().populate(dashboardFactory, uiSettings.dashboard(), engineContext.translationManager());
     }
 
@@ -104,7 +98,7 @@ public class GameUI implements GameEventListener {
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameScene currentGameScene = engineContext.gameSceneManager().currentGameScene();
-                final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
                 playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -127,10 +121,6 @@ public class GameUI implements GameEventListener {
     }
 
     // --- Accessors ---
-
-    public GameViewManager viewManager() {
-        return viewManager;
-    }
 
     public GameViewModel viewModel() {
         return viewModel;
@@ -172,18 +162,18 @@ public class GameUI implements GameEventListener {
     // private
 
     private void connectKeyboard(Keyboard keyboard) {
-        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
+        keyboard.enabledProperty().bind(engineContext.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
         keyboard.addStateListener(this::handleKeyboardStateChange);
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
     private void handleKeyboardStateChange(Keyboard keyboard) {
         if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
-            final Named currentViewID = viewManager.currentViewID();
+            final Named currentViewID = engineContext.viewManager().currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (executeMatchingAction(actionBindings, engineContext).isEmpty()) {
-                    viewManager.assertView(currentViewID).onInput(engineContext.input());
+                    engineContext.viewManager().assertView(currentViewID).onInput(engineContext.input());
                 }
             }
         }

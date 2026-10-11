@@ -57,7 +57,7 @@ public class GameMainScene extends Scene {
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(engineContext.gameSceneManager()),
-            engineContext.ui().viewManager().currentViewIDProperty(),
+            engineContext.viewManager().currentViewIDProperty(),
             engineContext.gameSceneManager().currentGameSceneProperty()
         ));
 

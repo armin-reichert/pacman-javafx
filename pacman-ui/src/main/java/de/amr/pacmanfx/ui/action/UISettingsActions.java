@@ -48,7 +48,7 @@ public class UISettingsActions {
         actionShowHelp = new GameAction<>("show_help") {
             @Override
             public void execute(EngineUIContext engineContext) {
-                engineContext.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(engineContext);
+                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(engineContext);
             }
 
             @Override
@@ -65,13 +65,13 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction<>("toggle_dashboard") {
             @Override
-            public void execute(EngineUIContext context) {
-                context.ui().viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
+            public void execute(EngineUIContext engineContext) {
+                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext context) {
-                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(EngineUIContext engineContext) {
+                return engineContext.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
@@ -123,8 +123,8 @@ public class UISettingsActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext context) {
-                return context.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(EngineUIContext engineContext) {
+                return engineContext.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {

@@ -202,7 +202,7 @@ public class GamePlayView implements GameView {
     @Override
     public void onQuit() {
         engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        engineContext.ui().viewManager().currentViewIDProperty().set(GameViewID.START_PAGES);
+        engineContext.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES);
     }
 
     @Override
