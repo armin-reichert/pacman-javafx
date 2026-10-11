@@ -12,10 +12,8 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -24,14 +22,14 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     private final ObjectProperty<Named> currentViewID = new SimpleObjectProperty<>();
 
-    private final Map<Named, GameView> views = new HashMap<>();
+    private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
     public DefaultGameViewManager(EngineUIContext engineContext) {
         requireNonNull(engineContext);
 
-        registerView(GameViewID.START_PAGES, new StartPagesView());
-        registerView(GameViewID.GAMEPLAY, new GamePlayView());
-        registerView(GameViewID.EDITOR, new EditorView());
+        views.put(GameViewID.START_PAGES, new StartPagesView());
+        views.put(GameViewID.GAMEPLAY, new GamePlayView());
+        views.put(GameViewID.EDITOR, new EditorView());
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
             engineContext.ui().clearMessage();
@@ -49,17 +47,12 @@ public final class DefaultGameViewManager implements GameViewManager {
         views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
     }
 
-    public void registerView(Named viewID, GameView gameView) {
-        requireNonNull(viewID);
-        requireNonNull(gameView);
-        views.put(viewID, gameView);
-        Logger.info("Game view registered. ID='{}': {}", viewID, gameView);
-    }
-
-
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameView> T assertView(Named viewID, Class<T> viewClass) {
+        if (!(viewID instanceof GameViewID)) {
+            throw new IllegalArgumentException(viewID + " is not a GameViewID");
+        }
         final GameView view = views.get(viewID);
         if (view == null) {
             throw new IllegalStateException("No view found for ID: " + viewID);
@@ -76,6 +69,9 @@ public final class DefaultGameViewManager implements GameViewManager {
     @Override
     @SuppressWarnings("unchecked")
     public <V extends GameView> Optional<V> optView(Named viewID, Class<V> viewClass) {
+        if (!(viewID instanceof GameViewID)) {
+            throw new IllegalArgumentException(viewID + " is not a GameViewID");
+        }
         final GameView view = views.get(viewID);
         return viewClass.isInstance(view) ? Optional.of((V) view) : Optional.empty();
     }
@@ -103,10 +99,14 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     @Override
     public Optional<GameView> optCurrentView() {
-        if (currentViewID() == null) {
+        final var viewID = currentViewID();
+        if (viewID == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(views.get(currentViewID()));
+        if (!(viewID instanceof GameViewID)) {
+            throw new IllegalArgumentException(viewID + " is not a GameViewID");
+        }
+        return Optional.ofNullable(views.get(viewID));
     }
 
     public boolean isSelected(Named viewID) {
