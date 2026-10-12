@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import org.tinylog.Logger;
@@ -39,9 +38,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
                 addSection(section);
             }, () -> Logger.error("Unknown dashboard ID: {}", def.id()));
         }
-        sections().forEach(section -> {
-            section.init(engineContext);
-        });
+        sections().forEach(section -> section.init(engineContext));
     }
 
     public void update(EngineUIContext engineContext) {
