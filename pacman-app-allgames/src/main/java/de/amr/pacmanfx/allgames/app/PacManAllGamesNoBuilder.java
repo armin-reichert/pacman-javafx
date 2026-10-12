@@ -66,10 +66,10 @@ public class PacManAllGamesNoBuilder extends Application {
         final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), GameUI.DEFAULT_UI_SETTINGS);
 
         final StartPagesView startPages = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
-        startPages.addStartPage(engine, new ArcadePacMan_StartPage());
-        startPages.addStartPage(engine, new ArcadeMsPacMan_StartPage());
-        startPages.addStartPage(engine, new TengenMsPacMan_StartPage());
-        startPages.addStartPage(engine, new XXL_StartPage());
+        startPages.addPage(engine, new ArcadePacMan_StartPage());
+        startPages.addPage(engine, new ArcadeMsPacMan_StartPage());
+        startPages.addPage(engine, new TengenMsPacMan_StartPage());
+        startPages.addPage(engine, new XXL_StartPage());
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
         engine.setUI(ui);

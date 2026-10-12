@@ -1,9 +1,12 @@
+@import "dashboard.css";
+@import "startpages.css";
+
 @font-face {
     font-family: "Emulogic";
     src: url("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf");
 }
 
-/* Custom context menu posture */
+/* Custom context menu */
 
 .custom-menu-item:hover {
     -fx-background-color: transparent;
@@ -16,62 +19,6 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
     -fx-stroke: #333;
-}
-
-/* Start pages */
-
-#start-pages-carousel {
-    -fx-background-image: url("/de/amr/pacmanfx/ui/graphics/pacman_wallpaper.png");
-}
-
-.carousel-nav {
-    -fx-opacity: 0.1;
-}
-
-.carousel-nav:hover {
-    -fx-opacity: 0.6;
-}
-
-.carousel-nav .font-awesome-icon {
-    -fx-size: 48;
-    -fx-fill: rgb(222, 222, 255);
-}
-
-.game-start-button-container {
-    -fx-background-color: rgb(0, 155, 252, 0.6);
-}
-
-.game-start-button {
-    -fx-font-family: "Emulogic";
-    -fx-font-size: 32;
-    -fx-text-fill: green;
-}
-
-/* Start page progress bar */
-
-.progress-bar {
-    -fx-background-color: transparent;
-}
-
-.progress-bar .track {
-    -fx-background-color: transparent;
-}
-
-.progress-bar .bar {
-    -fx-background-color: rgba(0, 155, 252, 0.7); /* same color as START button */
-}
-
-.link-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #0066cc;
-    -fx-underline: true;
-    -fx-cursor: hand;
-    -fx-padding: 0;
-    -fx-border-width: 0;
-}
-
-.link-button:hover {
-    -fx-text-fill: #003366;
 }
 
 #paused-icon {
@@ -108,49 +55,4 @@
 .option-menu {
     -fx-border-color: #999;
     -fx-border-width: 1px;
-}
-
-/* --- Dashboard --- */
-
-.dashboard .titled-pane .content {
-    -fx-background-color: #ffffff;
-}
-
-.dashboard-section > .title > .text {
-    -fx-font-family: "Sans";
-    -fx-font-size: 14;
-    -fx-font-weight: 700;
-}
-
-.dashboard-section {
-    -fx-pref-width: 380;
-    -fx-min-width:  380;
-    -fx-max-width:  480;
-    -fx-opacity: 0.8;
-    -fx-font-family: "Arial";
-    -fx-font-size: 12;
-    -fx-text-fill: #000;
-    -fx-text-stroke: #000;
-}
-
-.dashboard-section-grid {
-    -fx-vgap: 4;
-    -fx-hgap: 2;
-}
-
-.dashboard-section .label {
-    -fx-min-width:  130px;
-    -fx-min-height: 18px;
-}
-
-.dashboard-section .slider {
-    -fx-pref-width: 160px;
-}
-
-.dashboard-section .table-view {
-    -fx-pref-width: 320px;
-}
-
-#ds-readme-first {
-    -fx-font-size: 16;
 }

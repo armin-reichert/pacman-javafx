@@ -119,7 +119,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
         column.setCellFactory(_ -> new TableCell<>() {
             private final Button linkButton = new Button();
             {
-                linkButton.getStyleClass().add("link-button"); // see global posture.css
+                linkButton.getStyleClass().add("link-button");
                 linkButton.setOnAction(_ -> {
                     final MapLinkUserData data = (MapLinkUserData) linkButton.getUserData();
                     try {

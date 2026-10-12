@@ -1,0 +1,41 @@
+#start-pages-carousel {
+    -fx-background-image: url("/de/amr/pacmanfx/ui/graphics/pacman_wallpaper.png");
+}
+
+.carousel-nav {
+    -fx-opacity: 0.1;
+}
+
+.carousel-nav:hover {
+    -fx-opacity: 0.6;
+}
+
+.carousel-nav .font-awesome-icon {
+    -fx-size: 48;
+    -fx-fill: rgb(222, 222, 255);
+}
+
+.game-start-button-container {
+    -fx-background-color: rgb(0, 155, 252, 0.6);
+}
+
+.game-start-button {
+    -fx-font-family: "Emulogic";
+    -fx-font-size: 32;
+    -fx-text-fill: green;
+}
+
+/* Start page progress bar */
+
+.progress-bar {
+    -fx-background-color: transparent;
+}
+
+.progress-bar .track {
+    -fx-background-color: transparent;
+}
+
+.progress-bar .bar {
+    -fx-background-color: rgba(0, 155, 252, 0.7); /* same color as START button */
+}
+

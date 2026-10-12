@@ -59,6 +59,19 @@ public class StartPagesView implements GameView {
         ));
     }
 
+    public void addPage(EngineUIContext engineContext, StartPage startPage) {
+        requireNonNull(engineContext);
+        requireNonNull(startPage);
+
+        if (pages.contains(startPage)) {
+            Logger.warn("Start page already added to view");
+            return;
+        }
+        pages.add(startPage);
+        carousel.getItems().add(startPage.rootPane());
+        startPage.setEngineContext(engineContext);
+    }
+
     public List<StartPage> pages() {
         return pages;
     }
@@ -105,17 +118,6 @@ public class StartPagesView implements GameView {
     @Override
     public Optional<Supplier<String>> optTitleSupplier() {
         return Optional.of(this::composeTitle);
-    }
-
-    public void addStartPage(EngineUIContext engineContext, StartPage startPage) {
-        requireNonNull(startPage);
-        if (pages.contains(startPage)) {
-            Logger.warn("Start page already exists in list");
-            return;
-        }
-        pages.add(startPage);
-        carousel.getItems().add(startPage.rootPane());
-        startPage.setEngineContext(engineContext);
     }
 
     // Private area

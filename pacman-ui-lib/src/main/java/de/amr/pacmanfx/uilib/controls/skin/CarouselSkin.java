@@ -22,6 +22,9 @@ import javafx.util.Duration;
 
 public class CarouselSkin extends SkinBase<Carousel> {
 
+    public static final String CSS_SELECTOR_CAROUSEL_NAV = "carousel-nav";
+    public static final String CSS_SELECTOR_CAROUSEL_PROGRESS = "carousel-progress";
+
     public enum NavigationDirection { BACK, FORWARD }
 
     private final StackPane root = new StackPane();
@@ -40,7 +43,7 @@ public class CarouselSkin extends SkinBase<Carousel> {
         navButtonBack    = createNavButton(NavigationDirection.BACK);
         navButtonForward = createNavButton(NavigationDirection.FORWARD);
 
-        progressBar.getStyleClass().add("carousel-progress");
+        progressBar.getStyleClass().add(CSS_SELECTOR_CAROUSEL_PROGRESS);
         progressBar.setPrefHeight(10);
 
         progressTimer = createProgressTimer();
@@ -136,7 +139,7 @@ public class CarouselSkin extends SkinBase<Carousel> {
         final Carousel carousel = getSkinnable();
 
         final Button button = new Button();
-        button.getStyleClass().add("carousel-nav");
+        button.getStyleClass().add(CSS_SELECTOR_CAROUSEL_NAV);
 
         button.disableProperty().bind(carousel.navigationLockedProperty());
 

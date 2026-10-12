@@ -42,7 +42,7 @@ public class Carousel extends Control {
     public Carousel() {
         getStyleClass().add(STYLE_CLASS);
         setFocusTraversable(true);
-        items.addListener((ListChangeListener<? super Node>) change -> {
+        items.addListener((ListChangeListener<? super Node>) _ -> {
             backButtonVisible.set(items.size() >= 2);
             forwardButtonVisible.set(items.size() >= 2);
         });
