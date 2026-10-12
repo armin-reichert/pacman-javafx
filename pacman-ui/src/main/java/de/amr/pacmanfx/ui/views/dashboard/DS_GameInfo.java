@@ -35,7 +35,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void init(EngineUIContext engineContext) {
         addDynamicInfo("Game State",  () -> engineContext.optCurrentGame().get().state().name());
 
         addDynamicInfo("State Timer", () -> stateTimerInfo(engineContext.optCurrentGame().get().state()));

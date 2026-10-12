@@ -22,34 +22,36 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         setId("game-dashboard");
     }
 
-    public void setExecutionContext(EngineUIContext context) {
-        requireNonNull(context);
-        sections().forEach(section -> section.setEngineContext(context));
-    }
-
     public void populate(
-        DashboardFactory factory,
-        List<DashboardSectionSettings> sectionDefinitions,
-        TranslationManager translations)
+        EngineUIContext engineContext,
+        DashboardFactory dashboardFactory,
+        List<DashboardSectionSettings> sectionSettings)
     {
-        for (var def : sectionDefinitions) {
-            factory.identify(def.id()).ifPresentOrElse(dashboardID -> {
-                final GameDashboardSection section = factory.createSection(this, dashboardID, translations);
+        if (dashboardFactory == null) {
+            Logger.error("Cannot populate dashboard: factory not set");
+            return;
+        }
+        for (var def : sectionSettings) {
+            dashboardFactory.identify(def.id()).ifPresentOrElse(dashboardID -> {
+                final GameDashboardSection section = dashboardFactory.createSection(this, dashboardID, engineContext.translationManager());
                 section.setDisplayedStandalone(def.standalone());
                 section.setExpanded(def.expanded());
                 addSection(section);
             }, () -> Logger.error("Unknown dashboard ID: {}", def.id()));
         }
+        sections().forEach(section -> {
+            section.init(engineContext);
+        });
     }
 
-    public void update(EngineUIContext context) {
-        requireNonNull(context);
+    public void update(EngineUIContext engineContext) {
+        requireNonNull(engineContext);
         sections()
             .filter(GameDashboardSection::isExpanded)
-            .forEach(section -> section.update(context));
+            .forEach(section -> section.update(engineContext));
     }
 
-    public void updateSectionOrder() {
+    public void reorderSections() {
         final List<GameDashboardSection> reorderedSections = new ArrayList<>(sections()
             .filter(DashboardSection::isVisible)
             .filter(section -> section.id() != DashboardID.README)

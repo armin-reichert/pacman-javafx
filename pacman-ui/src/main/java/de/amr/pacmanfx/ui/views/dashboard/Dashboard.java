@@ -21,7 +21,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
 
     private final List<S> sectionList = FXCollections.observableArrayList();
 
-    private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateSectionOrder();
+    private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> reorderSections();
 
     private void onSectionExpandedStateChanged(S section) {
         if (section.isDisplayedStandalone()) {
@@ -49,7 +49,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
         setVisible(!isVisible());
     }
 
-    public void updateSectionOrder() {
+    public void reorderSections() {
     }
 
     public void addSection(S section) {
@@ -64,7 +64,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
         requireNonNull(section);
         if (sectionList.remove(section)) {
             section.visibleProperty().removeListener(visibilityChangeHandler);
-            updateSectionOrder();
+            reorderSections();
         }
         else Logger.error("Section {} not found", section.id());
     }

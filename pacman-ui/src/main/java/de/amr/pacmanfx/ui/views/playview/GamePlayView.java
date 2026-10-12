@@ -15,9 +15,11 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
+import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
@@ -29,6 +31,8 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
@@ -99,6 +103,11 @@ public class GamePlayView implements GameView {
         return layers;
     }
 
+    public void populateDashboard(DashboardFactory dashboardFactory){
+        List<DashboardSectionSettings> settings = engineContext.ui().settings().dashboard();
+        dashboard.populate(engineContext, dashboardFactory, settings);
+    }
+
     public GameDashboard dashboard() {
         return dashboard;
     }
@@ -157,8 +166,6 @@ public class GamePlayView implements GameView {
 
         contextMenuManager = new ContextMenuManager(engineContext);
         root.setOnContextMenuRequested(contextMenuManager);
-
-        dashboard.setExecutionContext(engineContext);
 
         layers.miniViewLayer().setViewModel(viewModel);
 

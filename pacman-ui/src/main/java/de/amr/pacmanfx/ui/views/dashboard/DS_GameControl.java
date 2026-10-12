@@ -44,7 +44,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void init(EngineUIContext engineContext) {
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 

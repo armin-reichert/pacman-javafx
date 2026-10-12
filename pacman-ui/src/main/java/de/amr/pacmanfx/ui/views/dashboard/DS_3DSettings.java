@@ -8,10 +8,12 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -41,7 +43,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void init(EngineUIContext engineContext) {
         final GameViewModel viewModel = engineContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -150,15 +152,17 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private static String sceneSizeInfo(GameScene gameScene) {
-        if (gameScene == null) return NO_INFO;
-
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             return NO_INFO;
         }
-
-        final double s = abstractGameScene.view2D().renderingSurface().scaling();
+        final GameSceneView2D view2D = abstractGameScene.view2D();
+        final RenderingSurface renderingSurface = view2D.renderingSurface();
+        if (renderingSurface == null) {
+            return NO_INFO;
+        }
+        final double s = renderingSurface.scaling();
         return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
-            abstractGameScene.view2D().unscaledWidth(), abstractGameScene.view2D().unscaledHeight(),
-            abstractGameScene.view2D().unscaledWidth() * s,  abstractGameScene.view2D().unscaledHeight() * s);
+            view2D.unscaledWidth(),      view2D.unscaledHeight(),
+            view2D.unscaledWidth() * s,  view2D.unscaledHeight() * s);
     }
 }

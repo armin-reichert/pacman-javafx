@@ -18,7 +18,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext context) {
+    public void init(EngineUIContext context) {
         final Joypad joypad = context.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;

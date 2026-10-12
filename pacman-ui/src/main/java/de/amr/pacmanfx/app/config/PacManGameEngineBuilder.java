@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.geometry.Rectangle2D;
@@ -106,11 +107,14 @@ public class PacManGameEngineBuilder {
             );
 
             final GameUI ui = new GameUI(stage, width, height, uiSettings);
-            engine.setUI(ui, dashboardFactory);
+            engine.setUI(ui);
 
             // Can only be done after UI has been assigned to game!
             final StartPagesView startPagesView = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
             addStartPages(engine, startPagesView);
+
+            final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+            playView.populateDashboard(dashboardFactory);
 
             return Optional.of(engine);
         }

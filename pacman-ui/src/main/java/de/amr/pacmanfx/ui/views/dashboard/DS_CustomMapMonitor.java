@@ -66,7 +66,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void init(EngineUIContext engineContext) {
         requireNonNull(engineContext);
         setCustomDirWatchDog(engineContext.watchdog());
         setMapEditFunction(mapFile -> runAction(CommonGameActions.instance().editorActions().createEditMapFileAction(mapFile),

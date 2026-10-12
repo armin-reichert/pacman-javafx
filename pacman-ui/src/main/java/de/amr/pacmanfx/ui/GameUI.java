@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import javafx.stage.Stage;
@@ -57,39 +56,32 @@ public class GameUI implements GameEventListener {
 
     private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
-    private final GameUISettings uiSettings;
+    private final GameUISettings settings;
 
     private EngineUIContext engineContext;
 
-    public GameUI(Stage stage, int width, int height, GameUISettings uiSettings) {
+    public GameUI(Stage stage, int width, int height, GameUISettings settings) {
         requireNonNull(stage);
-        this.uiSettings = requireNonNull(uiSettings);
+        this.settings = requireNonNull(settings);
 
         window = new GameWindow(stage, width, height);
 
         viewModel = new GameViewModel();
-        viewModel.init(uiSettings);
+        viewModel.init(settings);
 
     }
 
-    public void setEngineContext(EngineUIContext engineContext, DashboardFactory dashboardFactory) {
+    public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
 
         window.setEngineContext(engineContext);
 
         engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
-
-        buildDashboard(dashboardFactory);
         connectKeyboard(engineContext.input().keyboard());
         bindCommonActions();
 
         Logger.info("UI connected with engine");
         Logger.info(actionBindings);
-    }
-
-    private void buildDashboard(DashboardFactory dashboardFactory) {
-        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
-        playView.dashboard().populate(dashboardFactory, uiSettings.dashboard(), engineContext.translationManager());
     }
 
     @Override
@@ -121,6 +113,10 @@ public class GameUI implements GameEventListener {
     }
 
     // --- Accessors ---
+
+    public GameUISettings settings() {
+        return settings;
+    }
 
     public GameViewModel viewModel() {
         return viewModel;

@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
@@ -83,13 +82,13 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         clock().setPermanentAction(this::render);
     }
 
-    public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
+    public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
 
         viewManager = new DefaultGameViewManager(this);
         initGameVariantManager(ui.viewModel());
 
-        ui.setEngineContext(this, dashboardFactory);
+        ui.setEngineContext(this);
 
         gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
 
