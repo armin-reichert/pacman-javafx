@@ -11,6 +11,7 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
@@ -73,6 +74,18 @@ public class GameWindow {
         stage.setFullScreen(value);
     }
 
+    public void updateStageTitleBinding(GameViewManager viewManager, Named viewID) {
+        if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
+            stage.titleProperty().bind(titleBinding);
+        }
+        else if (viewID == GameViewID.EDITOR) {
+            viewManager.optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
+                stage.titleProperty().unbind();
+                editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
+            });
+        }
+    }
+
     // Private area
 
     private StringBinding createStageTitleBinding(EngineUIContext engineContext) {
@@ -101,18 +114,6 @@ public class GameWindow {
         return engineContext.viewManager().optCurrentView().isEmpty()
             ? Optional.of("No View present")
             : engineContext.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
-    }
-
-    public void updateStageTitleBinding(EngineUIContext engineContext, Named viewID) {
-        if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
-            stage.titleProperty().bind(titleBinding);
-        }
-        else if (viewID == GameViewID.EDITOR) {
-            engineContext.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
-                stage.titleProperty().unbind();
-                editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
-            });
-        }
     }
 
     private String titleForCurrentGameScene(EngineUIContext engineContext) {

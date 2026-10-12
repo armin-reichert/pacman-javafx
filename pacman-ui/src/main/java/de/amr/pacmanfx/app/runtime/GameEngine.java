@@ -94,7 +94,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        viewManager.currentViewIDProperty().addListener((_, _, viewID) -> ui.window().updateStageTitleBinding(this, viewID));
+        viewManager.currentViewIDProperty().addListener((_, _, viewID)
+            -> ui.window().updateStageTitleBinding(viewManager, viewID));
     }
 
     public void showGameVariant(GameVariantID variantID) {
