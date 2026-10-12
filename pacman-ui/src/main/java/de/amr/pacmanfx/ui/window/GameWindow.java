@@ -17,7 +17,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -58,14 +57,11 @@ public class GameWindow {
         engineContext.viewManager().currentViewIDProperty().addListener(
             (_, _, viewID) -> updateStageTitleBinding(engineContext, viewID));
 
-        engineContext.gameVariantManager().addVariantListener((_, _, _) -> updateStageIcon(engineContext));
-
         // Triggers title update
         connected.set(true);
     }
 
-    public void show(EngineUIContext engineContext) {
-        updateStageIcon(engineContext);
+    public void show() {
         stage.centerOnScreen();
         stage.show();
     }
@@ -121,16 +117,6 @@ public class GameWindow {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
-        }
-    }
-
-    private void updateStageIcon(EngineUIContext engineContext) {
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
-        final Image icon = runtime.uiConfig().assets().image("app_icon");
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
-        } else {
-            Logger.error("Could not access stage icon");
         }
     }
 

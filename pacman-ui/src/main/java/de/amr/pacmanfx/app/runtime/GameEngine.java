@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
@@ -29,6 +30,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -86,6 +88,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         viewManager = new DefaultGameViewManager(this);
         initGameVariantManager(ui.viewModel());
         ui.setEngineContext(this, dashboardFactory);
+
+        gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -93,7 +97,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         gameVariantManager.selectVariant(variantID.name());
 
         viewManager.onGameVariantChanged();
-        ui.window().show(this);
+
+        updateStageIcon();
+        ui.window().show();
 
         Platform.runLater(this::startBackgroundServices);
     }
@@ -285,6 +291,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
                 enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName));
             }
         });
+    }
+
+    private void updateStageIcon() {
+        final AssetMap assets = gameVariantManager.currentRuntime().uiConfig().assets();
+        final Image icon = assets.image("app_icon");
+        if (icon != null) {
+            ui.window().stage().getIcons().setAll(icon);
+        }
     }
 
     private void startBackgroundServices() {
