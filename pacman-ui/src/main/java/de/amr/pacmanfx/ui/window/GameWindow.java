@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -52,10 +51,6 @@ public class GameWindow {
 
         titleBinding = createStageTitleBinding(engineContext);
         stage.titleProperty().bind(titleBinding);
-
-        //TODO Without this, the title is not changed when returning from the editor. Why?
-        engineContext.viewManager().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitleBinding(engineContext, viewID));
 
         // Triggers title update
         connected.set(true);
@@ -108,7 +103,7 @@ public class GameWindow {
             : engineContext.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
-    private void updateStageTitleBinding(EngineUIContext engineContext, Named viewID) {
+    public void updateStageTitleBinding(EngineUIContext engineContext, Named viewID) {
         if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
             stage.titleProperty().bind(titleBinding);
         }

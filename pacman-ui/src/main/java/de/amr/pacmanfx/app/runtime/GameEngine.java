@@ -85,11 +85,16 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public void setUI(GameUI ui, DashboardFactory dashboardFactory) {
         this.ui = requireNonNull(ui);
+
         viewManager = new DefaultGameViewManager(this);
         initGameVariantManager(ui.viewModel());
+
         ui.setEngineContext(this, dashboardFactory);
 
         gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
+
+        //TODO Without this, the title is not changed when returning from the editor. Why?
+        viewManager.currentViewIDProperty().addListener((_, _, viewID) -> ui.window().updateStageTitleBinding(this, viewID));
     }
 
     public void showGameVariant(GameVariantID variantID) {
