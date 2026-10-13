@@ -90,6 +90,7 @@ public final class DefaultGameViewManager implements GameViewManager {
         return Optional.ofNullable(views.get(viewID));
     }
 
+    @Override
     public boolean isSelected(Named viewID) {
         requireNonNull(viewID);
         return currentViewID() == viewID;

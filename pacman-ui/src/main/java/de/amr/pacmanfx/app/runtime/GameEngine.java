@@ -10,6 +10,7 @@ import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -17,13 +18,13 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -91,8 +92,20 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         viewManager = new DefaultGameViewManager(this);
         viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
+        gameVariantManager.setViewModel(ui.viewModel());
+        gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
+            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 
-        initGameVariantManager(ui.viewModel());
+            final GameVariantUIConfig uiConfig = gameVariantManager.currentRuntime().uiConfig();
+            if (oldVariantName != null) {
+                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
+                exitGameVariant(gameVariantManager.variantRuntimeByName(oldVariantName), uiConfig);
+            }
+            if (newVariantName != null) {
+                Logger.info(">>> Enter game variant '{}'", newVariantName);
+                enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName), uiConfig);
+            }
+        });
         gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
 
         ui.setEngineContext(this);
@@ -112,7 +125,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     //TODO This method is messy and needs a cleanup!
-    public void enterGameVariant(DefaultGameVariantRuntime runtime) {
+    public void enterGameVariant(GameVariantRuntime runtime, GameVariantUIConfig uiConfig) {
         requireNonNull(runtime);
 
         final GameEventManager gameEventManager = new DefaultGameEventManager();
@@ -125,7 +138,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
 
         // Update game scene manager
-        gameSceneManager.setGameSceneConfig(runtime.uiConfig().gameSceneConfig());
+        gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
 
         // Just to be sure:
         gameEventManager.removeAllSubscribers();
@@ -136,20 +149,21 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
 
         // Init UI for new runtime (game variant)
-        runtime.uiConfig().load(this);
+        uiConfig.load(this);
 
         spriteAnimationTimer.attachAnimContainer(runtime.spriteAnimContainer());
         spriteAnimationTimer.start();
 
-        ui.viewModel().maze3DSettings().init(runtime.uiConfig().worldSettings().maze());
+        ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
     }
 
-    public void exitGameVariant(DefaultGameVariantRuntime variantRuntime) {
+    public void exitGameVariant(GameVariantRuntime variantRuntime, GameVariantUIConfig uiConfig) {
         requireNonNull(variantRuntime);
 
         variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        variantRuntime.uiConfig().unload(this);
         variantRuntime.spriteAnimContainer().clear();
+
+        uiConfig.unload(this);
 
         spriteAnimationTimer.detachAnimationContainer();
         soundManager.dispose();
@@ -274,12 +288,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public void enterGameVariant(String variantName) {
-        enterGameVariant(gameVariantManager.variantRuntimeByName(variantName));
+        enterGameVariant(gameVariantManager.variantRuntimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
     }
 
     @Override
     public void exitGameVariant(String variantName) {
-        exitGameVariant(gameVariantManager.variantRuntimeByName(variantName));
+        exitGameVariant(gameVariantManager.variantRuntimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
     }
 
     // Private area, no trespassing!
@@ -296,22 +310,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         ui.window().mainScene().replaceGameView(newView);
         ui.window().updateStageTitleBinding(viewManager, newViewID);
-    }
-
-    private void initGameVariantManager(GameViewModel viewModel) {
-        gameVariantManager.setViewModel(viewModel);
-        gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
-            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
-
-            if (oldVariantName != null) {
-                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.variantRuntimeByName(oldVariantName));
-            }
-            if (newVariantName != null) {
-                Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName));
-            }
-        });
     }
 
     private void updateStageIcon() {
