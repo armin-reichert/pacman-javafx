@@ -2,7 +2,6 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
@@ -26,9 +25,6 @@ public interface GameViewManager {
     default GameView assertCurrentView() {
         return assertView(currentViewID());
     }
-
-    //TODO dubious!
-    void onGameVariantChanged();
 
     void onGameSuspended(GameScene gameScene);
 

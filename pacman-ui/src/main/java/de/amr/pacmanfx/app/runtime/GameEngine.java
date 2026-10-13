@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -97,25 +98,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         ui.setEngineContext(this);
     }
 
-    private void onViewChanged(Named oldViewID, Named newViewID) {
-        ui.clearMessage();
-
-        if (oldViewID != null) {
-            viewManager.assertView(oldViewID).onExit();
-        }
-
-        final GameView newView = viewManager.assertView(newViewID);
-        newView.onEnter();
-
-        ui.window().mainScene().replaceGameView(newView);
-        ui.window().updateStageTitleBinding(viewManager, newViewID);
-    }
-
     public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
         gameVariantManager.selectVariant(variantID.name());
 
-        viewManager.onGameVariantChanged();
+        viewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
+        viewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
 
         updateStageIcon();
         ui.window().show();
@@ -295,6 +283,20 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     // Private area, no trespassing!
+
+    private void onViewChanged(Named oldViewID, Named newViewID) {
+        ui.clearMessage();
+
+        if (oldViewID != null) {
+            viewManager.assertView(oldViewID).onExit();
+        }
+
+        final GameView newView = viewManager.assertView(newViewID);
+        newView.onEnter();
+
+        ui.window().mainScene().replaceGameView(newView);
+        ui.window().updateStageTitleBinding(viewManager, newViewID);
+    }
 
     private void initGameVariantManager(GameViewModel viewModel) {
         gameVariantManager.setViewModel(viewModel);

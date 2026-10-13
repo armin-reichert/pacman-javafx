@@ -64,12 +64,6 @@ public final class DefaultGameViewManager implements GameViewManager {
     }
 
     @Override
-    public void onGameVariantChanged() {
-        currentViewIDProperty().set(GameViewID.START_PAGES);
-        assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
-    }
-
-    @Override
     public void onGameSuspended(GameScene currentGameScene) {
         currentGameScene.deactivate();
     }
