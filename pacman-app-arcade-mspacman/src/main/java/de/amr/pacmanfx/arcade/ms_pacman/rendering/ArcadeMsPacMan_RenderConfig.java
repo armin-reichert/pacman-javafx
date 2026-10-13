@@ -44,13 +44,11 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
 //    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
+    protected final AssetMap assets;
     protected final HUDStyleComp hudStyle;
 
-    protected final AssetMap assets;
-
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
-        this.assets = assets;
-
+        this.assets = requireNonNull(assets);
         hudStyle = new HUDStyleComp(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
@@ -66,11 +64,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public SpriteSheet<SpriteID> spriteSheet() {
         return ArcadeMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public AssetMap assets() {
-        return assets;
     }
 
     @Override
@@ -105,7 +98,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        return new ArcadeMsPacMan_VariantRenderer(animController, this, canvas);
+        return new ArcadeMsPacMan_VariantRenderer(animController, this, canvas, assets);
     }
 
     @Override

@@ -47,9 +47,7 @@ public class PacManAllGamesNoBuilder extends Application {
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
-            null,
             XXL_PacMan_Cartridge.CARTRIDGE,
-            null,
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
         engine = new GameEngine(

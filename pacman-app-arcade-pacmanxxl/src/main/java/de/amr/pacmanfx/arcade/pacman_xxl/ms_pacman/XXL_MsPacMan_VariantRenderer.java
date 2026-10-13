@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
@@ -23,8 +24,13 @@ public class XXL_MsPacMan_VariantRenderer extends ArcadeMsPacMan_VariantRenderer
 
     private final GenericLevelRenderer levelRenderer;
 
-    public XXL_MsPacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadeMsPacMan_RenderConfig renderConfig, Canvas canvas) {
-        super(animController, renderConfig, canvas);
+    public XXL_MsPacMan_VariantRenderer(
+        ActorSpriteAnimController animController,
+        ArcadeMsPacMan_RenderConfig renderConfig,
+        Canvas canvas,
+        AssetMap assets)
+    {
+        super(animController, renderConfig, canvas, assets);
 
         levelRenderer = new GenericLevelRenderer(canvas);
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());

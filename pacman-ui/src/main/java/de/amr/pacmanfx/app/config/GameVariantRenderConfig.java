@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.app.config;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
@@ -24,8 +23,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 public interface GameVariantRenderConfig {
-
-    AssetMap assets();
 
     SpriteSheet<?> spriteSheet();
 

@@ -33,7 +33,7 @@ public class XXL_PacMan_RenderConfig extends ArcadePacMan_RenderConfig {
 
     @Override
     public BaseRenderer createVariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-        return new XXL_PacMan_VariantRenderer(animController, this, canvas);
+        return new XXL_PacMan_VariantRenderer(animController, this, canvas, assets);
     }
 }
 

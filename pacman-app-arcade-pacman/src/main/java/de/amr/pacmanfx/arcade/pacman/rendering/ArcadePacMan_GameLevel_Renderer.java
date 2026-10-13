@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.world.Door;
@@ -21,6 +22,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.basics.TileDimension.TS;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -30,11 +32,13 @@ import static java.util.function.Predicate.not;
  */
 public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
+    private final AssetMap assets;
     private final ArcadePacMan_RenderConfig renderConfig;
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_RenderConfig renderConfig) {
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_RenderConfig renderConfig, AssetMap assets) {
         super(canvas);
-        this.renderConfig = renderConfig;
+        this.renderConfig = requireNonNull(renderConfig);
+        this.assets = requireNonNull(assets);
         setSpriteSheet(ArcadePacMan_SpriteSheet.instance());
     }
 
@@ -57,8 +61,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
         if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
             if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
-                if (renderConfig.assets().containsAsset("maze.bright")) {
-                    info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, renderConfig.assets().image("maze.bright"));
+                if (assets.containsAsset("maze.bright")) {
+                    info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
                 }
                 final var brightMazeImage = info.get(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);

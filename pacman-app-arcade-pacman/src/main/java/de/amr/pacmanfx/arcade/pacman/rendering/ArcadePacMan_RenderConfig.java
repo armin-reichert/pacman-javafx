@@ -54,13 +54,11 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
 
 //    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
 
-    private final AssetMap assets;
-
-    private final HUDStyleComp hudStyle;
+    protected final AssetMap assets;
+    protected final HUDStyleComp hudStyle;
 
     public ArcadePacMan_RenderConfig(AssetMap assets) {
-        this.assets = assets;
-
+        this.assets = requireNonNull(assets);
         hudStyle = new HUDStyleComp(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
@@ -76,11 +74,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
 
     @Override
     public void dispose() {
-    }
-
-    @Override
-    public AssetMap assets() {
-        return assets;
     }
 
     @Override
@@ -118,7 +111,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     public BaseRenderer createVariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
-        return new ArcadePacMan_VariantRenderer(animController, this, canvas);
+        return new ArcadePacMan_VariantRenderer(animController, this, canvas, assets);
     }
 
     @Override

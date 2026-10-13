@@ -68,11 +68,11 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     public static final String REL_PATH_ARCADE_MAPS_IMAGE     = "graphics/arcade_mazes.png";
     public static final String REL_PATH_NON_ARCADE_MAPS_IMAGE = "graphics/non_arcade_mazes.png";
 
-    public static final int NES_SCREEN_WIDTH_TILES  = 32; // 32 tiles
-    public static final int NES_SCREEN_HEIGHT_TILES = 30; // 30 tiles
+    public static final int NES_SCREEN_WIDTH_TILES  = 32;
+    public static final int NES_SCREEN_HEIGHT_TILES = 30;
 
-    public static final int NES_SCREEN_WIDTH  = 256; // 32 tiles
-    public static final int NES_SCREEN_HEIGHT = 240; // 30 tiles
+    public static final int NES_SCREEN_WIDTH  = 256; // 32 * 8
+    public static final int NES_SCREEN_HEIGHT = 240; // 30 * 8
 
     /** Aspect ratio of NES screen (32/30 = 1.066...) */
     public static final float NES_SCREEN_ASPECT_RATIO = (float) NES_SCREEN_WIDTH / (float) NES_SCREEN_HEIGHT;
@@ -103,7 +103,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         assets.freeze();
 
         loadSounds(engineContext.soundManager());
-        renderConfig = new TengenMsPacMan_RenderConfig(assets);
+        renderConfig = new TengenMsPacMan_RenderConfig();
     }
 
     @Override

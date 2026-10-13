@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
@@ -111,8 +110,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         return SHADES_OF_BLUE[(int) (tick % 64) / 16];
     }
 
-    private final AssetMap assets;
-
     private final HUDStyleComp hudStyle = new HUDStyleComp(
         spriteSheet(),
         spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
@@ -125,18 +122,11 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         "CREDIT %d" // not used in Tengen
     );
 
-    public TengenMsPacMan_RenderConfig(AssetMap assets) {
-        this.assets = requireNonNull(assets);
-    }
+    public TengenMsPacMan_RenderConfig() {}
 
     @Override
     public SpriteSheet<SpriteID> spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public AssetMap assets() {
-        return assets;
     }
 
     @Override

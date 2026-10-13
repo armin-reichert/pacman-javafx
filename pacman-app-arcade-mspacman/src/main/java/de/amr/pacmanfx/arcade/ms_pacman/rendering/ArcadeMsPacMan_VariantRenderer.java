@@ -9,6 +9,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.ArcadeColor;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -65,16 +66,24 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     private final MarqueeRenderer marqueeRenderer;
     private final ArcadeMsPacMan_GameLevelRenderer levelRenderer;
 
-    public ArcadeMsPacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadeMsPacMan_RenderConfig renderConfig, Canvas canvas) {
+    public ArcadeMsPacMan_VariantRenderer(
+        ActorSpriteAnimController animController,
+        ArcadeMsPacMan_RenderConfig renderConfig,
+        Canvas canvas,
+        AssetMap assets)
+    {
         super(canvas);
         this.animController = requireNonNull(animController);
+        requireNonNull(renderConfig);
+        requireNonNull(assets);
+
         setSpriteSheet(ArcadeMsPacMan_SpriteSheet.instance());
 
         marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         marqueeRenderer.scalingProperty().bind(scalingProperty());
 
-        levelRenderer = new ArcadeMsPacMan_GameLevelRenderer(animController, canvas, renderConfig.assets());
+        levelRenderer = new ArcadeMsPacMan_GameLevelRenderer(animController, canvas, assets);
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         levelRenderer.scalingProperty().bind(scalingProperty());
     }

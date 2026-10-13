@@ -10,6 +10,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.ArcadeColor;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
@@ -55,12 +56,15 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     private final ActorSpriteAnimController animController;
     private final ArcadePacMan_GameLevel_Renderer levelRenderer;
 
-    public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadePacMan_RenderConfig renderConfig, Canvas canvas) {
+    public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, ArcadePacMan_RenderConfig renderConfig, Canvas canvas, AssetMap assets) {
         super(canvas);
         this.animController = requireNonNull(animController);
+        requireNonNull(renderConfig);
+        requireNonNull(assets);
+
         setSpriteSheet(ArcadePacMan_SpriteSheet.instance());
 
-        levelRenderer = new ArcadePacMan_GameLevel_Renderer(canvas, renderConfig);
+        levelRenderer = new ArcadePacMan_GameLevel_Renderer(canvas, renderConfig, assets);
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         levelRenderer.scalingProperty().bind(scalingProperty());
     }
