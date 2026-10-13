@@ -139,7 +139,7 @@ public class XXL_OptionMenu extends OptionMenu {
         engineContext.gameVariantManager().addVariantListener((_, oldVariantName, newVariantName) -> {
             engineContext.engineLife().exitGameVariant(oldVariantName);
 
-            final DefaultGameVariantRuntime newRuntime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().variantRuntimeByName(newVariantName);
+            final DefaultGameVariantRuntime newRuntime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().runtimeByName(newVariantName);
             engineContext.engineLife().enterGameVariant(newVariantName);
             restartChaseAnimation(newRuntime);
         });

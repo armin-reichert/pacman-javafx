@@ -99,11 +99,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             final GameVariantUIConfig uiConfig = gameVariantManager.currentRuntime().uiConfig();
             if (oldVariantName != null) {
                 Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.variantRuntimeByName(oldVariantName), uiConfig);
+                exitGameVariant(gameVariantManager.runtimeByName(oldVariantName), uiConfig);
             }
             if (newVariantName != null) {
                 Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName), uiConfig);
+                enterGameVariant(gameVariantManager.runtimeByName(newVariantName), uiConfig);
             }
             updateStageIcon();
         });
@@ -288,12 +288,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public void enterGameVariant(String variantName) {
-        enterGameVariant(gameVariantManager.variantRuntimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
+        enterGameVariant(gameVariantManager.runtimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
     }
 
     @Override
     public void exitGameVariant(String variantName) {
-        exitGameVariant(gameVariantManager.variantRuntimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
+        exitGameVariant(gameVariantManager.runtimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
     }
 
     // Private area, no trespassing!
