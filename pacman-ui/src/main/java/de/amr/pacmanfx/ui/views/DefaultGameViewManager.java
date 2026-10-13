@@ -31,19 +31,6 @@ public final class DefaultGameViewManager implements GameViewManager {
         views.put(GameViewID.GAMEPLAY, new GamePlayView());
         views.put(GameViewID.EDITOR, new EditorView());
 
-        currentViewIDProperty().addListener((_, oldID, newID) -> {
-            engineContext.ui().clearMessage();
-
-            if (oldID != null) {
-                assertView(oldID).onExit();
-            }
-
-            final GameView newView = assertView(newID);
-            engineContext.ui().window().mainScene().replaceGameView(newView);
-
-            newView.onEnter();
-        });
-
         views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
     }
 

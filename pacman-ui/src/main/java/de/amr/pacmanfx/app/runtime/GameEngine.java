@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.app.runtime;
 
+import de.amr.basics.Named;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
@@ -24,6 +25,7 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
+import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -86,15 +88,27 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.ui = requireNonNull(ui);
 
         viewManager = new DefaultGameViewManager(this);
+        viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
+
+
         initGameVariantManager(ui.viewModel());
-
-        ui.setEngineContext(this);
-
         gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
 
-        //TODO Without this, the title is not changed when returning from the editor. Why?
-        viewManager.currentViewIDProperty().addListener((_, _, viewID)
-            -> ui.window().updateStageTitleBinding(viewManager, viewID));
+        ui.setEngineContext(this);
+    }
+
+    private void onViewChanged(Named oldViewID, Named newViewID) {
+        ui.clearMessage();
+
+        if (oldViewID != null) {
+            viewManager.assertView(oldViewID).onExit();
+        }
+
+        final GameView newView = viewManager.assertView(newViewID);
+        newView.onEnter();
+
+        ui.window().mainScene().replaceGameView(newView);
+        ui.window().updateStageTitleBinding(viewManager, newViewID);
     }
 
     public void showGameVariant(GameVariantID variantID) {
