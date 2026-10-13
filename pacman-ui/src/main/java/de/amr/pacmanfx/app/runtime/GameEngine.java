@@ -91,8 +91,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        viewManager.init(this);
         viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
+        //TODO Check why this fails when called in constructor
+        viewManager.init(this);
 
         gameVariantManager.setViewModel(ui.viewModel());
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
