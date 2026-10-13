@@ -24,13 +24,15 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
-    public DefaultGameViewManager(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
-
+    public DefaultGameViewManager() {
         views.put(GameViewID.START_PAGES, new StartPagesView());
         views.put(GameViewID.GAMEPLAY, new GamePlayView());
         views.put(GameViewID.EDITOR, new EditorView());
+    }
 
+    @Override
+    public void init(EngineUIContext engineContext) {
+        requireNonNull(engineContext);
         views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
     }
 

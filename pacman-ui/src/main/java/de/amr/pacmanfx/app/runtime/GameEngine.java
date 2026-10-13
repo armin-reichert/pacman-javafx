@@ -79,8 +79,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         spriteAnimationTimer = new SpriteAnimationTimer(60);
 
+        viewManager = new DefaultGameViewManager();
+
         gameVariantManager = new DefaultGameVariantManager();
-        gameVariantManager.setEngineContext(this);
+        gameVariantManager.init(this);
 
         clock().setUpdateAction(this::simulate);
         clock().setPermanentAction(this::render);
@@ -89,7 +91,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        viewManager = new DefaultGameViewManager(this);
+        viewManager.init(this);
         viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
         gameVariantManager.setViewModel(ui.viewModel());

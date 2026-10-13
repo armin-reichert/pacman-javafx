@@ -35,7 +35,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     public DefaultGameVariantManager() {}
 
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void init(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
     }
 
