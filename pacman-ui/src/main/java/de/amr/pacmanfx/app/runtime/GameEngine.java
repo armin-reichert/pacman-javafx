@@ -56,7 +56,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final GameSceneManager gameSceneManager;
 
-    private GameViewManager viewManager;
+    private final GameViewManager viewManager;
 
     private final SpriteAnimationTimer spriteAnimationTimer;
 
