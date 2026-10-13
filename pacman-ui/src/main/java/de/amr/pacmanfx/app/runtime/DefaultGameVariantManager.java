@@ -18,7 +18,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import org.tinylog.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,9 +101,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private DefaultGameVariantRuntime createGameVariantRuntime(EngineUIContext engineContext, String variantName, boolean includeInteractiveTests)
-        throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
+    private DefaultGameVariantRuntime createGameVariantRuntime(EngineUIContext engineContext, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
         final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engineContext);
         if (includeInteractiveTests) {
