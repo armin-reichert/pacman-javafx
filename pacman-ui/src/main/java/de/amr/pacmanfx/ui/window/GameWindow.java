@@ -10,6 +10,7 @@ import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
+import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -34,8 +35,8 @@ public class GameWindow {
     private StringBinding titleBinding;
 
     private final Stage stage;
-
     private final GameMainScene mainScene;
+    private EngineUIContext engineContext;
 
     public GameWindow(Stage stage, int width, int height) {
         this.stage = requireNonNull(stage);
@@ -48,9 +49,11 @@ public class GameWindow {
     }
 
     public void setEngineContext(EngineUIContext engineContext) {
+        this.engineContext = requireNonNull(engineContext);
+
         mainScene.setEngineContext(engineContext);
 
-        titleBinding = createStageTitleBinding(engineContext);
+        titleBinding = createStageTitleBinding();
         stage.titleProperty().bind(titleBinding);
 
         // Triggers title update
@@ -88,15 +91,15 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(EngineUIContext engineContext) {
+    private StringBinding createStageTitleBinding() {
         return createStringBinding(
             () -> {
                 final Named id = engineContext.viewManager().currentViewID();
                 if (id == GameViewID.START_PAGES || id == GameViewID.GAMEPLAY) {
-                    return optCurrentViewTitle(engineContext).orElse(titleForCurrentGameScene(engineContext));
+                    return optCurrentViewTitle().orElse(titleForCurrentGameScene());
                 }
                 if (id == GameViewID.EDITOR) {
-                    return optCurrentViewTitle(engineContext).orElse(("Map Editor"));
+                    return optCurrentViewTitle().orElse(("Map Editor"));
                 }
                 return "";
             },
@@ -110,13 +113,12 @@ public class GameWindow {
         );
     }
 
-    private Optional<String> optCurrentViewTitle(EngineUIContext engineContext) {
-        return engineContext.viewManager().optCurrentView().isEmpty()
-            ? Optional.of("No View present")
-            : engineContext.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
+    private Optional<String> optCurrentViewTitle() {
+        final GameView currentView = engineContext.viewManager().optCurrentView().orElse(null);
+        return currentView == null ? Optional.empty() : currentView.optTitleSupplier().map(Supplier::get);
     }
 
-    private String titleForCurrentGameScene(EngineUIContext engineContext) {
+    private String titleForCurrentGameScene() {
         final GameScene gameScene = engineContext.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = engineContext.ui().viewModel();
 
@@ -124,13 +126,13 @@ public class GameWindow {
         final boolean is3D   = viewModel.common3DSettings().view3DEnabledProperty().get();
         final boolean paused = engineContext.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(engineContext, paused, is3D);
+        final String normalTitle = stageTitle(paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(EngineUIContext engineContext, boolean paused, boolean is3D) {
+    private String stageTitle(boolean paused, boolean is3D) {
         final String gameVariantName = engineContext.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";

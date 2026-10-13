@@ -38,8 +38,10 @@ public class GameFlowActions {
         actionQuit = new GameAction<>("quit") {
             @Override
             public void execute(EngineUIContext engineContext) {
-                Logger.info("Call QUIT handler for {}:", engineContext.viewManager().assertCurrentView());
-                engineContext.viewManager().assertCurrentView().onQuit();
+                engineContext.viewManager().optCurrentView().ifPresent(currentView -> {
+                    Logger.info("Call QUIT handler for view {}:", currentView);
+                    currentView.onQuit();
+                });
             }
         };
 

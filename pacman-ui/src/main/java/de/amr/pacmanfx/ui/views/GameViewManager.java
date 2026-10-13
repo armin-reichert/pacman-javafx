@@ -22,10 +22,6 @@ public interface GameViewManager {
 
     Optional<GameView> optCurrentView();
 
-    default GameView assertCurrentView() {
-        return assertView(currentViewID());
-    }
-
     void onGameSuspended(GameScene gameScene);
 
     boolean isSelected(Named viewID);
