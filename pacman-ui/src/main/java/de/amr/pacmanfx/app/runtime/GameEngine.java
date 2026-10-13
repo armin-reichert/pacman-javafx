@@ -105,8 +105,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
                 Logger.info(">>> Enter game variant '{}'", newVariantName);
                 enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName), uiConfig);
             }
+            updateStageIcon();
         });
-        gameVariantManager.addVariantListener((_, _, _) -> updateStageIcon());
 
         ui.setEngineContext(this);
     }
