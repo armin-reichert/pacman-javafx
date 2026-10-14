@@ -46,19 +46,19 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
+    private final DefaultGameVariantManager gameVariantManager;
+
+    private final GameViewManager viewManager;
+
+    private final GameSceneManager gameSceneManager;
+
     private final RenderManager renderManager;
 
     private final SoundManager soundManager;
 
-    private final TranslationManager translationManager;
-
-    private final DefaultGameVariantManager gameVariantManager;
-
-    private final GameSceneManager gameSceneManager;
-
-    private final GameViewManager viewManager;
-
     private final SpriteAnimationTimer spriteAnimationTimer;
+
+    private final TranslationManager translationManager;
 
     private GameUI ui;
 
@@ -70,19 +70,23 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         RenderManager renderManager,
         GameSceneManager gameSceneManager,
         SoundManager soundManager,
+        SpriteAnimationTimer spriteAnimationTimer,
         TranslationManager translationManager)
     {
         this.renderManager = requireNonNull(renderManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
         this.soundManager = requireNonNull(soundManager);
+        this.spriteAnimationTimer = requireNonNull(spriteAnimationTimer);
         this.translationManager = requireNonNull(translationManager);
 
-        spriteAnimationTimer = new SpriteAnimationTimer(60);
-
         viewManager = new DefaultGameViewManager();
+        viewManager.currentViewIDProperty().addListener(
+            (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
         gameVariantManager = new DefaultGameVariantManager();
-        gameVariantManager.init(this);
+
+        gameVariantManager.selectedVariantNameProperty().addListener(
+            (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
         clock().setUpdateAction(this::simulate);
         clock().setPermanentAction(this::render);
@@ -90,27 +94,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        ui.setEngineContext(this);
+        this.ui.setEngineContext(this);
 
-        viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
-        //TODO Check why this fails when called in constructor
+        gameVariantManager.setViewModel(this.ui.viewModel());
+        gameVariantManager.init(this);
+
         viewManager.init(this);
-
-        gameVariantManager.setViewModel(ui.viewModel());
-        gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
-            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
-
-            final GameVariantUIConfig uiConfig = gameVariantManager.currentRuntime().uiConfig();
-            if (oldVariantName != null) {
-                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.runtimeByName(oldVariantName), uiConfig);
-            }
-            if (newVariantName != null) {
-                Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.runtimeByName(newVariantName), uiConfig);
-            }
-            updateStageIcon();
-        });
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -301,6 +290,20 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     // Private area, no trespassing!
+
+    private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
+        final GameVariantUIConfig uiConfig = gameVariantManager.currentRuntime().uiConfig();
+        if (oldVariantName != null) {
+            Logger.info("<<< Exit Game variant '{}'", oldVariantName);
+            exitGameVariant(gameVariantManager.runtimeByName(oldVariantName), uiConfig);
+        }
+        if (newVariantName != null) {
+            Logger.info(">>> Enter game variant '{}'", newVariantName);
+            enterGameVariant(gameVariantManager.runtimeByName(newVariantName), uiConfig);
+        }
+        updateStageIcon();
+
+    }
 
     private void onViewChanged(Named oldViewID, Named newViewID) {
         ui.clearMessage();

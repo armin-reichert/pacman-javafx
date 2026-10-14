@@ -6,6 +6,7 @@ package de.amr.pacmanfx.app.config;
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
@@ -103,6 +104,7 @@ public class PacManGameEngineBuilder {
                 new DefaultRenderManager(),
                 new DefaultGameSceneManager(),
                 new DefaultSoundManager(),
+                new SpriteAnimationTimer(60),
                 new DefaultTranslationManager()
             );
 

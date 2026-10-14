@@ -6,6 +6,7 @@ package de.amr.pacmanfx.allgames.app;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
@@ -54,6 +55,7 @@ public class PacManAllGamesNoBuilder extends Application {
             new DefaultRenderManager(),
             new DefaultGameSceneManager(),
             new DefaultSoundManager(),
+            new SpriteAnimationTimer(60),
             new DefaultTranslationManager()
         );
     }
