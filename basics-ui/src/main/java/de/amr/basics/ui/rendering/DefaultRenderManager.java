@@ -80,10 +80,11 @@ public class DefaultRenderManager implements RenderManager {
     private void render(Renderable r, long tick) {
         final Renderer renderer = r.layer() == RenderingLayer.DEBUG ? debugRenderer : variantRenderer;
 
+        renderer.ctx().save();
+
         final boolean hasOffset = !r.offset().equals(Vector2f.ZERO);
         if (hasOffset) {
             final Vector2f translate = r.offset().scaled(renderer.scaling());
-            renderer.ctx().save();
             renderer.ctx().translate(translate.x(), translate.y());
         }
 
@@ -100,8 +101,6 @@ public class DefaultRenderManager implements RenderManager {
             renderer.render(r, tick);
         }
 
-        if (hasOffset) {
-            renderer.ctx().restore();
-        }
+        renderer.ctx().restore();
     }
 }

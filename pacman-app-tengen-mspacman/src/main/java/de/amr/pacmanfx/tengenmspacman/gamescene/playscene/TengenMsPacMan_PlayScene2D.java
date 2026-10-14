@@ -92,9 +92,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     public TengenMsPacMan_PlayScene2D() {
         view2D().setRenderingSurface(new RenderingSurface());
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-        view2D().setClipRect(CLIP_RECT);
     }
 
     @Override
@@ -139,6 +136,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onActivate() {
+        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        view2D().setClipRect(CLIP_RECT);
         engineContext().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final HUD hud = session.hud();
@@ -152,6 +152,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
+        view2D().setClipRect(null);
     }
 
     @Override

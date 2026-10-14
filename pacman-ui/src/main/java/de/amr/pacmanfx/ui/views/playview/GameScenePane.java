@@ -131,15 +131,15 @@ public class GameScenePane extends StackPane {
         final FloatExpression unscaledHeight = view2D.unscaledHeightProperty();
         final DoubleExpression scaling = availableHeight.divide(unscaledHeight);
 
+        //TODO Check why resetting is necessary
+        plainContainer.reset();
+        plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
+        getChildren().setAll(plainContainer);
+
         view2D.setRenderingSurface(plainContainer.renderingSurface());
         view2D.renderingSurface().canvas().heightProperty().bind(availableHeight);
         view2D.renderingSurface().canvas().widthProperty().bind(scaling.multiply(unscaledWidth));
         view2D.renderingSurface().scalingProperty().bind(scaling);
-
-        plainContainer.setBackground(PLAIN_CONTAINER_BACKGROUND);
-
-        getChildren().setAll(plainContainer);
-        plainContainer.getChildren().setAll(plainContainer.renderingSurface().canvas());
 
         Logger.info("After embedding: canvas w={} h={} scaling={}",
             view2D.renderingSurface().canvas().getWidth(),
