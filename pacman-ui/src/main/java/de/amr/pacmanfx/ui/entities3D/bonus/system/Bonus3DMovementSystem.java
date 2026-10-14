@@ -13,8 +13,9 @@ import static de.amr.basics.TileDimension.HTS;
 class Bonus3DMovementSystem {
 
     public void update(GameEntity bonus) {
-        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
+        if (!bonus.hasComponent(BonusView3D.class)) return;
 
+        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
         final Vector2f center = bonus.pos().bodyCenter();
 
         view3D.translate().setX(center.x());

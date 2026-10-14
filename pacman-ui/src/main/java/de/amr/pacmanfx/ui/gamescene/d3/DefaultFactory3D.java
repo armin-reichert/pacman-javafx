@@ -31,12 +31,20 @@ import static java.util.Objects.requireNonNull;
 //TODO Remove factory classes and integrate into 3d systems
 public class DefaultFactory3D implements Factory3D {
 
+    private static class SingletonHolder {
+        static final DefaultFactory3D SINGLETON = new DefaultFactory3D();
+    }
+
+    public static DefaultFactory3D instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
     protected Pac3DShapeFactory pac3DShapeFactory = new Pac3DShapeFactory();
 
     protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
 
-    public DefaultFactory3D() {}
+    protected DefaultFactory3D() {}
 
     @Override
     public void dispose() {

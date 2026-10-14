@@ -15,6 +15,16 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
+    private static class SingletonHolder {
+        static final TengenMsPacMan_Factory3D SINGLETON = new TengenMsPacMan_Factory3D();
+    }
+
+    public static TengenMsPacMan_Factory3D instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
+    private TengenMsPacMan_Factory3D() {}
+
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);

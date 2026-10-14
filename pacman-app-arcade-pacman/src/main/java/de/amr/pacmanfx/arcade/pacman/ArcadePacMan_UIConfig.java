@@ -20,6 +20,7 @@ import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -80,7 +81,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     public ArcadePacMan_UIConfig() {
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
-        factory3D = new ArcadePacMan_Factory3D();
+        factory3D = DefaultFactory3D.instance();
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
     }
 

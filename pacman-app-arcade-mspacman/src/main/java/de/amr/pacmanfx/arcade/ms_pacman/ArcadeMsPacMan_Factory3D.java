@@ -16,6 +16,16 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
+    private static class SingletonHolder {
+        static final ArcadeMsPacMan_Factory3D SINGLETON = new ArcadeMsPacMan_Factory3D();
+    }
+
+    public static ArcadeMsPacMan_Factory3D instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
+    protected ArcadeMsPacMan_Factory3D() {}
+
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
         final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);

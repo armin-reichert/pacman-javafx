@@ -68,7 +68,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
     public XXL_PacMan_UIConfig() {
         assets = new AssetMap();
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
-        factory3D = new DefaultFactory3D();
+        factory3D = DefaultFactory3D.instance();
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
     }
 

@@ -69,7 +69,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     public XXL_MsPacMan_UIConfig() {
         assets = new AssetMap();
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
-        factory3D = new ArcadeMsPacMan_Factory3D();
+        factory3D = ArcadeMsPacMan_Factory3D.instance();
         gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
     }
 

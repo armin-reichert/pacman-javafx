@@ -90,7 +90,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     public TengenMsPacMan_UIConfig() {
         assets = new AssetMap();
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
-        factory3D = new TengenMsPacMan_Factory3D();
+        factory3D = TengenMsPacMan_Factory3D.instance();
         gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
     }
 
