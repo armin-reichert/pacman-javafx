@@ -12,6 +12,8 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.scene.paint.Color;
 
+import java.util.Optional;
+
 public interface RenderingUtil {
 
     static TerrainMapColoring findMapColoring(GameViewModel viewModel, WorldMap worldMap) {
@@ -28,8 +30,8 @@ public interface RenderingUtil {
         );
     }
 
-    static Color findPelletColor(WorldMap worldMap) {
-        final GenericWorldMapColorScheme foodColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        return foodColorScheme != null ? Color.valueOf(foodColorScheme.pellet()) : null;
+    static Optional<Color> findPelletColor(WorldMap worldMap) {
+        final GenericWorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        return colorScheme == null ? Optional.empty() : Optional.of(Color.valueOf(colorScheme.pellet()));
     }
 }

@@ -11,6 +11,10 @@ import static java.util.Objects.requireNonNull;
 
 public class InfoMap {
 
+    public static InfoMap singletonMap(Object key, Object value) {
+        return new InfoMap(Map.of(key, value));
+    }
+
     public static InfoMap create() {
         return new InfoMap(new HashMap<>());
     }

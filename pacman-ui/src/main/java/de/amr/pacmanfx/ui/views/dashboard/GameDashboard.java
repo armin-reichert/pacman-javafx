@@ -38,6 +38,9 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
                 addSection(section);
             }, () -> Logger.error("Unknown dashboard ID: {}", def.id()));
         }
+    }
+
+    public void init(EngineUIContext engineContext) {
         sections().forEach(section -> section.init(engineContext));
     }
 

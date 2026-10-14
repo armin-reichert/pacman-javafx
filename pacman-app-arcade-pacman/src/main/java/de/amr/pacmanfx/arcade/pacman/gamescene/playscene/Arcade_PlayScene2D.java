@@ -80,11 +80,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
 
         // Only available for generic level renderer in XXL game variants
-        final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap());
-        final InfoMap energizerRenderInfo = InfoMap.create();
-        if (pelletColor != null) {
-            energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor);
-        }
+        final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
+        final InfoMap energizerRenderInfo = pelletColor != null
+            ? InfoMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
+            : InfoMap.EMPTY_IMMUTABLE_MAP;
 
         return Ufx.streamOf(
             createRenderableLevel(level),

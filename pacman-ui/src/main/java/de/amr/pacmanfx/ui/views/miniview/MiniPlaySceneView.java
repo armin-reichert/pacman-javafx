@@ -169,8 +169,10 @@ public class MiniPlaySceneView {
     }
 
     private Stream<GameEntityView> createEntityViews() {
-        final InfoMap energizerRenderInfo = InfoMap.create();
-        energizerRenderInfo.put(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, RenderingUtil.findPelletColor(level.worldMap()));
+        final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
+        final InfoMap energizerRenderInfo = pelletColor != null
+            ? InfoMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
+            : InfoMap.EMPTY_IMMUTABLE_MAP;
         return level.entitySet().entities().all()
             .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : InfoMap.EMPTY_IMMUTABLE_MAP));
     }

@@ -90,6 +90,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        ui.setEngineContext(this);
 
         viewManager.currentViewIDProperty().addListener((_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
         //TODO Check why this fails when called in constructor
@@ -110,8 +111,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             }
             updateStageIcon();
         });
-
-        ui.setEngineContext(this);
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -120,6 +119,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         viewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
         viewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
+
+        viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
 
         updateStageIcon();
         ui.window().show();
