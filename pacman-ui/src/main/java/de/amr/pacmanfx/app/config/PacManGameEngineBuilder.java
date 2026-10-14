@@ -108,12 +108,12 @@ public class PacManGameEngineBuilder {
                 new DefaultTranslationManager()
             );
 
-            final GameUI ui = new GameUI(stage, width, height, uiSettings);
-            engine.setUI(ui);
+            engine.setUI(new GameUI(stage, width, height, uiSettings));
 
-            // Can only be done after UI has been assigned to game!
+            // Requires that UI has been assigned to game:
+
             final StartPagesView startPagesView = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
-            addStartPages(engine, startPagesView);
+            createStartPages().forEach(page -> startPagesView.addPage(engine, page));
 
             final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
             playView.populateDashboard(dashboardFactory);
@@ -121,20 +121,22 @@ public class PacManGameEngineBuilder {
             return Optional.of(engine);
         }
         catch (Exception x) {
-            Logger.error(x, "Game building failed");
+            Logger.error(x, "Game engine building failed");
             return Optional.empty();
         }
     }
 
-    private void addStartPages(EngineUIContext engineContext, StartPagesView startPagesView) {
+    private List<StartPage> createStartPages() {
+        final List<StartPage> pages = new ArrayList<>();
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addPage(engineContext, page);
+                pages.add(page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }
         }
+        return pages;
     }
 
     private void validateConfigurationData() {

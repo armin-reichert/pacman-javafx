@@ -68,7 +68,6 @@ public class GameUI implements GameEventListener {
 
         viewModel = new GameViewModel();
         viewModel.init(settings);
-
     }
 
     public void setEngineContext(EngineUIContext engineContext) {
