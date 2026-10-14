@@ -314,15 +314,14 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setStroke(ArcadeColor.WHITE.color());
-        for (int row = 0; row < grid.height(); ++row) {
+        for (int row = 0; row <= grid.cellsVertical(); ++row) {
             final int y = row * grid.cellSize();
-            ctx.strokeLine(0, y, grid.width() * TS, y);
+            ctx.strokeLine(0, y, grid.cellsHorizontal() * grid.cellSize(), y);
         }
-        for (int col = 0; col < grid.width(); ++col) {
+        for (int col = 0; col <= grid.cellsHorizontal(); ++col) {
             final int x = col * grid.cellSize();
-            ctx.strokeLine(x, 0, x, grid.height() * TS);
+            ctx.strokeLine(x, 0, x, grid.cellsVertical() * grid.cellSize());
         }
         ctx.restore();
     }
-
 }
