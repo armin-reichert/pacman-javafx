@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -24,50 +23,17 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
-    public DefaultGameViewManager() {
-        views.put(GameViewID.START_PAGES, new StartPagesView());
-        views.put(GameViewID.GAMEPLAY, new GamePlayView());
-        views.put(GameViewID.EDITOR, new EditorView());
-    }
+    public DefaultGameViewManager() {}
 
     @Override
     public void init(EngineUIContext engineContext) {
         requireNonNull(engineContext);
-        views.values().forEach(gameView -> gameView.setEngineContext(engineContext));
-    }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends GameView> T assertView(Named viewID, Class<T> viewClass) {
-        if (!(viewID instanceof GameViewID)) {
-            throw new IllegalArgumentException(viewID + " is not a GameViewID");
-        }
-        final GameView view = views.get(viewID);
-        if (view == null) {
-            throw new IllegalStateException("No view found for ID: " + viewID);
-        }
-        if (!viewClass.isInstance(view)) {
-            throw new IllegalStateException(
-                "View for ID " + viewID + " is not of expected type " + viewClass.getName() +
-                    " but was " + view.getClass().getName()
-            );
-        }
-        return (T) view;
-    }
+        views.put(GameViewID.START_PAGES, new StartPagesView(engineContext.translationManager()));
+        views.put(GameViewID.GAMEPLAY, new GamePlayView(engineContext));
+        views.put(GameViewID.EDITOR, new EditorView());
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <V extends GameView> Optional<V> optView(Named viewID, Class<V> viewClass) {
-        if (!(viewID instanceof GameViewID)) {
-            throw new IllegalArgumentException(viewID + " is not a GameViewID");
-        }
-        final GameView view = views.get(viewID);
-        return viewClass.isInstance(view) ? Optional.of((V) view) : Optional.empty();
-    }
-
-    @Override
-    public void onGameSuspended(GameScene currentGameScene) {
-        currentGameScene.deactivate();
+        currentViewID.set(GameViewID.START_PAGES);
     }
 
     @Override
@@ -81,20 +47,48 @@ public final class DefaultGameViewManager implements GameViewManager {
     }
 
     @Override
-    public Optional<GameView> optCurrentView() {
-        final var viewID = currentViewID();
-        if (viewID == null) {
-            return Optional.empty();
-        }
+    @SuppressWarnings("unchecked")
+    public <GV extends GameView> GV assertView(Named viewID, Class<GV> gameViewClass) {
+        requireNonNull(viewID);
+        requireNonNull(gameViewClass);
+
         if (!(viewID instanceof GameViewID)) {
             throw new IllegalArgumentException(viewID + " is not a GameViewID");
         }
-        return Optional.ofNullable(views.get(viewID));
+        final GameView gameView = views.get(viewID);
+        if (gameView == null) {
+            throw new IllegalStateException("No view found for ID: " + viewID);
+        }
+        if (!gameViewClass.isInstance(gameView)) {
+            throw new IllegalStateException(
+                "View for ID " + viewID + " is not of expected type " + gameViewClass.getName() +
+                    " but was " + gameView.getClass().getName()
+            );
+        }
+        return (GV) gameView;
+    }
+
+    @Override
+    public Optional<GameView> optCurrentView() {
+        return optView(currentViewID(), GameView.class);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <GV extends GameView> Optional<GV> optView(Named viewID, Class<GV> gameViewClass) {
+        requireNonNull(viewID);
+        requireNonNull(gameViewClass);
+
+        if (!(viewID instanceof GameViewID)) {
+            throw new IllegalArgumentException(viewID + " is not a GameViewID");
+        }
+        final GameView view = views.get(viewID);
+        return gameViewClass.isInstance(view) ? Optional.of((GV) view) : Optional.empty();
     }
 
     @Override
     public boolean isSelected(Named viewID) {
         requireNonNull(viewID);
-        return currentViewID() == viewID;
+        return currentViewID().name().equals(viewID.name());
     }
 }

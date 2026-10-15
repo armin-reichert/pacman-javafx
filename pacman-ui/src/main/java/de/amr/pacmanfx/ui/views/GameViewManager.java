@@ -29,7 +29,5 @@ public interface GameViewManager {
 
     Optional<GameView> optCurrentView();
 
-    void onGameSuspended(GameScene gameScene);
-
     boolean isSelected(Named viewID);
 }

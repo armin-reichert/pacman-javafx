@@ -13,19 +13,11 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
-
 public interface GameView extends QuitHandler {
 
     ActionBindingsRegistry<EngineUIContext> actionBindings();
 
-    void setEngineContext(EngineUIContext engineContext);
-
-    EngineUIContext engineContext();
-
-    default void onInput(Input input) {
-        executeMatchingAction(actionBindings(), engineContext());
-    }
+    void onInput(Input input);
 
     Node rootPane();
 

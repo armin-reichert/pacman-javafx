@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -28,11 +29,12 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private EngineUIContext engineContext;
-
+    private final TranslationManager translationManager;
     private final Carousel carousel;
 
-    public StartPagesView() {
+    public StartPagesView(TranslationManager translationManager) {
+        this.translationManager = requireNonNull(translationManager);
+
         carousel = new Carousel();
         carousel.setId("start-pages-carousel");
         carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
@@ -74,16 +76,6 @@ public class StartPagesView implements GameView {
 
     public List<StartPage> pages() {
         return pages;
-    }
-
-    @Override
-    public void setEngineContext(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
-    }
-
-    @Override
-    public EngineUIContext engineContext() {
-        return engineContext;
     }
 
     @Override
@@ -137,6 +129,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return engineContext != null ? engineContext.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return translationManager.translate("startpage.title.template", nameOfTheGame);
     }
 }

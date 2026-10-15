@@ -46,14 +46,6 @@ public class EditorView implements GameView {
     public ActionBindingsRegistry<EngineUIContext> actionBindings() { return ActionBindingsRegistry.empty(); }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {}
-
-    @Override
-    public EngineUIContext engineContext() {
-        return null;
-    }
-
-    @Override
     public void onEnter() {
         editor.ui().layoutPane().requestFocus();
     }

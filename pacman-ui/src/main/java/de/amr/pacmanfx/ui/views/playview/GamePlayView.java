@@ -55,11 +55,13 @@ public class GamePlayView implements GameView {
     private final Layers layers;
     private final GameDashboard dashboard;
 
-    private EngineUIContext engineContext;
+    private final EngineUIContext engineContext;
 
-    private ContextMenuManager contextMenuManager;
+    private final ContextMenuManager contextMenuManager;
 
-    public GamePlayView() {
+    public GamePlayView(EngineUIContext engineContext) {
+        this.engineContext = requireNonNull(engineContext);
+
         // Layer 1: Game scene container
         final var gameScenePane = new GameScenePane();
 
@@ -97,6 +99,23 @@ public class GamePlayView implements GameView {
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
 
         actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
+
+        final GameViewModel viewModel = engineContext.ui().viewModel();
+        final GameMainScene mainScene = engineContext.ui().window().mainScene();
+
+        contextMenuManager = new ContextMenuManager(engineContext);
+        root.setOnContextMenuRequested(contextMenuManager);
+
+        layers.miniViewLayer().setViewModel(viewModel);
+
+        layers.iconLayer().visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
+
+        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
+
+        viewModel.debugModeOnProperty().addListener(
+            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
+
+        installMainSceneResizeHandler(mainScene);
     }
 
     public Layers layers() {
@@ -158,35 +177,8 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
-        this.engineContext = engineContext;
-
-        final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameMainScene mainScene = engineContext.ui().window().mainScene();
-
-        contextMenuManager = new ContextMenuManager(engineContext);
-        root.setOnContextMenuRequested(contextMenuManager);
-
-        layers.miniViewLayer().setViewModel(viewModel);
-
-        layers.iconLayer().visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
-
-        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
-
-        viewModel.debugModeOnProperty().addListener(
-            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
-
-        installMainSceneResizeHandler(mainScene);
-    }
-
-    @Override
     public ActionBindingsRegistry<EngineUIContext> actionBindings() {
         return actionBindings;
-    }
-
-    @Override
-    public EngineUIContext engineContext() {
-        return engineContext;
     }
 
     @Override

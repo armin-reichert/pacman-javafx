@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -250,7 +251,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public void suspendGame() {
         if (currentGame != null) {
             soundManager.stopAll();
-            gameSceneManager.optCurrentGameScene().ifPresent(viewManager::onGameSuspended);
+            gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
             gameSceneManager.removeCurrentGameScene();
             clock().stop();
         }
