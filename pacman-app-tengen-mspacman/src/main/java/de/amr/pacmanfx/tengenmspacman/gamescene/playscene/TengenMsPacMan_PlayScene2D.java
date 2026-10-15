@@ -13,7 +13,6 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameContext;
@@ -276,18 +275,17 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
         final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer   = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
-            animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
+            animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
             eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
         level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
-                animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
+                animController.setAnimations(ghost, renderConfig.createGhostAnimations(engineContext.spriteAnimationSystem(), ghost.personality()));
                 eventHandler.resetGhostAnimation(animController, ghost);
             }
         });

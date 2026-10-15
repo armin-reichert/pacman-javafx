@@ -80,7 +80,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         view.createPacManAndGhosts(
             runtime().uiConfig().renderConfig(),
             runtime().playConfig().systems().actorSpriteAnimController(),
-            engineContext.spriteAnimationContainer()
+            engineContext.spriteAnimationSystem()
         );
         view.hideEverything();
 

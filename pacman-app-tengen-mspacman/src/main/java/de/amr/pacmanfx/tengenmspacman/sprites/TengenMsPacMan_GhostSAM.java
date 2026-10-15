@@ -20,35 +20,35 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
 
     private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostSAM(SpriteAnimationContainer container, GhostPersonality personality) {
+    public TengenMsPacMan_GhostSAM(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
         this.personality = requireNonNull(personality);
-        setFactory(id -> createAnimation(id, container));
+        setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
-                .build(container);
+                .build(spriteAnimationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };

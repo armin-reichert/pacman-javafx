@@ -17,6 +17,7 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -174,7 +175,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer animContainer, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW -> factory.createRedGhost();
@@ -183,20 +184,20 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
-        animController.setAnimations(ghost, createGhostAnimations(animContainer, personality));
+        animController.setAnimations(ghost, createGhostAnimations(spriteAnimationSystem, personality));
         animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer animContainer, GhostPersonality personality) {
-        return new TengenMsPacMan_GhostSAM(animContainer, personality);
+    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+        return new TengenMsPacMan_GhostSAM(spriteAnimationSystem, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimationContainer animContainer) {
-        return new TengenMsPacMan_PacSAM(animContainer);
+    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimationSystem spriteAnimationSystem) {
+        return new TengenMsPacMan_PacSAM(spriteAnimationSystem);
     }
 
     @Override

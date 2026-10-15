@@ -46,14 +46,13 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
-        blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
 
         timing().setTick(-1);
     }

@@ -14,7 +14,7 @@ import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -125,19 +125,19 @@ public class IntroSceneView {
         targetEnergizer = null;
     }
 
-    public void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
+    public void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationSystem spriteAnimationSystem) {
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(spriteAnimationSystem));
         pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         pacMan.spriteAnim().spriteAnimations().playSelected();
 
         ghosts = new Ghost[] {
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.ORANGE_GHOST_POKEY)
         };
     }
 

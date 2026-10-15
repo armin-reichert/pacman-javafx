@@ -7,14 +7,15 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 
 public class NailDressRapturing extends GameEntity {
 
-    public NailDressRapturing(SpriteAnimationContainer animContainer) {
+    public NailDressRapturing(SpriteAnimationSystem spriteAnimationSystem) {
         setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
 
-        assertComponent(SpriteAnimationComp.class).setSpriteAnimations(new DressRaptureAnimation(animContainer));
+        assertComponent(SpriteAnimationComp.class).setSpriteAnimations(new DressRaptureAnimation(spriteAnimationSystem));
         setState(NailDressRapturingState.NAIL);
     }
 

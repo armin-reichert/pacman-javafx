@@ -12,7 +12,6 @@ import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
@@ -143,7 +142,6 @@ public class IntroSceneView {
     private void createMsPacManAndTheGhosts(EngineUIContext engineContext, DefaultGameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
         final GameSystems systems = runtime.playConfig().systems();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         final WorldNavigationSystem nav = systems.navigator();
@@ -152,14 +150,14 @@ public class IntroSceneView {
         msPacMan.pos().set(PAC_START_POS);
         nav.setMoveDir(msPacMan, Direction.LEFT);
         nav.setSpeed(msPacMan, ACTOR_SPEED);
-        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
         msPacMan.show();
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {

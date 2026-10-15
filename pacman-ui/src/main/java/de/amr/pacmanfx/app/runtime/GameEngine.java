@@ -9,8 +9,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
@@ -58,9 +57,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final SoundManager soundManager;
 
-    private final SpriteAnimationTimer spriteAnimationTimer;
-
-    private final SpriteAnimationContainer spriteAnimationContainer;
+    private final SpriteAnimationSystem spriteAnimationSystem;
 
     private final TranslationManager translationManager;
 
@@ -74,16 +71,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         RenderManager renderManager,
         GameSceneManager gameSceneManager,
         SoundManager soundManager,
-        SpriteAnimationTimer spriteAnimationTimer,
+        SpriteAnimationSystem spriteAnimationSystem,
         TranslationManager translationManager)
     {
         this.renderManager = requireNonNull(renderManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
         this.soundManager = requireNonNull(soundManager);
-        this.spriteAnimationTimer = requireNonNull(spriteAnimationTimer);
+        this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
         this.translationManager = requireNonNull(translationManager);
-
-        spriteAnimationContainer = new SpriteAnimationContainer();
 
         viewManager = new DefaultGameViewManager();
         viewManager.currentViewIDProperty().addListener(
@@ -147,8 +142,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         // Init UI for new runtime (game variant)
         uiConfig.load(this);
 
-        spriteAnimationTimer.attachAnimContainer(spriteAnimationContainer);
-        spriteAnimationTimer.start();
+        spriteAnimationSystem.start();
 
         ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
     }
@@ -160,8 +154,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         uiConfig.unload(this);
 
-        spriteAnimationContainer.clear();
-        spriteAnimationTimer.detachAnimationContainer();
+        spriteAnimationSystem.stop();
 
         soundManager.dispose();
 
@@ -212,8 +205,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public SpriteAnimationContainer spriteAnimationContainer() {
-        return spriteAnimationContainer;
+    public SpriteAnimationSystem spriteAnimationSystem() {
+        return spriteAnimationSystem;
     }
 
     @Override
@@ -282,7 +275,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     @Override
     public void terminate() {
         suspendGame();
-        spriteAnimationTimer.stop();
+        spriteAnimationSystem.stop();
         ui.window().mainScene().flashMessageManager().stopAnimationTimer();
         PlayStation.instance().dispose();
         Logger.info("Application terminated. There is no way back!");
@@ -340,7 +333,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
-        spriteAnimationTimer.start();
+        spriteAnimationSystem.start();
 
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton

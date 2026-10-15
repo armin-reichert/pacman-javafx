@@ -59,16 +59,15 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer   = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
         final var actorFactory                         = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
-        blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
 
-        nailDressRapturing = new NailDressRapturing(animContainer);
+        nailDressRapturing = new NailDressRapturing(engineContext.spriteAnimationSystem());
         nailDressRapturing.pos().set(nailX, nailY);
         nailDressRapturing.show();
 

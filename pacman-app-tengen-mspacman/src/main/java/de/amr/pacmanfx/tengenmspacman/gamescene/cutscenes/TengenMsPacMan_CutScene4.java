@@ -12,7 +12,6 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameContext;
@@ -121,16 +120,15 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         juniors = new ArrayList<>();
         juniorSpawnTicks = new ArrayList<>();
@@ -223,7 +221,6 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig        = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer      = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController    = runtime().playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = runtime().playConfig().systems().navigator();
 
@@ -235,7 +232,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
         worldNavigationSystem.setSpeed(junior, 2);
 
-        animController.setAnimations(junior, renderConfig.createPacAnimations(animContainer));
+        animController.setAnimations(junior, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
         animController.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);

@@ -15,34 +15,34 @@ public class ArcadePacMan_PacSAM extends LazySAM {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_PacSAM(SpriteAnimationContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacSAM(SpriteAnimationSystem spriteAnimationSystem, ArcadePacMan_SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
-        setFactory(id -> createAnimation(id, container));
+        setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case AnimationID.ANIM_BIG_PAC_MAN -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

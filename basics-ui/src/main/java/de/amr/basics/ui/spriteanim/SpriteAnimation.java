@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    private final SpriteAnimationContainer container;
+    private final SpriteAnimationSystem spriteAnimationSystem;
 
     private RectShort[] sprites;
     private int frame;
@@ -24,8 +24,8 @@ public class SpriteAnimation {
     private int frameDurationTicks;
     private int smallTick;
 
-    public SpriteAnimation(SpriteAnimationContainer container) {
-        this.container = Objects.requireNonNull(container);
+    public SpriteAnimation(SpriteAnimationSystem spriteAnimationSystem) {
+        this.spriteAnimationSystem = Objects.requireNonNull(spriteAnimationSystem);
 
         sprites = new RectShort[0];
         frame = 0;
@@ -49,17 +49,13 @@ public class SpriteAnimation {
 
     public void start() {
         if (!running) {
-            if (container != null) {
-                container.add(this);
-            }
+            spriteAnimationSystem.animationContainer().add(this);
             running = true;
         }
     }
 
     public void stop() {
-        if (container != null) {
-            container.remove(this);
-        }
+        spriteAnimationSystem.animationContainer().remove(this);
         running = false;
     }
 

@@ -98,21 +98,20 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(animContainer));
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(engineContext.spriteAnimationSystem()));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(animContainer));
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(engineContext.spriteAnimationSystem()));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");

@@ -12,32 +12,32 @@ public class ArcadeMsPacMan_PacSAM extends LazySAM {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_PacSAM(SpriteAnimationContainer container) {
-        setFactory(id -> createAnimation(id, container));
+    public ArcadeMsPacMan_PacSAM(SpriteAnimationSystem spriteAnimationSystem) {
+        setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
-                .build(container);
+                .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

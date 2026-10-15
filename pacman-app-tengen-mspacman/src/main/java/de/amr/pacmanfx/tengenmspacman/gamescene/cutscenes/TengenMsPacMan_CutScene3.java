@@ -85,7 +85,6 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     
     private void createActors() {
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * TS, 10 * TS);
@@ -93,16 +92,16 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         stork = new Stork();
-        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(animContainer));
+        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(engineContext.spriteAnimationSystem()));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(animContainer));
+        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(engineContext.spriteAnimationSystem()));
     }
     
     private void playMusic() {

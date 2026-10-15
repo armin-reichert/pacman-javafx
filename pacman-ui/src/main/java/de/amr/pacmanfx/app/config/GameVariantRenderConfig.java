@@ -12,6 +12,7 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -38,11 +39,11 @@ public interface GameVariantRenderConfig {
 
     Renderer createVariantRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer container, GhostPersonality personality);
+    Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality);
 
-    SpriteAnimationAPI createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
+    SpriteAnimationAPI createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality);
 
-    SpriteAnimationAPI createPacAnimations(SpriteAnimationContainer container);
+    SpriteAnimationAPI createPacAnimations(SpriteAnimationSystem spriteAnimationSystem);
 
     Image createGhostPointsImage(int killedGhostIndex);
 

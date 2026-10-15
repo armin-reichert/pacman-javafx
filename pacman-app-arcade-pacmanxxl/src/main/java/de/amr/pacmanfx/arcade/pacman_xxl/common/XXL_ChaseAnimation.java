@@ -106,7 +106,7 @@ class XXL_ChaseAnimation {
         navigator.setWishDir(pac, Direction.LEFT);
         navigator.setSpeed(pac, PAC_FLEEING_SPEED);
 
-        animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationContainer()));
+        animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
 
@@ -118,10 +118,10 @@ class XXL_ChaseAnimation {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         ghosts = new ArrayList<>(List.of(
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.ORANGE_GHOST_POKEY)
         ));
 
         ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));

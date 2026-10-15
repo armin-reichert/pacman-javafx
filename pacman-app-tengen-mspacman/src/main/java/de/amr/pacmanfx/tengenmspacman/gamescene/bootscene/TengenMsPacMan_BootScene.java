@@ -67,7 +67,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         engineContext().optCurrentGame().ifPresent(game -> {
             ghost = runtime().uiConfig().renderConfig().createAnimatedGhost(
                 runtime().playConfig().systems().actorSpriteAnimController(),
-                engineContext.spriteAnimationContainer(),
+                engineContext.spriteAnimationSystem(),
                 GhostPersonality.RED_GHOST_SHADOW);
 
             final GameSession session = game.session();

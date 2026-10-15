@@ -15,17 +15,17 @@ public class TengenMsPacMan_StorkSAM extends LazySAM {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_StorkSAM(SpriteAnimationContainer container) {
-        setFactory(id -> createAnimation(id, container));
+    public TengenMsPacMan_StorkSAM(SpriteAnimationSystem spriteAnimationSystem) {
+        setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
         if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(STORK))
                 .frameTicks(8)
                 .repeated()
-                .build(container);
+                .build(spriteAnimationSystem);
         }
         throw new IllegalArgumentException("Illegal animation ID: " + animationID);
     }

@@ -11,7 +11,6 @@ import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
@@ -71,15 +70,14 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
+        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));

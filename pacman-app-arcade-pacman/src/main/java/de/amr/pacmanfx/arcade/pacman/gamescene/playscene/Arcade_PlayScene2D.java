@@ -193,7 +193,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(runtime(), engineContext.spriteAnimationContainer(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(runtime(), engineContext.spriteAnimationSystem(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
