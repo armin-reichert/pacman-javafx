@@ -27,9 +27,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private EngineUIContext engineContext;
 
-    private GameViewModel viewModel;
-
-    private final Map<String, DefaultGameVariantRuntime> configsByName = new HashMap<>();
+    private final Map<String, DefaultGameVariantRuntime> runtimesByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
@@ -39,18 +37,15 @@ public class DefaultGameVariantManager implements GameVariantManager {
         this.engineContext = requireNonNull(engineContext);
     }
 
-    public void setViewModel(GameViewModel viewModel) {
-        this.viewModel = requireNonNull(viewModel);
-    }
-
     @Override
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
+        final GameViewModel viewModel = engineContext.ui().viewModel();
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
         final DefaultGameVariantRuntime gameVariantRuntime;
         try {
             gameVariantRuntime = createGameVariantRuntime(engineContext, variantName, includeInteractiveTests);
-            configsByName.put(variantName, gameVariantRuntime);
+            runtimesByName.put(variantName, gameVariantRuntime);
         } catch (Exception x) {
             throw new RuntimeException("Game variant could not be registered", x);
         }
@@ -80,13 +75,13 @@ public class DefaultGameVariantManager implements GameVariantManager {
     @Override
     public DefaultGameVariantRuntime runtimeByName(String variantName) {
         requireNonNull(variantName);
-        return configsByName.get(variantName);
+        return runtimesByName.get(variantName);
     }
 
     @Override
     public boolean isVariantRegistered(String variantName) {
         requireNonNull(variantName);
-        return configsByName.containsKey(variantName);
+        return runtimesByName.containsKey(variantName);
     }
 
     @Override

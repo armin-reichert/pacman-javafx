@@ -96,10 +96,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.ui.setEngineContext(this);
-
-        gameVariantManager.setViewModel(this.ui.viewModel());
         gameVariantManager.init(this);
-
         viewManager.init(this);
     }
 
