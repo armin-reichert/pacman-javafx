@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
-import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.BooleanProperty;
@@ -48,7 +48,7 @@ public class UISettingsActions {
         actionShowHelp = new GameAction<>("show_help") {
             @Override
             public void execute(EngineUIContext engineContext) {
-                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(engineContext);
+                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp();
             }
 
             @Override

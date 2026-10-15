@@ -62,29 +62,38 @@ public class GamePlayView implements GameView {
     public GamePlayView(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
 
+        final GameViewModel viewModel = engineContext.ui().viewModel();
+        final GameMainScene mainScene = engineContext.ui().window().mainScene();
+
+        actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
+
         // Layer 1: Game scene container
-        final var gameScenePane = new GameScenePane();
+        final var gameSceneContainer = new GameScenePane();
 
         // Layer 2: Mini view layer
         final var miniView = new MiniPlaySceneView();
+        miniView.setViewModel(viewModel);
 
         // Layer 3: Overlay layer with dashboard
         final var overlayPane = new BorderPane();
         dashboard = new GameDashboard();
         dashboard.setVisible(false);
         overlayPane.setLeft(dashboard);
+        overlayPane.visibleProperty().bind(dashboard.visibleProperty());
 
         // Layer 4: Help info
-        final var helpView = new HelpView(gameScenePane);
+        final var helpView = new HelpView(gameSceneContainer);
 
         // Layer 5: "Paused" icon
-        final StackPane iconLayer = new StackPane();
-        iconLayer.setMouseTransparent(true);
         final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
         pausedIcon.setId("paused-icon");
+
+        final StackPane iconLayer = new StackPane();
+        iconLayer.setMouseTransparent(true);
+        iconLayer.visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
         iconLayer.getChildren().add(pausedIcon);
 
-        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, iconLayer);
+        layers = new Layers(gameSceneContainer, miniView, overlayPane, helpView, iconLayer);
 
         root = new StackPane(
             layers.gameSceneLayer(),
@@ -98,22 +107,10 @@ public class GamePlayView implements GameView {
         StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
         StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
 
-        actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
-
-        final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameMainScene mainScene = engineContext.ui().window().mainScene();
-
         contextMenuManager = new ContextMenuManager(engineContext);
         root.setOnContextMenuRequested(contextMenuManager);
 
-        layers.miniViewLayer().setViewModel(viewModel);
-
-        layers.iconLayer().visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
-
-        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
-
-        viewModel.debugModeOnProperty().addListener(
-            (_, _, debug) -> layers.gameSceneLayer.setDebugMode(debug));
+        viewModel.debugModeOnProperty().addListener((_, _, debug) -> layers.gameSceneLayer().setDebugMode(debug));
 
         installMainSceneResizeHandler(mainScene);
     }
@@ -122,16 +119,17 @@ public class GamePlayView implements GameView {
         return layers;
     }
 
-    public void populateDashboard(DashboardFactory dashboardFactory){
-        List<DashboardSectionSettings> settings = engineContext.ui().settings().dashboard();
-        dashboard.populate(engineContext, dashboardFactory, settings);
-    }
-
     public GameDashboard dashboard() {
         return dashboard;
     }
 
-    public void showHelp(EngineUIContext engineContext) {
+    public void populateDashboard(DashboardFactory dashboardFactory){
+        requireNonNull(dashboardFactory);
+        List<DashboardSectionSettings> settings = engineContext.ui().settings().dashboard();
+        dashboard.populate(engineContext, dashboardFactory, settings);
+    }
+
+    public void showHelp() {
         layers.helpLayer().showHelpPopup(engineContext, 2, engineContext.gameVariantManager().currentVariantName());
     }
 
