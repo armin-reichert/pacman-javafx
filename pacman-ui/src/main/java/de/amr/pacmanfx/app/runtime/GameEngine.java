@@ -9,6 +9,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationTimer;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
@@ -59,6 +60,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final SpriteAnimationTimer spriteAnimationTimer;
 
+    private final SpriteAnimationContainer spriteAnimationContainer;
+
     private final TranslationManager translationManager;
 
     private GameUI ui;
@@ -79,6 +82,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationTimer = requireNonNull(spriteAnimationTimer);
         this.translationManager = requireNonNull(translationManager);
+
+        spriteAnimationContainer = new SpriteAnimationContainer();
 
         viewManager = new DefaultGameViewManager();
         viewManager.currentViewIDProperty().addListener(
@@ -142,7 +147,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         // Init UI for new runtime (game variant)
         uiConfig.load(this);
 
-        spriteAnimationTimer.attachAnimContainer(runtime.spriteAnimContainer());
+        spriteAnimationTimer.attachAnimContainer(spriteAnimationContainer);
         spriteAnimationTimer.start();
 
         ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
@@ -152,11 +157,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         requireNonNull(variantRuntime);
 
         variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        variantRuntime.spriteAnimContainer().clear();
 
         uiConfig.unload(this);
 
+        spriteAnimationContainer.clear();
         spriteAnimationTimer.detachAnimationContainer();
+
         soundManager.dispose();
 
         currentGame.eventManager().removeAllSubscribers();
@@ -203,6 +209,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     @Override
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    @Override
+    public SpriteAnimationContainer spriteAnimationContainer() {
+        return spriteAnimationContainer;
     }
 
     @Override

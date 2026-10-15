@@ -23,6 +23,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import javafx.scene.paint.Color;
@@ -51,10 +52,10 @@ public class IntroSceneView {
     private Pac msPacMan;
     private List<Ghost> ghosts;
 
-    public IntroSceneView(DefaultGameVariantRuntime runtime) {
+    public IntroSceneView(EngineUIContext engineContext, DefaultGameVariantRuntime runtime) {
         createTitleText();
         createMarquee();
-        createMsPacManAndTheGhosts(runtime);
+        createMsPacManAndTheGhosts(engineContext, runtime);
         createCopyright(runtime);
     }
 
@@ -139,10 +140,10 @@ public class IntroSceneView {
         copyrightTexts.forEach(TextView::show);
     }
 
-    private void createMsPacManAndTheGhosts(DefaultGameVariantRuntime runtime) {
+    private void createMsPacManAndTheGhosts(EngineUIContext engineContext, DefaultGameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
         final GameSystems systems = runtime.playConfig().systems();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         final WorldNavigationSystem nav = systems.navigator();

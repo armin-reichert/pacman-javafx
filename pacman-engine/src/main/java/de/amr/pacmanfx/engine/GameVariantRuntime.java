@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.engine;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 
@@ -16,6 +15,4 @@ public interface GameVariantRuntime {
     GameVariantPlayConfig playConfig();
 
     CoinMechanism coinMechanism();
-
-    SpriteAnimationContainer spriteAnimContainer();
 }

@@ -85,7 +85,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     
     private void createActors() {
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime().spriteAnimContainer();
+        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * TS, 10 * TS);

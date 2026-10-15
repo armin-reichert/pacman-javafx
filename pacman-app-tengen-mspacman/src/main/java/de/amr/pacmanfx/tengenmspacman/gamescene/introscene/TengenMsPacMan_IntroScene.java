@@ -234,7 +234,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.show();
 
         final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer   = runtime().spriteAnimContainer();
+        final SpriteAnimationContainer animContainer   = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();

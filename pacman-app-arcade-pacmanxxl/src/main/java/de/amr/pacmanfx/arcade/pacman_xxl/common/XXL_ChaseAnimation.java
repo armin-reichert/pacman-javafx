@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
 import java.util.*;
@@ -59,18 +60,19 @@ class XXL_ChaseAnimation {
     private ChasingState state;
     private int collisionCount;
 
-    public XXL_ChaseAnimation(int numTilesX, float offsetY, DefaultGameVariantRuntime runtime) {
+    public XXL_ChaseAnimation(EngineUIContext engineContext, DefaultGameVariantRuntime runtime, int numTilesX, float offsetY) {
+        requireNonNull(engineContext);
+        this.runtime = requireNonNull(runtime);
         this.numTilesX = numTilesX;
         this.offsetY = offsetY;
-        this.runtime = requireNonNull(runtime);
-        createPac();
-        createGhosts();
+        createPac(engineContext);
+        createGhosts(engineContext);
     }
 
-    public void simulate() {
+    public void simulate(EngineUIContext engineContext) {
         switch (state) {
             case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
-            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts();
+            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(engineContext);
         }
     }
 
@@ -90,7 +92,7 @@ class XXL_ChaseAnimation {
             .build();
     }
 
-    private void createPac() {
+    private void createPac(EngineUIContext engineContext) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
@@ -104,30 +106,30 @@ class XXL_ChaseAnimation {
         navigator.setWishDir(pac, Direction.LEFT);
         navigator.setSpeed(pac, PAC_FLEEING_SPEED);
 
-        animController.setAnimations(pac, renderConfig.createPacAnimations(runtime.spriteAnimContainer()));
+        animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationContainer()));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
 
         pacView = createView(pac);
     }
 
-    private void createGhosts() {
+    private void createGhosts(EngineUIContext engineContext) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         ghosts = new ArrayList<>(List.of(
-            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationContainer(), GhostPersonality.ORANGE_GHOST_POKEY)
         ));
 
         ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));
     }
 
-    private void letPacManChaseGhosts() {
+    private void letPacManChaseGhosts(EngineUIContext engineContext) {
         if (ghosts.isEmpty()) {
-            createGhosts();
+            createGhosts(engineContext);
             collisionCount = 0;
         }
 

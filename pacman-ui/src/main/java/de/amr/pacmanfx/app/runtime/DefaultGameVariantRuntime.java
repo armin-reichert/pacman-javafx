@@ -5,12 +5,11 @@
 package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.engine.config.Cartridge;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import org.tinylog.Logger;
 
@@ -26,8 +25,6 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
     private final GameVariantPlayConfig playConfig;
 
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
-
-    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
 
     private final GameVariantUIConfig uiConfig;
 
@@ -76,10 +73,5 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
     @Override
     public CoinMechanism coinMechanism() {
         return coinMechanism;
-    }
-
-    @Override
-    public SpriteAnimationContainer spriteAnimContainer() {
-        return spriteAnimationContainer;
     }
 }

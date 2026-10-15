@@ -16,9 +16,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 //TODO make individual animation systems for ghosts and Pac-Man?
 public class ActorAnimationSystem {
 
-    public static void ensureActorAnimationsCreated(DefaultGameVariantRuntime runtime, GameLevel level) {
+    public static void ensureActorAnimationsCreated(DefaultGameVariantRuntime runtime, SpriteAnimationContainer animationContainer, GameLevel level) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = runtime.spriteAnimContainer();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();

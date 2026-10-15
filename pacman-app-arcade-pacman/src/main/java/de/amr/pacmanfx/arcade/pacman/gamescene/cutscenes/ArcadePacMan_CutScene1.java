@@ -46,7 +46,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime().spriteAnimContainer();
+        final SpriteAnimationContainer animContainer = engineContext.spriteAnimationContainer();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
         final var factory = ArcadePacMan_ActorFactory.instance();
 

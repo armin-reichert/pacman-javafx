@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
-        view = new IntroSceneView(runtime());
+        view = new IntroSceneView(engineContext, runtime());
 
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 

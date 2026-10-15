@@ -75,7 +75,7 @@ public class XXL_OptionMenu extends OptionMenu {
                 animationDirty = false;
                 restartChaseAnimation(runtime);
             }
-            chaseAnimation.simulate();
+            chaseAnimation.simulate(engineContext);
             draw();
         });
         chaseAnimationTimer = new Timeline(animationFrame);
@@ -153,11 +153,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void createNewChaseAnimation(DefaultGameVariantRuntime runtime, Canvas canvas) {
-        chaseAnimation = new XXL_ChaseAnimation(
-            settings.numTilesX(),
-            (settings.numTilesY() - 12) * TS,
-            runtime);
-
+        chaseAnimation = new XXL_ChaseAnimation(engineContext, runtime, settings.numTilesX(), (settings.numTilesY() - 12) * TS);
         chaseAnimationRenderer = runtime.uiConfig().renderConfig().createVariantRenderer(
             runtime.playConfig().systems().actorSpriteAnimController(),
             canvas);
