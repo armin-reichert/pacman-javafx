@@ -10,8 +10,7 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimationManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -41,9 +40,9 @@ public interface GameVariantRenderConfig {
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality);
 
-    SpriteAnimationAPI createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality);
+    SpriteAnimationManager createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality);
 
-    SpriteAnimationAPI createPacAnimations(SpriteAnimationSystem spriteAnimationSystem);
+    SpriteAnimationManager createPacAnimations(SpriteAnimationSystem spriteAnimationSystem);
 
     Image createGhostPointsImage(int killedGhostIndex);
 

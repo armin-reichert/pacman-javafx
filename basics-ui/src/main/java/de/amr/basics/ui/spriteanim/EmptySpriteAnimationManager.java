@@ -7,7 +7,7 @@ package de.amr.basics.ui.spriteanim;
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 
-public class EmptySpriteAnimation implements SpriteAnimationAPI {
+public class EmptySpriteAnimationManager implements SpriteAnimationManager {
 
     @Override
     public Object animation(Named animationID) {
@@ -21,7 +21,7 @@ public class EmptySpriteAnimation implements SpriteAnimationAPI {
 
     @Override
     public boolean isSelected(Named animationID) {
-        return SpriteAnimationAPI.super.isSelected(animationID);
+        return SpriteAnimationManager.super.isSelected(animationID);
     }
 
     @Override

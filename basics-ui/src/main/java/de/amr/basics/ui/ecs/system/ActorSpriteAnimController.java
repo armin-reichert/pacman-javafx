@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
-import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
+import de.amr.basics.ui.spriteanim.SpriteAnimationManager;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,7 +16,7 @@ public final class ActorSpriteAnimController {
 
     public ActorSpriteAnimController() {}
 
-    public void setAnimations(GameEntity actor, SpriteAnimationAPI animations) {
+    public void setAnimations(GameEntity actor, SpriteAnimationManager animations) {
         requireNonNull(actor);
         requireNonNull(animations);
         actor.assertComponent(SpriteAnimationComp.class).setSpriteAnimations(animations);
@@ -81,7 +81,7 @@ public final class ActorSpriteAnimController {
         spriteAnim(actor).resetSelected();
     }
 
-    private SpriteAnimationAPI spriteAnim(GameEntity actor) {
+    private SpriteAnimationManager spriteAnim(GameEntity actor) {
         requireNonNull(actor);
         return actor.assertComponent(SpriteAnimationComp.class).spriteAnimations();
     }

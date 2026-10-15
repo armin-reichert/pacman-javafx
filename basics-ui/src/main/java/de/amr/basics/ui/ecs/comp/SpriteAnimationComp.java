@@ -4,19 +4,19 @@
 
 package de.amr.basics.ui.ecs.comp;
 
-import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
+import de.amr.basics.ui.spriteanim.SpriteAnimationManager;
 
 public class SpriteAnimationComp {
 
     public SpriteAnimationComp() {}
 
-    private SpriteAnimationAPI facade = SpriteAnimationAPI.EMPTY_SPRITE_ANIMATION;
+    private SpriteAnimationManager facade = SpriteAnimationManager.EMPTY;
 
-    public void setSpriteAnimations(SpriteAnimationAPI facade) {
+    public void setSpriteAnimations(SpriteAnimationManager facade) {
         this.facade = facade;
     }
 
-    public SpriteAnimationAPI spriteAnimations() {
+    public SpriteAnimationManager spriteAnimations() {
         return facade;
     }
 }

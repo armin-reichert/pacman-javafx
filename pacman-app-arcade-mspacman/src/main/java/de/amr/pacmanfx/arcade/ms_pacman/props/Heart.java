@@ -9,14 +9,14 @@ import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 
-import static de.amr.basics.ui.spriteanim.SpriteAnimationAPI.singleSpriteAnimation;
+import static de.amr.basics.ui.spriteanim.SpriteAnimationManager.singleSpriteAnimationManager;
 
 public class Heart extends GameEntity {
 
     public Heart() {
         final var animationComp = new SpriteAnimationComp();
         animationComp.setSpriteAnimations(
-            singleSpriteAnimation(ArcadeMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART)));
+            singleSpriteAnimationManager(ArcadeMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART)));
         setComponent(SpriteAnimationComp.class, animationComp);
     }
 }

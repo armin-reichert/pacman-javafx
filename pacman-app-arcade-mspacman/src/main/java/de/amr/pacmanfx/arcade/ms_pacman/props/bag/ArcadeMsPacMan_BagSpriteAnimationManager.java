@@ -10,11 +10,11 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-public class ArcadeMsPacMan_BagSAM extends LazySAM {
+public class ArcadeMsPacMan_BagSpriteAnimationManager extends LazySpriteAnimationManager {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_BagSAM(SpriteAnimationSystem spriteAnimationSystem) {
+    public ArcadeMsPacMan_BagSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))

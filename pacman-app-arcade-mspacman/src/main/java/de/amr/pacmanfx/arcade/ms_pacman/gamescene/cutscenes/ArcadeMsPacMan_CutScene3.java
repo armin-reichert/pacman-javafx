@@ -11,12 +11,11 @@ import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
 import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.props.bag.ArcadeMsPacMan_BagSAM;
+import de.amr.pacmanfx.arcade.ms_pacman.props.bag.ArcadeMsPacMan_BagSpriteAnimationManager;
 import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
-import de.amr.pacmanfx.arcade.ms_pacman.props.stork.ArcadeMsPacMan_StorkSAM;
+import de.amr.pacmanfx.arcade.ms_pacman.props.stork.ArcadeMsPacMan_StorkSpriteAnimationManager;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.CutSceneTimingComp;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -108,10 +107,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(engineContext.spriteAnimationSystem()));
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSpriteAnimationManager(engineContext.spriteAnimationSystem()));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(engineContext.spriteAnimationSystem()));
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSpriteAnimationManager(engineContext.spriteAnimationSystem()));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");

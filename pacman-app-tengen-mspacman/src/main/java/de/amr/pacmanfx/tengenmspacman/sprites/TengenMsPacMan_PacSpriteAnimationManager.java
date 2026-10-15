@@ -9,11 +9,11 @@ import de.amr.basics.ui.spriteanim.*;
 
 import java.util.Arrays;
 
-public class TengenMsPacMan_PacSAM extends LazySAM {
+public class TengenMsPacMan_PacSpriteAnimationManager extends LazySpriteAnimationManager {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_PacSAM(SpriteAnimationSystem spriteAnimationSystem) {
+    public TengenMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))

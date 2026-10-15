@@ -18,7 +18,6 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -132,14 +131,14 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public ArcadePacMan_GhostSAM createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+    public ArcadePacMan_GhostSpriteAnimationManager createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
         requireNonNull(personality);
-        return new ArcadePacMan_GhostSAM(spriteAnimationSystem, personality);
+        return new ArcadePacMan_GhostSpriteAnimationManager(spriteAnimationSystem, personality);
     }
 
     @Override
-    public ArcadePacMan_PacSAM createPacAnimations(SpriteAnimationSystem spriteAnimationSystem) {
-        return new ArcadePacMan_PacSAM(spriteAnimationSystem, spriteSheet());
+    public ArcadePacMan_PacSpriteAnimationManager createPacAnimations(SpriteAnimationSystem spriteAnimationSystem) {
+        return new ArcadePacMan_PacSpriteAnimationManager(spriteAnimationSystem, spriteSheet());
     }
 
     @Override

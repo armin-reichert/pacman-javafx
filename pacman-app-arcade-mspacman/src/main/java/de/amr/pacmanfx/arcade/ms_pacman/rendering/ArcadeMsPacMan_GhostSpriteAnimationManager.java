@@ -1,26 +1,25 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.sprites;
+
+package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.spriteanim.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FLASHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FRIGHTENED;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GhostSAM extends LazySAM {
+public class ArcadeMsPacMan_GhostSpriteAnimationManager extends LazySpriteAnimationManager {
 
-    public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
-    public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
-    public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
-
-    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance(); 
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostSAM(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+    public ArcadeMsPacMan_GhostSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
         this.personality = requireNonNull(personality);
         setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
@@ -30,19 +29,19 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
         return switch (animationID) {
             case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
-                .frameTicks(NORMAL_TICKS)
+                .frameTicks(8)
                 .repeated()
                 .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
-                .frameTicks(FRIGHTENED_TICKS)
+                .sprites(spriteSheet.findSpriteSequence(GHOST_FRIGHTENED))
+                .frameTicks(8)
                 .repeated()
                 .build(spriteAnimationSystem);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
-                .frameTicks(FLASHING_TICKS)
+                .sprites(spriteSheet.findSpriteSequence(GHOST_FLASHING))
+                .frameTicks(7)
                 .repeated()
                 .build(spriteAnimationSystem);
 
@@ -50,7 +49,7 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
                 .build(spriteAnimationSystem);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
     }
 }

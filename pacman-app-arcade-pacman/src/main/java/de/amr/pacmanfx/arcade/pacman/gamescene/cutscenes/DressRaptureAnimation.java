@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 
-import de.amr.basics.ui.spriteanim.LazySAM;
+import de.amr.basics.ui.spriteanim.LazySpriteAnimationManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 
-class DressRaptureAnimation extends LazySAM {
+class DressRaptureAnimation extends LazySpriteAnimationManager {
 
     public DressRaptureAnimation(SpriteAnimationSystem spriteAnimationSystem) {
         setFactory(id -> switch (id) {

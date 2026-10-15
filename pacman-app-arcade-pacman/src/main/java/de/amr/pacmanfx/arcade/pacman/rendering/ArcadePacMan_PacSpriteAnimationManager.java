@@ -7,7 +7,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.spriteanim.*;
 
-public class ArcadePacMan_PacSAM extends LazySAM {
+public class ArcadePacMan_PacSpriteAnimationManager extends LazySpriteAnimationManager {
 
     public enum AnimationID implements Named {
         ANIM_BIG_PAC_MAN,
@@ -15,7 +15,7 @@ public class ArcadePacMan_PacSAM extends LazySAM {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_PacSAM(SpriteAnimationSystem spriteAnimationSystem, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem, ArcadePacMan_SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
         setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }

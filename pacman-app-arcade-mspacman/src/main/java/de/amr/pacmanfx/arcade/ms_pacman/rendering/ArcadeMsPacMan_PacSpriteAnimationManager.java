@@ -8,11 +8,11 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.spriteanim.*;
 
-public class ArcadeMsPacMan_PacSAM extends LazySAM {
+public class ArcadeMsPacMan_PacSpriteAnimationManager extends LazySpriteAnimationManager {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_PacSAM(SpriteAnimationSystem spriteAnimationSystem) {
+    public ArcadeMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
         setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 

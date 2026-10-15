@@ -16,7 +16,6 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -35,8 +34,8 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySce
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSpriteAnimationManager;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSpriteAnimationManager;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -191,13 +190,13 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
-        return new TengenMsPacMan_GhostSAM(spriteAnimationSystem, personality);
+    public TengenMsPacMan_GhostSpriteAnimationManager createGhostAnimations(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+        return new TengenMsPacMan_GhostSpriteAnimationManager(spriteAnimationSystem, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimationSystem spriteAnimationSystem) {
-        return new TengenMsPacMan_PacSAM(spriteAnimationSystem);
+    public TengenMsPacMan_PacSpriteAnimationManager createPacAnimations(SpriteAnimationSystem spriteAnimationSystem) {
+        return new TengenMsPacMan_PacSpriteAnimationManager(spriteAnimationSystem);
     }
 
     @Override

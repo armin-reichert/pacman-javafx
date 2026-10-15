@@ -8,11 +8,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacSAM;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacSpriteAnimationManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -96,7 +95,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         systems.navigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
         systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        systems.actorSpriteAnimController().select(pacMan, ArcadePacMan_PacSAM.AnimationID.ANIM_BIG_PAC_MAN);
+        systems.actorSpriteAnimController().select(pacMan, ArcadePacMan_PacSpriteAnimationManager.AnimationID.ANIM_BIG_PAC_MAN);
         systems.actorSpriteAnimController().playSelected(pacMan);
     }
 

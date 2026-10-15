@@ -10,7 +10,6 @@ import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -20,9 +19,9 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
-import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
+import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSpriteAnimationManager;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
-import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
+import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSpriteAnimationManager;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -98,10 +97,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
 
         stork = new Stork();
-        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(engineContext.spriteAnimationSystem()));
+        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSpriteAnimationManager(engineContext.spriteAnimationSystem()));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(engineContext.spriteAnimationSystem()));
+        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSpriteAnimationManager(engineContext.spriteAnimationSystem()));
     }
     
     private void playMusic() {

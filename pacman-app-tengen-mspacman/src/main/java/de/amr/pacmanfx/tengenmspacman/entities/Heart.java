@@ -9,14 +9,14 @@ import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
-import static de.amr.basics.ui.spriteanim.SpriteAnimationAPI.singleSpriteAnimation;
+import static de.amr.basics.ui.spriteanim.SpriteAnimationManager.singleSpriteAnimationManager;
 
 public class Heart extends GameEntity {
 
     public Heart() {
         final SpriteAnimationComp animationComp = new SpriteAnimationComp();
         animationComp.setSpriteAnimations(
-            singleSpriteAnimation(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
+            singleSpriteAnimationManager(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
         );
         setComponent(SpriteAnimationComp.class, animationComp);
     }

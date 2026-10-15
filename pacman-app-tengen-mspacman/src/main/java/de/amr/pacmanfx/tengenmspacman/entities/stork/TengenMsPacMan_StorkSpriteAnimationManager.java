@@ -11,11 +11,11 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
 import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.STORK;
 
-public class TengenMsPacMan_StorkSAM extends LazySAM {
+public class TengenMsPacMan_StorkSpriteAnimationManager extends LazySpriteAnimationManager {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_StorkSAM(SpriteAnimationSystem spriteAnimationSystem) {
+    public TengenMsPacMan_StorkSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
         setFactory(id -> createAnimation(id, spriteAnimationSystem));
     }
 
