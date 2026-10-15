@@ -48,7 +48,8 @@ public class UISettingsActions {
         actionShowHelp = new GameAction<>("show_help") {
             @Override
             public void execute(EngineUIContext engineContext) {
-                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp();
+                final String variantName = engineContext.gameVariantManager().currentVariantName();
+                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(variantName);
             }
 
             @Override

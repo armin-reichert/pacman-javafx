@@ -26,33 +26,6 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(EngineUIContext engineContext) {
-        final GameContext game = engineContext.optCurrentGame().get();
-        final GameSession session = game.session();
-        final AbstractGameState state = game.state();
-        final boolean demoLevel = session.isAttractMode();
-
-        final HelpInfo helpInfo = new HelpInfo(engineContext);
-        if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
-            helpInfo.addInfoForIntroScene();
-        }
-        else if (CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state)) {
-            helpInfo.addInfoForCreditScene();
-        }
-        else if (state.nameIsOneOf(CommonGameStateID.GAME_OR_LEVEL_STARTING, CommonGameStateID.GAME_LEVEL_PLAYING,
-            CommonGameStateID.GAME_LEVEL_PACMAN_DYING, CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-            if (demoLevel) {
-                helpInfo.addInfoForDemoLevelPlayScene();
-            } else {
-                helpInfo.addInfoForPlayScene();
-            }
-        }
-        else {
-            helpInfo.addQuitEntry();
-        }
-        return helpInfo;
-    }
-
     private final EngineUIContext engineContext;
 
     private final List<Label> column0 = new ArrayList<>();
@@ -60,13 +33,32 @@ public class HelpInfo {
 
     public HelpInfo(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
+
+        final GameContext game = engineContext.optCurrentGame().get();
+        final GameSession session = game.session();
+        final AbstractGameState state = game.state();
+        final boolean demoLevel = session.isAttractMode();
+
+        if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
+            addInfoForIntroScene();
+        }
+        else if (CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state)) {
+            addInfoForCreditScene();
+        }
+        else if (state.nameIsOneOf(CommonGameStateID.GAME_OR_LEVEL_STARTING, CommonGameStateID.GAME_LEVEL_PLAYING,
+            CommonGameStateID.GAME_LEVEL_PACMAN_DYING, CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+            if (demoLevel) {
+                addInfoForDemoLevelPlayScene();
+            } else {
+                addInfoForPlayScene();
+            }
+        }
+        else {
+            addQuitEntry();
+        }
     }
 
-    private String translate(String key, Object... args) {
-        return engineContext.translationManager().translate(key, args);
-    }
-
-    public Pane createPane(EngineUIContext engineContext, Color backgroundColor, Font font) {
+    public Pane createPane(Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -99,6 +91,10 @@ public class HelpInfo {
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
         }
         return pane;
+    }
+
+    private String translate(String key, Object... args) {
+        return engineContext.translationManager().translate(key, args);
     }
 
     private void addRow(Label label, Text text) {

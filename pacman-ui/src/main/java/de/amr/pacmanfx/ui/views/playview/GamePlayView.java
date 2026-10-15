@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -21,6 +22,7 @@ import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
+import de.amr.pacmanfx.ui.views.help.HelpInfo;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
@@ -129,8 +131,8 @@ public class GamePlayView implements GameView {
         dashboard.populate(engineContext, dashboardFactory, settings);
     }
 
-    public void showHelp() {
-        layers.helpLayer().showHelpPopup(engineContext, 2, engineContext.gameVariantManager().currentVariantName());
+    public void showHelp(String variantName) {
+        layers.helpLayer().popupHelpInfo(new HelpInfo(engineContext), 2, variantName);
     }
 
     public void acceptLevel(GameScene currentGameScene, GameLevel level) {

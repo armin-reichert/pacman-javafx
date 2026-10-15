@@ -6,12 +6,12 @@ package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import static de.amr.basics.util.Ufx.colorWithOpacity;
@@ -33,12 +33,13 @@ public class HelpView extends Pane {
         prefHeightProperty().bind(parent.prefHeightProperty());
     }
 
-    public void showHelpPopup(EngineUIContext engineContext, double scaling, String variantName) {
-        final boolean msPacMan = variantName.equals(GameVariantID.ARCADE_MS_PACMAN.name())
-                || variantName.equals(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
-        final Color bgColor = msPacMan ? ArcadeColor.RED.color() : ArcadeColor.BLUE.color();
-        final var font = GlobalFonts.MONOSPACED.font(Math.max(6, 14 * scaling));
-        final var infoPane = HelpInfo.build(engineContext).createPane(engineContext, colorWithOpacity(bgColor, 0.8), font);
+    public void popupHelpInfo(HelpInfo helpInfo, double scaling, String variantName) {
+        final boolean female = variantName.equals(GameVariantID.ARCADE_MS_PACMAN.name())
+                            || variantName.equals(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
+        final Color bgColor = female ? ArcadeColor.RED.color() : ArcadeColor.BLUE.color();
+        final Font font = GlobalFonts.MONOSPACED.font(Math.max(6, 14 * scaling));
+        final Pane infoPane = helpInfo.createPane(colorWithOpacity(bgColor, 0.8), font);
+
         popup.setTranslateX(10 * scaling);
         popup.setTranslateY(30 * scaling);
         popup.setContent(infoPane);
