@@ -66,7 +66,7 @@ public class DS_General extends GameDashboardSection {
         editPropertyWithSlider(sliderTargetFPS, context.clock().targetFrameRateProperty());
 
         addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(context.clock().fps(), context.clock().targetFrameRate()));
-        addDynamicInfo("Total Updates",  context.clock()::pausableUpdatesCount);
+        addDynamicInfo("Total Updates",  context.clock()::pausableActionCount);
         addDynamicInfo("Render Queue Size: ", () -> context.renderManager().renderQueueSize());
         colorPicker("Canvas Color", viewModel.common2DSettings().canvasBackgroundColorProperty());
         //checkBox("Font Smoothing",  viewModel.common2DSettings().fontSmoothingOnProperty());

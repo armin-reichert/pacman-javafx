@@ -124,7 +124,7 @@ public class GameWindow {
 
         final boolean debug  = viewModel.debugModeOnProperty().get();
         final boolean is3D   = viewModel.common3DSettings().view3DEnabledProperty().get();
-        final boolean paused = engineContext.clock().getUpdatesDisabled();
+        final boolean paused = engineContext.clock().areUpdatesDisabled();
 
         final String normalTitle = stageTitle(paused, is3D);
         return (gameScene == null || !debug)

@@ -82,7 +82,7 @@ public class SimulationActions {
         actionOneStep = new GameAction<>("simulation_one_step") {
             @Override
             public void execute(EngineUIContext context) {
-                final boolean failure = !context.clock().makeOneStep(true);
+                final boolean failure = !context.clock().makeStep(true);
                 if (failure) {
                     context.ui().shortMessage("Simulation step error!");
                 }
@@ -90,7 +90,7 @@ public class SimulationActions {
 
             @Override
             public boolean isEnabled(EngineUIContext context) {
-                return context.clock().getUpdatesDisabled();
+                return context.clock().areUpdatesDisabled();
             }
         };
 
@@ -105,7 +105,7 @@ public class SimulationActions {
 
             @Override
             public boolean isEnabled(EngineUIContext context) {
-                return context.clock().getUpdatesDisabled();
+                return context.clock().areUpdatesDisabled();
             }
         };
 
@@ -123,7 +123,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engineContext) {
                 final GameClock gameClock = engineContext.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
-                final boolean paused = gameClock.getUpdatesDisabled();
+                final boolean paused = gameClock.areUpdatesDisabled();
                 if (paused) {
                     engineContext.soundManager().stopAll();
                     //engineContext.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);

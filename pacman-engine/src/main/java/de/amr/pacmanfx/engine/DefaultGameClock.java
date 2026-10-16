@@ -37,20 +37,22 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultGameClock implements GameClock {
 
+    public static final int DEFAULT_FRAME_RATE = 60;
+
     /**
      * The desired frame rate. Changing this property rebuilds the internal
      * {@link Timeline}. If the clock was running, it is stopped and restarted
      * with the new timing.
      */
-    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(60) {
+    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_FRAME_RATE) {
         @Override
         protected void invalidated() {
-            final boolean wasRunning = isRunning();
-            if (wasRunning) {
+            final boolean runningWhenChanged = isRunning();
+            if (runningWhenChanged) {
                 stop();
             }
-            createClockwork();
-            if (wasRunning) {
+            rebuildTimeline();
+            if (runningWhenChanged) {
                 start();
             }
         }
@@ -66,19 +68,22 @@ public class DefaultGameClock implements GameClock {
     private final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 
     /** The JavaFX timeline that drives periodic tick execution. */
-    private final Timeline clockwork = new Timeline();
+    private final Timeline timeline = new Timeline();
 
     /** Action executed only when the clock allows updates. */
-    private Runnable updateAction = () -> {};
+    private Runnable pausableAction = () -> {};
 
     /** Action executed on every tick, regardless of pause state. */
     private Runnable permanentAction = () -> {};
 
-    private long updateActionCount;
-    private long tickCount;
+    private long pausableActionCount;
+
+    private long ticksTotal;
 
     private long fps;
-    private long countTicksStartTime;
+
+    private long countStartNanos;
+
     private long ticksInFrame;
 
     /** Handler invoked when an exception occurs during tick execution. */
@@ -89,9 +94,9 @@ public class DefaultGameClock implements GameClock {
      * The internal {@link Timeline} is initialized immediately.
      */
     public DefaultGameClock() {
-        createClockwork();
-        clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
-            Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, targetFrameRate()));
+        rebuildTimeline();
+        timeline.statusProperty().addListener((_, oldStatus, newStatus) ->
+            Logger.info("Clock status {} -> {}, target FPS: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
 
     @Override
@@ -100,8 +105,8 @@ public class DefaultGameClock implements GameClock {
     }
 
     @Override
-    public void setUpdateAction(Runnable action) {
-        this.updateAction = requireNonNull(action);
+    public void setPausableAction(Runnable action) {
+        this.pausableAction = requireNonNull(action);
     }
 
     @Override
@@ -133,27 +138,26 @@ public class DefaultGameClock implements GameClock {
     }
 
     @Override
-    public boolean getUpdatesDisabled() { return updatesDisabled.get(); }
+    public boolean areUpdatesDisabled() { return updatesDisabled.get(); }
 
     @Override
     public BooleanProperty timeMeasuredProperty() { return timeMeasured; }
 
     @Override
     public void start() {
-        setUpdatesDisabled(false);
-        clockwork.play();
+        timeline.play();
         Logger.info("Game clock started! Target FPS: {}", targetFrameRate());
     }
 
     @Override
     public void stop() {
-        clockwork.stop();
+        timeline.stop();
         Logger.info("Game clock stopped!");
     }
 
     @Override
     public boolean isRunning() {
-        return clockwork.getStatus() == Status.RUNNING;
+        return timeline.getStatus() == Status.RUNNING;
     }
 
     @Override
@@ -162,30 +166,30 @@ public class DefaultGameClock implements GameClock {
     }
 
     @Override
-    public long currentTick() { return tickCount; }
+    public long currentTick() { return ticksTotal; }
 
     @Override
-    public long pausableUpdatesCount() {
-        return updateActionCount;
+    public long pausableActionCount() {
+        return pausableActionCount;
     }
 
     @Override
-    public boolean makeSteps(int numSteps, boolean pausableActionIncluded) {
+    public boolean makeSteps(int numSteps, boolean pausableActionEnabled) {
         Validations.requireNonNegative(numSteps);
         for (int i = 0; i < numSteps; ++i) {
-            if (!makeOneStep(pausableActionIncluded)) return false;
+            if (!makeStep(pausableActionEnabled)) return false;
         }
         return true;
     }
 
     @Override
-    public boolean makeOneStep(boolean pausableActionIncluded) {
+    public boolean makeStep(boolean pausableActionEnabled) {
         try {
-            if (pausableActionIncluded) {
-                execute(updateAction, "Pausable action took {} milliseconds");
-                updateActionCount++;
+            if (pausableActionEnabled) {
+                runAction(pausableAction, "Pausable action took {} milliseconds");
+                pausableActionCount++;
             }
-            execute(permanentAction, "Permanent action took {} milliseconds");
+            runAction(permanentAction, "Permanent action took {} milliseconds");
             computeFPS();
         } catch (Throwable x) {
             errorHandler.accept(x);
@@ -195,13 +199,13 @@ public class DefaultGameClock implements GameClock {
     }
 
     private void computeFPS() {
-        final long now = System.nanoTime();
-        ++tickCount;
+        final long frameStartNanos = System.nanoTime();
+        ++ticksTotal;
         ++ticksInFrame;
-        if (now - countTicksStartTime > 1e9) {
+        if (frameStartNanos - countStartNanos > 1e9) {
             fps = ticksInFrame;
             ticksInFrame = 0;
-            countTicksStartTime = now;
+            countStartNanos = frameStartNanos;
         }
     }
 
@@ -210,14 +214,14 @@ public class DefaultGameClock implements GameClock {
      * <p>
      * The timeline is configured with a single {@link KeyFrame} whose duration
      * corresponds to the desired frame period. Each frame triggers a call to
-     * {@link #makeOneStep(boolean)}.
+     * {@link #makeStep(boolean)}.
      */
-    private void createClockwork() {
-        final var period = Duration.seconds(1.0 / targetFrameRate());
-        clockwork.getKeyFrames().setAll(new KeyFrame(period, _ -> makeOneStep(!getUpdatesDisabled())));
-        clockwork.setCycleCount(Animation.INDEFINITE);
+    private void rebuildTimeline() {
+        final Duration targetDuration = Duration.seconds(1.0 / targetFrameRate());
+        timeline.getKeyFrames().setAll(new KeyFrame(targetDuration, _ -> makeStep(!areUpdatesDisabled())));
+        timeline.setCycleCount(Animation.INDEFINITE);
         ticksInFrame = 0;
-        countTicksStartTime = System.nanoTime();
+        countStartNanos = System.nanoTime();
     }
 
     /**
@@ -229,7 +233,7 @@ public class DefaultGameClock implements GameClock {
      * @param action the action to run
      * @param logMessage the log message used when time measurement is enabled
      */
-    private void execute(Runnable action, String logMessage) {
+    private void runAction(Runnable action, String logMessage) {
         if (timeMeasured.get()) {
             final long start = System.nanoTime();
             action.run();

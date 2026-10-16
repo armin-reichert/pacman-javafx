@@ -44,7 +44,7 @@ public interface GameClock {
      *
      * @param action the action to run on each tick as long as updates are enabled
      */
-    void setUpdateAction(Runnable action);
+    void setPausableAction(Runnable action);
 
     /**
      * Sets the action that is executed on every tick, regardless of pause state.
@@ -98,7 +98,7 @@ public interface GameClock {
      *
      * @return {@code true} if paused
      */
-    boolean getUpdatesDisabled();
+    boolean areUpdatesDisabled();
 
     /**
      * Returns the property controlling whether time‑measurement logging is enabled.
@@ -148,7 +148,7 @@ public interface GameClock {
      *
      * @return the number of pausable updates
      */
-    long pausableUpdatesCount();
+    long pausableActionCount();
 
     /**
      * Executes a fixed number of simulation steps synchronously.
@@ -167,5 +167,5 @@ public interface GameClock {
      * @param pausableActionEnabled whether the pausable action should run
      * @return {@code true} if the step completed without error
      */
-    boolean makeOneStep(boolean pausableActionEnabled);
+    boolean makeStep(boolean pausableActionEnabled);
 }

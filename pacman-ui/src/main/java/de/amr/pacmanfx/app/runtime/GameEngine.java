@@ -89,7 +89,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         gameVariantManager.selectedVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
-        clock().setUpdateAction(this::simulate);
+        clock().setPausableAction(this::simulate);
         clock().setPermanentAction(this::render);
     }
 
