@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
-import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -56,10 +55,9 @@ public class GamePlayView implements GameView {
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
-
     private final EngineUIContext engineContext;
-
     private final ContextMenuManager contextMenuManager;
+    private final GamePlayViewRenderer renderer = new GamePlayViewRenderer(this);
 
     public GamePlayView(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
@@ -169,7 +167,9 @@ public class GamePlayView implements GameView {
     }
 
     public void render() {
-        GamePlayViewRenderer.render(this, engineContext, engineContext.gameSceneManager().currentGameScene());
+        updateDashboard();
+        updateMiniView();
+        renderer.render(engineContext);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -219,11 +219,6 @@ public class GamePlayView implements GameView {
     }
 
     // --- Component update
-
-    public void update() {
-        updateDashboard();
-        updateMiniView();
-    }
 
     private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {

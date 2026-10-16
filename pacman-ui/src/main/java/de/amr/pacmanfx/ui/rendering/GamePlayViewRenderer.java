@@ -25,35 +25,62 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayViewRenderer {
 
-    public static void render(GamePlayView playView, EngineUIContext engineContext, GameScene gameScene) {
-        requireNonNull(playView);
-        requireNonNull(engineContext);
+    private final GamePlayView playView;
 
-        final RenderManager renderManager = engineContext.renderManager();
+    public GamePlayViewRenderer(GamePlayView playView) {
+        this.playView = requireNonNull(playView);
+    }
+
+    public void render(EngineUIContext context) {
+        requireNonNull(context);
+        if (!(context.gameVariantManager().currentRuntime() instanceof DefaultGameVariantRuntime runtime)){
+            return;
+        }
+        if (context.optCurrentGame().isEmpty()) {
+            return;
+        }
+        render(
+            context.renderManager(),
+            context.ui().viewModel(),
+            runtime,
+            context.optCurrentGame().get().session(),
+            context.gameSceneManager().currentGameScene(),
+            context.clock().currentTick()
+        );
+    }
+
+    private void render(
+        RenderManager renderManager,
+        GameViewModel viewModel,
+        DefaultGameVariantRuntime runtime,
+        GameSession session,
+        GameScene gameScene,
+        long tick)
+    {
+        requireNonNull(renderManager);
+        requireNonNull(playView);
+        requireNonNull(viewModel);
+        requireNonNull(runtime);
+        requireNonNull(session);
+        requireNonNull(gameScene);
 
         // --- Refill the render queue
 
         renderManager.clearRenderQueue();
 
         // HUD
-        engineContext.optCurrentGame().ifPresent(game -> {
-            final GameSession session = game.session();
-            if (session.isHUDVisible()) {
-                GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
-                    .forEach(renderManager::addRenderable);
-            }
-        });
+        if (session.isHUDVisible()) {
+            GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
+                .forEach(renderManager::addRenderable);
+        }
 
         // Mini view
         playView.layers().miniViewLayer().renderables().forEach(renderManager::addRenderable);
 
         // Game scene content
-        if (gameScene != null) {
-            gameScene.renderables().forEach(renderManager::addRenderable);
-        }
+        gameScene.renderables().forEach(renderManager::addRenderable);
 
         // Debug mode rendering?
-        final GameViewModel viewModel = engineContext.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
         if (debugMode) {
             renderManager.addRenderable(new GameSceneDebugView(gameScene));
@@ -66,8 +93,6 @@ public class GamePlayViewRenderer {
         }
 
         //TODO This should not be done in each render frame
-
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final GameSceneView2D view2D = abstractGameScene.view2D();
@@ -110,17 +135,15 @@ public class GamePlayViewRenderer {
             playView.layers().miniViewLayer().renderingSurface().fill(Color.BLACK);
         }
 
-        // --- Render everything
-
-        renderManager.renderFrame(engineContext.clock().currentTick(), debugMode);
+        renderManager.renderFrame(tick, debugMode);
     }
 
-    private static void setRenderers(RenderManager renderManager, Renderer variantRenderer, Renderer debugRenderer) {
+    private void setRenderers(RenderManager renderManager, Renderer variantRenderer, Renderer debugRenderer) {
         renderManager.setVariantRenderer(variantRenderer);
         renderManager.setDebugRenderer(debugRenderer);
     }
 
-    private static Renderer createVariantRenderer(
+    private Renderer createVariantRenderer(
         GameVariantRenderConfig renderConfig,
         ActorSpriteAnimController animController,
         RenderingSurface renderingSurface,
@@ -132,7 +155,7 @@ public class GamePlayViewRenderer {
         return renderer;
     }
 
-    private static Renderer createDebugRenderer(
+    private Renderer createDebugRenderer(
         GameScene gameScene,
         GameVariantRenderConfig renderConfig,
         ActorSpriteAnimController animController,

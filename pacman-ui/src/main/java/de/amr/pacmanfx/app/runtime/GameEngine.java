@@ -362,9 +362,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private void render() {
         try {
             if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
-                final GamePlayView playView = viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
-                playView.render();
-                playView.update();
+                viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).render();
             }
         } catch (Exception x) {
             fatalError(x);
