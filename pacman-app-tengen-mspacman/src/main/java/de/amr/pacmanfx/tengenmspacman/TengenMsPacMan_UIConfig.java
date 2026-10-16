@@ -127,6 +127,12 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         Logger.info("Dispose game scene configuration");
         gameSceneConfig.dispose();
 
+        Logger.info("Dispose render configuration...");
+        if (renderConfig != null) {
+            renderConfig.dispose();
+            renderConfig = null;
+        }
+
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();

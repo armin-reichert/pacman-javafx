@@ -129,11 +129,17 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     public void dispose() {
         Logger.info("Dispose game variant configuration {}:", getClass().getSimpleName());
 
-        Logger.info("Dispose game scene configuration");
+        Logger.info("Dispose game scene configuration...");
         gameSceneConfig.dispose();
 
+        Logger.info("Dispose render configuration...");
+        if (renderConfig != null) {
+            renderConfig.dispose();
+            renderConfig = null;
+        }
+
         if (assets != null) {
-            Logger.info("Dispose assets");
+            Logger.info("Dispose assets...");
             assets.dispose();
             assets = null;
         }

@@ -15,10 +15,10 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
 
@@ -54,6 +54,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
         tengenPresentsTextView.data().setCenter(true);
         tengenPresentsTextView.data().setFont(GlobalFonts.ARCADE.font());
+        tengenPresentsTextView.setComponent(ShadesOfBlue.class, new ShadesOfBlue(ShadesOfBlue.BlueValue.VERY_DARK_BLUE));
     }
 
     @Override
@@ -82,7 +83,6 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         final GameSystems systems = game.playConfig().systems();
 
         final int stateTick = (int) game.state().timer().tickCount();
-        final Color shadeOfBlue = shadeOfBlue(stateTick);
 
         switch (stateTick) {
             case   1 -> fillCanvasGray(false);
@@ -114,7 +114,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             }
         }
 
-        tengenPresentsTextView.data().setFillColor(shadeOfBlue);
+        tengenPresentsTextView.assertComponent(ShadesOfBlue.class).setBlueValue(shadeOfBlue(stateTick));
         systems.motor().move(tengenPresentsTextView);
 
         systems.motor().move(ghost);

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.app.config;
 
+import de.amr.basics.Disposable;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -22,7 +23,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-public interface GameVariantRenderConfig {
+public interface GameVariantRenderConfig extends Disposable {
 
     SpriteSheet<?> spriteSheet();
 

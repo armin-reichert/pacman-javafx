@@ -22,6 +22,7 @@ import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.stork.Stork;
+import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.GameEntityRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
@@ -42,6 +43,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsComp;
+import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.JoypadKeyBindingsView;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuOptionView;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarView;
@@ -101,9 +103,6 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
             case  GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> levelRenderer.renderGameLevel(level, renderInfo);
 
-            case GameEntityView entityView
-                -> renderGameEntity(entityView.entity(), tick);
-
             case JoypadKeyBindingsView(JoypadKeyBinding joypadKeyBinding, Vector2f _)
                 -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
 
@@ -112,6 +111,15 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
 
             case MenuSeparatorBarView barView
                 -> draw(barView);
+
+            case GameEntityView(GameEntity entity, _, _, _, _) -> {
+                // Blue shade animation effect
+                if (entity instanceof TextView textView && textView.hasComponent(ShadesOfBlue.class)) {
+                    final ShadesOfBlue.BlueValue blueValue = textView.assertComponent(ShadesOfBlue.class).blueValue();
+                    textView.data().setFillColor(NES_Palette.color(blueValue.paletteIndex()));
+                }
+                renderGameEntity(entity, tick);
+            }
 
             default -> super.render(r, tick);
         }

@@ -44,8 +44,8 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
 //    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
-    protected final AssetMap assets;
-    protected final HUDStyleComp hudStyle;
+    protected AssetMap assets;
+    protected HUDStyleComp hudStyle;
 
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = requireNonNull(assets);
@@ -59,6 +59,12 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             Color.GRAY,
             GlobalFonts.ARCADE.font(),
             "CREDIT %2d");
+    }
+
+    @Override
+    public void dispose() {
+        assets = null;
+        hudStyle = null;
     }
 
     @Override

@@ -29,6 +29,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySceneDebugInfoRenderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
@@ -42,7 +43,6 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -52,7 +52,16 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
+    /**
+     * Blue color, changing from dark to brighter blue. Cycles through NES palette indices 0x01, 0x11, 0x21, 0x31 each 16 ticks.
+     */
+    public static ShadesOfBlue.BlueValue shadeOfBlue(long tick) {
+        final int phase = (int) (tick % 64) / 16;
+        return ShadesOfBlue.BlueValue.values()[phase];
+    }
+
     public static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+
     static {
         MESSAGE_TEXTS.put(MessageType.READY, "READY!");
         MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME OVER");
@@ -80,37 +89,9 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-    private static final Map<BonusSymbol, Integer> BONUS_VALUE_SPRITE_INDEX = new EnumMap<>(BonusSymbol.class);
-    static {
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.CHERRY,      0); // "100"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STRAWBERRY,  1); // "200"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ORANGE,      2); // "500"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PRETZEL,     3); // "700"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.APPLE,       4); // "1000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PEAR,        5); // "2000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.BANANA,      8); // 6 -> 8 ("5000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.MILK,        6); // 7 -> 6 ("3000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ICE_CREAM,   7); // 8 -> 7 ("4000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HIGH_HEELS,  9); // "6000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STAR,       10); // "7000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HAND,       11); // "8000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.RING,       12); // "9000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.FLOWER,     13); // "TEN!000"
-    }
+    private final Map<BonusSymbol, Integer> bonusValueSpriteIndexMap = new EnumMap<>(BonusSymbol.class);
 
-    /** Shades of blue sequence used by animation. */
-    private static final Color[] SHADES_OF_BLUE = {
-        NES_Palette.color(0x01), NES_Palette.color(0x11), NES_Palette.color(0x21), NES_Palette.color(0x31)
-    };
-
-    /**
-     * Blue color, changing from dark to brighter blue. Cycles through NES palette indices 0x01, 0x11, 0x21, 0x31 each 16 ticks.
-     */
-    public static Color shadeOfBlue(long tick) {
-        return SHADES_OF_BLUE[(int) (tick % 64) / 16];
-    }
-
-    private final HUDStyleComp hudStyle = new HUDStyleComp(
+    private HUDStyleComp hudStyle = new HUDStyleComp(
         spriteSheet(),
         spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
         spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
@@ -122,7 +103,28 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         "CREDIT %d" // not used in Tengen
     );
 
-    public TengenMsPacMan_RenderConfig() {}
+    public TengenMsPacMan_RenderConfig() {
+        bonusValueSpriteIndexMap.put(BonusSymbol.CHERRY,      0); // "100"
+        bonusValueSpriteIndexMap.put(BonusSymbol.STRAWBERRY,  1); // "200"
+        bonusValueSpriteIndexMap.put(BonusSymbol.ORANGE,      2); // "500"
+        bonusValueSpriteIndexMap.put(BonusSymbol.PRETZEL,     3); // "700"
+        bonusValueSpriteIndexMap.put(BonusSymbol.APPLE,       4); // "1000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.PEAR,        5); // "2000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.BANANA,      8); // 6 -> 8 ("5000")
+        bonusValueSpriteIndexMap.put(BonusSymbol.MILK,        6); // 7 -> 6 ("3000")
+        bonusValueSpriteIndexMap.put(BonusSymbol.ICE_CREAM,   7); // 8 -> 7 ("4000")
+        bonusValueSpriteIndexMap.put(BonusSymbol.HIGH_HEELS,  9); // "6000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.STAR,       10); // "7000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.HAND,       11); // "8000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.RING,       12); // "9000"
+        bonusValueSpriteIndexMap.put(BonusSymbol.FLOWER,     13); // "TEN!000"
+    }
+
+    @Override
+    public void dispose() {
+        bonusValueSpriteIndexMap.clear();
+        hudStyle = null;
+    }
 
     @Override
     public SpriteSheet<SpriteID> spriteSheet() {
@@ -223,6 +225,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusCode);
         }
         final BonusSymbol symbol = BonusSymbol.values()[bonusCode];
-        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusCode);
+        return bonusValueSpriteIndexMap.getOrDefault(symbol, bonusCode);
     }
 }

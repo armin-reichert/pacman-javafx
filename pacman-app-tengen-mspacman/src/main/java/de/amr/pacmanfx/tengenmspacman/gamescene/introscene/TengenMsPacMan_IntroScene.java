@@ -28,10 +28,10 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
+import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -47,6 +47,7 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene {
@@ -162,8 +163,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         tengenPresentsTextView = new TextView();
         tengenPresentsTextView.pos().set(8 * TS, ANCHOR_Y - TS);
         tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
-        tengenPresentsTextView.data().setFillColor(Color.WHITE); // TODO animate
         tengenPresentsTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        tengenPresentsTextView.setComponent(ShadesOfBlue.class, new ShadesOfBlue(ShadesOfBlue.BlueValue.VERY_DARK_BLUE));
         tengenPresentsTextView.show();
 
         final ImageView titleImageView = new ImageView();
@@ -284,7 +285,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 final long stateTick = timer().tickCount();
                 final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
 
-                scene.tengenPresentsTextView.data().setFillColor(TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick));
+                scene.tengenPresentsTextView.assertComponent(ShadesOfBlue.class).setBlueValue(shadeOfBlue(stateTick));
                 if (bright) {
                     scene.pressStartTextView.show();
                 } else {
