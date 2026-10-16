@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.EngineLifecycle;
+import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -185,7 +186,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     @Override
-    public DefaultGameVariantManager gameVariantManager() {
+    public GameVariantManager gameVariantManager() {
         return gameVariantManager;
     }
 
@@ -294,17 +295,19 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     // Private area, no trespassing!
 
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
-        final GameVariantUIConfig uiConfig = gameVariantManager.currentRuntime().uiConfig();
         if (oldVariantName != null) {
             Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-            exitGameVariant(gameVariantManager.runtimeByName(oldVariantName), uiConfig);
+            final DefaultGameVariantRuntime oldRuntime = gameVariantManager.runtimeByName(oldVariantName);
+            final GameVariantUIConfig oldUIConfig = oldRuntime.uiConfig();
+            exitGameVariant(oldRuntime, oldUIConfig);
         }
         if (newVariantName != null) {
             Logger.info(">>> Enter game variant '{}'", newVariantName);
-            enterGameVariant(gameVariantManager.runtimeByName(newVariantName), uiConfig);
+            final DefaultGameVariantRuntime newRuntime = gameVariantManager.runtimeByName(newVariantName);
+            final GameVariantUIConfig newUIConfig = newRuntime.uiConfig();
+            enterGameVariant(gameVariantManager.runtimeByName(newVariantName), newUIConfig);
         }
         updateStageIcon();
-
     }
 
     private void onViewChanged(Named oldViewID, Named newViewID) {
