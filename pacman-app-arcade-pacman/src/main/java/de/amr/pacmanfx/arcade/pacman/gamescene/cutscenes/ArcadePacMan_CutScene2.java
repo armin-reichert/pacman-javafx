@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
@@ -68,7 +67,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         blinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
 
         nailDressRapturing = new NailDressRapturing(engineContext.spriteAnimationSystem());
-        nailDressRapturing.pos().set(nailX, nailY);
+        nailDressRapturing.position().set(nailX, nailY);
         nailDressRapturing.show();
 
         timing().setTick(-1);
@@ -127,7 +126,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void dressRaptures(GameSystems systems) {
-        blinky.pos().sub(4, 0);
+        blinky.position().sub(4, 0);
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         nailDressRapturing.setState(NailDressRapturingState.RAPTURED);
     }

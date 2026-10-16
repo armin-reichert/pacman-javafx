@@ -145,9 +145,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final LivesCounter livesCounter = hud.livesCounter();
         final LevelCounter levelCounter = hud.levelCounter();
 
-        hud.gameScore().pos().set(4 * TS, TS);
-        hud.highScore().pos().set(11 * TS, TS);
-        hud.additionalEntities().theOne(GameOptionsDisplay.class).pos().set(16 * TS, 2.5f * TS); // horizontally centered
+        hud.gameScore().position().set(4 * TS, TS);
+        hud.highScore().position().set(11 * TS, TS);
+        hud.additionalEntities().theOne(GameOptionsDisplay.class).position().set(16 * TS, 2.5f * TS); // horizontally centered
 
         if (level != null) {
             // Called when level is created, adjust positions to map size
@@ -160,11 +160,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
                 Logger.error("There should exist exactly 2 level number displays in this HUD!");
             }
             else {
-                levelNumberDisplays.getFirst().pos().set(2 * TS, bottomPos);
-                levelNumberDisplays.getLast().pos().set(28 * TS - 1, bottomPos);
+                levelNumberDisplays.getFirst().position().set(2 * TS, bottomPos);
+                levelNumberDisplays.getLast().position().set(28 * TS - 1, bottomPos);
             }
-            livesCounter.pos().set(4 * TS, bottomPos);
-            levelCounter.pos().set(26 * TS - 2, bottomPos - 2);
+            livesCounter.position().set(4 * TS, bottomPos);
+            levelCounter.position().set(26 * TS - 2, bottomPos - 2);
         }
         else {
             // Called when session is started, initialize
@@ -383,7 +383,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Vector2i houseSize = house.sizeInTiles();
         float x = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float y = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
-        messageView.pos().set(x, y);
+        messageView.position().set(x, y);
 
         messageView.setComponent(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
 

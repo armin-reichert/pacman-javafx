@@ -122,7 +122,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
 
         clapperboard = new Clapperboard("4", "THE END");
-        clapperboard.pos().set(tilesPx(3), tilesPx(10));
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
 
         msPacMan = actorFactory.createMsPacMan();
         msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
@@ -151,7 +151,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         letActorsMove(game, tick);
 
         if (tick == 130) {
-            pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
+            pacMan.position().set(LEFT_BORDER, LOWER_LANE);
             pacMan.show();
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
@@ -160,7 +160,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
 
-            msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
+            msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.LEFT);
@@ -226,7 +226,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.pos().set((float) randomX, view2D().unscaledHeight() - 4 * TS);
+        junior.position().set((float) randomX, view2D().unscaledHeight() - 4 * TS);
         junior.show();
 
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
@@ -264,11 +264,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             computeNewMoveDir(navigator, junior);
         }
         motor.move(junior);
-        if (junior.pos().x() > view2D().unscaledWidth()) {
-            junior.pos().setX(0);
+        if (junior.position().x() > view2D().unscaledWidth()) {
+            junior.position().setX(0);
         }
-        if (junior.pos().x() < 0) {
-            junior.pos().setX(view2D().unscaledWidth());
+        if (junior.position().x() < 0) {
+            junior.position().setX(view2D().unscaledWidth());
         }
     }
 
@@ -285,7 +285,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        Vector2i tile = junior.pos().tile();
+        Vector2i tile = junior.position().tile();
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = new Vector2f(0.5f * view2D().unscaledWidth(), 0.5f * view2D().unscaledHeight());

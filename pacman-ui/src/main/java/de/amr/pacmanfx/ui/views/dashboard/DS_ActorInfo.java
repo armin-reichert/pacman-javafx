@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
@@ -88,8 +88,8 @@ public class DS_ActorInfo extends GameDashboardSection {
 
         final WorldNavigationComp worldNavigation = actor.assertComponent(WorldNavigationComp.class);
 
-        final Vector2i tile = actor.pos().tile();
-        final Vector2i tileOffset = actor.pos().offset();
+        final Vector2i tile = actor.position().tile();
+        final Vector2i tileOffset = actor.position().offset();
 
         return "(%2d,%2d) offset=(%2d,%2d)%s".formatted(
             tile.x(), tile.y(),
@@ -106,7 +106,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorMovementText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        return actor.optComponent(MovementComp.class).map(movement -> {
+        return actor.optComponent(Movement.class).map(movement -> {
             final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
             final boolean moved = !navigation.info().moved;

@@ -208,7 +208,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
         }
         else {
-            final Vector2i tile = event.pac().pos().tile();
+            final Vector2i tile = event.pac().position().tile();
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     playScene3D.animationSystem().stopPumping(energizer3D);

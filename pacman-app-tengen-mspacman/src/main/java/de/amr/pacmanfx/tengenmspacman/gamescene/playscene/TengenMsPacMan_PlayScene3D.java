@@ -92,17 +92,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         optionsDisplay.options().setBoosterMode(gameOptionValues(session).boosterMode());
         optionsDisplay.options().setDifficulty(gameOptionValues(session).difficulty());
         optionsDisplay.options().setMapCategory(gameOptionValues(session).mapCategory());
-        optionsDisplay.pos().set(0.5 * width, 1.5f * TS);
+        optionsDisplay.position().set(0.5 * width, 1.5f * TS);
         optionsDisplay.show();
 
         final LevelNumberDisplay leftNumberDisplay = new LevelNumberDisplay();
         leftNumberDisplay.levelNumber().setNumber(levelNumber);
-        leftNumberDisplay.pos().set(0, 0);
+        leftNumberDisplay.position().set(0, 0);
         leftNumberDisplay.show();
 
         final LevelNumberDisplay rightNumberDisplay = new LevelNumberDisplay();
         rightNumberDisplay.levelNumber().setNumber(levelNumber);
-        rightNumberDisplay.pos().set(width - 2 * TS, 0);
+        rightNumberDisplay.position().set(width - 2 * TS, 0);
         rightNumberDisplay.show();
 
         hud.additionalEntities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);

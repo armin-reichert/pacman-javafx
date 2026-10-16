@@ -116,7 +116,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         startingLevelOptionView = new MenuOptionView("STARTING LEVEL", 19, new Vector2f(0, 10.5f * TS));
 
         numContinuesImageView = new ImageView();
-        numContinuesImageView.pos().set(24 * TS, 20 * TS);
+        numContinuesImageView.position().set(24 * TS, 20 * TS);
         numContinuesView = new GameEntityView(numContinuesImageView, RenderingLayer.PROPS, 0, Vector2f.ZERO);
 
         moveArrowTextView = new GameEntityView(

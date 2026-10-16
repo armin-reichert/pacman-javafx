@@ -87,7 +87,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
             final double size = scaled(9);
             ctx.save();
             ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.fillRect(scaled(energizer.position().x() - 0.5), scaled(energizer.position().y() - 0.5), size, size);
             ctx.restore();
         }
     }

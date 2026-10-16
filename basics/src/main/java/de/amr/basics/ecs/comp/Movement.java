@@ -7,7 +7,7 @@ package de.amr.basics.ecs.comp;
 import de.amr.basics.ecs.Resettable;
 import de.amr.basics.math.Vector2f;
 
-public class MovementComp implements Resettable {
+public class Movement implements Resettable {
 
     private float vx;
     private float vy;

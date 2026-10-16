@@ -179,8 +179,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         if (level != null) {
             final int bottom = (level.worldMap().numRows() - 2) * TS;
-            livesCounter.pos().set(2 * TS, bottom);
-            levelCounter.pos().set(24 * TS, bottom + 2);
+            livesCounter.position().set(2 * TS, bottom);
+            levelCounter.position().set(24 * TS, bottom + 2);
         } else {
             livesCounter.data().setNumLivesShown(3);
             livesCounter.data().setMaxLivesShown(5);
@@ -266,8 +266,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         // In XXL game variant, the bonus position is stored inside the terrain map
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
-        bonus.pos().set(halfTileRightOf(tile));
-        bonus.setLifetimeSec(rules.edibleBonusDisplaySeconds());
+        bonus.position().set(halfTileRightOf(tile));
+        bonus.setLifetimeInSeconds(rules.edibleBonusDisplaySeconds());
         systems.bonusState().setEdible(bonus);
         bonus.show();
 
@@ -282,7 +282,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Vector2i houseSize = house.sizeInTiles();
         float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        messageView.pos().set(cx, cy);
+        messageView.position().set(cx, cy);
 
         final var style = new MessageViewStyleComp();
         style.setMessageFont(GlobalFonts.ARCADE.font());
@@ -322,7 +322,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         worldMap.foodLayer().energizerTiles().forEach(energizerTile -> {
             final Energizer energizer = new Energizer();
-            energizer.pos().set(energizerTile.scaled(TS).toVector2f());
+            energizer.position().set(energizerTile.scaled(TS).toVector2f());
             energizer.show();
             entities.add(energizer);
         });

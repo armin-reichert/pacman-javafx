@@ -10,7 +10,7 @@ public class MovementSystem {
 
     public void move(GameEntity actor) {
         actor.optMovement().ifPresent(movement -> {
-            actor.pos().add(movement.velocityX(), movement.velocityY());
+            actor.position().add(movement.velocityX(), movement.velocityY());
             movement.addVelocity(movement.accelerationX(), movement.accelerationY());
         });
     }

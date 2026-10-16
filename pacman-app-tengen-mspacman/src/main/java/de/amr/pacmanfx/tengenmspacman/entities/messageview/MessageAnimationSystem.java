@@ -22,7 +22,7 @@ public class MessageAnimationSystem {
         animation.setWrapped(false);
         animation.setFinished(false);
         animation.setRunning(true);
-        messageView.pos().set(startPosition);
+        messageView.position().set(startPosition);
         messageView.show();
     }
 
@@ -39,15 +39,15 @@ public class MessageAnimationSystem {
             return;
         }
         if (animation.wrapped()) {
-            if (messageView.pos().x() >= animation.startPosition().x()) {
+            if (messageView.position().x() >= animation.startPosition().x()) {
                 motor.setVelocity(messageView, 0, 0);
                 animation.setRunning(false);
                 animation.setFinished(true);
                 return;
             }
         }
-        else if (messageView.pos().x() > animation.wrapX()) {
-            messageView.pos().setX(-0.5 * animation.width());
+        else if (messageView.position().x() > animation.wrapX()) {
+            messageView.position().setX(-0.5 * animation.width());
             animation.setWrapped(true);
         }
         motor.setVelocityX(messageView, 1.0f);

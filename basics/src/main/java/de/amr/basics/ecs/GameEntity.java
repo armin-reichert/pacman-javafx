@@ -6,10 +6,10 @@ package de.amr.basics.ecs;
 
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
-import de.amr.basics.ecs.comp.LifetimeComp;
-import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ecs.comp.PositionComp;
-import de.amr.basics.ecs.comp.VisibilityComp;
+import de.amr.basics.ecs.comp.Lifetime;
+import de.amr.basics.ecs.comp.Movement;
+import de.amr.basics.ecs.comp.Position;
+import de.amr.basics.ecs.comp.Visibility;
 import de.amr.basics.timer.TickTimer;
 
 import java.util.Optional;
@@ -29,30 +29,30 @@ public class GameEntity extends Composition<Object> implements Disposable {
 
     public GameEntity() {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
-        setComponent(PositionComp.class, new PositionComp());
-        setComponent(VisibilityComp.class, new VisibilityComp(false));
+        setComponent(Position.class, new Position());
+        setComponent(Visibility.class, new Visibility(false));
     }
 
     // Typed access
 
-    public final PositionComp pos() {
-        return assertComponent(PositionComp.class);
+    public final Position position() {
+        return assertComponent(Position.class);
     }
 
-    public final VisibilityComp visibility() {
-        return assertComponent(VisibilityComp.class);
+    public final Visibility visibility() {
+        return assertComponent(Visibility.class);
     }
 
-    public final Optional<MovementComp> optMovement() {
-        return optComponent(MovementComp.class);
+    public final Optional<Movement> optMovement() {
+        return optComponent(Movement.class);
     }
 
-    public final LifetimeComp lifetime() {
-        return assertComponent(LifetimeComp.class);
+    public final Lifetime lifetime() {
+        return assertComponent(Lifetime.class);
     }
 
-    public void setLifetimeSec(float seconds) {
-        setComponent(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(seconds)));
+    public void setLifetimeInSeconds(float seconds) {
+        setComponent(Lifetime.class, new Lifetime(TickTimer.secToTicks(seconds)));
     }
 
     public final void setName(String name) {

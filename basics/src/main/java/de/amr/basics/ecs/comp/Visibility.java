@@ -6,13 +6,13 @@ package de.amr.basics.ecs.comp;
 
 import de.amr.basics.ecs.Resettable;
 
-public class VisibilityComp implements Resettable {
+public class Visibility implements Resettable {
 
     private final boolean defaultVisibility;
 
     private boolean visible;
 
-    public VisibilityComp(boolean defaultVisibility) {
+    public Visibility(boolean defaultVisibility) {
         this.defaultVisibility = defaultVisibility;
     }
 

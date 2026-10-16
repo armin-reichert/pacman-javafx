@@ -32,12 +32,12 @@ public class HUD {
 
     public HUD(String variantName) {
         creditDisplay.setName("Credits");
-        creditDisplay.pos().set(2 * TS, 36 * TS);
+        creditDisplay.position().set(2 * TS, 36 * TS);
 
-        gameScore.pos().set(TS, TS);
+        gameScore.position().set(TS, TS);
 
         highScore = ScoreSystem.createHighScore(variantName);
-        highScore.pos().set(14 * TS, TS);
+        highScore.position().set(14 * TS, TS);
         highScore.show();
     }
 

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 
 import java.util.Optional;
@@ -24,7 +24,7 @@ public final class Bonus extends GameEntity {
 
     public static Bonus createMovingBonus(int symbolCode) {
         final var bonus = new Bonus(symbolCode);
-        bonus.setComponent(MovementComp.class, new MovementComp());
+        bonus.setComponent(Movement.class, new Movement());
         bonus.setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         bonus.setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
 

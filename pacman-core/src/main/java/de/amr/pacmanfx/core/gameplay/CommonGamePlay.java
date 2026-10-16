@@ -58,7 +58,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entitySet().pac();
 
         pac.reset(); // initially invisible!
-        pac.pos().set(worldMap.terrainLayer().pacStartPosition());
+        pac.position().set(worldMap.terrainLayer().pacStartPosition());
         pac.state().setEnumValue(PacState.SLEEPING);
         systems.pacPower().stopAndReset(pac);
         systems.motor().setVelocity(pac, 0, 0);
@@ -68,7 +68,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
-            ghost.pos().set(ghost.worldInfo().startPosition());
+            ghost.position().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             systems.navigator().setMoveDir(ghost, direction);
             systems.navigator().setWishDir(ghost, direction);
@@ -172,8 +172,8 @@ public abstract class CommonGamePlay implements GamePlay {
         // Spawn Points entity
         final GhostPoints points = new GhostPoints(ghostValue);
         points.show();
-        points.pos().set(ghost.pos().asVector2f());
-        points.setLifetimeSec(rules.eatenGhostDisplaySeconds());
+        points.position().set(ghost.position().asVector2f());
+        points.setLifetimeInSeconds(rules.eatenGhostDisplaySeconds());
         level.entitySet().add(points);
 
         game.eventManager().publishEvent(new GhostEatenEvent(ghost));
@@ -217,8 +217,8 @@ public abstract class CommonGamePlay implements GamePlay {
             game.eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
 
-        gameScore.pos().set(TS, TS);
-        highScore.pos().set(14 * TS, TS);
+        gameScore.position().set(TS, TS);
+        highScore.position().set(14 * TS, TS);
     }
 
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
@@ -282,14 +282,14 @@ public abstract class CommonGamePlay implements GamePlay {
     private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entitySet().pac();
 
-        level.worldMap().terrainLayer().hPortalContainingTile(pac.pos().tile()).ifPresent(hPortal -> {
+        level.worldMap().terrainLayer().hPortalContainingTile(pac.position().tile()).ifPresent(hPortal -> {
             final Direction moveDir = pac.worldNavigation().moveDir();
             if (moveDir == Direction.LEFT) {
                 final float rightmostX = hPortal.rightBorderEntryTile().x() * TS;
-                pac.pos().setX(rightmostX);
+                pac.position().setX(rightmostX);
             } else if (moveDir == Direction.RIGHT) {
                 final float leftmostX = hPortal.leftBorderEntryTile().x() * TS;
-                pac.pos().setX(leftmostX);
+                pac.position().setX(leftmostX);
             }
             Logger.info("Detected Pac-Man collision while teleporting, moved Pac-Man back into world");
         });

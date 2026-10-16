@@ -17,7 +17,7 @@ public class Ghost3DMovementSystem {
     public void update(Ghost ghost) {
         final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
-        final Vector2f center = ghost.pos().bodyCenter();
+        final Vector2f center = ghost.position().bodyCenter();
         final double height = view3D.root().getBoundsInParent().getDepth();
         final int angle = switch (ghost.worldNavigation().wishDir()) {
             case LEFT  -> 0;

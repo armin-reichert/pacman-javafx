@@ -5,7 +5,7 @@
 package de.amr.basics.ui.entities.props.textview;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -15,7 +15,7 @@ public class TextView extends GameEntity {
 
     public TextView() {
         setComponent(TextViewDataComp.class, new TextViewDataComp());
-        setComponent(MovementComp.class, new MovementComp());
+        setComponent(Movement.class, new Movement());
     }
 
     public static TextView create(String text, Color color, Font font, float tileX, float tileY) {
@@ -23,7 +23,7 @@ public class TextView extends GameEntity {
         textDisplay.data().setFillColor(color);
         textDisplay.data().setFont(font);
         textDisplay.data().setText(text);
-        textDisplay.pos().set(tilesPx(tileX), tilesPx(tileY));
+        textDisplay.position().set(tilesPx(tileX), tilesPx(tileY));
         textDisplay.show();
         return textDisplay;
     }
@@ -32,7 +32,7 @@ public class TextView extends GameEntity {
         return assertComponent(TextViewDataComp.class);
     }
 
-    public MovementComp movement() {
-        return assertComponent(MovementComp.class);
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 }

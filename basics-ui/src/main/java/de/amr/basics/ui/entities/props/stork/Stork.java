@@ -5,7 +5,7 @@
 package de.amr.basics.ui.entities.props.stork;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 
 public class Stork extends GameEntity {
@@ -14,12 +14,12 @@ public class Stork extends GameEntity {
 
     public Stork() {
         setName("Beatrix von");
-        setComponent(MovementComp.class, new MovementComp());
+        setComponent(Movement.class, new Movement());
         setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
     }
 
-    public MovementComp movement() {
-        return assertComponent(MovementComp.class);
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 
     public SpriteAnimationComp spriteAnim() {

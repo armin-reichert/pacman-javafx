@@ -27,7 +27,7 @@ public class House3DSystem {
     public void update(House house, GameLevelEntitySet entitySet) {
         final House3DAnimationComp animation = house.assertComponent(House3DAnimationComp.class);
         boolean accessRequested = entitySet.ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
-            .filter(ghost -> house.isDoorAt(ghost.pos().tile()))
+            .filter(ghost -> house.isDoorAt(ghost.position().tile()))
             .anyMatch(GameEntity::isVisible);
         if (accessRequested) {
             if (!animation.doorsMeltingAnimation().isRunning()) {
@@ -48,7 +48,7 @@ public class House3DSystem {
     private boolean ghostIsNearHouseDoor(House house, Ghost ghost) {
         final House3DViewComp view3D = house.assertComponent(House3DViewComp.class);
         final Vector2f houseEntryPos = house.floorplan().entryPosition();
-        return ghost.pos().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
+        return ghost.position().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
     }
 
     private void playDoorsMeltingAnimation(House house) {

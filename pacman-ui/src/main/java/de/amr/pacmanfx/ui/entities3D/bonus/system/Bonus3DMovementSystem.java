@@ -16,7 +16,7 @@ class Bonus3DMovementSystem {
         if (!bonus.hasComponent(BonusView3D.class)) return;
 
         final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
-        final Vector2f center = bonus.pos().bodyCenter();
+        final Vector2f center = bonus.position().bodyCenter();
 
         view3D.translate().setX(center.x());
         view3D.translate().setY(center.y());

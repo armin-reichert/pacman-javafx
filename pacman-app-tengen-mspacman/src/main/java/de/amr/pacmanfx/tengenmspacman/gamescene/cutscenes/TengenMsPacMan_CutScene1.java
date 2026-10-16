@@ -112,22 +112,22 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void getReady(WorldNavigationSystem navigator) {
-        clapperboard.pos().set(3 * TS, 10 * TS);
+        clapperboard.position().set(3 * TS, 10 * TS);
 
-        msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
+        msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
-        pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
+        pacMan.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
 
-        inky.pos().set(LEFT_BORDER, UPPER_LANE);
+        inky.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(inky, Direction.RIGHT);
         navigator.setWishDir(inky, Direction.RIGHT);
         navigator.setSpeed(inky, 0);
 
-        pinky.pos().set(RIGHT_BORDER, LOWER_LANE);
+        pinky.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(pinky, Direction.LEFT);
         navigator.setWishDir(pinky, Direction.LEFT);
         navigator.setSpeed(pinky, 0);
@@ -146,11 +146,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     private void letActorsMove(GameContext game) {
         List.of(pacMan, msPacMan, inky, pinky).forEach(game.playConfig().systems().motor()::move);
         if (collided) {
-            if (inky.pos().y() > MIDDLE_LANE) {
-                inky.pos().setY(MIDDLE_LANE);
+            if (inky.position().y() > MIDDLE_LANE) {
+                inky.position().setY(MIDDLE_LANE);
             }
-            if (pinky.pos().y() > MIDDLE_LANE) {
-                pinky.pos().setY(MIDDLE_LANE);
+            if (pinky.position().y() > MIDDLE_LANE) {
+                pinky.position().setY(MIDDLE_LANE);
             }
         }
     }
@@ -184,17 +184,17 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             animSystem.playSelected(pinky);
         }
         else if (tick == 400) {
-            msPacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
+            msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-            pacMan.pos().set(RIGHT_BORDER, MIDDLE_LANE);
+            pacMan.position().set(RIGHT_BORDER, MIDDLE_LANE);
             navigator.setMoveDir(pacMan, Direction.LEFT);
 
-            pinky.pos().set(msPacMan.pos().x() - TS * 11, msPacMan.pos().y());
+            pinky.position().set(msPacMan.position().x() - TS * 11, msPacMan.position().y());
             navigator.setMoveDir(pinky, Direction.RIGHT);
             navigator.setWishDir(pinky, Direction.RIGHT);
 
-            inky.pos().set(pacMan.pos().x() + TS * 11, pacMan.pos().y());
+            inky.position().set(pacMan.position().x() + TS * 11, pacMan.position().y());
             navigator.setMoveDir(inky, Direction.LEFT);
             navigator.setWishDir(inky, Direction.LEFT);
         }
@@ -235,7 +235,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             animSystem.resetSelected(msPacMan);
         }
         else if (tick == 560) {
-            heart.pos().set(0.5f * (pacMan.pos().x() + msPacMan.pos().x()), pacMan.pos().y() - tilesPx(2));
+            heart.position().set(0.5f * (pacMan.position().x() + msPacMan.position().x()), pacMan.position().y() - tilesPx(2));
             heart.show();
         }
         else if (tick == 760) {

@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.props.marquee;
 
-import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.comp.Position;
 
 public class MarqueeLayoutComp {
 
@@ -18,7 +18,7 @@ public class MarqueeLayoutComp {
     public MarqueeLayoutComp() {
     }
 
-    public MarqueeArea computeArea(PositionComp pos) {
+    public MarqueeArea computeArea(Position pos) {
         return new MarqueeArea(pos.x(), pos.y(), pos.x() + (numBulbsHorizontally - 1) * bulbSize, pos.y() + (numBulbsVertically - 1) * bulbSize);
     }
 

@@ -32,11 +32,11 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         final WorldMap worldMap = level.worldMap();
         final HUD hud = game.session().hud();
 
-        hud.levelCounter().pos().set(
+        hud.levelCounter().position().set(
             (worldMap.numCols() - 4) * TS,
             (worldMap.numRows() - 2) * TS + 2);
 
-        hud.livesCounter().pos().set(
+        hud.livesCounter().position().set(
             2 * TS,
             (worldMap.numRows() - 2) * TS
         );

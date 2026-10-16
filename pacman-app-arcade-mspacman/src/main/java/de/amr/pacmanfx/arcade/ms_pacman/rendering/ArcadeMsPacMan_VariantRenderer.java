@@ -119,7 +119,7 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
         if (!gameEntity.isVisible()) return;
 
         ctx.save();
-        final Vector2f center = gameEntity.pos().bodyCenter();
+        final Vector2f center = gameEntity.position().bodyCenter();
         switch (gameEntity) {
             case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);
             case Ghost ghost               -> drawSpriteCentered(computeSprite(ghost),  center);
@@ -214,15 +214,15 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
-            drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
+            drawSpriteCentered(sprite, clapperboard.position().bodyCenter());
 
             final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
             // Draw number and title
             final String number = clapperboard.inscription().number();
             final String text = clapperboard.inscription().text();
-            final double numberX = scaled(clapperboard.pos().x() + sprite.width() - 25);
-            final double textX = scaled(clapperboard.pos().x() + sprite.width());
-            final double y = scaled(clapperboard.pos().y() + 18);
+            final double numberX = scaled(clapperboard.position().x() + sprite.width() - 25);
+            final double textX = scaled(clapperboard.position().x() + sprite.width());
+            final double y = scaled(clapperboard.position().y() + 18);
             ctx.setFont(arcade8);
             ctx.setFill(ArcadeColor.WHITE.color());
             ctx.fillText(number, numberX, y);
@@ -248,8 +248,8 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawScoreText(Score score, String title, Font font, Color color) {
-        final float x = score.pos().x();
-        final float y = score.pos().y();
+        final float x = score.position().x();
+        final float y = score.position().y();
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
         if (score.data().points() != 0) {
@@ -259,8 +259,8 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private void drawLivesCounter(LivesCounter livesCounter) {
         final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
-        final float x = livesCounter.pos().x();
-        final float y = livesCounter.pos().y();
+        final float x = livesCounter.position().x();
+        final float y = livesCounter.position().y();
 
         final int numLives = livesCounter.data().numLives();
 
@@ -277,8 +277,8 @@ public class ArcadeMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private void drawLevelCounter(LevelCounter levelCounter) {
         final HUDStyleComp style = levelCounter.assertComponent(HUDStyleComp.class);
-        final float y = levelCounter.pos().y();
-        float x = levelCounter.pos().x();
+        final float y = levelCounter.position().y();
+        float x = levelCounter.position().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left

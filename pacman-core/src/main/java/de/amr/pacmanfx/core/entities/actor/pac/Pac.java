@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.pac;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.actor.SteeringComp;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
@@ -23,7 +23,7 @@ public final class Pac extends GameEntity {
     public Pac(String name, boolean male) {
         this.name = requireNonNull(name);
 
-        setComponent(MovementComp.class, new MovementComp());
+        setComponent(Movement.class, new Movement());
         setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         setComponent(SteeringComp.class, new SteeringComp<Pac>());
         setComponent(PacDigestionComp.class, new PacDigestionComp());
@@ -34,8 +34,8 @@ public final class Pac extends GameEntity {
         setComponent(PacAnimationComp.class, new PacAnimationComp());
     }
 
-    public MovementComp movement() {
-        return assertComponent(MovementComp.class);
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 
     public WorldNavigationComp worldNavigation() {
@@ -78,7 +78,7 @@ public final class Pac extends GameEntity {
             "name=" + name +
             ", state=" + state() +
             ", visible=" + visibility() +
-            ", position=" + pos() +
+            ", position=" + position() +
             ", movement=" + movement() +
             ", worldNavigation=" + worldNavigation() +
             ", digestion=" + digestion() +

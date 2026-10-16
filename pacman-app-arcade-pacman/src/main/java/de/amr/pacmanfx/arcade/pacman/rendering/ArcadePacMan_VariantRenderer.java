@@ -106,7 +106,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
 
         ctx.save();
         ctx.setImageSmoothing(true);
-        final Vector2f center = gameEntity.pos().bodyCenter();
+        final Vector2f center = gameEntity.position().bodyCenter();
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
@@ -176,8 +176,8 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void drawScoreText(Score score, String title, Font font, Color color) {
-        final float x = score.pos().x();
-        final float y = score.pos().y();
+        final float x = score.position().x();
+        final float y = score.position().y();
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
         if (score.data().points() != 0) {
@@ -190,15 +190,15 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
             final double size = scaled(9);
             ctx.save();
             ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.fillRect(scaled(energizer.position().x() - 0.5), scaled(energizer.position().y() - 0.5), size, size);
             ctx.restore();
         }
     }
 
     private void draw(LivesCounter livesCounter) {
         final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
-        final float x = livesCounter.pos().x();
-        final float y = livesCounter.pos().y();
+        final float x = livesCounter.position().x();
+        final float y = livesCounter.position().y();
 
         final int numLives = livesCounter.data().numLives();
 
@@ -215,8 +215,8 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
 
     private void draw(LevelCounter levelCounter) {
         final HUDStyleComp style = levelCounter.assertComponent(HUDStyleComp.class);
-        final float y = levelCounter.pos().y();
-        float x = levelCounter.pos().x();
+        final float y = levelCounter.position().y();
+        float x = levelCounter.position().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
@@ -224,7 +224,7 @@ public class ArcadePacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(NailDressRapturing nailDressRapturing) {
-        drawSprite(animController.currentSprite(nailDressRapturing), nailDressRapturing.pos().x(), nailDressRapturing.pos().y(), true);
+        drawSprite(animController.currentSprite(nailDressRapturing), nailDressRapturing.position().x(), nailDressRapturing.position().y(), true);
     }
 
     private void renderHexCodeBlock(HexDigitsBlock block) {

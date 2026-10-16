@@ -47,8 +47,8 @@ public class GameEntityRenderer extends BaseRenderer {
         if (imageView.isVisible()) {
             final Image imageFX = imageView.image().image();
             final double s = scaling();
-            final double x = imageView.pos().x();
-            final double y = imageView.pos().y();
+            final double x = imageView.position().x();
+            final double y = imageView.position().y();
             ctx.save();
             ctx.scale(s, s);
             ctx.setImageSmoothing(imageView.image().smoothing());
@@ -61,7 +61,7 @@ public class GameEntityRenderer extends BaseRenderer {
         if (!textView.isVisible()) {
             return;
         }
-        final var pos = textView.pos();
+        final var pos = textView.position();
         final var data = textView.data();
 
         final Font scaledFont = Ufx.scaleFontBy(data.font(), scaling());
@@ -80,7 +80,7 @@ public class GameEntityRenderer extends BaseRenderer {
             fillTextCentered(
                 messageView.texts().texts().get(messageType),
                 color, scaledFont,
-                messageView.pos().x(), messageView.pos().y()
+                messageView.position().x(), messageView.position().y()
             );
         });
     }

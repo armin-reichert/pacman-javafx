@@ -21,6 +21,6 @@ public class ArcadeMsPacMan_ShadowHuntingStrategy extends ArcadeMsPacMan_Randomi
 
     @Override
     protected Vector2i computeChasingTargetTile(GameLevel level) {
-        return level.entitySet().pac().pos().tile();
+        return level.entitySet().pac().position().tile();
     }
 }

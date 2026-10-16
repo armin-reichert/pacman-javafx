@@ -41,7 +41,7 @@ public class MarqueeRenderer extends BaseRenderer {
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeColorsComp visualComp = marquee.colors();
 
-        final MarqueeArea area = layout.computeArea(marquee.pos());
+        final MarqueeArea area = layout.computeArea(marquee.position());
         final MarqueeCorners corners = layout.corners();
 
         final int numBulbs = layout.numBulbs();

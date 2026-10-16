@@ -36,7 +36,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy<Ghost> {
         }
 
         final GhostWorldInfoComp worldInfo = ghost.assertComponent(GhostWorldInfoComp.class);
-        final Vector2i myTile = ghost.pos().tile();
+        final Vector2i myTile = ghost.position().tile();
 
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here

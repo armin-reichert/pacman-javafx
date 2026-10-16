@@ -91,7 +91,7 @@ public class IntroSceneView {
     }
 
     public void placeMarqueeText2(float x, float y) {
-        marqueeTextView2.pos().set(x, y);
+        marqueeTextView2.position().set(x, y);
     }
 
     private void createTitleText() {
@@ -99,13 +99,13 @@ public class IntroSceneView {
         titleTextView.data().setText(MARQUEE_TITLE);
         titleTextView.data().setFillColor(ArcadeColor.ORANGE.color());
         titleTextView.data().setFont(GlobalFonts.ARCADE.font(8));
-        titleTextView.pos().set(TITLE_X, TITLE_Y);
+        titleTextView.position().set(TITLE_X, TITLE_Y);
         titleTextView.show();
     }
 
     private void createMarquee() {
         marquee = new Marquee();
-        marquee.pos().set(60, 88);
+        marquee.position().set(60, 88);
         marquee.show();
 
         marquee.layout().setNumBulbsHorizontally(34);
@@ -119,7 +119,7 @@ public class IntroSceneView {
 
         marqueeTextView1 = new TextView();
         marqueeTextView1.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeTextView1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
+        marqueeTextView1.position().set(TITLE_X, TOP_Y + tilesPx(3));
 
         marqueeTextView2 = new TextView();
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
@@ -130,7 +130,7 @@ public class IntroSceneView {
 
         copyrightImageView = new ImageView();
         copyrightImageView.show();
-        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImageView.position().set(tilesPx(6), tilesPx(28));
         copyrightImageView.image().setImage(assets.image("logo.midway"));
 
         copyrightTexts.add(create("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
@@ -147,7 +147,7 @@ public class IntroSceneView {
         final WorldNavigationSystem nav = systems.navigator();
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.pos().set(PAC_START_POS);
+        msPacMan.position().set(PAC_START_POS);
         nav.setMoveDir(msPacMan, Direction.LEFT);
         nav.setSpeed(msPacMan, ACTOR_SPEED);
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
@@ -161,7 +161,7 @@ public class IntroSceneView {
         );
 
         for (Ghost ghost : ghosts) {
-            ghost.pos().set(GHOST_START_POS);
+            ghost.position().set(GHOST_START_POS);
             nav.setMoveDir(ghost, Direction.LEFT);
             nav.setWishDir(ghost, Direction.LEFT);
             nav.setSpeed(ghost, ACTOR_SPEED);

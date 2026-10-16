@@ -89,13 +89,13 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case   7 -> fillCanvasGray(true);
             case  12 -> fillCanvasGray(false);
             case  21 -> {
-                tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, view2D().unscaledHeight()); // lower border of screen
+                tengenPresentsTextView.position().set(NES_SCREEN_WIDTH / 2.0, view2D().unscaledHeight()); // lower border of screen
                 tengenPresentsTextView.show();
                 systems.motor().setVelocity(tengenPresentsTextView, 0, -HTS);
             }
             case  55 -> systems.motor().setVelocity(tengenPresentsTextView, 0, 0);
             case 113 -> {
-                ghost.pos().set(view2D().unscaledWidth() - TS, GHOST_Y);
+                ghost.position().set(view2D().unscaledWidth() - TS, GHOST_Y);
                 ghost.show();
                 systems.navigator().setMoveDir(ghost, Direction.LEFT);
                 systems.navigator().setWishDir(ghost, Direction.LEFT);

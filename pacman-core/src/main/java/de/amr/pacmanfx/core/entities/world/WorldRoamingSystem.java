@@ -39,7 +39,7 @@ public class WorldRoamingSystem {
         WorldMovementPolicy<E> worldMovementPolicy,
         float speed)
     {
-        final Vector2i tile = actor.pos().tile();
+        final Vector2i tile = actor.position().tile();
         final boolean inPortalSpace = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         // Compute a random direction whenever a new tile has been entered or in a dead-end.

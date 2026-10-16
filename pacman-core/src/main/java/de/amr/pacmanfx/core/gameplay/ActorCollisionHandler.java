@@ -66,7 +66,7 @@ public class ActorCollisionHandler {
 
     public void detectFoodCollision(GameLevel level) {
         final Pac pac = level.entitySet().pac();
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         if (level.food().hasFoodAtTile(pacTile)) {
             frameState.setFoodFoundTile(pacTile);
             frameState.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));

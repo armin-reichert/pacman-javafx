@@ -91,7 +91,7 @@ public class FrameState {
     public List<String> asText() {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
-            final Vector2i ghostTile = ghost.pos().tile();
+            final Vector2i ghostTile = ghost.position().tile();
             lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.state().enumValue()));
         }
         if (energizerFound()) {
@@ -101,7 +101,7 @@ public class FrameState {
             lines.add("Bonus eaten: " + edibleBonus());
         }
         for (Ghost ghost : ghostsKilled()) {
-            final Vector2i ghostTile = ghost.pos().tile();
+            final Vector2i ghostTile = ghost.position().tile();
             lines.add("%s killed at %s".formatted(ghost.name(), ghostTile));
         }
         return lines;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 
 public class Bag extends GameEntity {
@@ -13,12 +13,12 @@ public class Bag extends GameEntity {
 
     public Bag() {
         setName("Birkin");
-        setComponent(MovementComp.class, new MovementComp());
+        setComponent(Movement.class, new Movement());
         setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
     }
 
-    public MovementComp movement() {
-        return assertComponent(MovementComp.class);
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 
     public SpriteAnimationComp spriteAnim() {

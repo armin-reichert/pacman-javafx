@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.pos().set(3 * TS, 10 * TS);
+        clapperboard.position().set(3 * TS, 10 * TS);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -139,8 +139,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         motor.move(stork);
         if (!bag.isOpen()) {
             motor.move(bag);
-            if (bag.pos().y() > GROUND_Y) {
-                bag.pos().setY(GROUND_Y);
+            if (bag.position().y() > GROUND_Y) {
+                bag.position().setY(GROUND_Y);
                 motor.setVelocity(bag,
                     0.9f * bag.movement().velocityX(),
                     -0.3f * bag.movement().velocityY()
@@ -159,7 +159,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         
         if (tick == 130) {
             pacMan.show();
-            pacMan.pos().set(TS * 3, GROUND_Y - 4);
+            pacMan.position().set(TS * 3, GROUND_Y - 4);
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
             navigator.setSpeed(pacMan, 0);
@@ -167,7 +167,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.stopSelected(pacMan);
 
-            msPacMan.pos().set(TS * 5, GROUND_Y - 4);
+            msPacMan.position().set(TS * 5, GROUND_Y - 4);
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
@@ -177,7 +177,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             animSystem.stopSelected(msPacMan);
 
             stork.show();
-            stork.pos().set(RIGHT_BORDER, TS * 7);
+            stork.position().set(RIGHT_BORDER, TS * 7);
             motor.setVelocity(stork, -0.8f, 0);
 
             animSystem.select(stork, CommonSpriteAnimationID.STORK_FLYING);
@@ -192,7 +192,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             stork.setBagReleasedFromBeak(true);
 
             bag.show();
-            bag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
+            bag.position().set(stork.position().x() - 15, stork.position().y() + 8);
             motor.setVelocity(bag, -0.5f, 0);
             motor.setAcceleration(bag, 0, 0.1f);
         }

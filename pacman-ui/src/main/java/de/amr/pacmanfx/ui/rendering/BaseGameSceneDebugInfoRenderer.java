@@ -119,7 +119,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx.setFont(debugTextFont);
             ctx.setFill(debugTextFill);
-            ctx.fillText(text, scaled(pac.pos().x() - 4), scaled(pac.pos().y() + 16));
+            ctx.fillText(text, scaled(pac.position().x() - 4), scaled(pac.position().y() + 16));
         }
 
         actor.optComponent(SpriteAnimationComp.class).ifPresent(_ -> {
@@ -130,7 +130,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
         actor.optComponent(WorldNavigationComp.class).ifPresent(navigation -> drawDirectionIndicator(actor, navigation));
 
-        final Rectangle2D boundingBox = PositionSystem.boundingBox(actor.pos().asVector2f());
+        final Rectangle2D boundingBox = PositionSystem.boundingBox(actor.position().asVector2f());
         ctx.save();
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
@@ -183,7 +183,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         final int height = 16;
         final int actorOffsetX = -40;
         final int actorOffsetY = -30;
-        final Vector2f center = actor.pos().bodyCenter();
+        final Vector2f center = actor.position().bodyCenter();
 
         final AnimationInfo info = switch (actor) {
             case Pac pac -> animationInfo(pac, animController);
@@ -217,7 +217,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         if (navigation.wishDir() == null) return;
 
         ctx.save();
-        Vector2f center = actor.pos().bodyCenter();
+        Vector2f center = actor.position().bodyCenter();
         Vector2f arrowHead = center.plus(navigation.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;

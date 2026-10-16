@@ -34,7 +34,7 @@ public class GhostStateSystem {
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
                 if (ghost.houseAccess().isUnlockRequested()) {
-                    final boolean insideHouse = ghost.worldInfo().house().contains(ghost.pos().tile());
+                    final boolean insideHouse = ghost.worldInfo().house().contains(ghost.position().tile());
                     if (insideHouse) {
                         setState(ghost, GhostState.LEAVING_HOUSE);
                     }

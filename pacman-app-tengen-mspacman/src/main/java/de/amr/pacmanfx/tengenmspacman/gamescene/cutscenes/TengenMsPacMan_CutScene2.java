@@ -85,7 +85,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
-            clapperboard.pos().set(3 * TS, 10 * TS);
+            clapperboard.position().set(3 * TS, 10 * TS);
             ClapperboardStateSystem.init(clapperboard);
             playMusic();
         }
@@ -112,7 +112,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         letActorsMove(game);
 
             if (tick == 270) {
-                msPacMan.pos().set(LEFT_BORDER, UPPER_LANE);
+                msPacMan.position().set(LEFT_BORDER, UPPER_LANE);
                 msPacMan.show();
 
                 navigator.setSpeed(msPacMan, 2.0f);
@@ -122,7 +122,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
                 animSystem.playSelected(msPacMan);
             }
             else if (tick == 320) {
-                pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
+                pacMan.position().set(LEFT_BORDER, UPPER_LANE);
                 pacMan.show();
 
                 navigator.setSpeed(pacMan, 2.0f);
@@ -132,42 +132,42 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
                 animSystem.playSelected(pacMan);
             }
             else if (tick == 520) {
-                pacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
+                pacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                 navigator.setMoveDir(pacMan, Direction.LEFT);
                 navigator.setSpeed(pacMan, 2.0f);
             }
             else if (tick == 570) {
-                msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
+                msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                 navigator.setMoveDir(msPacMan, Direction.LEFT);
                 navigator.setSpeed(msPacMan, 2.0f);
             }
             else if (tick == 780) {
-                msPacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
+                msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
                 navigator.setMoveDir(msPacMan, Direction.RIGHT);
                 navigator.setSpeed(msPacMan, 2.0f);
             }
             else if (tick == 830) {
-                pacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
+                pacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
                 navigator.setMoveDir(pacMan, Direction.RIGHT);
                 navigator.setSpeed(pacMan, 2.0f);
             }
             else if (tick == 1040) {
-                pacMan.pos().set(RIGHT_BORDER, UPPER_LANE);
+                pacMan.position().set(RIGHT_BORDER, UPPER_LANE);
                 navigator.setMoveDir(pacMan, Direction.LEFT);
                 navigator.setSpeed(pacMan, 4.0f); //TODO correct?
             }
             else if (tick == 1055) {
-                msPacMan.pos().set(RIGHT_BORDER, UPPER_LANE);
+                msPacMan.position().set(RIGHT_BORDER, UPPER_LANE);
                 navigator.setMoveDir(msPacMan, Direction.LEFT);
                 navigator.setSpeed(msPacMan, 4.0f);
             }
             else if (tick == 105) {
-                msPacMan.pos().set(LEFT_BORDER, LOWER_LANE);
+                msPacMan.position().set(LEFT_BORDER, LOWER_LANE);
                 navigator.setMoveDir(msPacMan, Direction.RIGHT);
                 navigator.setSpeed(msPacMan, 4.0f);
             }
             else if (tick == 1120) {
-                pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
+                pacMan.position().set(LEFT_BORDER, LOWER_LANE);
                 navigator.setMoveDir(pacMan, Direction.RIGHT);
                 navigator.setSpeed(pacMan, 4.0f);
             }

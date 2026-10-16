@@ -25,7 +25,7 @@ public class House extends GameEntity {
         door = new Door();
         door.assertComponent(DoorDataComp.class).setLeftTile(floorplan.leftDoorTile());
         door.assertComponent(DoorDataComp.class).setRightTile(floorplan.rightDoorTile());
-        door.pos().set(doorPos);
+        door.position().set(doorPos);
         door.show();
     }
 
@@ -73,7 +73,7 @@ public class House extends GameEntity {
      */
     public boolean isVisitedBy(GameEntity actor) {
         requireNonNull(actor);
-        final Vector2i actorTile = actor.pos().tile();
+        final Vector2i actorTile = actor.position().tile();
         return contains(actorTile);
     }
 

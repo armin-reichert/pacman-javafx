@@ -91,7 +91,7 @@ public class IntroSceneView {
 
         pellet = new ImageView();
         pellet.image().setImage(pelletImage);
-        pellet.pos().set(tilesPx(10) + HTS, tilesPx(24) + HTS);
+        pellet.position().set(tilesPx(10) + HTS, tilesPx(24) + HTS);
 
         text10 = new TextView();
         text10Pts = new TextView();
@@ -110,7 +110,7 @@ public class IntroSceneView {
         final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
         pointsEnergizer = new ImageView();
         pointsEnergizer.image().setImage(energizerImage);
-        pointsEnergizer.pos().set(tilesPx(LEFT_TILE_X + 6), tilesPx(26));
+        pointsEnergizer.position().set(tilesPx(LEFT_TILE_X + 6), tilesPx(26));
     }
 
     public void createAndShowTargetEnergizer() {
@@ -118,7 +118,7 @@ public class IntroSceneView {
         final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
         targetEnergizer = new ImageView();
         targetEnergizer.image().setImage(energizerImage);
-        targetEnergizer.pos().set(TARGET_ENERGIZER_CENTER_X, TARGET_ENERGIZER_CENTER_Y);
+        targetEnergizer.position().set(TARGET_ENERGIZER_CENTER_X, TARGET_ENERGIZER_CENTER_Y);
     }
 
     public void removeTargetEnergizer() {
@@ -199,7 +199,7 @@ public class IntroSceneView {
         titleTextView.data().setText(TITLE_TEXT);
         titleTextView.data().setFillColor(ArcadeColor.WHITE.color());
         titleTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
-        titleTextView.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+        titleTextView.position().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
     }
 
     private void initGhostGallery() {
@@ -213,19 +213,19 @@ public class IntroSceneView {
             final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
             imageView.image().setImage(spriteSheet.createImage(sprite));
             imageView.image().setSmoothing(true);
-            imageView.pos().set(TS * 4, y + offsetY - 1.5f * TS);
+            imageView.position().set(TS * 4, y + offsetY - 1.5f * TS);
 
             final TextView characterDisplay = ghostCharacterDisplays[i];
             characterDisplay.data().setText(GHOST_CHARACTERS[i]);
             characterDisplay.data().setFillColor(GHOST_COLORS[i].color());
             characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-            characterDisplay.pos().set(TS * 7, y + offsetY);
+            characterDisplay.position().set(TS * 7, y + offsetY);
 
             final TextView nicknameDisplay = ghostNicknameDisplays[i];
             nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
             nicknameDisplay.data().setFillColor(GHOST_COLORS[i].color());
             nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-            nicknameDisplay.pos().set(TS * 18, y + offsetY);
+            nicknameDisplay.position().set(TS * 18, y + offsetY);
         }
     }
 
@@ -233,28 +233,28 @@ public class IntroSceneView {
         text10.data().setText("10");
         text10.data().setFillColor(ArcadeColor.WHITE.color());
         text10.data().setFont(GlobalFonts.ARCADE.font(TS));
-        text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
+        text10.position().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
 
         text10Pts.data().setText("PTS");
         text10Pts.data().setFillColor(ArcadeColor.WHITE.color());
         text10Pts.data().setFont(GlobalFonts.ARCADE.font(6));
-        text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
+        text10Pts.position().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
 
         text50.data().setText("50");
         text50.data().setFillColor(ArcadeColor.WHITE.color());
         text50.data().setFont(GlobalFonts.ARCADE.font(TS));
-        text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
+        text50.position().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
 
         text50Pts.data().setText("PTS");
         text50Pts.data().setFillColor(ArcadeColor.WHITE.color());
         text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
-        text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
+        text50Pts.position().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
 
     private void initCopyrightText() {
         copyrightText.data().setText(MIDWAY_MFG_CO);
         copyrightText.data().setFillColor(ArcadeColor.PINK.color());
         copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
-        copyrightText.pos().set(tilesPx(4), tilesPx(32));
+        copyrightText.position().set(tilesPx(4), tilesPx(32));
     }
 }

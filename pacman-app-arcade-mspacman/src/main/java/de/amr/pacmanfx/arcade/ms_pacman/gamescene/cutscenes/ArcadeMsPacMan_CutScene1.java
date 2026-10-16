@@ -105,7 +105,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         heart = new Heart();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
-        clapperboard.pos().set(tilesPx(3), tilesPx(10));
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
 
         clapperboardSystem.startFlapAnimation(clapperboard);
     }
@@ -140,7 +140,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
         // Pac-Man
-        pacMan.pos().set(TS * (-2), UPPER_Y);
+        pacMan.position().set(TS * (-2), UPPER_Y);
         pacMan.show();
 
         nav.setMoveDir(pacMan, Direction.RIGHT);
@@ -151,7 +151,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
         // Inky
 
-        inky.pos().set(pacMan.pos().x() - 6 * TS, pacMan.pos().y());
+        inky.position().set(pacMan.position().x() - 6 * TS, pacMan.position().y());
         inky.show();
 
         nav.setSpeed(inky, SPEED_GHOST_CHASING);
@@ -162,7 +162,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         animController.playSelected(inky);
 
         // Ms. Pac-Man
-        msPacMan.pos().set(TS * 30, LOWER_Y);
+        msPacMan.position().set(TS * 30, LOWER_Y);
         msPacMan.show();
 
         nav.setMoveDir(msPacMan, Direction.LEFT);
@@ -173,7 +173,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
         // Pinky
 
-        pinky.pos().set(msPacMan.pos().x() + 6 * TS, msPacMan.pos().y());
+        pinky.position().set(msPacMan.position().x() + 6 * TS, msPacMan.position().y());
         pinky.show();
 
         nav.setMoveDir(pinky, Direction.LEFT);
@@ -185,7 +185,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void updateStateChasedByGhosts(GameSystems systems) {
-        if (inky.pos().x() > TS * 30) {
+        if (inky.position().x() > TS * 30) {
             enterStateComingTogether(systems);
         }
         else {
@@ -199,17 +199,17 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
         final WorldNavigationSystem nav = systems.navigator();
 
-        msPacMan.pos().set(TS * (-3), MIDDLE_Y);
+        msPacMan.position().set(TS * (-3), MIDDLE_Y);
         nav.setMoveDir(msPacMan, Direction.RIGHT);
 
-        pinky.pos().set(msPacMan.pos().x() - 5 * TS, msPacMan.pos().y());
+        pinky.position().set(msPacMan.position().x() - 5 * TS, msPacMan.position().y());
         nav.setMoveDir(pinky, Direction.RIGHT);
         nav.setWishDir(pinky, Direction.RIGHT);
 
-        pacMan.pos().set(TS * 31, MIDDLE_Y);
+        pacMan.position().set(TS * 31, MIDDLE_Y);
         nav.setMoveDir(pacMan, Direction.LEFT);
 
-        inky.pos().set(pacMan.pos().x() + 5 * TS, pacMan.pos().y());
+        inky.position().set(pacMan.position().x() + 5 * TS, pacMan.position().y());
         nav.setMoveDir(inky, Direction.LEFT);
         nav.setWishDir(inky, Direction.LEFT);
 
@@ -220,12 +220,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         final WorldNavigationSystem nav = systems.navigator();
 
         // Pac-Man and Ms. Pac-Man reach end position?
-        if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.pos().y() < UPPER_Y) {
+        if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.position().y() < UPPER_Y) {
             enterStateInHeaven(systems);
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.pos().x() - msPacMan.pos().x() < TS * 2) {
+        else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.position().x() - msPacMan.position().x() < TS * 2) {
             nav.setMoveDir(pacMan, Direction.UP);
             nav.setSpeed(pacMan, SPEED_RISING);
             nav.setMoveDir(msPacMan, Direction.UP);
@@ -233,7 +233,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         }
 
         // Inky and Pinky collide?
-        else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.pos().x() - pinky.pos().x() < TS * 2) {
+        else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.position().x() - pinky.position().x() < TS * 2) {
             nav.setMoveDir(inky, Direction.RIGHT);
             nav.setWishDir(inky, Direction.RIGHT);
             nav.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
@@ -253,12 +253,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
             List.of(pacMan, msPacMan, inky, pinky).forEach(systems.motor()::move);
 
             // Collision with ground?
-            if (inky.pos().y() > MIDDLE_Y) {
-                inky.pos().setY(MIDDLE_Y);
+            if (inky.position().y() > MIDDLE_Y) {
+                inky.position().setY(MIDDLE_Y);
                 inky.movement().setAcceleration(0, 0);
             }
-            if (pinky.pos().y() > MIDDLE_Y) {
-                pinky.pos().setY(MIDDLE_Y);
+            if (pinky.position().y() > MIDDLE_Y) {
+                pinky.position().setY(MIDDLE_Y);
                 pinky.movement().setAcceleration(0, 0);
             }
         }
@@ -286,7 +286,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         inky.hide();
         pinky.hide();
 
-        heart.pos().set((pacMan.pos().x() + msPacMan.pos().x()) * 0.5f, pacMan.pos().y() - TS * 2);
+        heart.position().set((pacMan.position().x() + msPacMan.position().x()) * 0.5f, pacMan.position().y() - TS * 2);
         heart.show();
     }
 

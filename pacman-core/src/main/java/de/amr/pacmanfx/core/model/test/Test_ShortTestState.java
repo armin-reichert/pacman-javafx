@@ -111,8 +111,8 @@ public class Test_ShortTestState extends AbstractGameState {
 
         // Eaten bonus is displayed as points for short time
         final var points = new BonusPoints(bonusValue);
-        points.pos().set(bonus.pos().asVector2f());
-        points.setLifetimeSec(rules.eatenBonusDisplaySeconds());
+        points.position().set(bonus.position().asVector2f());
+        points.setLifetimeInSeconds(rules.eatenBonusDisplaySeconds());
         points.show();
         level.entitySet().add(points);
 

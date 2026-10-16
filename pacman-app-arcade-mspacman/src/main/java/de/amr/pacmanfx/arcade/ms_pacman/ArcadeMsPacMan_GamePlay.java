@@ -59,8 +59,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         if (level != null) {
             levelCounter.data().setEnabled(level.number() < 8);
             final int bottom = (level.worldMap().numRows() - 2) * TS;
-            livesCounter.pos().set(2 * TS, bottom);
-            levelCounter.pos().set(24 * TS, bottom);
+            livesCounter.position().set(2 * TS, bottom);
+            levelCounter.position().set(24 * TS, bottom);
         } else {
             livesCounter.data().setNumLivesShown(3);
             livesCounter.data().setMaxLivesShown(5);
@@ -161,8 +161,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Bonus bonus = Bonus.createStaticBonus(symbolCode);
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-        bonus.pos().set(halfTileRightOf(bonusTile));
-        bonus.setLifetimeSec(lifetimeSec);
+        bonus.position().set(halfTileRightOf(bonusTile));
+        bonus.setLifetimeInSeconds(lifetimeSec);
         return bonus;
     }
 

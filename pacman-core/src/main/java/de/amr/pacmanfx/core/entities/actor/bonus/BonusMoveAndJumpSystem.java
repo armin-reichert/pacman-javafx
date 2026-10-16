@@ -66,7 +66,7 @@ public class BonusMoveAndJumpSystem {
 
         moveAndJump.routeNavigation().steer(bonus, level);
 
-        final Vector2i tile = bonus.pos().tile();
+        final Vector2i tile = bonus.position().tile();
         final boolean exitPortalReached = moveAndJump.routeNavigation().isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
@@ -88,7 +88,7 @@ public class BonusMoveAndJumpSystem {
         if (pulse.isTriggered()) {
             float jumpDelta = worldNavigation.moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = pulse.state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
-            bonus.pos().setY(bonus.pos().y() + dy);
+            bonus.position().setY(bonus.position().y() + dy);
         }
     }
 

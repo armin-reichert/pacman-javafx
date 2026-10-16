@@ -36,7 +36,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     private static TextView makeText(String text, int paletteIndex, int column, int row) {
         final TextView textView = new TextView();
-        textView.pos().set(column * TS, row * TS);
+        textView.position().set(column * TS, row * TS);
         textView.data().setText(text);
         textView.data().setFillColor(NES_Palette.color(paletteIndex));
         textView.data().setFont(GlobalFonts.ARCADE.font(TS));

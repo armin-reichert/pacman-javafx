@@ -97,30 +97,30 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private CollectedData collectData(GameLevel level) {
         final Pac pac = level.entitySet().pac();
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         
         var data = new CollectedData();
 
         final Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
         if (hunterAhead != null) {
-            final Vector2i tile = hunterAhead.pos().tile();
+            final Vector2i tile = hunterAhead.position().tile();
             data.hunterAhead = hunterAhead;
             data.hunterAheadDistance = pacTile.manhattanDist(tile);
         }
         
         final Ghost hunterBehind = findHuntingGhostBehind(level, pac);
         if (hunterBehind != null) {
-            final Vector2i tile = hunterBehind.pos().tile();
+            final Vector2i tile = hunterBehind.position().tile();
             data.hunterBehind = hunterBehind;
             data.hunterBehindDistance = pacTile.manhattanDist(tile);
         }
 
         data.frightenedGhosts = level.entitySet().ghostsInState(GhostState.FRIGHTENED)
-            .filter(ghost -> ghost.pos().tile().manhattanDist(pacTile) <= CollectedData.MAX_GHOST_CHASE_DIST)
+            .filter(ghost -> ghost.position().tile().manhattanDist(pacTile) <= CollectedData.MAX_GHOST_CHASE_DIST)
             .collect(Collectors.toList());
 
         data.frightenedGhostsDistance = data.frightenedGhosts.stream()
-            .map(ghost -> (float) ghost.pos().tile().manhattanDist(pacTile)).collect(Collectors.toList());
+            .map(ghost -> (float) ghost.position().tile().manhattanDist(pacTile)).collect(Collectors.toList());
 
         return data;
     }
@@ -144,7 +144,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             return;
         }
 
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
 
         // when not escaping ghost, keep move direction at least until next intersection
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -156,7 +156,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         if (!data.frightenedGhosts.isEmpty()
             && pac.power().ticksRemaining() >= GameConstants.SIMULATION_FPS) {
             final Ghost prey = data.frightenedGhosts.getFirst();
-            final Vector2i preyTile = prey.pos().tile();
+            final Vector2i preyTile = prey.position().tile();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(), preyTile.manhattanDist(pacTile));
             worldNavigation.setTargetTile(preyTile);
         } 
@@ -164,7 +164,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             Logger.trace("Active bonus detected, get it!");
             final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
-                worldNavigation.setTargetTile(bonus.pos().tile());
+                worldNavigation.setTargetTile(bonus.position().tile());
             }
         } 
         else {
@@ -179,10 +179,10 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            final Vector2i bonusTile = bonus.pos().tile();
+            final Vector2i bonusTile = bonus.position().tile();
             return bonus.state().enumValue() == BonusState.EDIBLE
                 && bonusTile.manhattanDist(pacTile) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }
@@ -192,7 +192,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     private Ghost findHuntingGhostAhead(GameLevel level) {
         final Pac pac = level.entitySet().pac();
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
-        final Vector2i pacManTile = pac.pos().tile();
+        final Vector2i pacManTile = pac.position().tile();
 
         boolean energizerFound = false;
         FoodLayer foodLayer = level.worldMap().foodLayer();
@@ -208,7 +208,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             final Vector2i aheadRight = ahead.plus(worldNavigation.moveDir().nextClockwise().vector());
             final List<Ghost> huntingGhosts = level.entitySet().ghostsInState(GhostState.HUNTING_PAC).toList();
             for (var ghost : huntingGhosts) {
-                final Vector2i ghostTile = ghost.pos().tile();
+                final Vector2i ghostTile = ghost.position().tile();
                 if (ghostTile.equals(ahead) || ghostTile.equals(aheadLeft) || ghostTile.equals(aheadRight)) {
                     if (energizerFound) {
                         Logger.trace("Ignore hunting ghost ahead, energizer comes first!");
@@ -223,7 +223,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private Ghost findHuntingGhostBehind(GameLevel level, Pac pac) {
         final WorldNavigationComp navigation = pac.worldNavigation();
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
 
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacTile.plus(navigation.moveDir().opposite().vector().scaled(i));
@@ -232,7 +232,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             }
             Iterable<Ghost> huntingGhosts = level.entitySet().ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
-                final Vector2i ghostTile = ghost.pos().tile();
+                final Vector2i ghostTile = ghost.position().tile();
                 if (ghostTile.equals(behind)) {
                     return ghost;
                 }
@@ -243,7 +243,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
         final Pac pac = level.entitySet().pac();
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         final List<Direction> escapes = new ArrayList<>(4);
         for (Direction dir : Direction.shuffled()) {
             if (forbidden.contains(dir)) {
@@ -267,7 +267,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         final WorldMap worldMap = level.worldMap();
         final FoodLayer foodLayer = worldMap.foodLayer();
         final Pac pac = level.entitySet().pac();
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         final long powerTicksRemaining = pac.power().ticksRemaining();
         final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
         final List<Vector2i> foodTiles = new ArrayList<>();
@@ -318,9 +318,9 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private float minDistanceFromGhosts(GameLevel level, Pac pac) {
-        final Vector2i pacTile = pac.pos().tile();
+        final Vector2i pacTile = pac.position().tile();
         return (float) level.entitySet().ghosts()
-            .map(ghost -> ghost.pos().tile())
+            .map(ghost -> ghost.position().tile())
             .mapToDouble(pacTile::manhattanDist)
             .min()
             .orElse(Float.MAX_VALUE);

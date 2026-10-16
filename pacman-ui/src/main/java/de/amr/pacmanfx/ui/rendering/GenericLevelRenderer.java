@@ -101,7 +101,7 @@ public class GenericLevelRenderer extends BaseRenderer {
     private void draw(Energizer energizer, InfoMap renderInfo) {
         if (energizer.isVisible() && energizer.state().on()) {
             final Color pelletColor = renderInfo.get(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
-            final Vector2f center = energizer.pos().asVector2f();
+            final Vector2f center = energizer.position().asVector2f();
             ctx.save();
             ctx.setFill(pelletColor);
             ctx.scale(scaling(), scaling());

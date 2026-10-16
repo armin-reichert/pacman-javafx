@@ -1,10 +1,10 @@
 package de.amr.basics.ecs.comp;
 
-public class LifetimeComp {
+public class Lifetime {
 
     private long ticksRemaining;
 
-    public LifetimeComp(long ticks) {
+    public Lifetime(long ticks) {
         ticksRemaining = ticks;
     }
 

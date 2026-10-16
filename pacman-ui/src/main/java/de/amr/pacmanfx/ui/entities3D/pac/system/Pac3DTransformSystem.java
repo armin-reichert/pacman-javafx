@@ -38,7 +38,7 @@ public class Pac3DTransformSystem {
         }
 
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
-        final Vector2f center = pac.pos().bodyCenter();
+        final Vector2f center = pac.position().bodyCenter();
 
         updateVisibility(pac, center);
 

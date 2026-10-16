@@ -35,7 +35,7 @@ public class EntityUpdateSystem {
         systems.ghostUpdate().update(game, level);
 
         level.entitySet().entities().ofType(Energizer.class).forEach(energizer -> {
-            final Vector2i tile = energizer.pos().tile();
+            final Vector2i tile = energizer.position().tile();
             final boolean eaten = level.food().hasEatenFoodAtTile(tile);
             final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
             energizer.state().setOn(!eaten && pulse);

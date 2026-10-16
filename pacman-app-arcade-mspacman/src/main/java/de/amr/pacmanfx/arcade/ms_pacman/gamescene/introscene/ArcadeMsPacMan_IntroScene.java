@@ -138,8 +138,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
         if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
-            if (ghost.pos().x() <= GHOST_RAISE_POS_X) {
-                ghost.pos().setX(GHOST_RAISE_POS_X);
+            if (ghost.position().x() <= GHOST_RAISE_POS_X) {
+                ghost.position().setX(GHOST_RAISE_POS_X);
                 nav.setMoveDir(ghost, Direction.UP);
                 nav.setWishDir(ghost, Direction.UP);
                 numTicksBeforeRising = 2;
@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
             if (numTicksBeforeRising > 0) {
                 numTicksBeforeRising--;
             }
-            else if (ghost.pos().y() <= endPositionY) {
+            else if (ghost.position().y() <= endPositionY) {
                 nav.setSpeed(ghost, 0);
                 animController.stopSelected(ghost);
                 animController.resetSelected(ghost);
@@ -172,7 +172,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
         motor.move(msPacMan);
-        if (msPacMan.pos().x() <= MS_PACMAN_END_POS_X) {
+        if (msPacMan.position().x() <= MS_PACMAN_END_POS_X) {
             nav.setSpeed(msPacMan, 0);
             animController.resetSelected(msPacMan);
             return true;

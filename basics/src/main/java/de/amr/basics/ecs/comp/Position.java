@@ -10,9 +10,10 @@ import de.amr.basics.math.Vector2i;
 
 import static java.util.Objects.requireNonNull;
 
-public final class PositionComp {
+public final class Position {
 
     private float x;
+
     private float y;
 
     public float x() {

@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.pos().set(tilesPx(3), tilesPx(10));
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
         clapperboardSystem.startFlapAnimation(clapperboard);
     }
 
@@ -169,21 +169,21 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         final WorldNavigationSystem nav = systems.navigator();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         
-        pacMan.pos().set(TS * 3, GROUND_Y - 4);
+        pacMan.position().set(TS * 3, GROUND_Y - 4);
         pacMan.show();
         nav.setMoveDir(pacMan, Direction.RIGHT);
 
         animController.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         animController.stopSelected(pacMan);
 
-        msPacMan.pos().set(TS * 5, GROUND_Y - 4);
+        msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
         nav.setMoveDir(msPacMan, Direction.RIGHT);
 
         animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.stopSelected(msPacMan);
 
-        stork.pos().set(TS * 30, TS * 12);
+        stork.position().set(TS * 30, TS * 12);
         stork.show();
         motor.setVelocity(stork, -0.8f, 0);
 
@@ -191,7 +191,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         animController.playSelected(stork);
 
         bag.show();
-        bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
+        bag.position().set(stork.position().x() - 14, stork.position().y() + 3);
         motor.setVelocityX(bag, stork.movement().velocityX());
         motor.setAcceleration(bag, 0, 0);
         closeBag();
@@ -204,7 +204,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         final MovementSystem motor = game.playConfig().systems().motor();
 
         // release bag from beak when stork reaches tile 20
-        if (stork.pos().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {
+        if (stork.position().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {
             motor.setAcceleration(bag, 0, 0.04f); // set tileY-gravity to let bag fall to ground
             motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
             stork.setBagReleasedFromBeak(true);
@@ -212,14 +212,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
         if (!bag.isOpen()) {
             motor.move(bag);
-            if (bag.pos().y() >= GROUND_Y) {
+            if (bag.position().y() >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
                     bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
-                    bag.pos().setY(GROUND_Y);
+                    bag.position().setY(GROUND_Y);
                 } else {
                     openBag();
-                    bag.pos().setY(GROUND_Y);
+                    bag.position().setY(GROUND_Y);
                     motor.setVelocity(bag, 0, 0);
                     motor.setAcceleration(bag, 0, 0);
                 }

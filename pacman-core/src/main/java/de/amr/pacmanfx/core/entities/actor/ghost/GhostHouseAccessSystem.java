@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.comp.Position;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -51,7 +51,7 @@ public class GhostHouseAccessSystem {
             return;
         }
         final House house = ghost.worldInfo().house();
-        final PositionComp position = ghost.pos();
+        final Position position = ghost.position();
         if (house.isVisitedBy(ghost)) {
             final float minY = (house.floorplan().minTile().y() + 1) * TS + HTS;
             final float maxY = (house.floorplan().maxTile().y() - 1) * TS - HTS;
@@ -81,7 +81,7 @@ public class GhostHouseAccessSystem {
             return;
         }
 
-        final PositionComp position = ghost.pos();
+        final Position position = ghost.position();
         final House house = ghost.worldInfo().house();
         final Vector2f houseEntryPosition = house.floorplan().entryPosition();
 
@@ -125,7 +125,7 @@ public class GhostHouseAccessSystem {
             return;
         }
 
-        final PositionComp position = ghost.pos();
+        final Position position = ghost.position();
         final House house = ghost.worldInfo().house();
         final Vector2f revivalPosition = halfTileRightOf(house.floorplan().ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
@@ -157,7 +157,7 @@ public class GhostHouseAccessSystem {
     }
 
     private void moveTowardsHouseEntry(Ghost ghost, GameLevel level, float speed) {
-        final PositionComp ghostPos = ghost.pos();
+        final Position ghostPos = ghost.position();
         final House house = ghost.worldInfo().house();
         final Vector2f entryPos = house.floorplan().entryPosition();
 

@@ -130,7 +130,7 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
         if (!gameEntity.isVisible()) return;
 
         ctx.save();
-        final Vector2f center = gameEntity.pos().bodyCenter();
+        final Vector2f center = gameEntity.position().bodyCenter();
         switch (gameEntity) {
             case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
@@ -264,8 +264,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     private void draw(Clapperboard clapperboard) {
         TengenMsPacMan_ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-            double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
-            drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
+            double numberX = clapperboard.position().x() + 8, numberY = clapperboard.position().y() + 18; // baseline
+            drawSpriteCentered(sprite, clapperboard.position().bodyCenter());
             // over-paint number from sprite sheet
             ctx.save();
             ctx.scale(scaling(), scaling());
@@ -280,19 +280,19 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
             final String text = clapperboard.inscription().text();
             ctx.fillText(number, scaled(numberX), scaled(numberY));
             if (clapperboard.state().textVisible()) {
-                double textX = clapperboard.pos().x() + sprite.width(), textY = clapperboard.pos().y() + 2;
+                double textX = clapperboard.position().x() + sprite.width(), textY = clapperboard.position().y() + 2;
                 ctx.fillText(text, scaled(textX), scaled(textY));
             }
         });
     }
 
     private void draw(Stork stork) {
-        drawSpriteCentered(animSystem.currentSprite(stork), stork.pos().bodyCenter());
+        drawSpriteCentered(animSystem.currentSprite(stork), stork.position().bodyCenter());
         if (stork.isBagReleasedFromBeak()) {
             ctx.save();
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(stork.pos().x() - 13), scaled(stork.pos().y() + 3), scaled(8), scaled(10));
+            ctx.fillRect(scaled(stork.position().x() - 13), scaled(stork.position().y() + 3), scaled(8), scaled(10));
             ctx.restore();
         }
     }
@@ -314,8 +314,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
             case NORMAL -> null;
         };
 
-        final float centerX = display.pos().x();
-        final float y = display.pos().y();
+        final float centerX = display.position().x();
+        final float y = display.position().y();
 
         ctx.save();
         ctx.setImageSmoothing(false);
@@ -342,16 +342,16 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
             case GAME_SCORE -> {
                 // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
                 if (tick % 60 < 30) {
-                    fillText(style.scoreText(), style.scoreTextColor(), scaledFont, score.pos().x(), score.pos().y());
+                    fillText(style.scoreText(), style.scoreTextColor(), scaledFont, score.position().x(), score.position().y());
                 }
                 fillText("%6d".formatted(score.data().points()),
-                    style.scoreTextColor(), scaledFont, 2 * TS, score.pos().y() + TS);
+                    style.scoreTextColor(), scaledFont, 2 * TS, score.position().y() + TS);
             }
             case HIGH_SCORE -> {
                 final Color color = score.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
-                fillText("HIGH SCORE", color, scaledFont, score.pos().x(), score.pos().y());
+                fillText("HIGH SCORE", color, scaledFont, score.position().x(), score.position().y());
                 fillText("%6d".formatted(score.data().points()), color, scaledFont,
-                    score.pos().x() + 2 * TS, score.pos().y() + TS
+                    score.position().x() + 2 * TS, score.position().y() + TS
                 );
             }
         }
@@ -359,8 +359,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
 
     private void draw(LivesCounter livesCounter) {
         final HUDStyleComp style = livesCounter.assertComponent(HUDStyleComp.class);
-        final float x = livesCounter.pos().x();
-        final float y = livesCounter.pos().y();
+        final float x = livesCounter.position().x();
+        final float y = livesCounter.position().y();
 
         final int numLives      = livesCounter.data().numLives();
         final int numLivesShown = livesCounter.data().numLivesShown();
@@ -377,8 +377,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LevelCounter levelCounter) {
-        float x = levelCounter.pos().x();
-        float y = levelCounter.pos().y();
+        float x = levelCounter.position().x();
+        float y = levelCounter.position().y();
 
         // Symbols are drawn from right to left!
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
@@ -391,8 +391,8 @@ public class TengenMsPacMan_VariantRenderer extends GameEntityRenderer {
     }
 
     private void draw(LevelNumberDisplay display) {
-        final float x = display.pos().x();
-        final float y = display.pos().y();
+        final float x = display.position().x();
+        final float y = display.position().y();
         final int number = display.levelNumber().number();
 
         drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);

@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.entities.world;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.comp.Movement;
+import de.amr.basics.ecs.comp.Position;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Direction;
@@ -38,7 +38,7 @@ public class WorldNavigationSystem {
 
         final WorldNavigationComp worldNavigation = actor.assertComponent(WorldNavigationComp.class);
         final Vector2i translateVector = worldNavigation.moveDir().vector().scaled(numTiles);
-        return actor.pos().tile().plus(translateVector);
+        return actor.position().tile().plus(translateVector);
     }
 
     /**
@@ -77,7 +77,7 @@ public class WorldNavigationSystem {
         final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
         if (navigation.moveDir() != dir) {
             navigation.setMoveDir(dir);
-            final MovementComp movement = actor.assertComponent(MovementComp.class);
+            final Movement movement = actor.assertComponent(Movement.class);
             movement.setVelocity(dir.vector().scaled(movement.speed()));
         }
     }
@@ -139,14 +139,14 @@ public class WorldNavigationSystem {
     public void placeAtTile(GameEntity actor, int tx, int ty, float ox, float oy) {
         requireNonNull(actor);
 
-        final PositionComp position = actor.pos();
+        final Position position = actor.position();
         final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
-        final Vector2i tileBefore = actor.pos().tile();
+        final Vector2i tileBefore = actor.position().tile();
 
         position.setX(tx * TS + ox);
         position.setY(ty * TS + oy);
 
-        final Vector2i tileAfter = actor.pos().tile();
+        final Vector2i tileAfter = actor.position().tile();
         navigation.setNewTileEntered(!tileAfter.equals(tileBefore));
     }
 
@@ -181,7 +181,7 @@ public class WorldNavigationSystem {
     public void setSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
-        final MovementComp movement = actor.assertComponent(MovementComp.class);
+        final Movement movement = actor.assertComponent(Movement.class);
         final Direction moveDir = actor.assertComponent(WorldNavigationComp.class).moveDir();
         movement.setVelocity(moveDir.vector().scaled(speed));
     }
@@ -205,7 +205,7 @@ public class WorldNavigationSystem {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
-        final Vector2i tileBefore = actor.pos().tile();
+        final Vector2i tileBefore = actor.position().tile();
         if (level.worldMap().terrainLayer().isTileInPortalSpace(tileBefore)) {
             return;
         }
@@ -287,7 +287,7 @@ public class WorldNavigationSystem {
             }
         }
 
-        final Vector2f center = actor.pos().bodyCenter();
+        final Vector2f center = actor.position().bodyCenter();
         final int leftBorder = 0;
         final int rightBorder = level.worldMap().numCols() * TS;
         navigation.setInTeleportingSpace(center.x() < leftBorder || center.x() > rightBorder);
@@ -296,11 +296,11 @@ public class WorldNavigationSystem {
             setWishDir(actor, navigation.moveDir().opposite());
             navigation.setTurnBackRequested(false);
         }
-        tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.wishDir());
+        tryMovingTowards(actor, level, movementPolicy, actor.position().tile(), navigation.wishDir());
         if (navigation.info().moved) {
             setMoveDir(actor, navigation.wishDir());
         } else {
-            tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.moveDir());
+            tryMovingTowards(actor, level, movementPolicy, actor.position().tile(), navigation.moveDir());
         }
     }
 
@@ -309,7 +309,7 @@ public class WorldNavigationSystem {
 
         if (navigation.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
-                .filter(portal -> portal.tileY() == actor.pos().tile().y())
+                .filter(portal -> portal.tileY() == actor.position().tile().y())
                 .findFirst()
                 .map(portal -> portal.tryTeleporting(this, actor))
                 .orElse(false);
@@ -324,28 +324,28 @@ public class WorldNavigationSystem {
         Vector2i tileBeforeMoving,
         Direction dir)
     {
-        final MovementComp movement = actor.assertComponent(MovementComp.class);
+        final Movement movement = actor.assertComponent(Movement.class);
         final WorldNavigationComp navigation = actor.assertComponent(WorldNavigationComp.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.speed());
-        final Vector2f touchPosition = actor.pos().bodyCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
+        final Vector2f touchPosition = actor.position().bodyCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = PositionSystem.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(navigation.moveDir().vector());
 
         if (!movementPolicy.canAccessTile(level, actor, touchedTile)) {
             if (!turn) {
-                placeAtTile(actor, actor.pos().tile()); // adjust over tile (would move forward against wall)
+                placeAtTile(actor, actor.position().tile()); // adjust over tile (would move forward against wall)
             }
             Logger.debug("Cannot move %s into tile %s".formatted(dir, touchedTile));
             return;
         }
 
         if (turn) {
-            final Vector2i tileOffset = PositionSystem.computeTileOffset(actor.pos().asVector2f());
+            final Vector2i tileOffset = PositionSystem.computeTileOffset(actor.position().asVector2f());
             final float offset = dir.isHorizontal() ? tileOffset.y() : tileOffset.x();
             final boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
-                placeAtTile(actor, actor.pos().tile()); // adjust over tile (starts moving around corner)
+                placeAtTile(actor, actor.position().tile()); // adjust over tile (starts moving around corner)
             } else {
                 Logger.debug("Wants to take corner towards %s but not at turn position".formatted(dir));
                 return;
@@ -364,7 +364,7 @@ public class WorldNavigationSystem {
             motor.move(actor);
         }
 
-        final Vector2i tileAfterMoving = actor.pos().tile();
+        final Vector2i tileAfterMoving = actor.position().tile();
         navigation.setNewTileEntered(!tileBeforeMoving.equals(tileAfterMoving));
 
         navigation.info().moved = true;

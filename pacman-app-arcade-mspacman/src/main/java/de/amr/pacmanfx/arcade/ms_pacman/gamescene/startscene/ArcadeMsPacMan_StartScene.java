@@ -58,13 +58,13 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
         msPacManImageView = new ImageView();
         msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
-        msPacManImageView.pos().set(13 * TS, 23.5 * TS);
+        msPacManImageView.position().set(13 * TS, 23.5 * TS);
         msPacManImageView.show();
 
         copyrightImageView = new ImageView();
         copyrightImageView.image().setImage(assets.image("logo.midway"));
         copyrightImageView.show();
-        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImageView.position().set(tilesPx(6), tilesPx(28));
 
         copyrightTexts.add(TextView.create("©",             ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 11, 30.125f));
         copyrightTexts.add(TextView.create("MIDWAY MFG CO", ArcadeColor.RED.color(), GlobalFonts.ARCADE.font(8), 13, 30));

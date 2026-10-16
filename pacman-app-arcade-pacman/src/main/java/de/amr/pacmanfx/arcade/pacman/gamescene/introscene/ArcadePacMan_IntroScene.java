@@ -97,13 +97,13 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         view.pulse.start();
 
-        view.pacMan.pos().set(TS * 28, TS * 20);
+        view.pacMan.position().set(TS * 28, TS * 20);
         nav.setMoveDir(view.pacMan, Direction.LEFT);
         nav.setSpeed(view.pacMan, CHASING_SPEED);
         view.pacMan.show();
 
         for (Ghost ghost : view.ghosts) {
-            ghost.pos().set(view.pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, view.pacMan.pos().y());
+            ghost.position().set(view.pacMan.position().x() + 16 * ghost.personality().ordinal() + 18, view.pacMan.position().y());
             nav.setMoveDir(ghost, Direction.LEFT);
             nav.setWishDir(ghost, Direction.LEFT);
             nav.setSpeed(ghost, CHASING_SPEED);
@@ -132,12 +132,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final Ghost pinkGhost = view.ghosts[GhostPersonality.PINK_GHOST_SPEEDY.ordinal()];
         final Ghost cyanGhost = view.ghosts[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()];
         if (tick_0_to_5 == 2) {
-            pinkGhost.pos().setX(pinkGhost.pos().x() + 0.5);
-            cyanGhost.pos().setX(cyanGhost.pos().x() - 0.5);
+            pinkGhost.position().setX(pinkGhost.position().x() + 0.5);
+            cyanGhost.position().setX(cyanGhost.position().x() - 0.5);
         }
         else if (tick_0_to_5 == 5) {
-            pinkGhost.pos().setX(pinkGhost.pos().x() - 0.5);
-            cyanGhost.pos().setX(cyanGhost.pos().x() + 0.5);
+            pinkGhost.position().setX(pinkGhost.position().x() - 0.5);
+            cyanGhost.position().setX(cyanGhost.position().x() + 0.5);
         }
 
         for (Ghost ghost : view.ghosts) {
@@ -207,7 +207,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         }
 
         view.points = new GhostPoints(GHOST_POINTS[numGhostsEaten]);
-        view.points.pos().set(victim.pos().asVector2f());
+        view.points.position().set(victim.position().asVector2f());
         view.points.show();
 
         ++numGhostsEaten;

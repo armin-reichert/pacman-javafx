@@ -47,7 +47,7 @@ public class ArcadePacMan_ActorSpeedRules implements ActorSpeedRules {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final boolean insideHouse = house.isVisitedBy(ghost);
-        final boolean tunnelSlowdown = terrain.isTunnel(ghost.pos().tile());
+        final boolean tunnelSlowdown = terrain.isTunnel(ghost.position().tile());
         return switch (ghost.state().enumValue()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;

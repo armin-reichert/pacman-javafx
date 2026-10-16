@@ -58,7 +58,7 @@ public class RouteGuidedSteering<E extends GameEntity> implements Steering<E> {
             //TODO Use navigator method
             navigation.setTargetTile(route.get(targetIndex));
         }
-        else if (gameEntity.pos().tile().equals(route.get(targetIndex))) {
+        else if (gameEntity.position().tile().equals(route.get(targetIndex))) {
             selectNextTargetTile(level, gameEntity);
         }
         else {

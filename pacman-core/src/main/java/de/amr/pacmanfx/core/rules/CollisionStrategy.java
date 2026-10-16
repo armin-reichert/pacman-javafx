@@ -18,7 +18,7 @@ public enum CollisionStrategy {
         public boolean collide(GameEntity either, GameEntity other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            return either.pos().tile().equals(other.pos().tile());
+            return either.position().tile().equals(other.position().tile());
         }
 
         @Override
@@ -32,7 +32,7 @@ public enum CollisionStrategy {
         public boolean collide(GameEntity either, GameEntity other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            return boundingBox(either.pos().asVector2f()).intersects(boundingBox(other.pos().asVector2f()));
+            return boundingBox(either.position().asVector2f()).intersects(boundingBox(other.position().asVector2f()));
         }
 
         @Override
@@ -47,8 +47,8 @@ public enum CollisionStrategy {
         public boolean collide(GameEntity either, GameEntity other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            final Vector2f eitherCenter = either.pos().bodyCenter();
-            final Vector2f otherCenter = other.pos().bodyCenter();
+            final Vector2f eitherCenter = either.position().bodyCenter();
+            final Vector2f otherCenter = other.position().bodyCenter();
             float dist = eitherCenter.euclideanDist(otherCenter);
             if (dist < COLLISION_SENSITIVITY_PIXELS) {
                 Logger.debug("Collision detected (dist={}): {} collides with {}", dist, either, other);

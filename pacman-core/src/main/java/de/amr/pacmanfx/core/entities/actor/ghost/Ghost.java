@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -23,7 +23,7 @@ public final class Ghost extends GameEntity {
         this.personality = requireNonNull(personality);
         setName(name);
 
-        setComponent(MovementComp.class, new MovementComp());
+        setComponent(Movement.class, new Movement());
         setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         setComponent(GhostWorldInfoComp.class, new GhostWorldInfoComp());
         setComponent(GhostHouseAccessComp.class, new GhostHouseAccessComp());
@@ -41,8 +41,8 @@ public final class Ghost extends GameEntity {
 
     // Typed component accessors
 
-    public MovementComp movement() {
-        return assertComponent(MovementComp.class);
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 
     public WorldNavigationComp worldNavigation() {

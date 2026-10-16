@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.Movement;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -98,7 +98,7 @@ class XXL_ChaseAnimation {
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
         pac = actorFactory.createPacMan();
-        pac.pos().setX(numTilesX * TS);
+        pac.position().setX(numTilesX * TS);
         pac.show();
 
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
@@ -134,7 +134,7 @@ class XXL_ChaseAnimation {
         }
 
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
-        if (pac.pos().x() > (numTilesX + 14) * TS) {
+        if (pac.position().x() > (numTilesX + 14) * TS) {
             startGhostsChasePacMan();
         }
         else {
@@ -159,10 +159,10 @@ class XXL_ChaseAnimation {
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
-        pac.pos().setX(numTilesX * TS);
+        pac.position().setX(numTilesX * TS);
 
         for (Ghost ghost : ghosts) {
-            ghost.pos().setX((numTilesX + 4) * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+            ghost.position().setX((numTilesX + 4) * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
             navigator.setMoveDir(ghost, Direction.LEFT);
@@ -182,14 +182,14 @@ class XXL_ChaseAnimation {
 
         moveActors();
 
-        if (ghosts.getLast().pos().x() < -4 * TS) { // ghosts left screen on the left side
-            pac.pos().setX(-(numTilesX - 4) * TS);
+        if (ghosts.getLast().position().x() < -4 * TS) { // ghosts left screen on the left side
+            pac.position().setX(-(numTilesX - 4) * TS);
             navigator.setMoveDir(pac, Direction.RIGHT);
             navigator.setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.show();
-                ghost.pos().setX(pac.pos().x() + 22 * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+                ghost.position().setX(pac.position().x() + 22 * TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
                 navigator.setMoveDir(ghost, Direction.RIGHT);
                 navigator.setWishDir(ghost, Direction.RIGHT);
@@ -212,10 +212,10 @@ class XXL_ChaseAnimation {
                 ++collisionCount;
 
                 ghostPoints = new GhostPoints(GHOST_POINTS[collisionCount - 1]);
-                ghostPoints.pos().set(ghost.pos().asVector2f());
-                ghostPoints.setComponent(MovementComp.class, new MovementComp());
+                ghostPoints.position().set(ghost.position().asVector2f());
+                ghostPoints.setComponent(Movement.class, new Movement());
                 ghostPoints.optMovement().ifPresent(movement -> movement.setVelocity(ghost.movement().velocity()));
-                ghostPoints.setLifetimeSec(GHOST_POINTS_DISPLAY_SEC);
+                ghostPoints.setLifetimeInSeconds(GHOST_POINTS_DISPLAY_SEC);
                 ghostPoints.show();
 
                 ghostPointsView = createView(ghostPoints);
@@ -230,7 +230,7 @@ class XXL_ChaseAnimation {
     }
 
     private static boolean colliding(GameEntity either, GameEntity other) {
-        return Math.abs(either.pos().x() - other.pos().x()) < 1;
+        return Math.abs(either.position().x() - other.position().x()) < 1;
     }
 
     private void moveActors() {

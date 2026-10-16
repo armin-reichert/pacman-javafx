@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
-import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.comp.Position;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.PerspectiveCamera;
@@ -62,7 +62,7 @@ public class DronePerspective implements Perspective<GameLevel> {
 
     @Override
     public void update(GameLevel level) {
-        final PositionComp pacPosition = level.entitySet().pac().pos();
+        final Position pacPosition = level.entitySet().pac().position();
         double x = lerp(camera.getTranslateX(), pacPosition.x(), speed);
         double y = lerp(camera.getTranslateY(), pacPosition.y(), speed);
         camera.setTranslateX(x);
