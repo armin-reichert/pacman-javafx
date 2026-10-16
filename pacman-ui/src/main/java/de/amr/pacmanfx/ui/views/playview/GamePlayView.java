@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.rendering.GamePlayViewRenderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
-import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -55,15 +54,12 @@ public class GamePlayView implements GameView {
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
-    private final EngineUIContext engineContext;
+    private final EngineUIContext engine;
     private final ContextMenuManager contextMenuManager;
     private final GamePlayViewRenderer renderer = new GamePlayViewRenderer(this);
 
-    public GamePlayView(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
-
-        final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameMainScene mainScene = engineContext.ui().window().mainScene();
+    public GamePlayView(EngineUIContext engine) {
+        this.engine = requireNonNull(engine);
 
         actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
 
@@ -72,47 +68,40 @@ public class GamePlayView implements GameView {
 
         // Layer 2: Mini view layer
         final var miniView = new MiniPlaySceneView();
-        miniView.setViewModel(viewModel);
+        miniView.setViewModel(engine.ui().viewModel());
 
         // Layer 3: Overlay layer with dashboard
-        final var overlayPane = new BorderPane();
         dashboard = new GameDashboard();
         dashboard.setVisible(false);
+
+        final var overlayPane = new BorderPane();
         overlayPane.setLeft(dashboard);
         overlayPane.visibleProperty().bind(dashboard.visibleProperty());
 
-        // Layer 4: Help info
+        // Layer 4: Help view
         final var helpView = new HelpView(gameSceneContainer);
 
         // Layer 5: "Paused" icon
-        final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
-        pausedIcon.setId("paused-icon");
+        final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE, "paused-icon");
 
-        final StackPane iconLayer = new StackPane();
+        final StackPane iconLayer = new StackPane(pausedIcon);
         iconLayer.setMouseTransparent(true);
-        iconLayer.visibleProperty().bind(engineContext.clock().updatesDisabledProperty());
-        iconLayer.getChildren().add(pausedIcon);
+        iconLayer.visibleProperty().bind(engine.clock().updatesDisabledProperty());
 
         layers = new Layers(gameSceneContainer, miniView, overlayPane, helpView, iconLayer);
 
-        root = new StackPane(
-            layers.gameSceneLayer(),
-            layers.miniViewLayer().root(),
-            layers.overlayLayer(),
-            layers.helpLayer(),
-            layers.iconLayer()
-        );
+        // Arrange layers in stack pane
+        root = new StackPane(gameSceneContainer, miniView.root(), overlayPane, helpView, iconLayer);
+        StackPane.setAlignment(miniView.root(), Pos.TOP_RIGHT);
+        StackPane.setAlignment(iconLayer, Pos.CENTER);
         root.setId("game-play-view");
 
-        StackPane.setAlignment(layers.miniViewLayer().root(), Pos.TOP_RIGHT);
-        StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
-
-        contextMenuManager = new ContextMenuManager(engineContext);
+        contextMenuManager = new ContextMenuManager(engine);
         root.setOnContextMenuRequested(contextMenuManager);
 
-        viewModel.debugModeOnProperty().addListener((_, _, debug) -> layers.gameSceneLayer().setDebugMode(debug));
+        engine.ui().viewModel().debugModeOnProperty().addListener((_, _, debug) -> gameSceneContainer.setDebugMode(debug));
 
-        installMainSceneResizeHandler(mainScene);
+        installMainSceneResizeHandler();
     }
 
     public Layers layers() {
@@ -125,26 +114,31 @@ public class GamePlayView implements GameView {
 
     public void populateDashboard(DashboardFactory dashboardFactory){
         requireNonNull(dashboardFactory);
-        List<DashboardSectionSettings> settings = engineContext.ui().settings().dashboard();
-        dashboard.populate(engineContext, dashboardFactory, settings);
+        List<DashboardSectionSettings> settings = engine.ui().settings().dashboard();
+        dashboard.populate(engine, dashboardFactory, settings);
     }
 
     public void showHelp(String variantName) {
-        layers.helpLayer().popupHelpInfo(new HelpInfo(engineContext), 2, variantName);
+        requireNonNull(variantName);
+        layers.helpLayer().popupHelpInfo(new HelpInfo(engine), 2, variantName);
     }
 
     public void acceptLevel(GameScene currentGameScene, GameLevel level) {
         requireNonNull(currentGameScene);
         requireNonNull(level);
 
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        if (!(engine.gameVariantManager().currentRuntime() instanceof DefaultGameVariantRuntime runtime)) {
+            Logger.error("Illegal game variant runtime class {}", engine.gameVariantManager().currentRuntime().getClass());
+            return;
+        }
+
+        if (!(currentGameScene instanceof AbstractGameScene gameScene)) {
+            Logger.error("Illegal game scene class {}", currentGameScene.getClass());
+            return;
+        }
 
         // Level changed: adjust game scene size by reembedding
-        layers.gameSceneLayer().embedGameScene(
-            engineContext.ui(),
-            runtime.uiConfig(),
-            (AbstractGameScene) currentGameScene);
-
+        layers.gameSceneLayer().embedGameScene(engine.ui(), runtime.uiConfig(), gameScene);
         layers.miniViewLayer().setLevel(level);
 
         contextMenuManager.hideContextMenu();
@@ -160,8 +154,8 @@ public class GamePlayView implements GameView {
 
         nextGameScene.onBeforeEmbedded();
 
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
-        layers.gameSceneLayer().embedGameScene(engineContext.ui(), runtime.uiConfig(), (AbstractGameScene) nextGameScene);
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+        layers.gameSceneLayer().embedGameScene(engine.ui(), runtime.uiConfig(), (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }
@@ -169,7 +163,7 @@ public class GamePlayView implements GameView {
     public void render() {
         updateDashboard();
         updateMiniView();
-        renderer.render(engineContext);
+        renderer.render(engine);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -191,26 +185,26 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onExit() {
-        engineContext.engineLife().suspendGame();
-        engineContext.soundManager().stopAll();
-        engineContext.soundManager().voice().stop();
+        engine.engineLife().suspendGame();
+        engine.soundManager().stopAll();
+        engine.soundManager().voice().stop();
         actionBindings.dispose();
         layers.gameSceneLayer().uninstallKeyBindings();
-    }
-
-    @Override
-    public void onQuit() {
-        engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        engineContext.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES);
     }
 
     @Override
     public void onInput(Input input) {
         // First look for an action of the play view itself that is triggered by the input.
         // If none is found, delegate to the current game scene.
-        if (executeMatchingAction(actionBindings, engineContext).isEmpty()) {
-            engineContext.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+        if (executeMatchingAction(actionBindings, engine).isEmpty()) {
+            engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
+    }
+
+    @Override
+    public void onQuit() {
+        engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
+        engine.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES);
     }
 
     @Override
@@ -218,25 +212,23 @@ public class GamePlayView implements GameView {
         return root;
     }
 
-    // --- Component update
+    // Private
 
     private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {
-            dashboard.update(engineContext);
+            dashboard.update(engine);
         }
     }
 
     private void updateMiniView() {
-        final boolean playScene3DActive = engineContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        final boolean playScene3DActive = engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         layers.miniViewLayer().update(playScene3DActive);
     }
 
-    // Private
-
-    private void installMainSceneResizeHandler(GameMainScene mainScene) {
+    private void installMainSceneResizeHandler() {
+        final GameMainScene mainScene = engine.ui().window().mainScene();
         final ChangeListener<? super Number> handler = (_, _, _)
             -> layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
-
         mainScene.widthProperty() .addListener(handler);
         mainScene.heightProperty().addListener(handler);
     }

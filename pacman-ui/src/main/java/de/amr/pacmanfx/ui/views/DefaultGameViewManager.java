@@ -87,8 +87,8 @@ public final class DefaultGameViewManager implements GameViewManager {
     }
 
     @Override
-    public boolean isSelected(Named viewID) {
-        requireNonNull(viewID);
-        return currentViewID().name().equals(viewID.name());
+    public boolean isSelected(Named id) {
+        requireNonNull(id);
+        return currentViewID().name().equals(id.name());
     }
 }

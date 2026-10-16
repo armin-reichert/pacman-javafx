@@ -16,8 +16,8 @@ public interface GameViewManager {
 
     <V extends GameView> V assertView(Named id, Class<V> viewClass);
 
-    default GameView assertView(Named viewID) {
-        return assertView(viewID, GameView.class);
+    default GameView assertView(Named id) {
+        return assertView(id, GameView.class);
     }
 
     <V extends GameView> Optional<V> optView(Named id, Class<V> viewClass);
@@ -28,5 +28,5 @@ public interface GameViewManager {
 
     Optional<GameView> optCurrentView();
 
-    boolean isSelected(Named viewID);
+    boolean isSelected(Named id);
 }

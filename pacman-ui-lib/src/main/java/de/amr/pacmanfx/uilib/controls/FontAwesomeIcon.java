@@ -112,10 +112,15 @@ public class FontAwesomeIcon extends Control {
 
     private final char unicode;
 
-    public FontAwesomeIcon(FontAwesomeSymbol symbol) {
-        unicode = requireNonNull(symbol).unicode();
-        getStyleClass().add(DEFAULT_STYLE_CLASS);
+    public FontAwesomeIcon(FontAwesomeSymbol symbol, String id) {
+        this(symbol);
+        setId(id);
+    }
 
+    public FontAwesomeIcon(FontAwesomeSymbol symbol) {
+        requireNonNull(symbol);
+        unicode = symbol.unicode();
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
         maxWidthProperty().bind(size);
         maxHeightProperty().bind(size);
     }
