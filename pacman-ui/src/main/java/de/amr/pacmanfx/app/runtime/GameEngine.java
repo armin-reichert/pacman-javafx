@@ -245,7 +245,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             clock().start();
         }
         else {
-            fatalError(new IllegalStateException("Game not be started, no game is currently selected"));
+            fatalError(new IllegalStateException("Game cannot be started, no game is currently selected"));
         }
     }
 
@@ -258,7 +258,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             clock().stop();
         }
         else {
-            fatalError(new IllegalStateException("Game not be suspended, no game is currently selected"));
+            fatalError(new IllegalStateException("Game cannot be suspended, no game is currently selected"));
         }
     }
 
