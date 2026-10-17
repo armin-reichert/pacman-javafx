@@ -51,7 +51,7 @@ public final class CheatActions {
                     session.setNumLives(session.numLives() + 3);
                     session.cheats().notifyCheatUsed();
                     final String msg = context.translationManager().translate("flash.cheat_add_lives", session.numLives());
-                    context.ui().shortMessage(msg);
+                    context.ui().showShortMessage(msg);
                 });
             }
 
@@ -304,7 +304,7 @@ public final class CheatActions {
         final String message = context.translationManager().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
         final Media voice = auto ? VoiceID.AUTOPILOT_ON.media() : VoiceID.AUTOPILOT_OFF.media();
 
-        ui.shortMessage(message);
+        ui.showShortMessage(message);
         context.soundManager().voice().playAfterSec(1, voice);
     }
 
@@ -317,7 +317,7 @@ public final class CheatActions {
         final String message = context.translationManager().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
         final Media voice = immune ? VoiceID.IMMUNITY_ON.media() : VoiceID.IMMUNITY_OFF.media();
 
-        ui.shortMessage(message);
+        ui.showShortMessage(message);
         context.soundManager().voice().playAfterSec(1, voice);
     }
 

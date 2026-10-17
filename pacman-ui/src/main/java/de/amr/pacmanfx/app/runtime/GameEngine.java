@@ -192,7 +192,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             newGameSession(currentGame);
             currentGame.playConfig().gamePlay().startSession(currentGame);
 
-            ui.window().mainScene().connect(currentGame.session());
+            if (ui != null) {
+                ui.window().mainScene().connect(currentGame.session());
+            } else {
+                Logger.error("No UI has been attached to engine!");
+            }
+
             gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
             clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -220,16 +225,18 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            3
+            3 //TODO make initial life selection work again
         );
         game.setSession(session);
     }
 
     @Override
     public void terminate() {
+        if (ui != null) {
+            ui.stopShortMessageSystem();
+        }
         suspendGame();
         spriteAnimationSystem.stop();
-        ui.window().mainScene().flashMessageManager().stopAnimationTimer();
         PlayStation.instance().dispose();
         Logger.info("Application terminated. There is no way back!");
     }
@@ -292,24 +299,27 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     private void onViewChanged(Named oldViewID, Named newViewID) {
-        ui.clearMessage();
-
         if (oldViewID != null) {
             gameViewManager.assertView(oldViewID).onExit();
         }
-
         final GameView newView = gameViewManager.assertView(newViewID);
         newView.onEnter();
 
-        ui.window().mainScene().replaceGameView(newView);
-        ui.window().updateStageTitleBinding(gameViewManager, newViewID);
+        if (ui != null) {
+            ui.clearShortMessage();
+            ui.window().mainScene().replaceGameView(newView);
+            ui.window().updateStageTitleBinding(gameViewManager, newViewID);
+        }
     }
 
     private void startBackgroundServices() {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
-        ui.window().mainScene().flashMessageManager().startAnimationTimer();
+
         spriteAnimationSystem.start();
+        if (ui != null) {
+            ui.startShortMessageSystem();
+        }
 
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
@@ -348,7 +358,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private void fatalError(Throwable reason) {
         suspendGame();
         final String errorMessage = translationManager.translate("error.oh_no_my_program");
-        ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+        ui.showShortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }

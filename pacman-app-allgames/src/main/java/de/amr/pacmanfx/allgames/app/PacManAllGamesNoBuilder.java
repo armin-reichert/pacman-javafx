@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.allgames.app;
 
+import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
@@ -27,14 +28,31 @@ import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
+import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
+
+import java.net.URL;
 
 public class PacManAllGamesNoBuilder extends Application {
+
+    static final String DEFAULT_UI_SETTINGS_PATH = "/de/amr/pacmanfx/ui/ui.json";
+
+    private static GameUISettings loadDefaultSettings() {
+        final URL url = GameUI.class.getResource(DEFAULT_UI_SETTINGS_PATH);
+        if (url == null) {
+            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'"
+                .formatted(DEFAULT_UI_SETTINGS_PATH));
+        }
+        final var settings = JsonLoader.load(url, GameUISettings.class);
+        Logger.info("Default UI settings loaded, URL={}", url);
+        return settings;
+    }
 
     static final float ASPECT_RATIO    = 1.6f; // 16:10
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
@@ -67,7 +85,7 @@ public class PacManAllGamesNoBuilder extends Application {
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), GameUI.DEFAULT_UI_SETTINGS);
+        final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), loadDefaultSettings());
 
         final StartPagesView startPages = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         startPages.addPage(engine, new ArcadePacMan_StartPage());

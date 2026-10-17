@@ -35,7 +35,7 @@ public class Camera3DActions {
                 final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID perspectiveID = perspectiveIDProperty.get().next();
                 perspectiveIDProperty.set(perspectiveID);
-                ui.shortMessage(translatedPerspectiveMessage(context, perspectiveID));
+                ui.showShortMessage(translatedPerspectiveMessage(context, perspectiveID));
             }
 
             @Override
@@ -51,7 +51,7 @@ public class Camera3DActions {
                 final var perspectiveIDProperty = ui.viewModel().common3DSettings().cameraPerspectiveIDProperty();
                 final PerspectiveID prevID = perspectiveIDProperty.get().prev();
                 perspectiveIDProperty.set(prevID);
-                ui.shortMessage(translatedPerspectiveMessage(context, prevID));
+                ui.showShortMessage(translatedPerspectiveMessage(context, prevID));
             }
 
             @Override

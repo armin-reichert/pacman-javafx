@@ -67,7 +67,7 @@ public final class CommonGameActions {
                     final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                     final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
                     collisionRules.collisionStrategyProperty().set(nextStrategy);
-                    engineContext.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
+                    engineContext.ui().showShortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
                 });
             }
         };

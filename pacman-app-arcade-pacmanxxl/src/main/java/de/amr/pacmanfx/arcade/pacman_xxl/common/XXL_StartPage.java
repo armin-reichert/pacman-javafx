@@ -91,7 +91,7 @@ public class XXL_StartPage implements StartPage {
             engineContext.engineLife().startGame();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            engineContext.ui().shortMessage("OK, I shut my mouth");
+            engineContext.ui().showShortMessage("OK, I shut my mouth");
             stopTalking();
         }
     }

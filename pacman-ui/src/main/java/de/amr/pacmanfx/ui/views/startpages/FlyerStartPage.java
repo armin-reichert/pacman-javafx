@@ -77,7 +77,7 @@ public class FlyerStartPage implements StartPage {
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             if (engineContext != null) {
                 engineContext.soundManager().voice().stop();
-                engineContext.ui().shortMessage(engineContext.translationManager().translate("flash.shut_up"));
+                engineContext.ui().showShortMessage(engineContext.translationManager().translate("flash.shut_up"));
             }
         }
     }

@@ -404,7 +404,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevelView3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            playScene3D.ui().shortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
+            playScene3D.ui().showShortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
         playScene3D.animationSystem().stopAllAnimations();

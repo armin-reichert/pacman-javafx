@@ -40,6 +40,19 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGameEngineBuilder {
 
+    static final String DEFAULT_UI_SETTINGS_PATH = "/de/amr/pacmanfx/ui/ui.json";
+
+    private static GameUISettings loadDefaultSettings() {
+        final URL url = GameUI.class.getResource(DEFAULT_UI_SETTINGS_PATH);
+        if (url == null) {
+            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'"
+                .formatted(DEFAULT_UI_SETTINGS_PATH));
+        }
+        final var settings = JsonLoader.load(url, GameUISettings.class);
+        Logger.info("Default UI settings loaded, URL={}", url);
+        return settings;
+    }
+
     private GameUISettings uiSettings;
 
     private DashboardFactory dashboardFactory;
@@ -52,9 +65,7 @@ public class PacManGameEngineBuilder {
 
     public PacManGameEngineBuilder() {
         dashboardFactory = CommonDashboardFactory.instance();
-        uiSettings = JsonLoader.load(
-            getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
-            GameUISettings.class);
+        uiSettings = loadDefaultSettings();
         Rectangle2D bounds = Screen.getPrimary().getBounds();
         height = Math.min(600, (int) bounds.getHeight() * 2 / 3);
         width = height * 28 / 32;

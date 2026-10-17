@@ -88,7 +88,7 @@ public class EditorActions {
         final EditorView editorView = engineContext.viewManager().assertView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(engineContext);
         if (!trySelectEditorView(engineContext, engineContext.viewManager())) {
-            ui.shortMessage("Cannot open the map editor.");
+            ui.showShortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());

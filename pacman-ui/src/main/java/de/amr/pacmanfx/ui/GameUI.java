@@ -40,20 +40,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
 
-    public static final String DEFAULT_UI_SETTINGS_PATH = "/de/amr/pacmanfx/ui/ui.json";
-
-    private static GameUISettings loadDefaultSettings() {
-        final URL url = GameUI.class.getResource(DEFAULT_UI_SETTINGS_PATH);
-        if (url == null) {
-            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'"
-                .formatted(DEFAULT_UI_SETTINGS_PATH));
-        }
-        final var settings = JsonLoader.load(url, GameUISettings.class);
-        Logger.info("Default UI settings loaded, URL={}", url);
-        return settings;
-    }
-
-    public static final GameUISettings DEFAULT_UI_SETTINGS = loadDefaultSettings();
+    private final GameUISettings settings;
 
     private final GameWindow window;
 
@@ -61,16 +48,12 @@ public class GameUI implements GameEventListener {
 
     private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
-    private final GameUISettings settings;
-
     private EngineUIContext engineContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings) {
         requireNonNull(stage);
         this.settings = requireNonNull(settings);
-
         window = new GameWindow(stage, width, height);
-
         viewModel = new GameViewModel();
         viewModel.init(settings);
     }
@@ -134,7 +117,7 @@ public class GameUI implements GameEventListener {
             case GenericChangeEvent _ -> forceGameSceneReload = true;
 
             case HighScoreAccessErrorEvent failure -> {
-                shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
+                showShortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
                 return;
             }
 
@@ -165,14 +148,22 @@ public class GameUI implements GameEventListener {
 
     // --- General commands ---
 
+    public void startShortMessageSystem() {
+        window().mainScene().flashMessageManager().startAnimationTimer();
+    }
+
+    public void stopShortMessageSystem() {
+        window().mainScene().flashMessageManager().stopAnimationTimer();
+    }
+
     /**
-     * Displays a flash message.
+     * Displays a "flash message" that disappears automatically after a given time.
      *
      * @param duration how long the message remains visible before fading
      * @param message  message text (supports {@link String#format})
      * @param args     formatting arguments
      */
-    public void shortMessage(Duration duration, String message, Object... args) {
+    public void showShortMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
         window.mainScene().flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
@@ -184,11 +175,11 @@ public class GameUI implements GameEventListener {
      * @param message message text
      * @param args    formatting arguments
      */
-    public void shortMessage(String message, Object... args) {
-        shortMessage(viewModel.flashMessageDurationProperty().get(), message, args);
+    public void showShortMessage(String message, Object... args) {
+        showShortMessage(viewModel.flashMessageDurationProperty().get(), message, args);
     }
 
-    public void clearMessage() {
+    public void clearShortMessage() {
         window.mainScene().flashMessageManager().clearMessage();
     }
 
