@@ -10,6 +10,7 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
@@ -107,10 +108,10 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(EngineUIContext engineContext) {
+    public Map<Named, Object> createExtensions(EngineContext engine) {
         return Map.of(
-            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engineContext),
-            EXT_ACTIONS,     new TengenMsPacMan_Actions(engineContext.input().joypad(), CommonGameActions.instance())
+            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engine),
+            EXT_ACTIONS,     new TengenMsPacMan_Actions(engine.input().joypad(), CommonGameActions.instance())
         );
     }
 

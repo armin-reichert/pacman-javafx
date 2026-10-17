@@ -8,9 +8,9 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.Cartridge;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
     private final GameVariantUIConfig uiConfig;
 
-    public DefaultGameVariantRuntime(Cartridge cartridge, EngineUIContext engineContext) {
+    public DefaultGameVariantRuntime(Cartridge cartridge, EngineContext engineContext) {
         requireNonNull(cartridge);
         requireNonNull(engineContext);
 

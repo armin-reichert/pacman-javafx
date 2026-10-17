@@ -6,11 +6,9 @@ package de.amr.pacmanfx.app.runtime;
 
 import de.amr.basics.Named;
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -27,7 +25,6 @@ import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -35,7 +32,6 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -48,9 +44,9 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
-    private final DefaultGameVariantManager gameVariantManager;
+    private final GameVariantManager gameVariantManager;
 
-    private final GameViewManager viewManager;
+    private final GameViewManager gameViewManager;
 
     private final GameSceneManager gameSceneManager;
 
@@ -71,23 +67,24 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public GameEngine(
         RenderManager renderManager,
         GameSceneManager gameSceneManager,
+        GameViewManager gameViewManager,
         SoundManager soundManager,
         SpriteAnimationSystem spriteAnimationSystem,
         TranslationManager translationManager)
     {
         this.renderManager = requireNonNull(renderManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
+        this.gameViewManager = requireNonNull(gameViewManager);
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
         this.translationManager = requireNonNull(translationManager);
 
-        viewManager = new DefaultGameViewManager();
-        viewManager.currentViewIDProperty().addListener(
+        this.gameViewManager.currentViewIDProperty().addListener(
             (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
-        gameVariantManager = new DefaultGameVariantManager();
-
-        gameVariantManager.selectedVariantNameProperty().addListener(
+        //TODO
+        this.gameVariantManager = new DefaultGameVariantManager();
+        this.gameVariantManager.selectedVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
         clock().setPausableAction(this::simulate);
@@ -97,70 +94,27 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.ui.setEngineContext(this);
+
+        //TODO Check this
         gameVariantManager.init(this);
-        viewManager.init(this);
+        gameViewManager.init(this);
     }
 
     public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
         gameVariantManager.selectVariant(variantID.name());
 
-        viewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
-        viewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
+        gameViewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
+        gameViewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
 
-        viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
+        gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
 
-        updateStageIcon();
-        ui.window().show();
+        if (ui != null) {
+            ui.updateStageIcon(gameVariantManager.currentRuntime());
+            ui.window().show();
+        }
 
         Platform.runLater(this::startBackgroundServices);
-    }
-
-    //TODO This method is messy and needs a cleanup!
-    public void enterGameVariant(GameVariantRuntime runtime, GameVariantUIConfig uiConfig) {
-        requireNonNull(runtime);
-
-        final GameEventManager gameEventManager = new DefaultGameEventManager();
-
-        // Create new game context
-        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), gameEventManager);
-
-        newGameSession(currentGame);
-
-        stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
-
-        // Update game scene manager
-        gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-
-        // Just to be sure:
-        gameEventManager.removeAllSubscribers();
-        gameEventManager.addSubscriber(ui);
-        gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
-        gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
-
-        runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
-
-        // Init UI for new runtime (game variant)
-        uiConfig.load(this);
-
-        spriteAnimationSystem.start();
-
-        ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
-    }
-
-    public void exitGameVariant(GameVariantRuntime variantRuntime, GameVariantUIConfig uiConfig) {
-        requireNonNull(variantRuntime);
-
-        variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-
-        uiConfig.unload(this);
-
-        spriteAnimationSystem.stop();
-
-        soundManager.dispose();
-
-        currentGame.eventManager().removeAllSubscribers();
-        currentGame = null;
     }
 
     // Interface GameEngineContext
@@ -222,7 +176,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public GameViewManager viewManager() {
-        return viewManager;
+        return gameViewManager;
     }
 
     @Override
@@ -239,12 +193,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             currentGame.playConfig().gamePlay().startSession(currentGame);
 
             ui.window().mainScene().connect(currentGame.session());
-            viewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
+            gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
             clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
             clock().start();
-        }
-        else {
+        } else {
             fatalError(new IllegalStateException("Game cannot be started, no game is currently selected"));
         }
     }
@@ -256,8 +209,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
             gameSceneManager.removeCurrentGameScene();
             clock().stop();
-        }
-        else {
+        } else {
             fatalError(new IllegalStateException("Game cannot be suspended, no game is currently selected"));
         }
     }
@@ -284,12 +236,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public void enterGameVariant(String variantName) {
-        enterGameVariant(gameVariantManager.runtimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
+        enterGameVariant(gameVariantManager.runtimeByName(variantName));
     }
 
     @Override
     public void exitGameVariant(String variantName) {
-        exitGameVariant(gameVariantManager.runtimeByName(variantName), gameVariantManager.currentRuntime().uiConfig());
+        exitGameVariant(gameVariantManager.runtimeByName(variantName));
     }
 
     // Private area, no trespassing!
@@ -297,39 +249,60 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
         if (oldVariantName != null) {
             Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-            final DefaultGameVariantRuntime oldRuntime = gameVariantManager.runtimeByName(oldVariantName);
-            final GameVariantUIConfig oldUIConfig = oldRuntime.uiConfig();
-            exitGameVariant(oldRuntime, oldUIConfig);
+            final GameVariantRuntime oldRuntime = gameVariantManager.runtimeByName(oldVariantName);
+            exitGameVariant(oldRuntime);
         }
         if (newVariantName != null) {
             Logger.info(">>> Enter game variant '{}'", newVariantName);
-            final DefaultGameVariantRuntime newRuntime = gameVariantManager.runtimeByName(newVariantName);
-            final GameVariantUIConfig newUIConfig = newRuntime.uiConfig();
-            enterGameVariant(gameVariantManager.runtimeByName(newVariantName), newUIConfig);
+            final GameVariantRuntime newRuntime = gameVariantManager.runtimeByName(newVariantName);
+            enterGameVariant(newRuntime);
         }
-        updateStageIcon();
+    }
+
+    //TODO This method is messy and needs a cleanup!
+    private void enterGameVariant(GameVariantRuntime runtime) {
+
+        final GameEventManager gameEventManager = new DefaultGameEventManager();
+
+        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), gameEventManager);
+        newGameSession(currentGame);
+        stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
+        runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
+        spriteAnimationSystem.start();
+
+        gameEventManager.addSubscriber(ui);
+        gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
+        gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
+
+        if (ui != null) {
+            ui.onEnterGameVariant(runtime);
+        }
+    }
+
+    private void exitGameVariant(GameVariantRuntime runtime) {
+        runtime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
+        spriteAnimationSystem.stop();
+        soundManager.dispose();
+        currentGame.eventManager().removeAllSubscribers();
+        currentGame = null;
+
+        if (ui != null) {
+            ui.onExitGameVariant(runtime);
+        }
     }
 
     private void onViewChanged(Named oldViewID, Named newViewID) {
         ui.clearMessage();
 
         if (oldViewID != null) {
-            viewManager.assertView(oldViewID).onExit();
+            gameViewManager.assertView(oldViewID).onExit();
         }
 
-        final GameView newView = viewManager.assertView(newViewID);
+        final GameView newView = gameViewManager.assertView(newViewID);
         newView.onEnter();
 
         ui.window().mainScene().replaceGameView(newView);
-        ui.window().updateStageTitleBinding(viewManager, newViewID);
-    }
-
-    private void updateStageIcon() {
-        final AssetMap assets = gameVariantManager.currentRuntime().uiConfig().assets();
-        final Image icon = assets.image("app_icon");
-        if (icon != null) {
-            ui.window().stage().getIcons().setAll(icon);
-        }
+        ui.window().updateStageTitleBinding(gameViewManager, newViewID);
     }
 
     private void startBackgroundServices() {
@@ -364,8 +337,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private void render() {
         try {
-            if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
-                viewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).render();
+            if (gameViewManager.isSelected(GameViewID.GAMEPLAY)) {
+                gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).render();
             }
         } catch (Exception x) {
             fatalError(x);

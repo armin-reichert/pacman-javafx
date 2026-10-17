@@ -26,6 +26,7 @@ import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.assets.DefaultTranslationManager;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
+import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -54,6 +55,7 @@ public class PacManAllGamesNoBuilder extends Application {
         engine = new GameEngine(
             new DefaultRenderManager(),
             new DefaultGameSceneManager(),
+            new DefaultGameViewManager(),
             new DefaultSoundManager(),
             new SpriteAnimationSystem(60),
             new DefaultTranslationManager()

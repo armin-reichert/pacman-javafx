@@ -8,11 +8,10 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.config.Cartridge;
-import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private EngineUIContext engineContext;
+    private EngineContext engineContext;
 
     private final Map<String, DefaultGameVariantRuntime> runtimesByName = new HashMap<>();
 
@@ -33,18 +32,17 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     public DefaultGameVariantManager() {}
 
-    public void init(EngineUIContext engineContext) {
+    public void init(EngineContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
     }
 
     @Override
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
-        final GameViewModel viewModel = engineContext.ui().viewModel();
-        final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
+
         final DefaultGameVariantRuntime gameVariantRuntime;
         try {
-            gameVariantRuntime = createGameVariantRuntime(engineContext, variantName, includeInteractiveTests);
+            gameVariantRuntime = createGameVariantRuntime(engineContext, variantName);
             runtimesByName.put(variantName, gameVariantRuntime);
         } catch (Exception x) {
             throw new RuntimeException("Game variant could not be registered", x);
@@ -96,15 +94,13 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private DefaultGameVariantRuntime createGameVariantRuntime(EngineUIContext engineContext, String variantName, boolean includeInteractiveTests) {
+    private DefaultGameVariantRuntime createGameVariantRuntime(EngineContext engineContext, String variantName) {
         final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
         final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engineContext);
-        if (includeInteractiveTests) {
-            final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
-            gameFlow.addState(new Test_ShortTestState());
-            gameFlow.addState(new Test_MediumTestState());
-            gameFlow.addState(new Test_CutScenesTestState());
-        }
+        final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
+        gameFlow.addState(new Test_ShortTestState());
+        gameFlow.addState(new Test_MediumTestState());
+        gameFlow.addState(new Test_CutScenesTestState());
         variantRuntime.playConfig().worldMapManager().loadMapPrototypes();
         Logger.info("Loaded world maps for game variant {}", variantName);
         return variantRuntime;

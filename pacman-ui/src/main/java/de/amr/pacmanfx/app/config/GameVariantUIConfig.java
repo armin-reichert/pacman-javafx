@@ -8,6 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -23,7 +24,7 @@ public interface GameVariantUIConfig extends Disposable {
 
     void unload(EngineUIContext engineContext);
 
-    default Map<Named, Object> createExtensions(EngineUIContext engineContext) {
+    default Map<Named, Object> createExtensions(EngineContext engineContext) {
         return Map.of();
     }
 

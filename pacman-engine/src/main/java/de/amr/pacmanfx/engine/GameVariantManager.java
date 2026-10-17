@@ -9,6 +9,8 @@ import javafx.beans.value.ChangeListener;
 
 public interface GameVariantManager {
 
+    void init(EngineContext engine);
+
     void registerVariantConfig(String variantName);
 
     GameVariantRuntime runtimeByName(String variantName);

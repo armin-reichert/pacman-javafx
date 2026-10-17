@@ -6,11 +6,15 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Named;
 import de.amr.basics.json.JsonLoader;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -23,6 +27,7 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.GameWindow;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -81,6 +86,39 @@ public class GameUI implements GameEventListener {
 
         Logger.info("UI connected with engine");
         Logger.info(actionBindings);
+    }
+
+    public void onEnterGameVariant(GameVariantRuntime runtime) {
+        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
+            Logger.error("Illegal runtime class: {}", runtime.getClass());
+            return;
+        }
+        final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
+        uiConfig.load(engineContext);
+        viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
+        engineContext.gameSceneManager().setGameSceneConfig(uiConfig.gameSceneConfig());
+        updateStageIcon(runtime);
+    }
+
+    public void onExitGameVariant(GameVariantRuntime runtime) {
+        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
+            Logger.error("Illegal runtime class: {}", runtime.getClass());
+            return;
+        }
+        final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
+        uiConfig.unload(engineContext);
+    }
+
+    public void updateStageIcon(GameVariantRuntime runtime) {
+        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
+            Logger.error("Illegal runtime class: {}", runtime.getClass());
+            return;
+        }
+        final AssetMap assets = defaultRuntime.uiConfig().assets();
+        final Image icon = assets.image("app_icon");
+        if (icon != null) {
+            window().stage().getIcons().setAll(icon);
+        }
     }
 
     @Override
