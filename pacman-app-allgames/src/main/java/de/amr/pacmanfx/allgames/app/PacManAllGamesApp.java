@@ -47,7 +47,7 @@ public class PacManAllGamesApp extends Application {
             .startPage(ArcadePacMan_StartPage::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .startPage(TengenMsPacMan_StartPage::new)
-            .startPage(XXL_StartPage::new)
+            .startPage(() -> new XXL_StartPage("Pac-Man XXL games")) //TODO localize
             .window(stage)
             .screenArea(1.6, 0.8)
             .buildEngine()

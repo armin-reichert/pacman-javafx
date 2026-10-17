@@ -83,9 +83,9 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
-        init(engineContext, config.gameVariant());
+    public void setEngine(EngineUIContext engine) {
+        this.engineContext = requireNonNull(engine);
+        init(engine, config.gameVariant());
     }
 
     @Override

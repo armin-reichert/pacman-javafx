@@ -27,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -45,10 +46,10 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private EngineUIContext engineContext;
+    private EngineUIContext engine;
 
-    public XXL_StartPage() {
-        title = "Pac-Man XXL games"; // TODO localize
+    public XXL_StartPage(String title) {
+        this.title = title;
 
         final OptionMenuSettings menuSettings = JsonLoader.load(
             getClass().getResource(OPTION_MENU_SETTINGS_PATH),
@@ -69,12 +70,11 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setEngineContext(EngineUIContext engineContext) {
-        this.engineContext = engineContext;
-
+    public void setEngine(EngineUIContext engine) {
+        this.engine = requireNonNull(engine);
         // Ensure both game variants are available
-        engineContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
-        engineContext.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
+        engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_PACMAN_XXL.name());
+        engine.gameVariantManager().registerVariantConfig(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
     }
 
     @Override
@@ -82,30 +82,32 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), engineContext);
+            runAction(CommonGameActions.instance().editorActions().actionOpenEditor(), engine);
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
             XXL_WorldMapManager.instance().setSelectionMode(mode);
-            engineContext.engineLife().startGame();
+            engine.engineLife().startGame();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            engineContext.ui().showShortMessage("OK, I shut my mouth");
+            engine.ui().showShortMessage("OK, I shut my mouth");
             stopTalking();
         }
     }
 
     @Override
     public void onEnter() {
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
         final GameVariantID selectedGameVariantID = menu.selectedGameVariantID();
         switch (selectedGameVariantID) {
-            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> engineContext.gameVariantManager().selectVariant(selectedGameVariantID.name());
+            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> engine.gameVariantManager().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
 
-        menu.init(engineContext);
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+        runtime.uiConfig().load(engine);
+
+        menu.init(engine);
         menu.bindEntries();
         menu.restartChaseAnimation(runtime);
 
@@ -136,15 +138,15 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        final StartPagesView startPagesView = engineContext.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPagesView = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         startPagesView.rootPane().pauseProgress();
     }
 
     private void startTalking() {
-        engineContext.soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
+        engine.soundManager().voice().playAfterSec(0.5, VARIANT_NARRATION);
     }
 
     private void stopTalking() {
-        engineContext.soundManager().voice().stop();
+        engine.soundManager().voice().stop();
     }
 }

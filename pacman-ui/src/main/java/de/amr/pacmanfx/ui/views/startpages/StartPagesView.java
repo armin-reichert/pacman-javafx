@@ -71,7 +71,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setEngineContext(engineContext);
+        startPage.setEngine(engineContext);
     }
 
     public List<StartPage> pages() {

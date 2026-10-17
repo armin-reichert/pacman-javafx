@@ -91,7 +91,7 @@ public class PacManAllGamesNoBuilder extends Application {
         startPages.addPage(engine, new ArcadePacMan_StartPage());
         startPages.addPage(engine, new ArcadeMsPacMan_StartPage());
         startPages.addPage(engine, new TengenMsPacMan_StartPage());
-        startPages.addPage(engine, new XXL_StartPage());
+        startPages.addPage(engine, new XXL_StartPage("Pac-Man XXL games")); //TODO localize
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
         engine.setUI(ui);

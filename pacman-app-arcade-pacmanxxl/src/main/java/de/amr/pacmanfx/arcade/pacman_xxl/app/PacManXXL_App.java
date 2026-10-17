@@ -27,7 +27,7 @@ public class PacManXXL_App extends Application {
     @Override
     public void start(Stage stage) {
         engine = new PacManGameEngineBuilder()
-            .startPage(XXL_StartPage::new)
+            .startPage(() -> new XXL_StartPage("Pac-Man XXL games")) //TODO localize
             .window(stage)
             .screenArea(1.6, 0.8)
             .buildEngine()

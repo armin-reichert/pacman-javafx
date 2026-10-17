@@ -14,6 +14,7 @@ import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
@@ -22,7 +23,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
 import java.util.*;
@@ -44,10 +44,10 @@ class XXL_ChaseAnimation {
     public static final float PAC_FLEEING_SPEED = 1.0f;
     public static final float GHOST_CHASE_SPEED = 1.05f;
 
-    private final DefaultGameVariantRuntime runtime;
-
     private final int numTilesX;
     private final float offsetY;
+
+    private final SpriteAnimationSystem spriteAnimationSystem;
 
     private Pac pac;
     private List<Ghost> ghosts;
@@ -60,19 +60,21 @@ class XXL_ChaseAnimation {
     private ChasingState state;
     private int collisionCount;
 
-    public XXL_ChaseAnimation(EngineUIContext engineContext, DefaultGameVariantRuntime runtime, int numTilesX, float offsetY) {
-        requireNonNull(engineContext);
-        this.runtime = requireNonNull(runtime);
+    public XXL_ChaseAnimation(SpriteAnimationSystem spriteAnimationSystem, int numTilesX, float offsetY) {
+        this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
         this.numTilesX = numTilesX;
         this.offsetY = offsetY;
-        createPac(engineContext);
-        createGhosts(engineContext);
     }
 
-    public void simulate(EngineUIContext engineContext) {
+    public void init(DefaultGameVariantRuntime runtime) {
+        createPac(runtime);
+        createGhosts(runtime);
+    }
+
+    public void simulate(DefaultGameVariantRuntime runtime) {
         switch (state) {
-            case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
-            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(engineContext);
+            case GHOSTS_CHASING_PAC -> letGhostsChasePacMan(runtime);
+            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(runtime);
         }
     }
 
@@ -92,7 +94,7 @@ class XXL_ChaseAnimation {
             .build();
     }
 
-    private void createPac(EngineUIContext engineContext) {
+    private void createPac(DefaultGameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
@@ -106,41 +108,41 @@ class XXL_ChaseAnimation {
         navigator.setWishDir(pac, Direction.LEFT);
         navigator.setSpeed(pac, PAC_FLEEING_SPEED);
 
-        animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        animController.setAnimations(pac, renderConfig.createPacAnimations(spriteAnimationSystem));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
 
         pacView = createView(pac);
     }
 
-    private void createGhosts(EngineUIContext engineContext) {
+    private void createGhosts(DefaultGameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         ghosts = new ArrayList<>(List.of(
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.ORANGE_GHOST_POKEY)
         ));
 
         ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));
     }
 
-    private void letPacManChaseGhosts(EngineUIContext engineContext) {
+    private void letPacManChaseGhosts(DefaultGameVariantRuntime runtime) {
         if (ghosts.isEmpty()) {
-            createGhosts(engineContext);
+            createGhosts(runtime);
             collisionCount = 0;
         }
 
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.position().x() > (numTilesX + 14) * TS) {
-            startGhostsChasePacMan();
+            startGhostsChasePacMan(runtime);
         }
         else {
             if (ghostPoints == null) {
                 pac.show();
-                moveActors();
+                moveActors(runtime);
                 checkCollisionPacGhost();
             }
             else {
@@ -153,7 +155,7 @@ class XXL_ChaseAnimation {
         }
     }
 
-    public void startGhostsChasePacMan() {
+    public void startGhostsChasePacMan(DefaultGameVariantRuntime runtime) {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
@@ -176,11 +178,11 @@ class XXL_ChaseAnimation {
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void letGhostsChasePacMan() {
+    private void letGhostsChasePacMan(DefaultGameVariantRuntime runtime) {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
-        moveActors();
+        moveActors(runtime);
 
         if (ghosts.getLast().position().x() < -4 * TS) { // ghosts left screen on the left side
             pac.position().setX(-(numTilesX - 4) * TS);
@@ -233,7 +235,7 @@ class XXL_ChaseAnimation {
         return Math.abs(either.position().x() - other.position().x()) < 1;
     }
 
-    private void moveActors() {
+    private void moveActors(DefaultGameVariantRuntime runtime) {
         final var motor = runtime.playConfig().systems().motor();
         motor.move(pac);
         for (Ghost ghost : ghosts) {

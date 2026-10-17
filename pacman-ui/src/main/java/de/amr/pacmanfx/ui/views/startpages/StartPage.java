@@ -15,7 +15,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    void setEngineContext(EngineUIContext engineContext);
+    void setEngine(EngineUIContext engine);
 
     void onEnter();
 
