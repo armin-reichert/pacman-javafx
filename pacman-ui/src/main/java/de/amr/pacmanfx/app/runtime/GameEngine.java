@@ -87,16 +87,16 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.gameVariantManager.selectedVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
+        gameVariantManager.init(this);
+
         clock().setPausableAction(this::simulate);
         clock().setPermanentAction(this::render);
     }
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.ui.setEngineContext(this);
-
-        //TODO Check this
-        gameVariantManager.init(this);
+        ui.setEngineContext(this);
+        //TODO Analyse why exactly view manager needs UI to initialized
         gameViewManager.init(this);
     }
 
