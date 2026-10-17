@@ -65,16 +65,18 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private StateChangeEventMapper stateChangeEventMapper;
 
     public GameEngine(
-        RenderManager renderManager,
+        GameVariantManager gameVariantManager,
         GameSceneManager gameSceneManager,
         GameViewManager gameViewManager,
+        RenderManager renderManager,
         SoundManager soundManager,
         SpriteAnimationSystem spriteAnimationSystem,
         TranslationManager translationManager)
     {
-        this.renderManager = requireNonNull(renderManager);
+        this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
         this.gameViewManager = requireNonNull(gameViewManager);
+        this.renderManager = requireNonNull(renderManager);
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
         this.translationManager = requireNonNull(translationManager);
@@ -82,8 +84,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.gameViewManager.currentViewIDProperty().addListener(
             (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
-        //TODO
-        this.gameVariantManager = new DefaultGameVariantManager();
         this.gameVariantManager.selectedVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 

@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.DefaultRenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.app.runtime.DefaultGameVariantManager;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
@@ -53,9 +54,10 @@ public class PacManAllGamesNoBuilder extends Application {
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
         engine = new GameEngine(
-            new DefaultRenderManager(),
+            new DefaultGameVariantManager(),
             new DefaultGameSceneManager(),
             new DefaultGameViewManager(),
+            new DefaultRenderManager(),
             new DefaultSoundManager(),
             new SpriteAnimationSystem(60),
             new DefaultTranslationManager()
