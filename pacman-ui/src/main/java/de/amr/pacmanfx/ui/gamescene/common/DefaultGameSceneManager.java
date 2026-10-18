@@ -51,17 +51,17 @@ public class DefaultGameSceneManager implements GameSceneManager {
 
     public DefaultGameSceneManager() {}
 
-    public void forceGameSceneUpdate(EngineUIContext engineContext) {
-        updateGameSceneAndForceReload(engineContext, true);
+    public void forceGameSceneUpdate(EngineUIContext engine) {
+        updateGameSceneAndForceReload(engine, true);
     }
 
-    public void updateGameSceneAndForceReload(EngineUIContext engineContext, boolean forceReload) {
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+    public void updateGameSceneAndForceReload(EngineUIContext engine, boolean forceReload) {
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
         final GameVariantUIConfig uiConfig = runtime.uiConfig();
 
-        final GameContext currentGame = engineContext.optCurrentGame().orElseThrow();
+        final GameContext currentGame = engine.optCurrentGame().orElseThrow();
         final GameSession session = currentGame.session();
-        final boolean select3D = engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
+        final boolean select3D = engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
         final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(currentGame, select3D).orElse(null);
 
         if (nextGameScene == null) {
@@ -71,7 +71,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
             throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
 
-        nextScene.setEngine(engineContext);
+        nextScene.setEngine(engine);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
@@ -81,7 +81,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         }
         nextGameScene.activate();
 
-        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         playView.replaceGameScene(currentGameScene(), nextGameScene);
 
         session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));

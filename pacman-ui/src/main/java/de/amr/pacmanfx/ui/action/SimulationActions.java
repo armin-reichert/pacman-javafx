@@ -126,7 +126,7 @@ public class SimulationActions {
                 final boolean paused = gameClock.areUpdatesDisabled();
                 if (paused) {
                     engine.soundManager().stopAll();
-                    //engineContext.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+                    //engine.gameVariantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
                 }
             }
 

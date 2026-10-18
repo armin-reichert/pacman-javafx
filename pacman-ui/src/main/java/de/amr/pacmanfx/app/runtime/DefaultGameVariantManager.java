@@ -94,9 +94,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private DefaultGameVariantRuntime createGameVariantRuntime(EngineContext engineContext, String variantName) {
+    private DefaultGameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
         final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
-        final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engineContext);
+        final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engine);
         final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
         gameFlow.addState(new Test_ShortTestState());
         gameFlow.addState(new Test_MediumTestState());

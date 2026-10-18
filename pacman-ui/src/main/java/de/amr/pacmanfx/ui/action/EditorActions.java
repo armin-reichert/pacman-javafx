@@ -11,7 +11,6 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -87,21 +86,21 @@ public class EditorActions {
         final GameUI ui = engine.ui();
         final EditorView editorView = engine.viewManager().assertView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(engine);
-        if (!trySelectEditorView(engine, engine.viewManager())) {
+        if (!trySelectEditorView(engine)) {
             ui.showShortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());
     }
 
-    private boolean trySelectEditorView(EngineUIContext engine, GameViewManager viewManager) {
+    private boolean trySelectEditorView(EngineUIContext engine) {
         requireNonNull(engine);
-        if (viewManager.optView(GameViewID.EDITOR, EditorView.class).isEmpty()) {
+        if (engine.viewManager().optView(GameViewID.EDITOR, EditorView.class).isEmpty()) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (canOpenEditor(engine, viewManager)) {
-            viewManager.currentViewIDProperty().set(GameViewID.EDITOR);
+        if (canOpenEditor(engine)) {
+            engine.viewManager().currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
         else {
@@ -110,11 +109,11 @@ public class EditorActions {
         }
     }
 
-    private boolean canOpenEditor(EngineUIContext engine, GameViewManager viewManager) {
-        if (viewManager.isSelected(GameViewID.START_PAGES)) {
+    private boolean canOpenEditor(EngineUIContext engine) {
+        if (engine.viewManager().isSelected(GameViewID.START_PAGES)) {
             return true;
         }
-        if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
+        if (engine.viewManager().isSelected(GameViewID.GAMEPLAY)) {
             if (engine.optCurrentGame().isEmpty()) return true;
             return !engine.optCurrentGame().get().session().isGameRunning();
         }

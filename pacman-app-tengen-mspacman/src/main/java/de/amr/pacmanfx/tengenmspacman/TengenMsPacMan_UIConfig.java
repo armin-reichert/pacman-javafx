@@ -96,14 +96,14 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(EngineUIContext engineContext) {
+    public void load(EngineUIContext engine) {
         assets = new AssetMap();
         assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
         assets.addAsset("startpage.image2", RM.loadImage("graphics/flyer-page-2.png"));
         assets.freeze();
 
-        loadSounds(engineContext.soundManager());
+        loadSounds(engine.soundManager());
         renderConfig = new TengenMsPacMan_RenderConfig();
     }
 
@@ -116,8 +116,8 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(EngineUIContext engineContext) {
-        unloadSounds(engineContext.soundManager());
+    public void unload(EngineUIContext engine) {
+        unloadSounds(engine.soundManager());
         dispose();
     }
 

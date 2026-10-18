@@ -28,9 +28,9 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
     private final GameVariantUIConfig uiConfig;
 
-    public DefaultGameVariantRuntime(Cartridge cartridge, EngineContext engineContext) {
+    public DefaultGameVariantRuntime(Cartridge cartridge, EngineContext engine) {
         requireNonNull(cartridge);
-        requireNonNull(engineContext);
+        requireNonNull(engine);
 
         playConfig = new GameVariantPlayConfig(
             cartridge.systemsFactory().get(),
@@ -42,7 +42,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
         try {
             uiConfig = (GameVariantUIConfig) cartridge.uiConfigClass().getConstructor().newInstance();
-            extensions.putAll(uiConfig.createExtensions(engineContext));
+            extensions.putAll(uiConfig.createExtensions(engine));
             Logger.info("Added {} extension(s) to game variant (cartridge ID={}):", extensions.size(), cartridge.id());
             extensions.forEach((name, ext) -> Logger.info("- Extension Name: {}, Type: {}", name, ext.getClass().getSimpleName()));
         } catch (Exception cause) {

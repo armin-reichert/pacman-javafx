@@ -31,11 +31,11 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction<>("insert_coin") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
-                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
-                    engineContext.soundManager().voice().stop();
-                    engineContext.soundManager().setEnabled(true);
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
+                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+                    engine.soundManager().voice().stop();
+                    engine.soundManager().setEnabled(true);
                     game.coinMechanism().insertCoin();
                     game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                     game.eventManager().publishEvent(new CreditAddedEvent(1));
@@ -44,8 +44,8 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 if (game.coinMechanism().isFull()) {
@@ -65,15 +65,15 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.soundManager().voice().stop();
-                engineContext.optCurrentGame().ifPresent(game ->
+            public void execute(EngineUIContext engine) {
+                engine.soundManager().voice().stop();
+                engine.optCurrentGame().ifPresent(game ->
                     game.playConfig().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 if (game.coinMechanism().isEmpty()) {

@@ -87,25 +87,25 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public Map<Named, Object> createExtensions(EngineContext engineContext) {
+    public Map<Named, Object> createExtensions(EngineContext engine) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void load(EngineUIContext engineContext) {
+    public void load(EngineUIContext engine) {
         assets = new AssetMap();
         assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.addAsset("maze.bright", createBrightEmptyMap());
         assets.freeze();
 
-        loadSounds(engineContext.soundManager());
+        loadSounds(engine.soundManager());
         renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
 
     @Override
-    public void unload(EngineUIContext engineContext) {
-        unloadSounds(engineContext.soundManager());
+    public void unload(EngineUIContext engine) {
+        unloadSounds(engine.soundManager());
         dispose();
     }
 

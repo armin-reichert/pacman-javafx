@@ -108,11 +108,11 @@ public class XXL_OptionMenu extends OptionMenu {
         );
     }
 
-    public void init(EngineUIContext engineContext) {
-        this.engine = engineContext;
+    public void init(EngineUIContext engine) {
+        this.engine = engine;
 
-        final String variantName = engineContext.gameVariantManager().currentVariantName();
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        final String variantName = engine.gameVariantManager().currentVariantName();
+        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
@@ -121,18 +121,18 @@ public class XXL_OptionMenu extends OptionMenu {
         }
         xxlMapManager.loadMapPrototypes();
 
-        engineContext.engineLife().newGameSession(engineContext.optCurrentGame().orElseThrow());
+        engine.engineLife().newGameSession(engine.optCurrentGame().orElseThrow());
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
-        meView3DEnabled.setValue(engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
-        meCutScenesEnabled.setValue(engineContext.optCurrentGame().orElseThrow().session().cutScenesEnabled());
+        meView3DEnabled.setValue(engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
+        meCutScenesEnabled.setValue(engine.optCurrentGame().orElseThrow().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
         meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
         logMenuState();
-        soundEnabledProperty().bind(engineContext.soundManager().muteProperty().not());
-        scaling = computeScalingValue(engineContext.ui().stage().heightProperty());
+        soundEnabledProperty().bind(engine.soundManager().muteProperty().not());
+        scaling = computeScalingValue(engine.ui().stage().heightProperty());
     }
 
     public void restartChaseAnimation(DefaultGameVariantRuntime runtime) {

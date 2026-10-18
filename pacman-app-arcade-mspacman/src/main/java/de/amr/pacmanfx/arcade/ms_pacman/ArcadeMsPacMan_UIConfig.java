@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(EngineUIContext engineContext) {
+    public void load(EngineUIContext engine) {
         assets = new AssetMap();
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
@@ -111,7 +111,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         }
         assets.freeze();
 
-        loadSounds(engineContext.soundManager());
+        loadSounds(engine.soundManager());
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
     }
 
@@ -121,8 +121,8 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(EngineUIContext engineContext) {
-        unloadSounds(engineContext.soundManager());
+    public void unload(EngineUIContext engine) {
+        unloadSounds(engine.soundManager());
         dispose();
     }
 

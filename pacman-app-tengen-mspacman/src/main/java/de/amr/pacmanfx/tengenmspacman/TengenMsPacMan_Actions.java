@@ -48,38 +48,38 @@ public final class TengenMsPacMan_Actions {
 
         actionEnterStartScreen = new GameAction<>("enter_start_screen") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
         };
 
         actionQuitDemoLevel = new GameAction<>("quit_demo_level") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.session().isAttractMode();
             }
         };
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> game.playConfig().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING));
             }
         };
 
         actionTogglePlaySceneDisplayMode = new GameAction<>("toggle_play_scene_display_mode") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+            public void execute(EngineUIContext engine) {
+                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
                 final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
                 uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
@@ -95,8 +95,8 @@ public final class TengenMsPacMan_Actions {
 
         actionToggleJoypadBindingsDisplayed = new GameAction<>("toggle_joypad_bindings_displayed") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+            public void execute(EngineUIContext engine) {
+                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
                 final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
             }
@@ -104,14 +104,14 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction<>("toggle_pac_booster") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     session.optLevel().ifPresent(level -> {
                         final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
                         gameOptionValues(session).setBoosterEnabled(nextEnabledState);
                         if (nextEnabledState) {
-                            engineContext.ui().showShortMessage("Booster ON!"); //TODO localize
+                            engine.ui().showShortMessage("Booster ON!"); //TODO localize
                         }
                         //TODO hack: this should be done by entity update system!
                         level.entitySet().pac().assertComponent(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
@@ -120,8 +120,8 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game != null) {
                     final GameSession session = game.session();
                     return gameOptionValues(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();

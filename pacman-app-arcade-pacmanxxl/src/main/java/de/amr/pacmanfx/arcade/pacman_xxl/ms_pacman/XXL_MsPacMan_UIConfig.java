@@ -80,20 +80,20 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(EngineUIContext engineContext) {
+    public void load(EngineUIContext engine) {
         assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
-        loadSounds(engineContext.soundManager());
+        loadSounds(engine.soundManager());
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
     }
 
     @Override
-    public void unload(EngineUIContext engineContext) {
-        unloadSounds(engineContext.soundManager());
+    public void unload(EngineUIContext engine) {
+        unloadSounds(engine.soundManager());
         dispose();
     }
 

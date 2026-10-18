@@ -74,13 +74,13 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(EngineUIContext engineContext) {
+    public void load(EngineUIContext engine) {
         assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
-        loadSounds(engineContext.soundManager());
+        loadSounds(engine.soundManager());
         renderConfig = new XXL_PacMan_RenderConfig(assets);
     }
 
@@ -90,8 +90,8 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(EngineUIContext engineContext) {
-        unloadSounds(engineContext.soundManager());
+    public void unload(EngineUIContext engine) {
+        unloadSounds(engine.soundManager());
         dispose();
     }
 
