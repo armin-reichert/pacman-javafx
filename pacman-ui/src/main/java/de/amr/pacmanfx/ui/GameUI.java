@@ -78,7 +78,7 @@ public class GameUI implements GameEventListener {
     public void setEngine(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
 
-        stageTitleManager = new StageTitleManager(engine, stage.titleProperty());
+        stageTitleManager = new StageTitleManager(engine, stage);
         mainScene.setEngineContext(engine);
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
         connectKeyboard(engine.input().keyboard());

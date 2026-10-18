@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.StringProperty;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -22,44 +22,49 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
+/**
+ * The stage title depends on lots of different things: the currently selected game variant, the view mode,
+ * if debug mode is active and more. This class handles all these cases.
+ */
 public class StageTitleManager {
 
     private final EngineUIContext engine;
 
-    private final StringBinding binding;
+    private final StringBinding startAndPlayViewBinding;
 
-    private final StringProperty stageTitleProperty;
+    private final Stage stage;
 
-    public StageTitleManager(EngineUIContext engine, StringProperty stageTitleProperty) {
+    public StageTitleManager(EngineUIContext engine, Stage stage) {
         this.engine = requireNonNull(engine);
-        this.stageTitleProperty = stageTitleProperty;
-        binding = createStartAndGameViewTitleBinding();
-        stageTitleProperty.bind(binding);
+        this.stage = requireNonNull(stage);
+        startAndPlayViewBinding = createStartAndPlayViewTitleBinding();
+        stage.titleProperty().bind(startAndPlayViewBinding);
     }
 
     public void update(Named viewID) {
         if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
-            stageTitleProperty.bind(binding);
+            stage.titleProperty().bind(startAndPlayViewBinding);
         }
         else if (viewID == GameViewID.EDITOR) {
-            engine.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
-                stageTitleProperty.unbind();
-                editorView.optTitleSupplier().ifPresent(titleSupplier -> stageTitleProperty.set(titleSupplier.get()));
+            engine.viewManager().optView(GameViewID.EDITOR, EditorView.class)
+                .flatMap(EditorView::optTitleSupplier).ifPresent(supplier -> {
+                stage.titleProperty().unbind();
+                stage.setTitle(supplier.get());
             });
         }
     }
 
     // Private area
 
-    private StringBinding createStartAndGameViewTitleBinding() {
+    private StringBinding createStartAndPlayViewTitleBinding() {
         return createStringBinding(
             () -> {
                 final Named id = engine.viewManager().currentViewID();
                 if (id == GameViewID.START_PAGES || id == GameViewID.GAMEPLAY) {
-                    return optCurrentViewTitle(engine).orElse(titleForCurrentGameScene(engine));
+                    return optCurrentViewTitle().orElse(titleForCurrentGameScene());
                 }
                 if (id == GameViewID.EDITOR) {
-                    return optCurrentViewTitle(engine).orElse(("Map Editor"));
+                    return optCurrentViewTitle().orElse(("Map Editor"));
                 }
                 return "";
             },
@@ -72,12 +77,12 @@ public class StageTitleManager {
         );
     }
 
-    private Optional<String> optCurrentViewTitle(EngineUIContext engine) {
+    private Optional<String> optCurrentViewTitle() {
         final GameView currentView = engine.viewManager().optCurrentView().orElse(null);
         return currentView == null ? Optional.empty() : currentView.optTitleSupplier().map(Supplier::get);
     }
 
-    private String titleForCurrentGameScene(EngineUIContext engine) {
+    private String titleForCurrentGameScene() {
         final GameScene gameScene = engine.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = engine.ui().viewModel();
 
@@ -85,31 +90,31 @@ public class StageTitleManager {
         final boolean is3D   = viewModel.common3DSettings().view3DEnabledProperty().get();
         final boolean paused = engine.clock().areUpdatesDisabled();
 
-        final String normalTitle = stageTitle(engine, paused, is3D);
+        final String normalTitle = stageTitle(paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(EngineUIContext engine, boolean paused, boolean is3D) {
+    private String stageTitle(boolean paused, boolean is3D) {
         final String gameVariantName = engine.gameVariantManager().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = engine.translationManager().translate(is3D ?
-            "view_mode.3d" : "view_mode.2d");
+        final String viewModeKey = engine.translationManager().translate(is3D ? "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
+        // Must cast to get access to UI configuration!
         final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-        final TranslationManager variantTranslationManager = runtime.uiConfig().translations();
+        final TranslationManager translationManager = runtime.uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
-        if (variantTranslationManager.textBundle() != null
-            && variantTranslationManager.textBundle().containsKey(titleKey)) {
-            return variantTranslationManager.translate(titleKey, viewModeKey);
+        if (translationManager.textBundle() != null
+            && translationManager.textBundle().containsKey(titleKey)) {
+            return translationManager.translate(titleKey, viewModeKey);
         } else {
             return "Unspecified Pac-Man Game Variant";
         }
