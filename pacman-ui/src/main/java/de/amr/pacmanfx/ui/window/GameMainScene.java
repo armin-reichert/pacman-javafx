@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameMainScene extends Scene {
 
-    private final StackPane gameViewHolder = new StackPane();
+    private final StackPane gameViewRoot = new StackPane();
 
     private final StatusIconBox statusIconBox;
 
@@ -35,47 +35,48 @@ public class GameMainScene extends Scene {
     public GameMainScene(double width, double height, Pane flashMessagePane) {
         super(new StackPane(), width, height, Color.BLACK);
 
-        getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
-
         statusIconBox = new StatusIconBox();
-        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
-
         keyboardInfoPopup = new KeyboardInfoPopup();
-        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
 
         rootPane().getChildren().addAll(
-            gameViewHolder,
+            gameViewRoot,
             statusIconBox.rootPane(),
             flashMessagePane,
             keyboardInfoPopup.rootPane()
         );
+
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
+        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
     }
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
     }
 
-    public void setEngineContext(EngineUIContext engineContext) {
+    public void setEngineContext(EngineUIContext engine) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> engineContext.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> selectBackground(engineContext.gameSceneManager()),
-            engineContext.viewManager().currentViewIDProperty(),
-            engineContext.gameSceneManager().currentGameSceneProperty()
+            () -> selectBackground(engine.gameSceneManager()),
+            engine.viewManager().currentViewIDProperty(),
+            engine.gameSceneManager().currentGameSceneProperty()
         ));
 
-        statusIconBox.setEngineContext(engineContext);
-        keyboardInfoPopup.setEngineContext(engineContext);
+        statusIconBox.setEngineContext(engine);
+        keyboardInfoPopup.setEngineContext(engine);
     }
 
-    public void connect(GameSession session) {
+    public void setGameSession(GameSession session) {
+        requireNonNull(session);
         statusIconBox.bind(session.cheats());
     }
 
     public void replaceGameView(GameView gameView) {
         requireNonNull(gameView);
-        gameViewHolder.getChildren().setAll(gameView.rootPane());
+        gameViewRoot.getChildren().setAll(gameView.rootPane());
     }
 
     private Background selectBackground(GameSceneManager gameSceneManager) {

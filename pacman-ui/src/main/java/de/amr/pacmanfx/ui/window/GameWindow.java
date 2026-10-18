@@ -48,17 +48,8 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show() {
-        stage.centerOnScreen();
-        stage.show();
-    }
-
     public Stage stage() {
         return stage;
-    }
-
-    public void setFullScreen(boolean value) {
-        stage.setFullScreen(value);
     }
 
     public void updateStageTitleBinding(GameViewManager viewManager, Named viewID) {

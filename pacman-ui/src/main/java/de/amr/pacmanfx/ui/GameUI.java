@@ -167,6 +167,16 @@ public class GameUI implements GameEventListener {
 
     // --- General commands ---
 
+    public void show() {
+        window.stage().centerOnScreen();
+        window.stage().show();
+    }
+
+    public void setFullScreen(boolean value) {
+        window.stage().setFullScreen(value);
+    }
+
+
     public void startShortMessageSystem() {
         flashMessageManager.startAnimationTimer();
     }

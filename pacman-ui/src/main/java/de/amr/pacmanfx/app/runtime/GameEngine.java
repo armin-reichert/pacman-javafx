@@ -111,7 +111,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         if (ui != null) {
             ui.updateStageIcon(gameVariantManager.currentRuntime());
-            ui.window().show();
+            ui.show();
         }
 
         Platform.runLater(this::startBackgroundServices);
@@ -193,7 +193,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             currentGame.playConfig().gamePlay().startSession(currentGame);
 
             if (ui != null) {
-                ui.mainScene().connect(currentGame.session());
+                ui.mainScene().setGameSession(currentGame.session());
             } else {
                 Logger.error("No UI has been attached to engine!");
             }
