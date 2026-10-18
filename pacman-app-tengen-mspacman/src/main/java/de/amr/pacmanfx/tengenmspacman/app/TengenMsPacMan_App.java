@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.app.config.PacManGameEngineBuilder;
 import de.amr.pacmanfx.app.runtime.GameEngine;
-import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import javafx.application.Application;
@@ -21,7 +21,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        PlayStation.instance().insertCartridges(TengenMsPacMan_Cartridge.CARTRIDGE);
+        CartridgeRegistry.instance().register(TengenMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

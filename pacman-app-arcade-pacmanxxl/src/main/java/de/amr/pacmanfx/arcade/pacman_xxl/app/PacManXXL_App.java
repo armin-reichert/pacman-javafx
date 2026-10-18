@@ -9,7 +9,7 @@ import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -19,7 +19,7 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
-        PlayStation.instance().insertCartridges(
+        CartridgeRegistry.instance().register(
             XXL_PacMan_Cartridge.CARTRIDGE,
             XXL_MsPacMan_Cartridge.CARTRIDGE);
     }

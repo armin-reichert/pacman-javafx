@@ -8,7 +8,7 @@ import de.amr.pacmanfx.app.config.PacManGameEngineBuilder;
 import de.amr.pacmanfx.app.runtime.GameEngine;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        PlayStation.instance().insertCartridges(ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        CartridgeRegistry.instance().register(ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

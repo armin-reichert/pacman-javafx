@@ -20,7 +20,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
@@ -64,7 +64,7 @@ public class PacManAllGamesNoBuilder extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        PlayStation.instance().insertCartridges(
+        CartridgeRegistry.instance().register(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,

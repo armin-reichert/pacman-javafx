@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.PlayStation;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.engine.config.Cartridge;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -95,7 +95,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     private DefaultGameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
-        final Cartridge cartridge = PlayStation.instance().cartridgeByName(variantName);
+        final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantName);
         final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engine);
         final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
         gameFlow.addState(new Test_ShortTestState());

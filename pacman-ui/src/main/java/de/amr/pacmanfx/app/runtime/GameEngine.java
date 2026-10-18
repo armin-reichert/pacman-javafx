@@ -15,10 +15,10 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.GameVariantRuntime;
-import de.amr.pacmanfx.engine.PlayStation;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
@@ -35,6 +35,7 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -43,6 +44,12 @@ import static java.util.Objects.requireNonNull;
  * The Pac-Man games "engine".
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext {
+
+    private final GameClock clock;
+
+    private final Input input = new Input();
+
+    private final DirectoryWatchdog watchdog;
 
     private final GameVariantManager gameVariantManager;
 
@@ -81,6 +88,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
         this.translationManager = requireNonNull(translationManager);
 
+        clock = new DefaultGameClock();
+        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+
+        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+
         this.gameViewManager.currentViewIDProperty().addListener(
             (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
@@ -89,8 +101,13 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         gameVariantManager.init(this);
 
-        clock().setPausableAction(this::simulate);
-        clock().setPermanentAction(this::render);
+        clock.setPausableAction(this::simulate);
+        clock.setPermanentAction(this::render);
+
+        final boolean ok = validateUserDirs();
+        if (!ok) {
+            throw new IllegalStateException("GameBox: User directory validation failed");
+        }
     }
 
     public void setUI(GameUI ui) {
@@ -121,7 +138,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public GameClock clock() {
-        return PlayStation.instance().clock();
+        return clock;
     }
 
     @Override
@@ -146,7 +163,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public Input input() {
-        return PlayStation.instance().input();
+        return input;
     }
 
     @Override
@@ -181,7 +198,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return PlayStation.instance().watchdog();
+        return watchdog;
     }
 
     // EngineLifecycle
@@ -200,8 +217,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
             gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
-            clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
-            clock().start();
+            clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+            clock.start();
         } else {
             fatalError(new IllegalStateException("Game cannot be started, no game is currently selected"));
         }
@@ -213,7 +230,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
             soundManager.stopAll();
             gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
             gameSceneManager.removeCurrentGameScene();
-            clock().stop();
+            clock.stop();
         } else {
             fatalError(new IllegalStateException("Game cannot be suspended, no game is currently selected"));
         }
@@ -237,7 +254,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         }
         suspendGame();
         spriteAnimationSystem.stop();
-        PlayStation.instance().dispose();
+        watchdog.dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
@@ -252,6 +269,24 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     }
 
     // Private area, no trespassing!
+
+    private boolean validateUserDirs() {
+        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
+            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
+    }
+
+    private static boolean dirExistsAndIsWritable(File dir, String description) {
+        if (!dir.exists() && !dir.mkdirs()) {
+            Logger.error("{} could not be created", description);
+            return false;
+        }
+        if (!dir.canWrite()) {
+            Logger.error("{} is not writable: {}", description, dir);
+            return false;
+        }
+        Logger.info("{} exists and is writable: {}", description, dir);
+        return true;
+    }
 
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
         if (oldVariantName != null) {
@@ -330,7 +365,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
     private void simulate() {
         if (currentGame != null) {
             try {
-                currentGame.session().newFrameState(clock().currentTick());
+                currentGame.session().newFrameState(clock.currentTick());
                 currentGame.playConfig().systems().updateSystem().updateEntities(currentGame);
 
                 // This can change the current game state!
