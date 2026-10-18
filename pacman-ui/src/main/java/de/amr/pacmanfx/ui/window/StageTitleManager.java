@@ -12,40 +12,37 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class StageTitleManager {
 
-    private final BooleanProperty connected = new SimpleBooleanProperty(false);
+    private final EngineUIContext engine;
 
-    private final StringBinding currentBinding;
+    private final StringBinding binding;
 
     private final StringProperty stageTitleProperty;
 
     public StageTitleManager(EngineUIContext engine, StringProperty stageTitleProperty) {
+        this.engine = requireNonNull(engine);
         this.stageTitleProperty = stageTitleProperty;
-        currentBinding = createStageTitleBinding(engine);
-        stageTitleProperty.bind(currentBinding);
-        // Triggers title update
-        connected.set(true);
+        binding = createStartAndGameViewTitleBinding();
+        stageTitleProperty.bind(binding);
     }
 
-    public void update(GameViewManager viewManager, Named viewID) {
+    public void update(Named viewID) {
         if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
-            stageTitleProperty.bind(currentBinding);
+            stageTitleProperty.bind(binding);
         }
         else if (viewID == GameViewID.EDITOR) {
-            viewManager.optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
+            engine.viewManager().optView(GameViewID.EDITOR, EditorView.class).ifPresent(editorView -> {
                 stageTitleProperty.unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stageTitleProperty.set(titleSupplier.get()));
             });
@@ -54,7 +51,7 @@ public class StageTitleManager {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(EngineUIContext engine) {
+    private StringBinding createStartAndGameViewTitleBinding() {
         return createStringBinding(
             () -> {
                 final Named id = engine.viewManager().currentViewID();
@@ -66,7 +63,6 @@ public class StageTitleManager {
                 }
                 return "";
             },
-            connected,
             engine.gameVariantManager().selectedVariantNameProperty(),
             engine.gameSceneManager().currentGameSceneProperty(),
             engine.clock().updatesDisabledProperty(),
