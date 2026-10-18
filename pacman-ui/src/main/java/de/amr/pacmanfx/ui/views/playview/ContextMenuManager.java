@@ -27,7 +27,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     public ContextMenuManager(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
-        engineContext.ui().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        engineContext.ui().mainScene().scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }

@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.help.HelpInfo;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
-import de.amr.pacmanfx.ui.window.GameMainScene;
+import de.amr.pacmanfx.ui.window.MainScene;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.beans.value.ChangeListener;
@@ -226,10 +226,10 @@ public class GamePlayView implements GameView {
     }
 
     private void installMainSceneResizeHandler() {
-        final GameMainScene mainScene = engine.ui().mainScene();
+        final MainScene mainScene = engine.ui().mainScene();
         final ChangeListener<? super Number> handler = (_, _, _)
-            -> layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
-        mainScene.widthProperty() .addListener(handler);
-        mainScene.heightProperty().addListener(handler);
+            -> layers.gameSceneLayer().resizeTo(mainScene.scene().getWidth(), mainScene.scene().getHeight());
+        mainScene.scene().widthProperty() .addListener(handler);
+        mainScene.scene().heightProperty().addListener(handler);
     }
 }

@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
-import de.amr.pacmanfx.ui.window.GameMainScene;
+import de.amr.pacmanfx.ui.window.MainScene;
 import de.amr.pacmanfx.ui.window.StageTitleManager;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -48,7 +48,7 @@ public class GameUI implements GameEventListener {
 
     private final Stage stage;
 
-    private final GameMainScene mainScene;
+    private final MainScene mainScene;
 
     private final FlashMessageManager flashMessageManager;
 
@@ -69,9 +69,9 @@ public class GameUI implements GameEventListener {
         viewModel = new GameViewModel();
         viewModel.init(settings);
 
-        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
+        mainScene = new MainScene(width, height, flashMessageManager.messageView().rootPane());
 
-        stage.setScene(mainScene);
+        stage.setScene(mainScene.scene());
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
@@ -164,7 +164,7 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public GameMainScene mainScene() {
+    public MainScene mainScene() {
         return mainScene;
     }
 
@@ -224,7 +224,7 @@ public class GameUI implements GameEventListener {
     private void connectKeyboard(Keyboard keyboard) {
         keyboard.enabledProperty().bind(engine.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
         keyboard.addStateListener(this::handleKeyboardStateChange);
-        keyboard.filterKeyEventsFrom(mainScene);
+        keyboard.filterKeyEventsFrom(mainScene.scene());
     }
 
     private void handleKeyboardStateChange(Keyboard keyboard) {

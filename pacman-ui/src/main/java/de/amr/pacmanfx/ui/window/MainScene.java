@@ -24,21 +24,24 @@ import static java.util.Objects.requireNonNull;
 /**
  * The main scene of the game.
  */
-public class GameMainScene extends Scene {
+public class MainScene {
 
-    private final StackPane gameViewRoot = new StackPane();
+    private final Scene scene;
+
+    private final StackPane sceneRoot;
+
+    private final StackPane gameViewRoot;
 
     private final StatusIconBox statusIconBox;
 
     private final KeyboardInfoPopup keyboardInfoPopup;
 
-    public GameMainScene(double width, double height, Pane flashMessagePane) {
-        super(new StackPane(), width, height, Color.BLACK);
-
+    public MainScene(double width, double height, Pane flashMessagePane) {
+        gameViewRoot = new StackPane();
         statusIconBox = new StatusIconBox();
         keyboardInfoPopup = new KeyboardInfoPopup();
 
-        rootPane().getChildren().addAll(
+        sceneRoot = new StackPane(
             gameViewRoot,
             statusIconBox.rootPane(),
             flashMessagePane,
@@ -48,18 +51,23 @@ public class GameMainScene extends Scene {
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
 
-        getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
+        scene = new Scene(sceneRoot, width, height, Color.BLACK);
+        scene.getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
+    }
+
+    public Scene scene() {
+        return scene;
     }
 
     public StackPane rootPane() {
-        return (StackPane) getRoot();
+        return sceneRoot;
     }
 
     public void setEngineContext(EngineUIContext engine) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
-        rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+        sceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(engine.gameSceneManager()),
             engine.viewManager().currentViewIDProperty(),
             engine.gameSceneManager().currentGameSceneProperty()
