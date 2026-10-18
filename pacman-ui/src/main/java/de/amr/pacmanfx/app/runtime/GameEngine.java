@@ -95,7 +95,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        ui.setEngineContext(this);
+        ui.setEngine(this);
         //TODO Analyse why exactly view manager needs UI to initialized
         gameViewManager.init(this);
     }

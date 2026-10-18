@@ -5,15 +5,16 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -25,26 +26,29 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameMainScene extends Scene {
 
-    private final FlashMessageManager flashMessageManager;
-
     private final StackPane gameViewHolder = new StackPane();
 
     private final StatusIconBox statusIconBox;
 
     private final KeyboardInfoPopup keyboardInfoPopup;
 
-    public GameMainScene(double width, double height) {
+    public GameMainScene(double width, double height, Pane flashMessagePane) {
         super(new StackPane(), width, height, Color.BLACK);
 
         getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
-
-        flashMessageManager = new FlashMessageManager();
 
         statusIconBox = new StatusIconBox();
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
 
         keyboardInfoPopup = new KeyboardInfoPopup();
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        rootPane().getChildren().addAll(
+            gameViewHolder,
+            statusIconBox.rootPane(),
+            flashMessagePane,
+            keyboardInfoPopup.rootPane()
+        );
     }
 
     public StackPane rootPane() {
@@ -63,21 +67,10 @@ public class GameMainScene extends Scene {
 
         statusIconBox.setEngineContext(engineContext);
         keyboardInfoPopup.setEngineContext(engineContext);
-
-        rootPane().getChildren().addAll(
-            gameViewHolder,
-            statusIconBox.rootPane(),
-            flashMessageManager.messageView().rootPane(),
-            keyboardInfoPopup.rootPane()
-        );
     }
 
     public void connect(GameSession session) {
         statusIconBox.bind(session.cheats());
-    }
-
-    public FlashMessageManager flashMessageManager() {
-        return flashMessageManager;
     }
 
     public void replaceGameView(GameView gameView) {

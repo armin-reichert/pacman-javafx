@@ -34,14 +34,20 @@ public class GameWindow {
 
     private StringBinding titleBinding;
 
+    private final FlashMessageManager flashMessageManager;
+
     private final Stage stage;
+
     private final GameMainScene mainScene;
+
     private EngineUIContext engineContext;
 
     public GameWindow(Stage stage, int width, int height) {
         this.stage = requireNonNull(stage);
 
-        mainScene = new GameMainScene(width, height);
+        flashMessageManager = new FlashMessageManager();
+
+        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
 
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -71,6 +77,10 @@ public class GameWindow {
 
     public GameMainScene mainScene() {
         return mainScene;
+    }
+
+    public FlashMessageManager flashMessageManager() {
+        return flashMessageManager;
     }
 
     public void setFullScreen(boolean value) {

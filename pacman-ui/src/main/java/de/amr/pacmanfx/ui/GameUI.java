@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Named;
-import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
@@ -32,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.util.Set;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
@@ -48,7 +46,7 @@ public class GameUI implements GameEventListener {
 
     private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
-    private EngineUIContext engineContext;
+    private EngineUIContext engine;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings) {
         requireNonNull(stage);
@@ -58,13 +56,13 @@ public class GameUI implements GameEventListener {
         viewModel.init(settings);
     }
 
-    public void setEngineContext(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
+    public void setEngine(EngineUIContext engine) {
+        this.engine = requireNonNull(engine);
 
-        window.setEngineContext(engineContext);
+        window.setEngineContext(engine);
 
-        engineContext.soundManager().muteProperty().bind(viewModel.muteProperty());
-        connectKeyboard(engineContext.input().keyboard());
+        engine.soundManager().muteProperty().bind(viewModel.muteProperty());
+        connectKeyboard(engine.input().keyboard());
         bindCommonActions();
 
         Logger.info("UI connected with engine");
@@ -77,9 +75,9 @@ public class GameUI implements GameEventListener {
             return;
         }
         final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
-        uiConfig.load(engineContext);
+        uiConfig.load(engine);
         viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
-        engineContext.gameSceneManager().setGameSceneConfig(uiConfig.gameSceneConfig());
+        engine.gameSceneManager().setGameSceneConfig(uiConfig.gameSceneConfig());
         updateStageIcon(runtime);
     }
 
@@ -89,7 +87,7 @@ public class GameUI implements GameEventListener {
             return;
         }
         final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
-        uiConfig.unload(engineContext);
+        uiConfig.unload(engine);
     }
 
     public void updateStageIcon(GameVariantRuntime runtime) {
@@ -109,8 +107,8 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
-                final GameScene currentGameScene = engineContext.gameSceneManager().currentGameScene();
-                final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                final GameScene currentGameScene = engine.gameSceneManager().currentGameScene();
+                final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
                 playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -124,10 +122,10 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
 
-        if (engineContext.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
-            defaultGameSceneManager.updateGameSceneAndForceReload(engineContext, forceGameSceneReload);
+        if (engine.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+            defaultGameSceneManager.updateGameSceneAndForceReload(engine, forceGameSceneReload);
         }
-        engineContext.gameSceneManager().optCurrentGameScene()
+        engine.gameSceneManager().optCurrentGameScene()
             .flatMap(GameScene::optGameEventHandler)
             .ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
@@ -149,11 +147,11 @@ public class GameUI implements GameEventListener {
     // --- General commands ---
 
     public void startShortMessageSystem() {
-        window().mainScene().flashMessageManager().startAnimationTimer();
+        window().flashMessageManager().startAnimationTimer();
     }
 
     public void stopShortMessageSystem() {
-        window().mainScene().flashMessageManager().stopAnimationTimer();
+        window().flashMessageManager().stopAnimationTimer();
     }
 
     /**
@@ -166,7 +164,7 @@ public class GameUI implements GameEventListener {
     public void showShortMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
-        window.mainScene().flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
+        window.flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
     }
 
     /**
@@ -180,24 +178,24 @@ public class GameUI implements GameEventListener {
     }
 
     public void clearShortMessage() {
-        window.mainScene().flashMessageManager().clearMessage();
+        window.flashMessageManager().clearMessage();
     }
 
     // private
 
     private void connectKeyboard(Keyboard keyboard) {
-        keyboard.enabledProperty().bind(engineContext.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
+        keyboard.enabledProperty().bind(engine.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
         keyboard.addStateListener(this::handleKeyboardStateChange);
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
     private void handleKeyboardStateChange(Keyboard keyboard) {
         if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
-            final Named currentViewID = engineContext.viewManager().currentViewID();
+            final Named currentViewID = engine.viewManager().currentViewID();
             if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
-                if (executeMatchingAction(actionBindings, engineContext).isEmpty()) {
-                    engineContext.viewManager().assertView(currentViewID).onInput(engineContext.input());
+                if (executeMatchingAction(actionBindings, engine).isEmpty()) {
+                    engine.viewManager().assertView(currentViewID).onInput(engine.input());
                 }
             }
         }
