@@ -29,7 +29,7 @@ public class EditorView implements GameView {
 
     public void ensureEditorCreated(EngineUIContext engineContext) {
         if (editor == null) {
-            editor = new TileMapEditor(engineContext.ui().window().stage(), new Pac3DShapeFactory());
+            editor = new TileMapEditor(engineContext.ui().stage(), new Pac3DShapeFactory());
             editor.setOnQuit(_ -> engineContext.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES));
             final MenuItem miQuitEditor = new MenuItem(engineContext.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());

@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.pacmanfx.ui.window.GameWindow;
+import de.amr.pacmanfx.ui.window.StageTitleManager;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -46,7 +46,7 @@ public class GameUI implements GameEventListener {
 
     private final GameUISettings settings;
 
-    private final GameWindow window;
+    private final Stage stage;
 
     private final GameMainScene mainScene;
 
@@ -58,15 +58,17 @@ public class GameUI implements GameEventListener {
 
     private EngineUIContext engine;
 
+    private StageTitleManager stageTitleManager;
+
     public GameUI(Stage stage, int width, int height, GameUISettings settings) {
-        requireNonNull(stage);
+        this.stage = requireNonNull(stage);
         this.settings = requireNonNull(settings);
 
         flashMessageManager = new FlashMessageManager();
         mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
-        window = new GameWindow(stage);
         viewModel = new GameViewModel();
         viewModel.init(settings);
+
 
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -76,7 +78,7 @@ public class GameUI implements GameEventListener {
     public void setEngine(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
 
-        window.setEngineContext(engine);
+        stageTitleManager = new StageTitleManager(engine, stage.titleProperty());
         mainScene.setEngineContext(engine);
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
         connectKeyboard(engine.input().keyboard());
@@ -115,7 +117,7 @@ public class GameUI implements GameEventListener {
         final AssetMap assets = defaultRuntime.uiConfig().assets();
         final Image icon = assets.image("app_icon");
         if (icon != null) {
-            window().stage().getIcons().setAll(icon);
+            stage.getIcons().setAll(icon);
         }
     }
 
@@ -149,6 +151,10 @@ public class GameUI implements GameEventListener {
 
     // --- Accessors ---
 
+    public Stage stage() {
+        return stage;
+    }
+
     public GameUISettings settings() {
         return settings;
     }
@@ -157,23 +163,23 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public GameWindow window() {
-        return window;
-    }
-
     public GameMainScene mainScene() {
         return mainScene;
+    }
+
+    public StageTitleManager stageTitleManager() {
+        return stageTitleManager;
     }
 
     // --- General commands ---
 
     public void show() {
-        window.stage().centerOnScreen();
-        window.stage().show();
+        stage.centerOnScreen();
+        stage.show();
     }
 
     public void setFullScreen(boolean value) {
-        window.stage().setFullScreen(value);
+        stage.setFullScreen(value);
     }
 
 

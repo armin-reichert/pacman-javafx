@@ -132,7 +132,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         logMenuState();
         soundEnabledProperty().bind(engineContext.soundManager().muteProperty().not());
-        scaling = computeScalingValue(engineContext.ui().window().stage().heightProperty());
+        scaling = computeScalingValue(engineContext.ui().stage().heightProperty());
     }
 
     public void restartChaseAnimation(DefaultGameVariantRuntime runtime) {

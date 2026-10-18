@@ -308,7 +308,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         if (ui != null) {
             ui.clearShortMessage();
             ui.mainScene().replaceGameView(newView);
-            ui.window().updateStageTitleBinding(gameViewManager, newViewID);
+            ui.stageTitleManager().update(gameViewManager, newViewID);
         }
     }
 
