@@ -226,7 +226,7 @@ public class GamePlayView implements GameView {
     }
 
     private void installMainSceneResizeHandler() {
-        final GameMainScene mainScene = engine.ui().window().mainScene();
+        final GameMainScene mainScene = engine.ui().mainScene();
         final ChangeListener<? super Number> handler = (_, _, _)
             -> layers.gameSceneLayer().resizeTo(mainScene.getWidth(), mainScene.getHeight());
         mainScene.widthProperty() .addListener(handler);

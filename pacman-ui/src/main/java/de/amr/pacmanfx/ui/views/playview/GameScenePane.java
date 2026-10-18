@@ -74,8 +74,8 @@ public class GameScenePane extends StackPane {
         requireNonNull(uiConfig);
         requireNonNull(gameScene);
 
-        final DoubleExpression availableWidth = ui.window().mainScene().widthProperty();
-        final DoubleExpression availableHeight = ui.window().mainScene().heightProperty();
+        final DoubleExpression availableWidth = ui.mainScene().widthProperty();
+        final DoubleExpression availableHeight = ui.mainScene().heightProperty();
         final Game2DSettingsVM settingsViewModel = ui.viewModel().common2DSettings();
         final GameSceneEmbedding embedding = uiConfig.gameSceneConfig().embedding(gameScene);
         switch (embedding) {

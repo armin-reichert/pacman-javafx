@@ -27,38 +27,20 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameWindow {
 
-    public static final int MIN_STAGE_WIDTH  = 280;
-    public static final int MIN_STAGE_HEIGHT = 360;
-
     private final BooleanProperty connected = new SimpleBooleanProperty(false);
 
     private StringBinding titleBinding;
 
-    private final FlashMessageManager flashMessageManager;
-
     private final Stage stage;
-
-    private final GameMainScene mainScene;
 
     private EngineUIContext engineContext;
 
-    public GameWindow(Stage stage, int width, int height) {
+    public GameWindow(Stage stage) {
         this.stage = requireNonNull(stage);
-
-        flashMessageManager = new FlashMessageManager();
-
-        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
-
-        stage.setScene(mainScene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
     public void setEngineContext(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
-
-        mainScene.setEngineContext(engineContext);
-
         titleBinding = createStageTitleBinding();
         stage.titleProperty().bind(titleBinding);
 
@@ -73,14 +55,6 @@ public class GameWindow {
 
     public Stage stage() {
         return stage;
-    }
-
-    public GameMainScene mainScene() {
-        return mainScene;
-    }
-
-    public FlashMessageManager flashMessageManager() {
-        return flashMessageManager;
     }
 
     public void setFullScreen(boolean value) {

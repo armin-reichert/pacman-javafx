@@ -27,7 +27,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     public ContextMenuManager(EngineUIContext engineContext) {
         this.engineContext = requireNonNull(engineContext);
-        engineContext.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        engineContext.ui().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
@@ -57,7 +57,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(engineContext.ui().window().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
+            contextMenu.show(engineContext.ui().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }

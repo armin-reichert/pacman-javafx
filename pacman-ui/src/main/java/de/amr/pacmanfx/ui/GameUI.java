@@ -25,6 +25,8 @@ import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.window.FlashMessageManager;
+import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -38,9 +40,17 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
 
+    public static final int MIN_STAGE_WIDTH  = 280;
+
+    public static final int MIN_STAGE_HEIGHT = 360;
+
     private final GameUISettings settings;
 
     private final GameWindow window;
+
+    private final GameMainScene mainScene;
+
+    private final FlashMessageManager flashMessageManager;
 
     private final GameViewModel viewModel;
 
@@ -51,16 +61,23 @@ public class GameUI implements GameEventListener {
     public GameUI(Stage stage, int width, int height, GameUISettings settings) {
         requireNonNull(stage);
         this.settings = requireNonNull(settings);
-        window = new GameWindow(stage, width, height);
+
+        flashMessageManager = new FlashMessageManager();
+        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
+        window = new GameWindow(stage);
         viewModel = new GameViewModel();
         viewModel.init(settings);
+
+        stage.setScene(mainScene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
     public void setEngine(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
 
         window.setEngineContext(engine);
-
+        mainScene.setEngineContext(engine);
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
         connectKeyboard(engine.input().keyboard());
         bindCommonActions();
@@ -144,14 +161,18 @@ public class GameUI implements GameEventListener {
         return window;
     }
 
+    public GameMainScene mainScene() {
+        return mainScene;
+    }
+
     // --- General commands ---
 
     public void startShortMessageSystem() {
-        window().flashMessageManager().startAnimationTimer();
+        flashMessageManager.startAnimationTimer();
     }
 
     public void stopShortMessageSystem() {
-        window().flashMessageManager().stopAnimationTimer();
+        flashMessageManager.stopAnimationTimer();
     }
 
     /**
@@ -164,7 +185,7 @@ public class GameUI implements GameEventListener {
     public void showShortMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
-        window.flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
+        flashMessageManager.showMessage(message.formatted(args), duration.toSeconds());
     }
 
     /**
@@ -178,7 +199,7 @@ public class GameUI implements GameEventListener {
     }
 
     public void clearShortMessage() {
-        window.flashMessageManager().clearMessage();
+        flashMessageManager.clearMessage();
     }
 
     // private
@@ -186,7 +207,7 @@ public class GameUI implements GameEventListener {
     private void connectKeyboard(Keyboard keyboard) {
         keyboard.enabledProperty().bind(engine.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
         keyboard.addStateListener(this::handleKeyboardStateChange);
-        keyboard.filterKeyEventsFrom(window.mainScene());
+        keyboard.filterKeyEventsFrom(mainScene);
     }
 
     private void handleKeyboardStateChange(Keyboard keyboard) {
