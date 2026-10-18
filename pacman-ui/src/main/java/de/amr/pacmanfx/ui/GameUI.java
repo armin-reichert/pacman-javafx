@@ -65,10 +65,11 @@ public class GameUI implements GameEventListener {
         this.settings = requireNonNull(settings);
 
         flashMessageManager = new FlashMessageManager();
-        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
+
         viewModel = new GameViewModel();
         viewModel.init(settings);
 
+        mainScene = new GameMainScene(width, height, flashMessageManager.messageView().rootPane());
 
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);

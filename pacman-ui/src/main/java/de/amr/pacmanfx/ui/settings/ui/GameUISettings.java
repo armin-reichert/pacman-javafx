@@ -8,7 +8,6 @@ import java.util.List;
 
 public record GameUISettings(
     double flashMessageDuration,
-    boolean testStatesIncluded,
     boolean debugModeOn,
     boolean keyboardMonitorOn,
     boolean muted,

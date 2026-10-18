@@ -11,7 +11,6 @@ import javafx.util.Duration;
 public class GameViewModel {
 
     private final ObjectProperty<Duration> flashMessageDuration;
-    private final BooleanProperty testStatesIncluded;
     private final BooleanProperty debugModeOn;
     private final BooleanProperty keyboardMonitorOn;
     private final BooleanProperty mute;
@@ -24,7 +23,6 @@ public class GameViewModel {
 
     public GameViewModel() {
         flashMessageDuration = new SimpleObjectProperty<>();
-        testStatesIncluded = new SimpleBooleanProperty();
         debugModeOn = new SimpleBooleanProperty();
         keyboardMonitorOn = new SimpleBooleanProperty();
         mute = new SimpleBooleanProperty();
@@ -38,7 +36,6 @@ public class GameViewModel {
 
     public void init(GameUISettings settings) {
         flashMessageDuration.set(Duration.seconds(settings.flashMessageDuration()));
-        testStatesIncluded.set(settings.testStatesIncluded());
         debugModeOn.set(settings.debugModeOn());
         keyboardMonitorOn.set(settings.keyboardMonitorOn());
         mute.set(settings.muted());
@@ -52,10 +49,6 @@ public class GameViewModel {
 
     public ObjectProperty<Duration> flashMessageDurationProperty() {
         return flashMessageDuration;
-    }
-
-    public BooleanProperty testStatesIncludedProperty() {
-        return testStatesIncluded;
     }
 
     public BooleanProperty debugModeOnProperty() {
