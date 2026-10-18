@@ -35,18 +35,18 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void init(EngineUIContext engineContext) {
-        addDynamicInfo("Game State",  () -> engineContext.optCurrentGame().get().state().name());
+    public void init(EngineUIContext engine) {
+        addDynamicInfo("Game State",  () -> engine.optCurrentGame().get().state().name());
 
-        addDynamicInfo("State Timer", () -> stateTimerInfo(engineContext.optCurrentGame().get().state()));
+        addDynamicInfo("State Timer", () -> stateTimerInfo(engine.optCurrentGame().get().state()));
 
-        addDynamicInfo("Game Scene", fnGameSceneInfo(engineContext, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicInfo("Game Scene", fnGameSceneInfo(engine, gameScene -> gameScene.getClass().getSimpleName()));
 
-        addDynamicInfo("Level Number", fnLevelInfo(engineContext,
-            level -> (engineContext.optCurrentGame().get().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+        addDynamicInfo("Level Number", fnLevelInfo(engine,
+            level -> (engine.optCurrentGame().get().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
-        addDynamicInfo("World Map", fnLevelInfo(engineContext,
+        addDynamicInfo("World Map", fnLevelInfo(engine,
             level -> {
                 final String url = level.worldMap().url();
                 return url == null
@@ -55,7 +55,7 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Fill/Stroke/Pellet", fnLevelInfo(engineContext,
+        addDynamicInfo("Fill/Stroke/Pellet", fnLevelInfo(engine,
             level -> {
                 final WorldMap worldMap = level.worldMap();
                 WorldMapColorScheme colorScheme = null;
@@ -63,7 +63,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
                     final GameVariantUIConfig uiConfig = runtime.uiConfig();
                     colorScheme = uiConfig.renderConfig().colorScheme(worldMap, uiConfig.worldSettings());
                 }
@@ -77,19 +77,19 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Pac lives",      () -> engineContext.optCurrentGame().get().session().numLives());
-        addDynamicInfo("Hunting Phase",  fnLevelInfo(engineContext, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnLevelInfo(engineContext, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicInfo("-Remaining",     fnLevelInfo(engineContext, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        addDynamicInfo("Collision mode", fnRulesInfo(engineContext, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
-        addDynamicInfo("Pac-Man speed",  supplyLevelSpeedInfo(engineContext, (level, rules) -> fmtPacNormalSpeed(engineContext.optCurrentGame().get(), level, rules)));
-        addDynamicInfo("- empowered",    supplyLevelSpeedInfo(engineContext, (level, rules) -> fmtPacSpeedPowered(engineContext.optCurrentGame().get(), level, rules)));
-        addDynamicInfo("Power Duration", fnLevelInfo(engineContext, level -> fmtPacPowerTime(rules(engineContext), level)));
-        addDynamicInfo("Pellets",        fnLevelInfo(engineContext, this::fmtPelletCount));
-        addDynamicInfo("Ghost speed",    supplyLevelSpeedInfo(engineContext, this::fmtGhostAttackSpeed));
-        addDynamicInfo("- frightened",   supplyLevelSpeedInfo(engineContext, this::fmtGhostSpeedFrightened));
-        addDynamicInfo("- in tunnel",    supplyLevelSpeedInfo(engineContext, this::fmtGhostSpeedTunnel));
-        addDynamicInfo("Maze flashes",   fnLevelInfo(engineContext, level -> fmtNumFlashes(rules(engineContext), level)));
+        addDynamicInfo("Pac lives",      () -> engine.optCurrentGame().get().session().numLives());
+        addDynamicInfo("Hunting Phase",  fnLevelInfo(engine, this::fmtHuntingPhase));
+        addDynamicInfo("-Running",       fnLevelInfo(engine, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicInfo("-Remaining",     fnLevelInfo(engine, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        addDynamicInfo("Collision mode", fnRulesInfo(engine, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
+        addDynamicInfo("Pac-Man speed",  supplyLevelSpeedInfo(engine, (level, rules) -> fmtPacNormalSpeed(engine.optCurrentGame().get(), level, rules)));
+        addDynamicInfo("- empowered",    supplyLevelSpeedInfo(engine, (level, rules) -> fmtPacSpeedPowered(engine.optCurrentGame().get(), level, rules)));
+        addDynamicInfo("Power Duration", fnLevelInfo(engine, level -> fmtPacPowerTime(rules(engine), level)));
+        addDynamicInfo("Pellets",        fnLevelInfo(engine, this::fmtPelletCount));
+        addDynamicInfo("Ghost speed",    supplyLevelSpeedInfo(engine, this::fmtGhostAttackSpeed));
+        addDynamicInfo("- frightened",   supplyLevelSpeedInfo(engine, this::fmtGhostSpeedFrightened));
+        addDynamicInfo("- in tunnel",    supplyLevelSpeedInfo(engine, this::fmtGhostSpeedTunnel));
+        addDynamicInfo("Maze flashes",   fnLevelInfo(engine, level -> fmtNumFlashes(rules(engine), level)));
     }
 
     private GameRules rules(EngineUIContext context) {

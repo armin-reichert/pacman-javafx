@@ -65,15 +65,15 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void setEngineContext(EngineUIContext engineContext) {
-        final GameViewModel viewModel = engineContext.ui().viewModel();
-        final GameViewManager viewManager = engineContext.viewManager();
+    public void setEngine(EngineUIContext engine) {
+        final GameViewModel viewModel = engine.ui().viewModel();
+        final GameViewManager viewManager = engine.viewManager();
 
-        setTooltip(iconMuted,     engineContext.translationManager().translate("status_icon.muted"));
-        setTooltip(icon3D,        engineContext.translationManager().translate("status_icon.3d"));
-        setTooltip(iconAutopilot, engineContext.translationManager().translate("status_icon.autopilot"));
-        setTooltip(iconImmune,    engineContext.translationManager().translate("status_icon.immune"));
-        setTooltip(iconCheated,   engineContext.translationManager().translate("status_icon.cheated"));
+        setTooltip(iconMuted,     engine.translationManager().translate("status_icon.muted"));
+        setTooltip(icon3D,        engine.translationManager().translate("status_icon.3d"));
+        setTooltip(iconAutopilot, engine.translationManager().translate("status_icon.autopilot"));
+        setTooltip(iconImmune,    engine.translationManager().translate("status_icon.immune"));
+        setTooltip(iconCheated,   engine.translationManager().translate("status_icon.cheated"));
 
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(

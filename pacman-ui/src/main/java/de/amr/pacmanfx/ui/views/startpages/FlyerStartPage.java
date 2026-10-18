@@ -47,7 +47,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected EngineUIContext engineContext;
+    protected EngineUIContext engine;
 
     protected AbstractGameScene gameScene;
 
@@ -75,30 +75,30 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (engineContext != null) {
-                engineContext.soundManager().voice().stop();
-                engineContext.ui().showShortMessage(engineContext.translationManager().translate("flash.shut_up"));
+            if (engine != null) {
+                engine.soundManager().voice().stop();
+                engine.ui().showShortMessage(engine.translationManager().translate("flash.shut_up"));
             }
         }
     }
 
     @Override
     public void setEngine(EngineUIContext engine) {
-        this.engineContext = requireNonNull(engine);
+        this.engine = requireNonNull(engine);
         init(engine, config.gameVariant());
     }
 
     @Override
     public void onEnter() {
-        engineContext.gameVariantManager().selectVariant(gameVariantName);
+        engine.gameVariantManager().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        engineContext.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        engine.soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        engineContext.soundManager().voice().stop();
+        engine.soundManager().voice().stop();
     }
 
     @Override
@@ -115,10 +115,10 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(EngineUIContext engineContext) {
+    protected GameStartButton createStartButton(EngineUIContext engine) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
-            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engineContext);
+            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engine);
             Logger.info("START BUTTON PRESSED!");
         });
         rootPane.getChildren().add(button);
@@ -129,7 +129,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(EngineUIContext engineContext, String gameVariantName) {
+    private void init(EngineUIContext engine, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;
@@ -146,6 +146,6 @@ public class FlyerStartPage implements StartPage {
             }
         });
 
-        startButton = createStartButton(engineContext);
+        startButton = createStartButton(engine);
     }
 }

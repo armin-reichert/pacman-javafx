@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction<EngineUIContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
-        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engineContext().input().joypad().keyForButton(JoypadButton.START));
+        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engine().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
     }
@@ -136,11 +136,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void playMusic() {
-        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_1);
+        engine().soundManager().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     private void stopMusic() {
-        engineContext().soundManager().stop(PacManGameSoundID.INTERMISSION_1);
+        engine().soundManager().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     private void letActorsMove(GameContext game) {
@@ -253,14 +253,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
         clapperboard = new Clapperboard("1", "THEY MEET");
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
-        inky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL);
 
-        pinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new Heart();
     }

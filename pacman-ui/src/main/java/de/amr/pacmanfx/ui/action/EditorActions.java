@@ -51,9 +51,9 @@ public class EditorActions {
 
         return new GameAction<>("edit_map_file") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                openMapEditor(engineContext).ifPresent(editor -> {
-                    startEditor(engineContext, editor);
+            public void execute(EngineUIContext engine) {
+                openMapEditor(engine).ifPresent(editor -> {
+                    startEditor(engine, editor);
                     if (mapFile != null) {
                         try {
                             editor.editFile(mapFile);
@@ -77,30 +77,30 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(EngineUIContext engineContext, TileMapEditor editor) {
-        engineContext.engineLife().suspendGame();
+    private void startEditor(EngineUIContext engine, TileMapEditor editor) {
+        engine.engineLife().suspendGame();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor(EngineUIContext engineContext) {
-        final GameUI ui = engineContext.ui();
-        final EditorView editorView = engineContext.viewManager().assertView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(engineContext);
-        if (!trySelectEditorView(engineContext, engineContext.viewManager())) {
+    private Optional<TileMapEditor> openMapEditor(EngineUIContext engine) {
+        final GameUI ui = engine.ui();
+        final EditorView editorView = engine.viewManager().assertView(GameViewID.EDITOR, EditorView.class);
+        editorView.ensureEditorCreated(engine);
+        if (!trySelectEditorView(engine, engine.viewManager())) {
             ui.showShortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());
     }
 
-    private boolean trySelectEditorView(EngineUIContext engineContext, GameViewManager viewManager) {
-        requireNonNull(engineContext);
+    private boolean trySelectEditorView(EngineUIContext engine, GameViewManager viewManager) {
+        requireNonNull(engine);
         if (viewManager.optView(GameViewID.EDITOR, EditorView.class).isEmpty()) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (canOpenEditor(engineContext, viewManager)) {
+        if (canOpenEditor(engine, viewManager)) {
             viewManager.currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
@@ -110,13 +110,13 @@ public class EditorActions {
         }
     }
 
-    private boolean canOpenEditor(EngineUIContext engineContext, GameViewManager viewManager) {
+    private boolean canOpenEditor(EngineUIContext engine, GameViewManager viewManager) {
         if (viewManager.isSelected(GameViewID.START_PAGES)) {
             return true;
         }
         if (viewManager.isSelected(GameViewID.GAMEPLAY)) {
-            if (engineContext.optCurrentGame().isEmpty()) return true;
-            return !engineContext.optCurrentGame().get().session().isGameRunning();
+            if (engine.optCurrentGame().isEmpty()) return true;
+            return !engine.optCurrentGame().get().session().isGameRunning();
         }
         return false;
     }

@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-        engineContext().soundManager().voice().stop();
+        engine().soundManager().voice().stop();
         actionBindingsRegistry().dispose();
     }
 

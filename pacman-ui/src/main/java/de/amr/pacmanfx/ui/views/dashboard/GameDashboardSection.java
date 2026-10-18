@@ -61,7 +61,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         addRow(label, dynamicInfoText);
     }
 
-    protected void setGameAction(EngineUIContext engineContext, Button button, GameAction<EngineUIContext> action) {
-        button.setOnAction(_ -> runAction(action, engineContext));
+    protected void setGameAction(EngineUIContext engine, Button button, GameAction<EngineUIContext> action) {
+        button.setOnAction(_ -> runAction(action, engine));
     }
 }

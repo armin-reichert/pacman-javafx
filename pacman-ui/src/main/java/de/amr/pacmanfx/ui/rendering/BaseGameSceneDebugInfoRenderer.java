@@ -76,7 +76,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     }
 
     public void render(AbstractGameScene gameScene) {
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+        gameScene.engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final GameSceneView2D canvasRendering = gameScene.assertComponent(GameSceneView2D.class);
 

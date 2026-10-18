@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    protected EngineUIContext engineContext;
+    protected EngineUIContext engine;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -83,27 +83,27 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     // Convenience
 
-    public EngineUIContext engineContext() {
-        return engineContext;
+    public EngineUIContext engine() {
+        return engine;
     }
 
     public GameUI ui() {
-        return engineContext.ui();
+        return engine.ui();
     }
 
-    public final void setEngineContext(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
-        if (this.engineContext != null) {
+    public final void setEngine(EngineUIContext engine) {
+        requireNonNull(engine);
+        if (this.engine != null) {
             Logger.debug("Engine context already assigned to game scene {}", this);
             return;
         }
-        this.engineContext = engineContext;
+        this.engine = engine;
         onEngineConnected();
         Logger.info("Game scene {} connected with engine", getClass().getSimpleName());
     }
 
     public DefaultGameVariantRuntime runtime() {
-        return (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
+        return (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
     }
 
     // Interface GameScene
@@ -121,8 +121,8 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        if (engineContext != null) {
-            executeMatchingAction(actionBindingsRegistry(), engineContext);
+        if (engine != null) {
+            executeMatchingAction(actionBindingsRegistry(), engine);
         }
     }
 

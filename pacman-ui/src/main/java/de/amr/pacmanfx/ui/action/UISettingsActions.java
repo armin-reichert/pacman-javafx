@@ -47,16 +47,16 @@ public class UISettingsActions {
 
         actionShowHelp = new GameAction<>("show_help") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                final String variantName = engineContext.gameVariantManager().currentVariantName();
-                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(variantName);
+            public void execute(EngineUIContext engine) {
+                final String variantName = engine.gameVariantManager().currentVariantName();
+                engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(variantName);
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext context) {
-                final String variantName = context.gameVariantManager().currentVariantName();
+            public boolean isEnabled(EngineUIContext engine) {
+                final String variantName = engine.gameVariantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
-                final GameSceneManager gameSceneManager = context.gameSceneManager();
+                final GameSceneManager gameSceneManager = engine.gameSceneManager();
                 return isArcadeGame &&
                       (gameSceneManager.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
                     || gameSceneManager.currentGameSceneHasID(CommonGameSceneID.START_SCENE)
@@ -66,66 +66,66 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction<>("toggle_dashboard") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
+            public void execute(EngineUIContext engine) {
+                engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                return engineContext.viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(EngineUIContext engine) {
+                return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleDebugInfo = new GameAction<>("toggle_debug_info") {
             @Override
-            public void execute(EngineUIContext context) {
-                toggleBooleanProperty(context.ui().viewModel().debugModeOnProperty());
+            public void execute(EngineUIContext engine) {
+                toggleBooleanProperty(engine.ui().viewModel().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction<>("toggle_keyboard_monitor") {
             @Override
-            public void execute(EngineUIContext context) {
-                toggleBooleanProperty(context.ui().viewModel().keyboardMonitorOnProperty());
+            public void execute(EngineUIContext engine) {
+                toggleBooleanProperty(engine.ui().viewModel().keyboardMonitorOnProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction<>("toggle_mini_view_visibility") {
             @Override
-            public void execute(EngineUIContext context) {
-                final BooleanProperty miniViewActiveProperty = context.ui().viewModel().miniViewSettings().activeProperty;
+            public void execute(EngineUIContext engine) {
+                final BooleanProperty miniViewActiveProperty = engine.ui().viewModel().miniViewSettings().activeProperty;
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
-                if (!context.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
-                    final String msg = context.translationManager().translate(
+                if (!engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
+                    final String msg = engine.translationManager().translate(
                         miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
-                    context.ui().showShortMessage(msg);
+                    engine.ui().showShortMessage(msg);
                 }
             }
         };
 
         actionTogglePlayScene2D3D = new GameAction<>("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
-                    final BooleanProperty view3DEnabledProperty = engineContext.ui().viewModel().common3DSettings().view3DEnabledProperty();
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
+                    final BooleanProperty view3DEnabledProperty = engine.ui().viewModel().common3DSettings().view3DEnabledProperty();
                     toggleBooleanProperty(view3DEnabledProperty);
                     final boolean enabled = view3DEnabledProperty.get();
-                    if (!isPlaySceneRunning(engineContext.gameSceneManager())) {
-                        engineContext.ui().showShortMessage(engineContext.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                    if (!isPlaySceneRunning(engine.gameSceneManager())) {
+                        engine.ui().showShortMessage(engine.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                     }
                     if (isLevelPlaying(game.state())) {
-                        if (engineContext.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+                        if (engine.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
                             //TODO This is dubious, must be revisited
-                            defaultGameSceneManager.forceGameSceneUpdate(engineContext);
+                            defaultGameSceneManager.forceGameSceneUpdate(engine);
                         }
                     }
                 });
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                return engineContext.viewManager().isSelected(GameViewID.GAMEPLAY);
+            public boolean isEnabled(EngineUIContext engine) {
+                return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {

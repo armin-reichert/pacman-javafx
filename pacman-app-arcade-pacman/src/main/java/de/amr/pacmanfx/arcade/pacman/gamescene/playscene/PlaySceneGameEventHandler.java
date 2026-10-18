@@ -61,7 +61,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+        gameScene.engine().optCurrentGame().ifPresent(game -> {
             //TODO Does not belong here
             final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
             game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
@@ -70,7 +70,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+        gameScene.engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
             if (!silent) {
@@ -84,7 +84,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
         final State<GameContext> newState = e.newState();
         Logger.info("Entering game state '{}'", newState.name());
 
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+        gameScene.engine().optCurrentGame().ifPresent(game -> {
             if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
@@ -104,13 +104,13 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> gameScene.onAcceptGameLevel(game.session(), e.level()));
+        gameScene.engine().optCurrentGame().ifPresent(game -> gameScene.onAcceptGameLevel(game.session(), e.level()));
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
+        gameScene.engine().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
     }
 
     @Override
@@ -120,7 +120,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = gameScene.engineContext().clock().currentTick();
+        final long tick = gameScene.engine().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

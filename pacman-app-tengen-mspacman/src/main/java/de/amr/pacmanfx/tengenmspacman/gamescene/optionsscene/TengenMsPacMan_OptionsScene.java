@@ -77,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final ObjectProperty<PlayOption> selectedOption = new SimpleObjectProperty<>(PlayOption.PLAY_MODE) {
         @Override
         protected void invalidated() {
-            engineContext().soundManager().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            engine().soundManager().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
@@ -140,7 +140,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
-            createJoypadKeyBindingsView(engineContext().input()), // dynamic, depends on current bindings and visibility
+            createJoypadKeyBindingsView(engine().input()), // dynamic, depends on current bindings and visibility
             playModeOptionView,
             boosterModeOptionView,
             difficultyOptionView,
@@ -158,7 +158,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             session.setHudVisible(false);
 
@@ -193,10 +193,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
     @Override
     public void onInput() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
-            final Keyboard keyboard = engineContext().input().keyboard();
-            final Joypad joypad = engineContext().input().joypad();
+            final Keyboard keyboard = engine().input().keyboard();
+            final Joypad joypad = engine().input().joypad();
 
             if (joypad.isButtonPressed(JoypadButton.DOWN)) {
                 selectedOption.set(selectedOption.get().succ());
@@ -328,7 +328,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private void optionValueChanged() {
-        engineContext().soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        engine().soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 

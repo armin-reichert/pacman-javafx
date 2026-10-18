@@ -91,7 +91,7 @@ class GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        gameScene.engineContext().optCurrentGame().ifPresent(game -> {
+        gameScene.engine().optCurrentGame().ifPresent(game -> {
             Logger.info("Enter game state '{}'", e.newState().name());
             final GameSession session = game.session();
             if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {

@@ -74,10 +74,10 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     private void updateStateClapperboard(GameSystems systems) {
         clapperboardSystem.update(clapperboard);
         if (sceneTimer.hasExpired()) {
-            engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
+            engine().soundManager().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing(systems);
         }
     }
@@ -174,7 +174,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
             nav.setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            engineContext().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
+            engine().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
         }
         else {
             List.of(pacMan, msPacMan).forEach(motor::move);

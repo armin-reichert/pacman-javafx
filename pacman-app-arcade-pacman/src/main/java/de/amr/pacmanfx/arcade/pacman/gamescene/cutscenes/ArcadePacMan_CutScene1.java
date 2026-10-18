@@ -49,9 +49,9 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
-        blinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
 
         timing().setTick(-1);
     }
@@ -73,7 +73,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         }
 
         if (timing.tick() == timing.animationStartTick()) {
-            engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
+            engine().soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan(systems);
         }
         else if (timing.tick() == timing.animationStartTick() + 260) {

@@ -61,13 +61,13 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction<>("toggle_collision_strategy") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final ActorCollisionRules collisionRules = game.playConfig().gameRules().actorCollisionRules();
                     final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                     final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
                     collisionRules.collisionStrategyProperty().set(nextStrategy);
-                    engineContext.ui().showShortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
+                    engine.ui().showShortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
                 });
             }
         };

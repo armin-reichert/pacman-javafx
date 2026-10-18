@@ -93,14 +93,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
-        inky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL);
 
-        pinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new Heart();
 
@@ -126,7 +126,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     private void updateStateClapperboard(GameSystems systems) {
         clapperboardSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
-            engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_1);
+            engine().soundManager().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts(systems);
         }
@@ -292,7 +292,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            engineContext().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
+            engine().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
         }
     }
 }

@@ -62,7 +62,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         currentState = SceneState.DARK;
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             game.session().setHudVisible(false);
             //TODO This is only a temporary solution
             setHUDStyle(game.session().hud());

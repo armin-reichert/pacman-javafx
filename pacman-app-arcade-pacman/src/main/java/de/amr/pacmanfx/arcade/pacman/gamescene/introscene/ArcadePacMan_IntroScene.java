@@ -68,7 +68,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         view.pulse.stop();
-        engineContext().soundManager().voice().stop();
+        engine().soundManager().voice().stop();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         view.createPacManAndGhosts(
             runtime().uiConfig().renderConfig(),
             runtime().playConfig().systems().actorSpriteAnimController(),
-            engineContext.spriteAnimationSystem()
+            engine.spriteAnimationSystem()
         );
         view.hideEverything();
 
@@ -88,7 +88,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        engineContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        engine().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     void startChasingPacMan(GameContext game) {
@@ -113,7 +113,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chasePacMan(long tick) {
-        final GameContext game = engineContext().optCurrentGame().orElse(null);
+        final GameContext game = engine().optCurrentGame().orElse(null);
         if (game == null) return;
 
         final GameSystems systems = game.playConfig().systems();

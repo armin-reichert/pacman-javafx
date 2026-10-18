@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface GameViewManager {
 
-    void init(EngineUIContext engineContext);
+    void init(EngineUIContext engine);
 
     <V extends GameView> V assertView(Named id, Class<V> viewClass);
 

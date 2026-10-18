@@ -37,8 +37,8 @@ public class GameFlowActions {
 
         actionQuit = new GameAction<>("quit") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.viewManager().optCurrentView().ifPresent(currentView -> {
+            public void execute(EngineUIContext engine) {
+                engine.viewManager().optCurrentView().ifPresent(currentView -> {
                     Logger.info("Call QUIT handler for view {}:", currentView);
                     currentView.onQuit();
                 });
@@ -47,23 +47,23 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction<>("let_game_state_expire") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
             }
         };
 
         actionRestartIntro = new GameAction<>("restart_intro") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final AbstractGameState gameState = game.state();
 
                     if (gameState.id() instanceof TestStateID) {
                         gameState.onExit(game);
                     }
 
-                    engineContext.engineLife().suspendGame();
-                    engineContext.clock().start();
+                    engine.engineLife().suspendGame();
+                    engine.clock().start();
                     game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
                 });
             }

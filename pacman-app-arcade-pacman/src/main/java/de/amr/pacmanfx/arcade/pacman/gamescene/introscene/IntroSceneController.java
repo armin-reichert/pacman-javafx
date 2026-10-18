@@ -130,7 +130,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().optCurrentGame().orElse(null);
+                final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
                 final GameSystems systems = game.playConfig().systems();
@@ -158,7 +158,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().optCurrentGame().orElse(null);
+                final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
                 final GameSystems systems = game.playConfig().systems();
@@ -174,7 +174,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().optCurrentGame().orElse(null);
+                final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
                 final long tick = timer.tickCount();
@@ -196,7 +196,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext game = scene.engineContext().optCurrentGame().orElse(null);
+                final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
                 scene.view.pulse.triggerPulse();

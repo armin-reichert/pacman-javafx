@@ -61,8 +61,8 @@ public class StartPagesView implements GameView {
         ));
     }
 
-    public void addPage(EngineUIContext engineContext, StartPage startPage) {
-        requireNonNull(engineContext);
+    public void addPage(EngineUIContext engine, StartPage startPage) {
+        requireNonNull(engine);
         requireNonNull(startPage);
 
         if (pages.contains(startPage)) {
@@ -71,7 +71,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setEngine(engineContext);
+        startPage.setEngine(engine);
     }
 
     public List<StartPage> pages() {

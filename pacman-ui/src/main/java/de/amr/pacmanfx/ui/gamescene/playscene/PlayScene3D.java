@@ -112,7 +112,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     protected void onEngineConnected() {
         final GameViewModel viewModel = ui().viewModel();
 
-        textPicker = new RandomTextPicker(engineContext().translationManager().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
         final var comp3D = assertComponent(GameSceneView3D.class);
         comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
@@ -158,10 +158,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onBeforeEmbedded() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             // TODO: reconsider whether scores need recreation here (variant/font change?)
-            final String scoreTitle = engineContext().translationManager().translate("score.score");
-            final String highScoreTitle = engineContext().translationManager().translate("score.high_score");
+            final String scoreTitle = engine().translationManager().translate("score.score");
+            final String highScoreTitle = engine().translationManager().translate("score.high_score");
             replaceScoresView(game.session(), scoreTitle, highScoreTitle);
         });
     }
@@ -181,7 +181,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         // Remove actor 3D view components
-        engineContext().optCurrentGame().flatMap(game -> game.session().optLevel()).ifPresent(level -> {
+        engine().optCurrentGame().flatMap(game -> game.session().optLevel()).ifPresent(level -> {
             final GameLevelEntitySet entitySet = level.entitySet();
             entitySet.pac().removeComponent(PacView3D.class);
             entitySet.ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
@@ -192,14 +192,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onInput() {
         final Optional<GameAction<EngineUIContext>> executedAction =
-            executeMatchingAction(actionBindingsRegistry(), engineContext());
+            executeMatchingAction(actionBindingsRegistry(), engine());
 
         //TODO Rethink this
         if (executedAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
                 if (perspective instanceof DronePerspective dronePerspective) {
-                    final Keyboard keyboard = engineContext().input().keyboard();
+                    final Keyboard keyboard = engine().input().keyboard();
                     dronePerspective.handleKeyPressed(keyboard);
                 }
             });
@@ -264,8 +264,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onQuit() {
         onDeactivate();
-        engineContext().soundManager().setEnabled(false);
-        engineContext().optCurrentGame().ifPresent(game ->
+        engine().soundManager().setEnabled(false);
+        engine().optCurrentGame().ifPresent(game ->
             runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER));
     }
 
@@ -310,7 +310,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                engineContext().translationManager().translate("score.game_over"),
+                engine().translationManager().translate("score.game_over"),
                 runtime().uiConfig().assets().color("color.game_over_message"));
         }
 

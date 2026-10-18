@@ -45,13 +45,13 @@ public final class CheatActions {
 
         actionAddLives = new GameAction<>("cheat_add_lives") {
             @Override
-            public void execute(EngineUIContext context) {
-                context.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     session.setNumLives(session.numLives() + 3);
                     session.cheats().notifyCheatUsed();
-                    final String msg = context.translationManager().translate("flash.cheat_add_lives", session.numLives());
-                    context.ui().showShortMessage(msg);
+                    final String msg = engine.translationManager().translate("flash.cheat_add_lives", session.numLives());
+                    engine.ui().showShortMessage(msg);
                 });
             }
 
@@ -64,14 +64,14 @@ public final class CheatActions {
 
         actionEatAllPellets = new GameAction<>("cheat_eat_all_pellets") {
             @Override
-            public void execute(EngineUIContext context) {
-                context.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     final GameLevel level = session.level();
                     level.food().eatPellets();
                     session.cheats().notifyCheatUsed();
                     game.eventManager().publishEvent(
-                        new PacEatsFoodEvent(level.entitySet().pac(), false, true, context.clock().currentTick()));
+                        new PacEatsFoodEvent(level.entitySet().pac(), false, true, engine.clock().currentTick()));
                 });
             }
 
@@ -125,8 +125,8 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -147,8 +147,8 @@ public final class CheatActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -158,13 +158,13 @@ public final class CheatActions {
 
         actionActivateAutopilot = new GameAction<>("activate_autopilot") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> setAutopilot(engineContext, game.session(), true));
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> setAutopilot(engine, game.session(), true));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -174,13 +174,13 @@ public final class CheatActions {
 
         actionDeactivateAutopilot = new GameAction<>("deactivate_autopilot") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> setAutopilot(engineContext, game.session(), false));
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> setAutopilot(engine, game.session(), false));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -190,13 +190,13 @@ public final class CheatActions {
 
         actionActivateImmunity = new GameAction<>("activate_immunity") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> setPacImmune(engineContext, game.session(), true));
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> setPacImmune(engine, game.session(), true));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -206,13 +206,13 @@ public final class CheatActions {
 
         actionDeactivateImmunity = new GameAction<>("deactivate_immunity") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> setPacImmune(engineContext, game.session(), false));
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> setPacImmune(engine, game.session(), false));
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);
@@ -222,16 +222,16 @@ public final class CheatActions {
 
         actionToggleImmunity = new GameAction<>("toggle_immunity") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     final GameCheats cheats = game.session().cheats();
-                    setPacImmune(engineContext, game.session(), !cheats.isPacImmune());
+                    setPacImmune(engine, game.session(), !cheats.isPacImmune());
                 });
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
                 final GameLevel normalLevel = normalLevel(game.session()).orElse(null);

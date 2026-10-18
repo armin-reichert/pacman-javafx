@@ -22,7 +22,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
     }
 
     public void populate(
-        EngineUIContext engineContext,
+        EngineUIContext engine,
         DashboardFactory dashboardFactory,
         List<DashboardSectionSettings> sectionSettings)
     {
@@ -32,7 +32,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         }
         for (var def : sectionSettings) {
             dashboardFactory.identify(def.id()).ifPresentOrElse(dashboardID -> {
-                final GameDashboardSection section = dashboardFactory.createSection(this, dashboardID, engineContext.translationManager());
+                final GameDashboardSection section = dashboardFactory.createSection(this, dashboardID, engine.translationManager());
                 section.setDisplayedStandalone(def.standalone());
                 section.setExpanded(def.expanded());
                 addSection(section);
@@ -40,15 +40,15 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         }
     }
 
-    public void init(EngineUIContext engineContext) {
-        sections().forEach(section -> section.init(engineContext));
+    public void init(EngineUIContext engine) {
+        sections().forEach(section -> section.init(engine));
     }
 
-    public void update(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
+    public void update(EngineUIContext engine) {
+        requireNonNull(engine);
         sections()
             .filter(GameDashboardSection::isExpanded)
-            .forEach(section -> section.update(engineContext));
+            .forEach(section -> section.update(engine));
     }
 
     public void reorderSections() {

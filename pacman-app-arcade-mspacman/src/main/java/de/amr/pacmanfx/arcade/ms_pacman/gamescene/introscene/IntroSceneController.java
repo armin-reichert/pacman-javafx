@@ -47,7 +47,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                scene.engine().optCurrentGame().ifPresent(game -> {
                     final Ghost ghost = scene.view.ghosts().get(scene.ghostInSpotlight);
                     final boolean atEndPosition = scene.letGhostWalkIn(game, ghost);
                     if (atEndPosition) {
@@ -70,7 +70,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                scene.engine().optCurrentGame().ifPresent(game -> {
                     final boolean atEndPosition = scene.letMsPacManWalkIn(game, scene.view.msPacMan());
                     if (atEndPosition) {
                         controller.enterState(scene, READY_TO_PLAY);
@@ -82,7 +82,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                scene.engine().optCurrentGame().ifPresent(game -> {
                     final GameFlow gameFlow = scene.runtime().playConfig().gameFlow();
                     final boolean canPlay = !game.coinMechanism().isEmpty();
                     if (timer.atSecond(2.0) && !canPlay) {

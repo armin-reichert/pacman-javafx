@@ -62,11 +62,11 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         final var actorFactory                         = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
-        blinky = renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW);
 
-        nailDressRapturing = new NailDressRapturing(engineContext.spriteAnimationSystem());
+        nailDressRapturing = new NailDressRapturing(engine.spriteAnimationSystem());
         nailDressRapturing.position().set(nailX, nailY);
         nailDressRapturing.show();
 
@@ -116,7 +116,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void startTheShow() {
-        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
+        engine().soundManager().play(PacManGameSoundID.INTERMISSION_2);
         nailDressRapturing.setState(NailDressRapturingState.NAIL);
     }
 

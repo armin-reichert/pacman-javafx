@@ -71,7 +71,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
             throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
 
-        nextScene.setEngineContext(engineContext);
+        nextScene.setEngine(engineContext);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {

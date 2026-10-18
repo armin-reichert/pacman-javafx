@@ -44,7 +44,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void init(EngineUIContext engineContext) {
+    public void init(EngineUIContext engine) {
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 
@@ -54,13 +54,12 @@ public class DS_GameControl extends GameDashboardSection {
 
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
 
-        addDynamicInfo("Collision Mode", fnRulesInfo(engineContext, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", fnRulesInfo(engine, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
 
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives,
             () -> {
-            final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
                 final int lifeCount = choiceBoxInitialLives.getValue();
                 //TODO store value and use it when new session is created
                 Logger.info("Initial life count was set to: {}", lifeCount);
@@ -68,25 +67,24 @@ public class DS_GameControl extends GameDashboardSection {
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
-        setGameAction(engineContext, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
-        setGameAction(engineContext, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
-        setGameAction(engineContext, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
-        setGameAction(engineContext, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engine, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engine, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
+        setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
+        setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            engineContext.optCurrentGame().get().playConfig().gameRules().actorCollisionRules().collisionDoubleCheckedProperty()
+            engine.optCurrentGame().get().playConfig().gameRules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> engineContext.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> engine.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
-    public void update(EngineUIContext engineContext) {
-        super.update(engineContext);
+    public void update(EngineUIContext engine) {
+        super.update(engine);
 
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engineContext.gameVariantManager().currentRuntime();
-        final GameContext game = engineContext.optCurrentGame().get();
+        final GameContext game = engine.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
@@ -109,10 +107,10 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(game.playConfig().gameRules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
-    private boolean canStartLevel(EngineUIContext engineContext, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(engineContext.gameVariantManager().currentVariantName());
+    private boolean canStartLevel(EngineUIContext engine, AbstractGameState gameState) {
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(engine.gameVariantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !engineContext.optCurrentGame().get().coinMechanism().isEmpty()
+        return !engine.optCurrentGame().get().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

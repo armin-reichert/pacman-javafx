@@ -106,7 +106,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameContext game = engineContext().optCurrentGame().orElse(null);
+        final GameContext game = engine().optCurrentGame().orElse(null);
         if (game == null) return Stream.empty();
 
         final GameSession session = game.session();
@@ -121,7 +121,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
 
             final HUD hud = session.hud();
@@ -138,7 +138,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         view2D().setClipRect(CLIP_RECT);
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final HUD hud = session.hud();
 
@@ -168,7 +168,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onQuit() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             onDeactivate();
             runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
@@ -178,12 +178,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = engineContext().translationManager();
+        final TranslationManager translations = engine().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
         final var contextMenu = new ContextMenu();
 
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "context_menu.scaled_to_fit");
             miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
             miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
@@ -201,7 +201,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             addLocalizedCheckBox(contextMenu, translations, game.session().cheats().pacImmuneProperty(), "context_menu.immunity");
             addSeparator(contextMenu);
             addLocalizedCheckBox(contextMenu, translations, ui().viewModel().muteProperty(), "context_menu.muted");
-            addLocalizedActionItem(engineContext(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addLocalizedActionItem(engine(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
         });
 
         return Optional.of(contextMenu);
@@ -250,7 +250,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void acceptNormalLevel() {
-        engineContext().soundManager().setEnabled(true); //TODO needed?
+        engine().soundManager().setEnabled(true); //TODO needed?
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindingsRegistry().registerAllBindings(actions().steeringBindings());
@@ -262,7 +262,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void acceptDemoLevel() {
-        engineContext().soundManager().setEnabled(false); //TODO needed?
+        engine().soundManager().setEnabled(false); //TODO needed?
         actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
         actionBindingsRegistry().selectAnyMatchingBinding(actions().actionQuitDemoLevel(), actions().localBindings());
     }
@@ -279,13 +279,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
-            animController.setAnimations(pac, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+            animController.setAnimations(pac, renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
             eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
         level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
-                animController.setAnimations(ghost, renderConfig.createGhostAnimations(engineContext.spriteAnimationSystem(), ghost.personality()));
+                animController.setAnimations(ghost, renderConfig.createGhostAnimations(engine.spriteAnimationSystem(), ghost.personality()));
                 eventHandler.resetGhostAnimation(animController, ghost);
             }
         });

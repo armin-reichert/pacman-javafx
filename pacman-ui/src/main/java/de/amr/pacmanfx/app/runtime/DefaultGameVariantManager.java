@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private EngineContext engineContext;
+    private EngineContext engine;
 
     private final Map<String, DefaultGameVariantRuntime> runtimesByName = new HashMap<>();
 
@@ -32,8 +32,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     public DefaultGameVariantManager() {}
 
-    public void init(EngineContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
+    public void init(EngineContext engine) {
+        this.engine = requireNonNull(engine);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
         final DefaultGameVariantRuntime gameVariantRuntime;
         try {
-            gameVariantRuntime = createGameVariantRuntime(engineContext, variantName);
+            gameVariantRuntime = createGameVariantRuntime(engine, variantName);
             runtimesByName.put(variantName, gameVariantRuntime);
         } catch (Exception x) {
             throw new RuntimeException("Game variant could not be registered", x);

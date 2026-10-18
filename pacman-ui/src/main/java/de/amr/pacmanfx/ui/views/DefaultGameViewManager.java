@@ -26,11 +26,11 @@ public final class DefaultGameViewManager implements GameViewManager {
     public DefaultGameViewManager() {}
 
     @Override
-    public void init(EngineUIContext engineContext) {
-        requireNonNull(engineContext);
+    public void init(EngineUIContext engine) {
+        requireNonNull(engine);
 
-        views.put(GameViewID.START_PAGES, new StartPagesView(engineContext.translationManager()));
-        views.put(GameViewID.GAMEPLAY, new GamePlayView(engineContext));
+        views.put(GameViewID.START_PAGES, new StartPagesView(engine.translationManager()));
+        views.put(GameViewID.GAMEPLAY, new GamePlayView(engine));
         views.put(GameViewID.EDITOR, new EditorView());
 
         currentViewID.set(GameViewID.START_PAGES);

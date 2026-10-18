@@ -43,8 +43,8 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void init(EngineUIContext engineContext) {
-        final GameViewModel viewModel = engineContext.ui().viewModel();
+    public void init(EngineUIContext engine) {
+        final GameViewModel viewModel = engine.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
 
@@ -54,11 +54,11 @@ public class DS_3DSettings extends GameDashboardSection {
 
         colorPicker("Floor Color", viewModel.maze3DSettings().floorColorProperty());
 
-        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(engineContext)));
+        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(engine)));
 
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(engineContext)));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(engine)));
 
-        addDynamicInfo("Scene Size", () -> sceneSizeInfo(engineContext.gameSceneManager().optCurrentGameScene().orElse(null)));
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(engine.gameSceneManager().optCurrentGameScene().orElse(null)));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty);
 
@@ -104,17 +104,17 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
 
         cbUsePlayScene3D.setOnAction(_ -> runAction(CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(),
-                engineContext));
+                engine));
 
         cbWireframeMode .setOnAction(_ -> runAction(CommonGameActions.instance().camera3DActions().actionToggleDrawMode(),
-            engineContext));
+            engine));
     }
 
     @Override
-    public void update(EngineUIContext engineContext) {
-        super.update(engineContext);
+    public void update(EngineUIContext engine) {
+        super.update(engine);
 
-        final GameViewModel viewModel = engineContext.ui().viewModel();
+        final GameViewModel viewModel = engine.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3DSettings().cameraPerspectiveIDProperty().get());
 
@@ -123,7 +123,7 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(viewModel.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final GamePlayView playView = engineContext.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         final MiniPlaySceneView miniView = playView.layers().miniViewLayer();
         cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());

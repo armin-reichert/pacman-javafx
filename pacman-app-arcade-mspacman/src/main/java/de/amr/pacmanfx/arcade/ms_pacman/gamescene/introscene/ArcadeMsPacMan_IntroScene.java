@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
-        view = new IntroSceneView(engineContext, runtime());
+        view = new IntroSceneView(engine, runtime());
 
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
@@ -80,14 +80,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         numTicksBeforeRising = 0;
 
         startAnimations(animController, view.msPacMan(), view.ghosts());
-        engineContext().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        engine().soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }
 
     @Override
     public void onDeactivate() {
-        engineContext().soundManager().voice().stop();
+        engine().soundManager().voice().stop();
         actionBindingsRegistry().dispose();
     }
 

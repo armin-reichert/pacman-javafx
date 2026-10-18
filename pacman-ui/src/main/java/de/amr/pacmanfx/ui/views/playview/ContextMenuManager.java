@@ -23,11 +23,11 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final EngineUIContext engineContext;
+    private final EngineUIContext engine;
 
-    public ContextMenuManager(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
-        engineContext.ui().mainScene().scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+    public ContextMenuManager(EngineUIContext engine) {
+        this.engine = requireNonNull(engine);
+        engine.ui().mainScene().scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
@@ -40,13 +40,13 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
         contextMenu.getItems().clear();
 
-        engineContext.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = engineContext.translationManager();
+        engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
+            final TranslationManager translations = engine.translationManager();
             // Add 2D play scene-specific entries
-            if (engineContext.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(
-                    engineContext,
+                    engine,
                     contextMenu,
                     translations,
                     CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(),
@@ -57,7 +57,7 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(engineContext.ui().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
+            contextMenu.show(engine.ui().mainScene().rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }

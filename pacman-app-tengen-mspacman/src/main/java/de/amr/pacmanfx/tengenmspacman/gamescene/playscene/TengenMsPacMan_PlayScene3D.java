@@ -42,7 +42,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void addAdditional3DLevelElements(GameLevelView3D level3D) {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             session.optLevel().ifPresent(_ -> {
                 if (!gameOptionValues(session).areInitial()) {
@@ -145,7 +145,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {
-                scores3D.showTextForScore(engineContext().translationManager().translate("score.game_over"),
+                scores3D.showTextForScore(engine().translationManager().translate("score.game_over"),
                     Color.valueOf(NES_Palette.rgb(0x16)));
             }
             // Always show high score

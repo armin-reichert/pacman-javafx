@@ -26,15 +26,15 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    private final EngineUIContext engineContext;
+    private final EngineUIContext engine;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(EngineUIContext engineContext) {
-        this.engineContext = requireNonNull(engineContext);
+    public HelpInfo(EngineUIContext engine) {
+        this.engine = requireNonNull(engine);
 
-        final GameContext game = engineContext.optCurrentGame().get();
+        final GameContext game = engine.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
@@ -74,7 +74,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext game = engineContext.optCurrentGame().get();
+        final GameContext game = engine.optCurrentGame().get();
         final GameCheats cheats = game.session().cheats();
 
         // add default entries:
@@ -94,7 +94,7 @@ public class HelpInfo {
     }
 
     private String translate(String key, Object... args) {
-        return engineContext.translationManager().translate(key, args);
+        return engine.translationManager().translate(key, args);
     }
 
     private void addRow(Label label, Text text) {

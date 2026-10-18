@@ -46,7 +46,7 @@ public final class ContextMenuSupport {
     }
 
     public static MenuItem addLocalizedActionItem(
-        EngineUIContext engineContext,
+        EngineUIContext engine,
         ContextMenu menu,
         TranslationManager translator,
         GameAction<EngineUIContext> action,
@@ -54,7 +54,7 @@ public final class ContextMenuSupport {
         Object... args)
     {
         var item = new MenuItem(translator.translate(globalAssetsKey, args));
-        item.setOnAction(_ -> runAction(action, engineContext));
+        item.setOnAction(_ -> runAction(action, engine));
         return add(menu, item);
     }
 

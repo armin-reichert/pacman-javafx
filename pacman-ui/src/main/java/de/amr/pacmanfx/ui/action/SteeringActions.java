@@ -35,16 +35,16 @@ public class SteeringActions {
         }
 
         @Override
-        public void execute(EngineUIContext engineContext) {
-            engineContext.optCurrentGame().ifPresent(game -> {
+        public void execute(EngineUIContext engine) {
+            engine.optCurrentGame().ifPresent(game -> {
                 final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
                 game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
             });
         }
 
         @Override
-        public boolean isEnabled(EngineUIContext engineContext) {
-            final GameContext game = engineContext.optCurrentGame().orElse(null);
+        public boolean isEnabled(EngineUIContext engine) {
+            final GameContext game = engine.optCurrentGame().orElse(null);
             return game != null
                 && game.session().optLevel().isPresent()
                 && !game.session().isAttractMode()

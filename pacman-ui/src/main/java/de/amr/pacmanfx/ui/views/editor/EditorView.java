@@ -27,11 +27,11 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(EngineUIContext engineContext) {
+    public void ensureEditorCreated(EngineUIContext engine) {
         if (editor == null) {
-            editor = new TileMapEditor(engineContext.ui().stage(), new Pac3DShapeFactory());
-            editor.setOnQuit(_ -> engineContext.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES));
-            final MenuItem miQuitEditor = new MenuItem(engineContext.translationManager().translate("editor.menu.back_to_game"));
+            editor = new TileMapEditor(engine.ui().stage(), new Pac3DShapeFactory());
+            editor.setOnQuit(_ -> engine.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES));
+            final MenuItem miQuitEditor = new MenuItem(engine.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey

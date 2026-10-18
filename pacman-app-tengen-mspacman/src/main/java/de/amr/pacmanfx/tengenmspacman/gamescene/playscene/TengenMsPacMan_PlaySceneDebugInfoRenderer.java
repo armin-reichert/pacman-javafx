@@ -33,7 +33,7 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
     }
 
     public void draw(AbstractGameScene playScene) {
-        playScene.engineContext().optCurrentGame().ifPresent(game -> {
+        playScene.engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final AbstractGameState gameState = game.state();
 

@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction<EngineUIContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
-        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engineContext().input().joypad().keyForButton(JoypadButton.START));
+        actionBindingsRegistry().bindActionToKeyCombination(quitAction, engine().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
     }
@@ -110,11 +110,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void playMusic() {
-        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_4);
+        engine().soundManager().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void stopMusic() {
-        engineContext().soundManager().stop(PacManGameSoundID.INTERMISSION_4);
+        engine().soundManager().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void createActors() {
@@ -125,10 +125,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         clapperboard.position().set(tilesPx(3), tilesPx(10));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         juniors = new ArrayList<>();
         juniorSpawnTicks = new ArrayList<>();
@@ -232,7 +232,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
         worldNavigationSystem.setSpeed(junior, 2);
 
-        animController.setAnimations(junior, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        animController.setAnimations(junior, renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
         animController.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);
@@ -249,7 +249,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        engineContext().soundManager().playLoop(soundID);
+        engine().soundManager().playLoop(soundID);
     }
 
     private void updateJunior(GameContext game, long tick, int index) {

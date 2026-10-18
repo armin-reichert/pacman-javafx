@@ -125,7 +125,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final GameVariantUIConfig uiConfig = runtime().uiConfig();
             final var tengenAction = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
@@ -237,13 +237,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
-        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(animController, engineContext.spriteAnimationSystem(), GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, engine.spriteAnimationSystem(), GhostPersonality.ORANGE_GHOST_POKEY)
         );
 
         marqueeSubSceneContent = List.of(
@@ -345,7 +345,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                scene.engine().optCurrentGame().ifPresent(game -> {
                     final Ghost currentGhost = scene.currentGhost();
                     final int personalityIndex = currentGhost.personality().ordinal();
                     final Color ghostColor = scene.ghostColors[personalityIndex];
@@ -423,7 +423,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.engineContext().optCurrentGame().ifPresent(game -> {
+                scene.engine().optCurrentGame().ifPresent(game -> {
                     final GameFlow flow = game.playConfig().gameFlow();
                     final GameSystems systems = game.playConfig().systems();
                     final ActorSpriteAnimController animController = systems.actorSpriteAnimController();

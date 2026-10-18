@@ -99,7 +99,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        engineContext().optCurrentGame().ifPresent(game -> {
+        engine().optCurrentGame().ifPresent(game -> {
             final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
             actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());

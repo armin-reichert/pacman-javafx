@@ -65,7 +65,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     public void onActivate() {
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = engineContext().input().joypad();
+        final Joypad joypad = engine().input().joypad();
 
         actionBindingsRegistry().bindActionToKeyCombination(
             CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire(),
@@ -98,11 +98,11 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void playMusic() {
-        engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_2);
+        engine().soundManager().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     private void stopMusic() {
-        engineContext().soundManager().stop(PacManGameSoundID.INTERMISSION_2);
+        engine().soundManager().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
     private void updateScene(GameContext game, long tick) {
@@ -186,9 +186,9 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         clapperboard = new Clapperboard("2", "THE CHASE");
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
     }
 }

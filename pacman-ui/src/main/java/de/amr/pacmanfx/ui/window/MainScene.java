@@ -63,7 +63,7 @@ public class MainScene {
         return sceneRoot;
     }
 
-    public void setEngineContext(EngineUIContext engine) {
+    public void setEngine(EngineUIContext engine) {
         // Delegate mouse scroll events to current game scene
         scene.setOnScroll(e -> engine.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
@@ -73,8 +73,8 @@ public class MainScene {
             engine.gameSceneManager().currentGameSceneProperty()
         ));
 
-        statusIconBox.setEngineContext(engine);
-        keyboardInfoPopup.setEngineContext(engine);
+        statusIconBox.setEngine(engine);
+        keyboardInfoPopup.setEngine(engine);
     }
 
     public void setGameSession(GameSession session) {

@@ -100,17 +100,17 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engineContext.spriteAnimationSystem()));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSpriteAnimationManager(engineContext.spriteAnimationSystem()));
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSpriteAnimationManager(engine.spriteAnimationSystem()));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSpriteAnimationManager(engineContext.spriteAnimationSystem()));
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSpriteAnimationManager(engine.spriteAnimationSystem()));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     private void updateClapperboardState() {
         clapperboardSystem.update(clapperboard);
         if (timing().tick() ==  timing().animationStartTick() + 60) {
-            engineContext().soundManager().play(PacManGameSoundID.INTERMISSION_3);
+            engine().soundManager().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 

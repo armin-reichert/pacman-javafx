@@ -70,7 +70,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private GameContext assertGame() {
-        return playScene3D.engineContext().optCurrentGame().orElseThrow();
+        return playScene3D.engine().optCurrentGame().orElseThrow();
     }
 
     private Optional<PacManGameSoundEffects> optSoundEffects() {
@@ -202,7 +202,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevelView3D level3D = assertLevel3D();
-        final long tick = playScene3D.engineContext().clock().currentTick();
+        final long tick = playScene3D.engine().clock().currentTick();
 
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));

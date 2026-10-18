@@ -51,26 +51,26 @@ public class DS_ActorInfo extends GameDashboardSection {
         addGhostInfo(context, GhostPersonality.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyPacStateAndName(EngineUIContext engineContext) {
-        return () -> engineContext.optCurrentGame().flatMap(game -> game.session().optLevel())
+    private Supplier<String> supplyPacStateAndName(EngineUIContext engine) {
+        return () -> engine.optCurrentGame().flatMap(game -> game.session().optLevel())
             .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
     }
 
-    private Supplier<?> supplyLivesCount(EngineUIContext engineContext) {
-        return fnLevelInfo(engineContext, _ -> {
-            final GameSession session = engineContext.optCurrentGame().map(GameContext::session).orElse(null);
+    private Supplier<?> supplyLivesCount(EngineUIContext engine) {
+        return fnLevelInfo(engine, _ -> {
+            final GameSession session = engine.optCurrentGame().map(GameContext::session).orElse(null);
             return session != null ? session.numLives() : 0;
         });
     }
 
-    private void addGhostInfo(EngineUIContext engineContext, GhostPersonality personality) {
-        addDynamicInfo(ghostName(personality), supplyGhostText(engineContext, this::ghostNameAndStateText, personality));
-        addDynamicInfo("Movement",  supplyGhostText(engineContext, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      supplyGhostText(engineContext, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(engineContext,
-            (_, ghost) -> ghostAnimationText(engineContext.optCurrentGame().get().playConfig().systems().actorSpriteAnimController(), ghost),
+    private void addGhostInfo(EngineUIContext engine, GhostPersonality personality) {
+        addDynamicInfo(ghostName(personality), supplyGhostText(engine, this::ghostNameAndStateText, personality));
+        addDynamicInfo("Movement",  supplyGhostText(engine, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(engine, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(engine,
+            (_, ghost) -> ghostAnimationText(engine.optCurrentGame().get().playConfig().systems().actorSpriteAnimController(), ghost),
             personality));
     }
 

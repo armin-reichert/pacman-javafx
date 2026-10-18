@@ -28,48 +28,48 @@ public class TestActions {
 
         actionTestCutScenes = new GameAction<>("test_cut_scenes") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
-                    engineContext.ui().showShortMessage("Cut scenes test"); //TODO localize
+                    engine.ui().showShortMessage("Cut scenes test"); //TODO localize
                 });
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.playConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction<>("short_level_test") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
-                    engineContext.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+                    engine.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
                 });
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction<>("medium_level_test") {
             @Override
-            public void execute(EngineUIContext engineContext) {
-                engineContext.optCurrentGame().ifPresent(game -> {
+            public void execute(EngineUIContext engine) {
+                engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
-                    engineContext.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+                    engine.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
                 });
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engineContext) {
-                final GameContext game = engineContext.optCurrentGame().orElse(null);
+            public boolean isEnabled(EngineUIContext engine) {
+                final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
