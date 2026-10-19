@@ -36,14 +36,19 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * The Pac-Man games "engine".
  */
-public final class GameEngine implements EngineLifecycle, EngineUIContext {
+public final class GameEngine implements EngineLifecycle, EngineUIContext, TranslationManager {
+
+    static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
+        "de.amr.pacmanfx.ui.localized_texts", GameEngine.class.getModule());
 
     private final GameClock clock;
 
@@ -63,8 +68,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final SpriteAnimationSystem spriteAnimationSystem;
 
-    private final TranslationManager translationManager;
-
     private GameUI ui;
 
     private GameContext currentGame;
@@ -77,8 +80,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         GameViewManager gameViewManager,
         RenderManager renderManager,
         SoundManager soundManager,
-        SpriteAnimationSystem spriteAnimationSystem,
-        TranslationManager translationManager)
+        SpriteAnimationSystem spriteAnimationSystem)
     {
         this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
@@ -86,7 +88,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         this.renderManager = requireNonNull(renderManager);
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
-        this.translationManager = requireNonNull(translationManager);
 
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -134,6 +135,27 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
         }
 
         Platform.runLater(this::startBackgroundServices);
+    }
+
+    // Interface TranslationManager
+
+    @Override
+    public ResourceBundle textBundle() {
+        return TEXT_BUNDLE;
+    }
+
+    @Override
+    public String translate(String key, Object... args) {
+        requireNonNull(key);
+        if (textBundle().containsKey(key)) {
+            return replaceEscapeSequences(MessageFormat.format(textBundle().getString(key), args));
+        }
+        Logger.error("Missing localized text for key {}", key);
+        return "[" + key + "]";
+    }
+
+    private static String replaceEscapeSequences(String s) {
+        return s.replace("\\n", "\n");
     }
 
     // Interface GameEngineContext
@@ -185,7 +207,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     @Override
     public TranslationManager translationManager() {
-        return translationManager;
+        return this;
     }
 
     @Override
@@ -394,7 +416,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private void fatalError(Throwable reason) {
         suspendGame();
-        final String errorMessage = translationManager.translate("error.oh_no_my_program");
+        final String errorMessage = translate("error.oh_no_my_program");
         ui.showShortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
