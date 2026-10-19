@@ -47,7 +47,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
     private final GameClock clock;
 
-    private final Input input = new Input();
+    private final Input input;
 
     private final DirectoryWatchdog watchdog;
 
@@ -90,6 +90,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext {
 
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+
+        input = new Input();
 
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
