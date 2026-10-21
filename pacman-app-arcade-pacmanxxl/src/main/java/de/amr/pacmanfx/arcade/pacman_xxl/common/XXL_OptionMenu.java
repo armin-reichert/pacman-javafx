@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ui.rendering.Renderer;
+import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -33,6 +34,7 @@ import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 public class XXL_OptionMenu extends OptionMenu {
 
     private final OptionMenuEntry<GameVariantID> meGameVariantID;
+    private final OptionMenuEntry<Integer> meInitialLifeCount;
     private final OptionMenuEntry<Boolean> meView3DEnabled;
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
@@ -58,11 +60,13 @@ public class XXL_OptionMenu extends OptionMenu {
         defineAction(2, KeyCode.ENTER, "START");
 
         meGameVariantID    = createGameVariantIDEntry();
+        meInitialLifeCount = createInitialLifeCountEntry();
         meView3DEnabled    = createView3DEnabledEntry();
         meCutScenesEnabled = createCutScenesEnabledEntry();
         meMapOrder         = createMapOrderEntry();
 
         addEntry(meGameVariantID);
+        addEntry(meInitialLifeCount);
         addEntry(meView3DEnabled);
         addEntry(meCutScenesEnabled);
         addEntry(meMapOrder);
@@ -100,8 +104,9 @@ public class XXL_OptionMenu extends OptionMenu {
 
     @Override
     public void logMenuState() {
-        Logger.info("Option Menu: {}, {}, Cutscenes {}, {}",
+        Logger.info("Option Menu: {}, {} lives, {}, Cutscenes {}, {}",
             meGameVariantID.value(),
+            meInitialLifeCount.value(),
             meView3DEnabled.value() ? "3D" : "2D",
             meCutScenesEnabled.value() ? "ON" : "OFF",
             meMapOrder.value()
@@ -125,6 +130,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
+        meInitialLifeCount.setValue(runtime.playConfig().gameRules().initialLifeCount());
         meView3DEnabled.setValue(engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
         meCutScenesEnabled.setValue(engine.optCurrentGame().orElseThrow().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
@@ -160,14 +166,16 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     public void bindEntries() {
-        meGameVariantID.valueProperty().addListener(this::onGameVariantNameChanged);
+        meGameVariantID.valueProperty().addListener(this::onGameVariantNameChange);
+        meInitialLifeCount.valueProperty().addListener(this::onInitialLifeCountChange);
         meView3DEnabled.valueProperty().addListener(this::onPlay3DSettingsChange);
         meCutScenesEnabled.valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().bind(scaling);
     }
 
     public void unbindEntries() {
-        meGameVariantID.valueProperty().removeListener(this::onGameVariantNameChanged);
+        meGameVariantID.valueProperty().removeListener(this::onGameVariantNameChange);
+        meInitialLifeCount.valueProperty().removeListener(this::onInitialLifeCountChange);
         meView3DEnabled.valueProperty().removeListener(this::onPlay3DSettingsChange);
         meCutScenesEnabled.valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().unbind();
@@ -192,8 +200,18 @@ public class XXL_OptionMenu extends OptionMenu {
         });
     }
 
-    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
+    private void onGameVariantNameChange(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
         engine.gameVariantManager().selectVariant(newID.name());
+        if (engine.gameVariantManager().currentRuntime().playConfig().gameRules() instanceof Arcade_GameRules rules) {
+            meInitialLifeCount.setValue(rules.initialLifeCount());
+        }
+
+    }
+
+    private void onInitialLifeCountChange(ObservableValue<? extends Integer> obs, Integer oldValue, Integer newValue) {
+        if (engine.gameVariantManager().currentRuntime().playConfig().gameRules() instanceof Arcade_GameRules rules) {
+            rules.setInitialLifeCount(newValue);
+        }
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
@@ -223,6 +241,10 @@ public class XXL_OptionMenu extends OptionMenu {
         });
 
         return entry;
+    }
+
+    private OptionMenuEntry<Integer> createInitialLifeCountEntry() {
+        return new OptionMenuEntry<>("LIVES", List.of(3, 5), 3);
     }
 
     private OptionMenuEntry<Boolean> createView3DEnabledEntry() {

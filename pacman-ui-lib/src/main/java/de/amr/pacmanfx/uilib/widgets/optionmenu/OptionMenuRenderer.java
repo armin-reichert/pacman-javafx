@@ -30,6 +30,8 @@ public class OptionMenuRenderer extends BaseRenderer {
 
     public static final String CHANGE_VALUE = "CHANGE VALUE";
 
+    public static final int TOP_Y = 10 * TS;
+
     public OptionMenuRenderer(Canvas canvas) {
         super(canvas);
     }
@@ -53,7 +55,7 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         float lineSkip = 2.5f * TS;
 
-        float y = 12 * TS;
+        float y = TOP_Y;
         for (int i = 0; i < menu.entries().size(); ++i) {
             final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
