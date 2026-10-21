@@ -44,15 +44,15 @@ public class GameSession {
 
     private boolean hudVisible;
 
-    public GameSession(String variantName, GameCheats cheats, int initialNumLives) {
+    public GameSession(String variantName, GameCheats cheats, int initialLifeCount) {
         requireNonNull(variantName);
         requireNonNull(cheats);
 
-        this.initialNumLives = initialNumLives;
+        this.initialNumLives = initialLifeCount;
         this.cheats = cheats;
         this.hud = new HUD(variantName);
 
-        numLives = initialNumLives;
+        numLives = initialLifeCount;
         newFrameState(0);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {

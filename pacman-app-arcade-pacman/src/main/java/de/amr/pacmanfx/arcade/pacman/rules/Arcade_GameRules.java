@@ -78,12 +78,24 @@ public class Arcade_GameRules implements GameRules {
 
     protected ScoringRules scoringRules;
 
+    protected int initialLifeCount;
+
     protected Arcade_GameRules() {
         actorCollisionRules = new ActorCollisionRules();
         actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.SAME_TILE);
         actorCollisionRules.collisionDoubleCheckedProperty().set(true);
 
         actorSpeedRules = new ArcadePacMan_ActorSpeedRules();
+        initialLifeCount = 3;
+    }
+
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    @Override
+    public int initialLifeCount() {
+        return initialLifeCount;
     }
 
     @Override

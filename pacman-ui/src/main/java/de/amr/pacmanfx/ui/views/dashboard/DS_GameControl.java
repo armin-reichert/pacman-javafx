@@ -15,9 +15,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
-import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -31,7 +29,6 @@ public class DS_GameControl extends GameDashboardSection {
     private static final int CUT_SCENES_TEST_QUIT = 1;
 
     private Spinner<Integer> spinnerCredit;
-    private ChoiceBox<Integer> choiceBoxInitialLives;
     private Button[] buttonGroupLevelActions;
     private Button[] buttonGroupCutScenesTest;
     private CheckBox cbCollisionCheckedTwice;
@@ -47,8 +44,6 @@ public class DS_GameControl extends GameDashboardSection {
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
 
-        choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
-
         buttonGroupLevelActions  = buttonList("Game Level", List.of(/*"Start",*/ "Quit", "Next"));
 
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
@@ -56,13 +51,6 @@ public class DS_GameControl extends GameDashboardSection {
         addDynamicInfo("Collision Mode", fnRulesInfo(engine, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
 
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
-
-        setAction(choiceBoxInitialLives,
-            () -> {
-                final int lifeCount = choiceBoxInitialLives.getValue();
-                //TODO store value and use it when new session is created
-                Logger.info("Initial life count was set to: {}", lifeCount);
-            });
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
@@ -86,10 +74,6 @@ public class DS_GameControl extends GameDashboardSection {
         final GameContext game = engine.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
-
-        //TODO use stored (where?) value
-        choiceBoxInitialLives.setValue(3);
-        choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);

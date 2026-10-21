@@ -267,7 +267,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            3 //TODO make initial life selection work again
+            gameVariantManager.currentRuntime().playConfig().gameRules().initialLifeCount()
         );
         game.setSession(session);
     }

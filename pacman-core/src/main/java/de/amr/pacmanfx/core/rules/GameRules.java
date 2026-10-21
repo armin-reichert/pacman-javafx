@@ -14,6 +14,8 @@ import java.util.OptionalInt;
 
 public interface GameRules {
 
+    int initialLifeCount();
+
     ActorCollisionRules actorCollisionRules();
 
     ActorSpeedRules actorSpeedRules();

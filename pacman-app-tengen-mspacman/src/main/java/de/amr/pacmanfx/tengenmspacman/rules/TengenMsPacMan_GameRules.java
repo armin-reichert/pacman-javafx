@@ -58,10 +58,18 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     private final ObjectProperty<MapCategory> mapCategory = new SimpleObjectProperty<>(MapCategory.ARCADE);
 
+    private final int initialLifeCount;
+
     public TengenMsPacMan_GameRules() {
         actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.CENTER_DISTANCE);
         actorCollisionRules.collisionDoubleCheckedProperty().set(true);
         scoringRules.mapCategoryProperty().bind(mapCategory);
+        initialLifeCount = 3;
+    }
+
+    @Override
+    public int initialLifeCount() {
+        return initialLifeCount;
     }
 
     @Override
