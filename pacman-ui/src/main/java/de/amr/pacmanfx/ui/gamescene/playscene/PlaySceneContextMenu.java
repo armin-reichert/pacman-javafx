@@ -48,7 +48,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
     private final ObjectProperty<PerspectiveID> perspectiveIDProperty;
 
     public PlaySceneContextMenu(PlayScene3D playScene3D) {
-        final Game3DSettingsVM settings3D = playScene3D.ui().viewModel().common3DSettings();
+        final Game3DSettingsVM settings3D = playScene3D.engine().ui().viewModel().common3DSettings();
         final GameContext game = playScene3D.engine().optCurrentGame().orElseThrow();
         final GameCheats cheats = game.session().cheats();
         final TranslationManager translator = playScene3D.engine().translationManager();
@@ -58,7 +58,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedTitleItem(this, translator, "context_menu.scene_display");
         addLocalizedActionItem(playScene3D.engine(), this, translator,
             CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
-        addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
+        addLocalizedCheckBox(this, translator, playScene3D.engine().ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
         addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
 
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -75,7 +75,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
         addSeparator(this);
-        addLocalizedCheckBox(this, translator, playScene3D.ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedCheckBox(this, translator, playScene3D.engine().ui().viewModel().muteProperty(), "context_menu.muted");
         addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);

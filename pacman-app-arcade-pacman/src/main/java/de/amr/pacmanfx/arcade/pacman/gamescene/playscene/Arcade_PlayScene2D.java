@@ -153,7 +153,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 }
             });
             addSeparator(contextMenu);
-            addLocalizedCheckBox(contextMenu, engine().translationManager(), ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedCheckBox(contextMenu, engine().translationManager(), engine.ui().viewModel().muteProperty(), "context_menu.muted");
             addLocalizedActionItem(engine(), contextMenu, engine().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         });
@@ -212,7 +212,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
         renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
 
-        final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(ui().viewModel(), level.worldMap());
+        final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(engine.ui().viewModel(), level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
             renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);

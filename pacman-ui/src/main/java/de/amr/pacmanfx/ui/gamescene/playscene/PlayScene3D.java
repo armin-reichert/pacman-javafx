@@ -109,7 +109,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     protected void onEngineConnected() {
-        final GameViewModel viewModel = ui().viewModel();
+        final GameViewModel viewModel = engine.ui().viewModel();
 
         textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
@@ -167,7 +167,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onActivate() {
-        final Game3DSettingsVM settings3D = ui().viewModel().common3DSettings();
+        final Game3DSettingsVM settings3D = engine.ui().viewModel().common3DSettings();
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
         registerActionBindings();
@@ -177,7 +177,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
+        engine.ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         // Remove actor 3D view components
         engine().optCurrentGame().flatMap(game -> game.session().optLevel()).ifPresent(level -> {
@@ -342,8 +342,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameViewModel viewModel      = ui().viewModel();
-        final GameSession session          = game.session();
+        final GameViewModel viewModel = engine.ui().viewModel();
+        final GameSession session     = game.session();
 
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");

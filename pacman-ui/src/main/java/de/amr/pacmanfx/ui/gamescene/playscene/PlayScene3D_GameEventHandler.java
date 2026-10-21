@@ -86,7 +86,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(playScene3D.ui().viewModel().common3DSettings(), assertGame().session().level());
+            handleTestState(playScene3D.engine().ui().viewModel().common3DSettings(), assertGame().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -325,7 +325,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameViewModel viewModel = playScene3D.ui().viewModel();
+        final GameViewModel viewModel = playScene3D.engine().ui().viewModel();
         final GameLevel level = assertGame().session().level();
         final House house = level.entitySet().entities().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
@@ -402,7 +402,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevelView3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            playScene3D.ui().showShortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
+            playScene3D.engine().ui().showShortMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 
         playScene3D.animationSystem().stopAllAnimations();

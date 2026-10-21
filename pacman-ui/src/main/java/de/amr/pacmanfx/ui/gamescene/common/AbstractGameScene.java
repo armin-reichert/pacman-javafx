@@ -17,7 +17,6 @@ import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
@@ -86,10 +85,6 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     public EngineUIContext engine() {
         return engine;
-    }
-
-    public GameUI ui() {
-        return engine.ui();
     }
 
     public final void setEngine(EngineUIContext engine) {
