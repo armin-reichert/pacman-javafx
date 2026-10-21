@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -69,7 +68,7 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meMapOrder);
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
-            final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+            final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
             if (animationDirty) {
                 stopChaseAnimation();
                 createNewChaseAnimation(runtime, canvas);
@@ -113,7 +112,7 @@ public class XXL_OptionMenu extends OptionMenu {
         this.engine = engine;
 
         final String variantName = engine.gameVariantManager().currentVariantName();
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {

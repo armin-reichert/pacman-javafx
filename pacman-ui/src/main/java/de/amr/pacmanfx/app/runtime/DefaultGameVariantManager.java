@@ -8,9 +8,10 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
+import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.CartridgeRegistry;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.Cartridge;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -26,7 +27,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private EngineContext engine;
 
-    private final Map<String, DefaultGameVariantRuntime> runtimesByName = new HashMap<>();
+    private final Map<String, GameVariantRuntime> runtimesByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
@@ -40,7 +41,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
 
-        final DefaultGameVariantRuntime gameVariantRuntime;
+        final GameVariantRuntime gameVariantRuntime;
         try {
             gameVariantRuntime = createGameVariantRuntime(engine, variantName);
             runtimesByName.put(variantName, gameVariantRuntime);
@@ -66,12 +67,12 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public DefaultGameVariantRuntime currentRuntime() {
+    public GameVariantRuntime currentRuntime() {
         return runtimeByName(currentVariantName());
     }
 
     @Override
-    public DefaultGameVariantRuntime runtimeByName(String variantName) {
+    public GameVariantRuntime runtimeByName(String variantName) {
         requireNonNull(variantName);
         return runtimesByName.get(variantName);
     }
@@ -94,7 +95,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private DefaultGameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
+    private GameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
         final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantName);
         final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engine);
         final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();

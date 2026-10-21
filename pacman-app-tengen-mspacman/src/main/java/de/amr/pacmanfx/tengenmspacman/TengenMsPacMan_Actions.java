@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Joypad;
@@ -79,7 +79,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePlaySceneDisplayMode = new GameAction<>("toggle_play_scene_display_mode") {
             @Override
             public void execute(EngineUIContext engine) {
-                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+                final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
                 final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
                 uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
@@ -96,7 +96,7 @@ public final class TengenMsPacMan_Actions {
         actionToggleJoypadBindingsDisplayed = new GameAction<>("toggle_joypad_bindings_displayed") {
             @Override
             public void execute(EngineUIContext engine) {
-                final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+                final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
                 final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
             }

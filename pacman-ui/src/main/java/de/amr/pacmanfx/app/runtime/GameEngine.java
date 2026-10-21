@@ -296,9 +296,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     @Override
     public GameVariantUIConfig uiConfig(GameVariantRuntime runtime) {
         if (!(runtime instanceof DefaultGameVariantRuntime runtimeImpl)) {
-            throw new IllegalArgumentException("Cannot determine game variant runtime for variant " + runtime);
+            throw new IllegalArgumentException("Illegal game variant runtime type" + runtime.getClass().getSimpleName());
         }
-        return runtimeImpl._uiConfig();
+        return runtimeImpl.uiConfig();
     }
 
     // Private area, no trespassing!

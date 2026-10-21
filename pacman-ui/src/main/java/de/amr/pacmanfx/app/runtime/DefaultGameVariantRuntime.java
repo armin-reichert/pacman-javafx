@@ -50,7 +50,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
         }
     }
 
-    public GameVariantUIConfig _uiConfig() {
+    public GameVariantUIConfig uiConfig() {
         return uiConfig;
     }
 

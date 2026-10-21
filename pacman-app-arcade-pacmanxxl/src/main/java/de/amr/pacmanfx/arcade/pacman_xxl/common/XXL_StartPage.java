@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;

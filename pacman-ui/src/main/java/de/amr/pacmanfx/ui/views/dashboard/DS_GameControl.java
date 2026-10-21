@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
