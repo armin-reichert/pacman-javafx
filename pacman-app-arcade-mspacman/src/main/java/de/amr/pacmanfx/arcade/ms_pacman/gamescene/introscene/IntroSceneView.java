@@ -14,7 +14,6 @@ import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -22,6 +21,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
@@ -51,11 +51,11 @@ public class IntroSceneView {
     private Pac msPacMan;
     private List<Ghost> ghosts;
 
-    public IntroSceneView(EngineUIContext engine, DefaultGameVariantRuntime runtime) {
+    public IntroSceneView(EngineUIContext engine, GameVariantRuntime runtime) {
         createTitleText();
         createMarquee();
         createMsPacManAndTheGhosts(engine, runtime);
-        createCopyright(runtime);
+        createCopyright(engine, runtime);
     }
 
     public Stream<Renderable> renderables() {
@@ -125,8 +125,8 @@ public class IntroSceneView {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
     }
 
-    private void createCopyright(DefaultGameVariantRuntime runtime) {
-        final AssetMap assets = runtime.uiConfig().assets();
+    private void createCopyright(EngineUIContext engine, GameVariantRuntime runtime) {
+        final AssetMap assets = engine.uiConfig(runtime).assets();
 
         copyrightImageView = new ImageView();
         copyrightImageView.show();
@@ -139,9 +139,9 @@ public class IntroSceneView {
         copyrightTexts.forEach(TextView::show);
     }
 
-    private void createMsPacManAndTheGhosts(EngineUIContext engine, DefaultGameVariantRuntime runtime) {
+    private void createMsPacManAndTheGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
         final GameSystems systems = runtime.playConfig().systems();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         final WorldNavigationSystem nav = systems.navigator();

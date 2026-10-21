@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -33,13 +33,13 @@ public final class Arcade_Actions {
             @Override
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
-                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+                    final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
                     engine.soundManager().voice().stop();
                     engine.soundManager().setEnabled(true);
                     game.coinMechanism().insertCoin();
                     game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                     game.eventManager().publishEvent(new CreditAddedEvent(1));
-                    runtime.uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
+                    engine.uiConfig(runtime).optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
                 });
             }
 

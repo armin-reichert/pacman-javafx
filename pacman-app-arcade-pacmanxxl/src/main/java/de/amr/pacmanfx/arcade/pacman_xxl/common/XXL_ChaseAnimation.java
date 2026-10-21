@@ -17,12 +17,13 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
 import java.util.*;
@@ -66,15 +67,15 @@ class XXL_ChaseAnimation {
         this.offsetY = offsetY;
     }
 
-    public void init(DefaultGameVariantRuntime runtime) {
-        createPac(runtime);
-        createGhosts(runtime);
+    public void init(EngineUIContext engine, GameVariantRuntime runtime) {
+        createPac(engine, runtime);
+        createGhosts(engine, runtime);
     }
 
-    public void simulate(DefaultGameVariantRuntime runtime) {
+    public void simulate(EngineUIContext engine, GameVariantRuntime runtime) {
         switch (state) {
             case GHOSTS_CHASING_PAC -> letGhostsChasePacMan(runtime);
-            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(runtime);
+            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(engine, runtime);
         }
     }
 
@@ -94,8 +95,8 @@ class XXL_ChaseAnimation {
             .build();
     }
 
-    private void createPac(DefaultGameVariantRuntime runtime) {
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+    private void createPac(EngineUIContext engine, GameVariantRuntime runtime) {
+        final GameVariantRenderConfig renderConfig =  engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
@@ -115,8 +116,8 @@ class XXL_ChaseAnimation {
         pacView = createView(pac);
     }
 
-    private void createGhosts(DefaultGameVariantRuntime runtime) {
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+    private void createGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
+        final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         ghosts = new ArrayList<>(List.of(
@@ -129,9 +130,9 @@ class XXL_ChaseAnimation {
         ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));
     }
 
-    private void letPacManChaseGhosts(DefaultGameVariantRuntime runtime) {
+    private void letPacManChaseGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         if (ghosts.isEmpty()) {
-            createGhosts(runtime);
+            createGhosts(engine, runtime);
             collisionCount = 0;
         }
 
@@ -155,7 +156,7 @@ class XXL_ChaseAnimation {
         }
     }
 
-    public void startGhostsChasePacMan(DefaultGameVariantRuntime runtime) {
+    public void startGhostsChasePacMan(GameVariantRuntime runtime) {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
@@ -178,7 +179,7 @@ class XXL_ChaseAnimation {
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void letGhostsChasePacMan(DefaultGameVariantRuntime runtime) {
+    private void letGhostsChasePacMan(GameVariantRuntime runtime) {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 
@@ -235,7 +236,7 @@ class XXL_ChaseAnimation {
         return Math.abs(either.position().x() - other.position().x()) < 1;
     }
 
-    private void moveActors(DefaultGameVariantRuntime runtime) {
+    private void moveActors(GameVariantRuntime runtime) {
         final var motor = runtime.playConfig().systems().motor();
         motor.move(pac);
         for (Ghost ghost : ghosts) {

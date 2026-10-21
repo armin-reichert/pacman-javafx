@@ -9,8 +9,8 @@ import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -31,31 +31,30 @@ public class GamePlayViewRenderer {
         this.playView = requireNonNull(playView);
     }
 
-    public void render(EngineUIContext context) {
-        requireNonNull(context);
-        if (!(context.gameVariantManager().currentRuntime() instanceof DefaultGameVariantRuntime runtime)){
+    public void render(EngineUIContext engine) {
+        requireNonNull(engine);
+        if (engine.optCurrentGame().isEmpty()) {
             return;
         }
-        if (context.optCurrentGame().isEmpty()) {
-            return;
-        }
-        if (!(context.gameSceneManager().currentGameScene() instanceof AbstractGameScene gameScene)) {
+        if (!(engine.gameSceneManager().currentGameScene() instanceof AbstractGameScene gameScene)) {
             return;
         }
         render(
-            context.renderManager(),
-            context.ui().viewModel(),
-            runtime,
-            context.optCurrentGame().get().session(),
+            engine,
+            engine.renderManager(),
+            engine.ui().viewModel(),
+            engine.gameVariantManager().currentRuntime(),
+            engine.optCurrentGame().get().session(),
             gameScene,
-            context.clock().currentTick()
+            engine.clock().currentTick()
         );
     }
 
     private void render(
+        EngineUIContext engine,
         RenderManager renderManager,
         GameViewModel viewModel,
-        DefaultGameVariantRuntime runtime,
+        GameVariantRuntime runtime,
         GameSession session,
         AbstractGameScene gameScene,
         long tick)
@@ -85,7 +84,7 @@ public class GamePlayViewRenderer {
         // --- Update the renderers
         //TODO This should not be done in every render frame!
 
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         if (gameScene.view2D() != null) {

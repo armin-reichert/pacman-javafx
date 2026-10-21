@@ -10,7 +10,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -319,10 +318,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevelView3D level3D) {
         final GameSession session = assertGame().session();
-        final GameVariantUIConfig uiConfig = playScene3D.runtime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
-            level3D.addKilledGhostNumberBox(ghost, uiConfig, index);
+            level3D.addKilledGhostNumberBox(ghost, playScene3D.uiConfig(), index);
         });
     }
 
@@ -414,7 +412,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        playScene3D.runtime().uiConfig().optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
+        playScene3D.optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

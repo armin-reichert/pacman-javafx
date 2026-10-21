@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -90,11 +89,7 @@ public class GameUI implements GameEventListener {
     }
 
     public void onEnterGameVariant(GameVariantRuntime runtime) {
-        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
-            Logger.error("Illegal runtime class: {}", runtime.getClass());
-            return;
-        }
-        final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
         uiConfig.load(engine);
         viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
         engine.gameSceneManager().setGameSceneConfig(uiConfig.gameSceneConfig());
@@ -102,20 +97,12 @@ public class GameUI implements GameEventListener {
     }
 
     public void onExitGameVariant(GameVariantRuntime runtime) {
-        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
-            Logger.error("Illegal runtime class: {}", runtime.getClass());
-            return;
-        }
-        final GameVariantUIConfig uiConfig = defaultRuntime.uiConfig();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
         uiConfig.unload(engine);
     }
 
     public void updateStageIcon(GameVariantRuntime runtime) {
-        if (!(runtime instanceof DefaultGameVariantRuntime defaultRuntime)) {
-            Logger.error("Illegal runtime class: {}", runtime.getClass());
-            return;
-        }
-        final AssetMap assets = defaultRuntime.uiConfig().assets();
+        final AssetMap assets = engine.uiConfig(runtime).assets();
         final Image icon = assets.image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);

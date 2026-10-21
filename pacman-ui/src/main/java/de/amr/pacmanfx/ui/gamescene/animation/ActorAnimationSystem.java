@@ -7,29 +7,30 @@ package de.amr.pacmanfx.ui.gamescene.animation;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
-import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.ui.EngineUIContext;
 
 //TODO make individual animation systems for ghosts and Pac-Man?
 public class ActorAnimationSystem {
 
-    public static void ensureActorAnimationsCreated(DefaultGameVariantRuntime runtime, SpriteAnimationSystem spriteAnimationSystem, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+    public static void ensureActorAnimationsCreated(EngineUIContext engine, GameVariantRuntime runtime, SpriteAnimationSystem spriteAnimationSystem, GameLevel level) {
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
-            animController.setAnimations(pac, renderConfig.createPacAnimations(spriteAnimationSystem));
+            animController.setAnimations(pac, uiConfig.renderConfig().createPacAnimations(spriteAnimationSystem));
             resetPacAnimation(animController, pac);
         }
 
         level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost,
-                    renderConfig.createGhostAnimations(spriteAnimationSystem, ghost.personality()));
+                    uiConfig.renderConfig().createGhostAnimations(spriteAnimationSystem, ghost.personality()));
                 resetGhostAnimation(animController, ghost);
             }
         });

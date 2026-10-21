@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig     = engine.uiConfig(runtime()).renderConfig();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         pacMan = actorFactory.createPacMan();

@@ -9,6 +9,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -290,6 +291,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     @Override
     public void exitGameVariant(String variantName) {
         exitGameVariant(gameVariantManager.runtimeByName(variantName));
+    }
+
+    @Override
+    public GameVariantUIConfig uiConfig(GameVariantRuntime runtime) {
+        if (!(runtime instanceof DefaultGameVariantRuntime runtimeImpl)) {
+            throw new IllegalArgumentException("Cannot determine game variant runtime for variant " + runtime);
+        }
+        return runtimeImpl._uiConfig();
     }
 
     // Private area, no trespassing!

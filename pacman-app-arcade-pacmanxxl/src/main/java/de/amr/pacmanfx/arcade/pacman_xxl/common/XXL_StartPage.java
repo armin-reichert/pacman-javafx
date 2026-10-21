@@ -11,6 +11,7 @@ import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -104,8 +105,8 @@ public class XXL_StartPage implements StartPage {
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
 
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-        runtime.uiConfig().load(engine);
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        engine.uiConfig(runtime).load(engine);
 
         menu.init(engine);
         menu.bindEntries();

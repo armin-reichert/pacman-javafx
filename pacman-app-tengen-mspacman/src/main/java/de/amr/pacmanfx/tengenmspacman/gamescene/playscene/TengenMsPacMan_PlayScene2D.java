@@ -274,7 +274,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig     = uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();
@@ -331,7 +331,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private Stream<GameEntityView> createEntityViews(GameLevel level, Vector2f offset) {
-        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = uiConfig().renderConfig();
         final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
             level.entitySet().all()

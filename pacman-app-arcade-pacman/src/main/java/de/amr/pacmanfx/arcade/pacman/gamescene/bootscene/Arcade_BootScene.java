@@ -123,7 +123,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUDStyleComp hudStyle = runtime().uiConfig().renderConfig().hudStyle();
+        final HUDStyleComp hudStyle = engine.uiConfig(runtime()).renderConfig().hudStyle();
         hud.levelCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.livesCounter().setComponent(HUDStyleComp.class, hudStyle);
         hud.gameScore().setComponent(HUDStyleComp.class, hudStyle);

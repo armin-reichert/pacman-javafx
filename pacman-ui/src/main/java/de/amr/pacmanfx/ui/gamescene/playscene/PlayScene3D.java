@@ -9,7 +9,6 @@ import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -311,7 +310,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         } else {
             scoresView.showTextForScore(
                 engine().translationManager().translate("score.game_over"),
-                runtime().uiConfig().assets().color("color.game_over_message"));
+                uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -343,7 +342,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig uiConfig = runtime().uiConfig();
         final GameViewModel viewModel      = ui().viewModel();
         final GameSession session          = game.session();
 
@@ -353,13 +351,13 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevelView3D(game, viewModel, uiConfig);
+        level3D = new GameLevelView3D(game, viewModel, uiConfig());
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.hud().levelCounter());
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(runtime(), game.session(), level3D);
+        animationSystem.createAnimations(engine, runtime(), game.session(), level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();

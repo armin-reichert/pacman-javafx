@@ -4,8 +4,9 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -127,18 +128,15 @@ public class GamePlayView implements GameView {
         requireNonNull(currentGameScene);
         requireNonNull(level);
 
-        if (!(engine.gameVariantManager().currentRuntime() instanceof DefaultGameVariantRuntime runtime)) {
-            Logger.error("Illegal game variant runtime class {}", engine.gameVariantManager().currentRuntime().getClass());
-            return;
-        }
-
         if (!(currentGameScene instanceof AbstractGameScene gameScene)) {
             Logger.error("Illegal game scene class {}", currentGameScene.getClass());
             return;
         }
 
+        final GameVariantUIConfig uiConfig = engine.uiConfig(engine.gameVariantManager().currentRuntime());
+
         // Level changed: adjust game scene size by reembedding
-        layers.gameSceneLayer().embedGameScene(engine.ui(), runtime.uiConfig(), gameScene);
+        layers.gameSceneLayer().embedGameScene(engine.ui(), uiConfig, gameScene);
         layers.miniViewLayer().setLevel(level);
 
         contextMenuManager.hideContextMenu();
@@ -154,8 +152,8 @@ public class GamePlayView implements GameView {
 
         nextGameScene.onBeforeEmbedded();
 
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-        layers.gameSceneLayer().embedGameScene(engine.ui(), runtime.uiConfig(), (AbstractGameScene) nextGameScene);
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        layers.gameSceneLayer().embedGameScene(engine.ui(), engine.uiConfig(runtime), (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
     }

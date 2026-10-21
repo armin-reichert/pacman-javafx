@@ -8,11 +8,11 @@ import de.amr.basics.Named;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
@@ -56,8 +56,8 @@ public class DefaultGameSceneManager implements GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(EngineUIContext engine, boolean forceReload) {
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-        final GameVariantUIConfig uiConfig = runtime.uiConfig();
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
 
         final GameContext currentGame = engine.optCurrentGame().orElseThrow();
         final GameSession session = currentGame.session();

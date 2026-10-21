@@ -17,7 +17,6 @@ import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -126,7 +125,6 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
-            final GameVariantUIConfig uiConfig = runtime().uiConfig();
             final var tengenAction = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
             game.session().setHudVisible(false);
@@ -136,7 +134,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionEnterStartScreen(), tengenAction.localBindings());
             actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionToggleJoypadBindingsDisplayed(), tengenAction.localBindings());
 
-            final List<GhostSettings> ghostSettings = uiConfig.worldSettings().ghosts();
+            final List<GhostSettings> ghostSettings = uiConfig().worldSettings().ghosts();
             ghostColors = Stream.of(
                     GhostPersonality.RED_GHOST_SHADOW,
                     GhostPersonality.PINK_GHOST_SPEEDY,
@@ -233,7 +231,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
         marqueeTextView2.show();
 
-        final GameVariantRenderConfig renderConfig     = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig     = uiConfig().renderConfig();
         final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
 
         msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();

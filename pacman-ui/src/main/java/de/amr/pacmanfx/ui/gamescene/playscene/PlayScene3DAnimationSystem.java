@@ -14,7 +14,6 @@ import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -22,6 +21,8 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -134,9 +135,9 @@ public class PlayScene3DAnimationSystem implements Disposable {
     private Pool<EnergizerParticle3D> particlePool;
 
 
-    public void createAnimations(DefaultGameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
+    public void createAnimations(EngineUIContext engine, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
         final GameVariantPlayConfig config = runtime.playConfig();
-        final GameVariantUIConfig uiConfig = runtime.uiConfig();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
 
         final GameLevel level = level3D.level();
         final int numFlashes = config.gameRules().numLevelFlashes(level.number());

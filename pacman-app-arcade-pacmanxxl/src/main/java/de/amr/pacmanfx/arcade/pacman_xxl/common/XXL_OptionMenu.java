@@ -9,6 +9,7 @@ import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -75,7 +76,7 @@ public class XXL_OptionMenu extends OptionMenu {
                 animationDirty = false;
                 restartChaseAnimation(runtime);
             }
-            chaseAnimation.simulate((DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime());
+            chaseAnimation.simulate(engine, engine.gameVariantManager().currentRuntime());
             draw();
         });
         chaseAnimationTimer = new Timeline(animationFrame);
@@ -135,22 +136,22 @@ public class XXL_OptionMenu extends OptionMenu {
         scaling = computeScalingValue(engine.ui().stage().heightProperty());
     }
 
-    public void restartChaseAnimation(DefaultGameVariantRuntime runtime) {
+    public void restartChaseAnimation(GameVariantRuntime runtime) {
         chaseAnimationTimer.stop();
         createNewChaseAnimation(runtime, canvas);
         chaseAnimation.startGhostsChasePacMan(runtime);
         chaseAnimationTimer.playFromStart();
     }
 
-    private void createNewChaseAnimation(DefaultGameVariantRuntime runtime, Canvas canvas) {
+    private void createNewChaseAnimation(GameVariantRuntime runtime, Canvas canvas) {
         chaseAnimation = new XXL_ChaseAnimation(
             engine.spriteAnimationSystem(),
             settings.numTilesX(),
             (settings.numTilesY() - 12) * TS);
 
-        chaseAnimation.init(runtime);
+        chaseAnimation.init(engine, runtime);
 
-        chaseAnimationRenderer = runtime.uiConfig().renderConfig().createVariantRenderer(
+        chaseAnimationRenderer = engine.uiConfig(runtime).renderConfig().createVariantRenderer(
             runtime.playConfig().systems().actorSpriteAnimController(),
             canvas);
     }

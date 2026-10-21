@@ -7,10 +7,11 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -54,7 +55,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return runtime().uiConfig().optSoundEffects();
+        return uiConfig().optSoundEffects();
     }
 
     // Events
@@ -102,8 +103,12 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         Logger.info("Game scene {} connected with engine", getClass().getSimpleName());
     }
 
-    public DefaultGameVariantRuntime runtime() {
-        return (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
+    public GameVariantRuntime runtime() {
+        return engine.gameVariantManager().currentRuntime();
+    }
+
+    public GameVariantUIConfig uiConfig() {
+        return engine.uiConfig(runtime());
     }
 
     // Interface GameScene

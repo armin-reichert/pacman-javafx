@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     @Override
     protected void onEngineConnected() {
-        final AssetMap assets = runtime().uiConfig().assets();
+        final AssetMap assets = uiConfig().assets();
 
         msPacManImageView = new ImageView();
         msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));

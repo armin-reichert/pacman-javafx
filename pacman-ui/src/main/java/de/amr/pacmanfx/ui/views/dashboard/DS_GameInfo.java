@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -17,6 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.paint.Color;
 
@@ -63,8 +63,8 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-                    final GameVariantUIConfig uiConfig = runtime.uiConfig();
+                    final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+                    final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
                     colorScheme = uiConfig.renderConfig().colorScheme(worldMap, uiConfig.worldSettings());
                 }
                 if (colorScheme != null) {

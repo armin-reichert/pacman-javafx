@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.app.runtime.DefaultGameVariantRuntime;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
@@ -108,9 +109,9 @@ public class StageTitleManager {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        // Must cast to get access to UI configuration!
-        final DefaultGameVariantRuntime runtime = (DefaultGameVariantRuntime) engine.gameVariantManager().currentRuntime();
-        final TranslationManager translationManager = runtime.uiConfig().translations();
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
+        final TranslationManager translationManager = uiConfig.translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (translationManager.textBundle() != null
             && translationManager.textBundle().containsKey(titleKey)) {

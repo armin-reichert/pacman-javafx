@@ -23,12 +23,12 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.animation.ActorAnimationSystem;
+import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.rendering.GenericLevelRenderer;
-import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.RenderingUtil;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             return Stream.empty();
         }
 
-        final GameVariantRenderConfig renderConfig = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime()).renderConfig();
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
@@ -193,7 +193,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         Logger.info(bindingsRegistry);
 
         // TODO check this
-        ActorAnimationSystem.ensureActorAnimationsCreated(runtime(), engine.spriteAnimationSystem(), level);
+        ActorAnimationSystem.ensureActorAnimationsCreated(engine, runtime(), engine.spriteAnimationSystem(), level);
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {

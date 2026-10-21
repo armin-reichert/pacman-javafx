@@ -7,7 +7,9 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.EngineContext;
+import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 
@@ -24,4 +26,6 @@ public interface EngineUIContext extends EngineContext {
     TranslationManager translationManager();
 
     GameUI ui();
+
+    GameVariantUIConfig uiConfig(GameVariantRuntime runtime);
 }

@@ -119,7 +119,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig   = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig = uiConfig().renderConfig();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
@@ -220,7 +220,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig        = runtime().uiConfig().renderConfig();
+        final GameVariantRenderConfig renderConfig        = uiConfig().renderConfig();
         final ActorSpriteAnimController animController    = runtime().playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = runtime().playConfig().systems().navigator();
 
