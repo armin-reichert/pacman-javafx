@@ -39,7 +39,9 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComponent(GameSceneView2D.class, view2D);
 
-        setComponent(ActionBindingsRegistry.class, new DefaultActionBindingsRegistry<>("Action Bindings for '%s'".formatted(this)));
+        final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>(
+            "Action Bindings for '%s'".formatted(this));
+        setComponent(ActionBindingsRegistry.class, actionBindings);
     }
 
     // Typed game scene component access
@@ -53,21 +55,25 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return assertComponent(ActionBindingsRegistry.class);
     }
 
+    //TODO Should sound effects also be a component of the scene?
     public Optional<PacManGameSoundEffects> optSoundEffects() {
         return uiConfig().optSoundEffects();
     }
 
-    // Events
+    // Hooks
 
+    /**
+     * Hook method called when the game scene gets the engine reference.
+     */
     protected void onEngineConnected() {}
 
     /**
-     * Hook method called when the game scene becomes active.
+     * Hook method called when the game scene becomes the current scene
      */
     protected void onActivate() {}
 
     /**
-     * Hook method called when the game scene becomes inactive.
+     * Hook method called when the game scene is no longer the current scene.
      */
     protected void onDeactivate() {}
 
@@ -81,7 +87,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
     }
 
-    // Convenience
+    // Accessors
 
     public EngineUIContext engine() {
         return engine;
@@ -90,7 +96,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     public final void setEngine(EngineUIContext engine) {
         requireNonNull(engine);
         if (this.engine != null) {
-            Logger.debug("Engine context already assigned to game scene {}", this);
+            Logger.debug("Engine already assigned to game scene {}", this);
             return;
         }
         this.engine = engine;
@@ -106,7 +112,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         return engine.uiConfig(runtime());
     }
 
-    // Interface GameScene
+    // --- Interface GameScene
 
     @Override
     public final void activate() {
@@ -121,12 +127,10 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     @Override
     public void onInput() {
-        if (engine != null) {
-            executeMatchingAction(actionBindingsRegistry(), engine);
-        }
+        executeMatchingAction(actionBindingsRegistry(), engine);
     }
 
-    // --- QuitHandler
+    // --- Interface QuitHandler
 
     @Override
     public void onQuit() {
