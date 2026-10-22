@@ -18,7 +18,7 @@ public interface EngineContext {
 
     Optional<GameContext> optCurrentGame();
 
-    EngineLifecycle engineLife();
+    EngineLifecycle lifeCycle();
 
     GameVariantManager gameVariantManager();
 

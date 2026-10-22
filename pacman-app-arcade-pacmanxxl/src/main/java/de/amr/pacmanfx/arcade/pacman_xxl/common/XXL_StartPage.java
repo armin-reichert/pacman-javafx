@@ -88,7 +88,7 @@ public class XXL_StartPage implements StartPage {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
             XXL_WorldMapManager.instance().setSelectionMode(mode);
-            engine.engineLife().startGame();
+            engine.lifeCycle().startGame();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             engine.ui().showMessage("OK, I shut my mouth");

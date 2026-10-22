@@ -183,7 +183,7 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onExit() {
-        engine.engineLife().suspendGame();
+        engine.lifeCycle().suspendGame();
         engine.soundManager().stopAll();
         engine.soundManager().voice().stop();
         actionBindings.dispose();

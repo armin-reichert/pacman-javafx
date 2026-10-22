@@ -126,7 +126,7 @@ public class XXL_OptionMenu extends OptionMenu {
         }
         xxlMapManager.loadMapPrototypes();
 
-        engine.engineLife().newGameSession(engine.optCurrentGame().orElseThrow());
+        engine.lifeCycle().newGameSession(engine.optCurrentGame().orElseThrow());
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));

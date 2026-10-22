@@ -172,7 +172,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     @Override
-    public EngineLifecycle engineLife() {
+    public EngineLifecycle lifeCycle() {
         return this;
     }
 
@@ -425,8 +425,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private void fatalError(Throwable reason) {
         suspendGame();
-        final String errorMessage = translate("error.oh_no_my_program");
-        ui.showMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+        ui.showMessage(Duration.seconds(60), translate("error.oh_no_my_program") + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }

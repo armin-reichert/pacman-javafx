@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -30,18 +31,15 @@ public class GameFlowActions {
 
         actionStartGame = new GameAction<>("start_game") {
             @Override
-            public void execute(EngineUIContext context) {
-                context.engineLife().startGame();
+            public void execute(EngineUIContext engine) {
+                engine.lifeCycle().startGame();
             }
         };
 
         actionQuit = new GameAction<>("quit") {
             @Override
             public void execute(EngineUIContext engine) {
-                engine.viewManager().optCurrentView().ifPresent(currentView -> {
-                    Logger.info("Call QUIT handler for view {}:", currentView);
-                    currentView.onQuit();
-                });
+                engine.viewManager().optCurrentView().ifPresent(QuitHandler::onQuit);
             }
         };
 
@@ -62,9 +60,9 @@ public class GameFlowActions {
                         gameState.onExit(game);
                     }
 
-                    engine.engineLife().suspendGame();
-                    engine.clock().start();
+                    engine.lifeCycle().suspendGame();
                     game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
+                    engine.clock().start();
                 });
             }
         };
