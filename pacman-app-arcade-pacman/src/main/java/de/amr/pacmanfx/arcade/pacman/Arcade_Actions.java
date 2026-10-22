@@ -22,12 +22,20 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public final class Arcade_Actions {
 
+    private static class SingletonHolder {
+        static final Arcade_Actions SINGLETON = new Arcade_Actions();
+    }
+
+    public static Arcade_Actions instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
     private final GameAction<EngineUIContext> actionInsertCoin;
     private final GameAction<EngineUIContext> actionStartPlaying;
 
     private final Set<ActionKeyBinding<EngineUIContext>> gameStartActionBindings;
 
-    public Arcade_Actions() {
+    private Arcade_Actions() {
 
         actionInsertCoin = new GameAction<>("insert_coin") {
             @Override

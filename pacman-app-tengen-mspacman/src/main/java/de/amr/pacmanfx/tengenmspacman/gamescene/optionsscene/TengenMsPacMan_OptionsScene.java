@@ -25,7 +25,6 @@ import de.amr.pacmanfx.engine.input.JoypadButton;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -162,10 +161,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             final GameSession session = game.session();
             session.setHudVisible(false);
 
-            final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
-
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+            final var actions = TengenMsPacMan_Actions.instance();
+            final Joypad joypad = engine.input().joypad();
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings(joypad));
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings(joypad));
             actionBindingsRegistry().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
             actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
@@ -343,7 +342,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private JoypadKeyBindingsView createJoypadKeyBindingsView(Input input) {
-        final var uiSettings = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = TengenMsPacMan_UISettings.instance();
         final boolean showBindings = uiSettings.joypadBindingsDisplayed.get();
         return showBindings ? new JoypadKeyBindingsView(input.joypad().currentKeyBinding(), Vector2f.ZERO) : null;
     }

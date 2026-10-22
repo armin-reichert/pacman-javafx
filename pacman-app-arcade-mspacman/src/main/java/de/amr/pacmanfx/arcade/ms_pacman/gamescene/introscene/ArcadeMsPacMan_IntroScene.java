@@ -12,7 +12,6 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -68,8 +67,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions arcadeActions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-        actionBindingsRegistry().registerAllBindings(arcadeActions.gameStartActionBindings());
+        actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
         view = new IntroSceneView(engine, runtime());

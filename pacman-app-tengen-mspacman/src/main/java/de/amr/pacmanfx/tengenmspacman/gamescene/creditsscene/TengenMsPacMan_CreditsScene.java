@@ -11,7 +11,6 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarView;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -100,9 +99,9 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
-            final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
-
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+            final var actions = TengenMsPacMan_Actions.instance();
+            actionBindingsRegistry().selectAnyMatchingBinding(
+                actions.actionEnterStartScreen(), actions.localBindings(engine.input().joypad()));
 
             fadeProgress = 0;
             displayMode = DisplayMode.ORIGINAL_AUTHORS;

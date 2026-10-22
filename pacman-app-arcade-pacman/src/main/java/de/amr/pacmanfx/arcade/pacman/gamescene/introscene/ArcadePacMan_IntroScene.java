@@ -11,7 +11,6 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -57,9 +56,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-
-        actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
+        actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings()); // insert coin + start game actions
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);

@@ -25,8 +25,8 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -125,14 +125,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
-            final var tengenAction = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
-
             game.session().setHudVisible(false);
-
             spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-            actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionEnterStartScreen(), tengenAction.localBindings());
-            actionBindingsRegistry().selectAnyMatchingBinding(tengenAction.actionToggleJoypadBindingsDisplayed(), tengenAction.localBindings());
+            final Joypad joypad = engine.input().joypad();
+            final var tengenActions = TengenMsPacMan_Actions.instance();
+            actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionEnterStartScreen(), tengenActions.localBindings(joypad));
+            actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionToggleJoypadBindingsDisplayed(), tengenActions.localBindings(joypad));
 
             final List<GhostSettings> ghostSettings = uiConfig().worldSettings().ghosts();
             ghostColors = Stream.of(

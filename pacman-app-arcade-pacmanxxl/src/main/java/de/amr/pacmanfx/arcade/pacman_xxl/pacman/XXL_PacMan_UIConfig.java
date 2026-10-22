@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
@@ -12,9 +11,6 @@ import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameSceneConfig;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -26,7 +22,10 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.engine.sound.SoundEntry.audioClip;
 import static de.amr.pacmanfx.engine.sound.SoundEntry.mediaPlayer;
@@ -82,11 +81,6 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
         loadSounds(engine.soundManager());
         renderConfig = new XXL_PacMan_RenderConfig(assets);
-    }
-
-    @Override
-    public Map<Named, Object> createExtensions(EngineContext engine) {
-        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override

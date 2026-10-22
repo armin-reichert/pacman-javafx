@@ -4,13 +4,10 @@
 
 package de.amr.pacmanfx.engine;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 
 public interface GameVariantRuntime {
-
-    <T> T extensionValue(Named id, Class<T> type);
 
     GameVariantPlayConfig playConfig();
 

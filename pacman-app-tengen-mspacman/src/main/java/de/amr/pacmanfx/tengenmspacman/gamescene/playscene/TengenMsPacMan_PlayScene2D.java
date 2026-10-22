@@ -28,8 +28,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -176,8 +176,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final var uiSettings = uiSettings();
-
+        final TengenMsPacMan_UISettings uiSettings = TengenMsPacMan_UISettings.instance();
         final TranslationManager translations = engine().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
@@ -241,30 +240,27 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     // private area, do NOT enter!
 
-    private TengenMsPacMan_Actions actions() {
-        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
-    }
-
-    private TengenMsPacMan_UISettings uiSettings() {
-        return runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-    }
-
     private void acceptNormalLevel() {
         engine().soundManager().setEnabled(true); //TODO needed?
 
+        final TengenMsPacMan_Actions actions = TengenMsPacMan_Actions.instance();
+        final Joypad joypad = engine.input().joypad();
+
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        actionBindingsRegistry().registerAllBindings(actions().steeringBindings());
-
+        actionBindingsRegistry().registerAllBindings(actions.steeringBindings(joypad));
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
-
-        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
-        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePacBooster(), actions().localBindings());
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings(joypad));
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings(joypad));
     }
 
     private void acceptDemoLevel() {
         engine().soundManager().setEnabled(false); //TODO needed?
-        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionTogglePlaySceneDisplayMode(), actions().localBindings());
-        actionBindingsRegistry().selectAnyMatchingBinding(actions().actionQuitDemoLevel(), actions().localBindings());
+
+        final TengenMsPacMan_Actions actions = TengenMsPacMan_Actions.instance();
+        final Joypad joypad = engine.input().joypad();
+
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings(joypad));
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings(joypad));
     }
 
     void playLevelCompleteAnimation(GameContext game, GameLevel level, int numFlashes) {

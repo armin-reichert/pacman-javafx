@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
@@ -16,12 +15,9 @@ import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -113,11 +109,6 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
         loadSounds(engine.soundManager());
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
-    }
-
-    @Override
-    public Map<Named, Object> createExtensions(EngineContext engine) {
-        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override

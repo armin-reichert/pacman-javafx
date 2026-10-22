@@ -13,7 +13,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -75,9 +74,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Bind "insert coin" + "start game" actions
-        final Arcade_Actions actions = runtime().extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-
-        actionBindingsRegistry().registerAllBindings(actions.gameStartActionBindings());
+        actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
     }
 
     @Override

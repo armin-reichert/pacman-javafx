@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
@@ -120,16 +120,18 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
-        final var actions = runtime().extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = TengenMsPacMan_Actions.instance();
+        final Joypad joypad = engine.input().joypad();
 
         actionBindingsRegistry().dispose();
 
         if (session.isAttractMode()) {
             // In demo level, allow going back to options screen
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
-        } else {
-            actionBindingsRegistry().registerAllBindings(actions.steeringBindings());
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings(joypad));
+        }
+        else {
+            actionBindingsRegistry().registerAllBindings(actions.steeringBindings(joypad));
+            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings(joypad));
             actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
         }
         registerActionBindings();

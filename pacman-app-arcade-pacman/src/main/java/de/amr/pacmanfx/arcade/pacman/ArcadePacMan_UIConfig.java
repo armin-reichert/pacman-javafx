@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
@@ -16,7 +15,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -84,11 +82,6 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
         factory3D = DefaultFactory3D.instance();
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
-    }
-
-    @Override
-    public Map<Named, Object> createExtensions(EngineContext engine) {
-        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override

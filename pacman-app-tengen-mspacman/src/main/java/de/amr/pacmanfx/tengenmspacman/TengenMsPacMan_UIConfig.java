@@ -4,33 +4,30 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
-import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.sound.SoundEntry;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.engine.sound.SoundEntry.audioClip;
 import static de.amr.pacmanfx.engine.sound.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_ACTIONS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_UI_SETTINGS;
 
 public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -105,14 +102,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
         loadSounds(engine.soundManager());
         renderConfig = new TengenMsPacMan_RenderConfig();
-    }
-
-    @Override
-    public Map<Named, Object> createExtensions(EngineContext engine) {
-        return Map.of(
-            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(engine),
-            EXT_ACTIONS,     new TengenMsPacMan_Actions(engine.input().joypad(), CommonGameActions.instance())
-        );
     }
 
     @Override
