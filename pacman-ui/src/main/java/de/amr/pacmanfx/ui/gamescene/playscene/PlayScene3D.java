@@ -37,6 +37,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.DoubleProperty;
@@ -234,7 +235,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         perspectiveManager.updatePerspective(level);
 
-        optSoundEffects().ifPresent(soundEffects -> {
+        optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
             soundEffects.setEnabled(!session.isAttractMode());
             soundEffects.playAmbientGameLevelSound(game, level);
         });

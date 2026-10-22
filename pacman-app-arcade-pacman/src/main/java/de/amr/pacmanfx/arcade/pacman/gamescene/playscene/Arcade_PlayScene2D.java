@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.rendering.GenericLevelRenderer;
 import de.amr.pacmanfx.ui.rendering.RenderingUtil;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.scene.control.CheckMenuItem;
@@ -112,7 +113,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(
-            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game, level)));
+            level -> optComponent(PacManGameSoundEffects.class).ifPresent(sfx -> sfx.playAmbientGameLevelSound(game, level)));
     }
 
     @Override

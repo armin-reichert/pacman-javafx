@@ -9,9 +9,9 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -20,8 +20,6 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
@@ -53,11 +51,6 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @SuppressWarnings("unchecked")
     public ActionBindingsRegistry<EngineUIContext> actionBindingsRegistry() {
         return assertComponent(ActionBindingsRegistry.class);
-    }
-
-    //TODO Should sound effects also be a component of the scene?
-    public Optional<PacManGameSoundEffects> optSoundEffects() {
-        return uiConfig().optSoundEffects();
     }
 
     // Hooks
@@ -102,6 +95,9 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         this.engine = engine;
         onEngineConnected();
         Logger.info("Game scene {} connected with engine", getClass().getSimpleName());
+
+        // Can only be done after engine has been connected!
+        uiConfig().optSoundEffects().ifPresent(soundEffects -> setComponent(PacManGameSoundEffects.class, soundEffects));
     }
 
     public GameVariantRuntime runtime() {
@@ -122,7 +118,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     @Override
     public final void deactivate() {
         onDeactivate();
-        optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+        optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private Optional<PacManGameSoundEffects> optSoundEffects() {
-        return playScene3D.optSoundEffects();
+        return playScene3D.optComponent(PacManGameSoundEffects.class);
     }
 
     @Override
@@ -412,7 +412,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
-        playScene3D.optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);
+        playScene3D.optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {

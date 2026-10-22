@@ -43,6 +43,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.animation.FlashingState;
 import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
@@ -159,7 +160,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             ensureActorAnimationsCreated(level, gameOptionValues(session).boosterEnabled());
-            optSoundEffects().ifPresent(soundEffects -> {
+            optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game, level);
             });

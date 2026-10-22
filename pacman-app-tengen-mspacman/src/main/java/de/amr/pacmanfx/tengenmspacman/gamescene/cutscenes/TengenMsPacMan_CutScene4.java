@@ -214,7 +214,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             spawnJunior(tick);
         }
         else if (tick == 1500) {
-            optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
+            optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
         }
     }
 
