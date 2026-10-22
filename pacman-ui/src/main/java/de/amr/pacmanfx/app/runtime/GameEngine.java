@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
@@ -236,7 +236,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     public void startGame() {
         if (currentGame != null) {
             newGameSession(currentGame);
-            currentGame.playConfig().gamePlay().startSession(currentGame);
+            currentGame.runtime().gamePlay().startSession(currentGame);
 
             if (ui != null) {
                 ui.mainScene().setGameSession(currentGame.session());
@@ -271,7 +271,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            gameVariantManager.currentRuntime().playConfig().gameRules().initialLifeCount()
+            gameVariantManager.currentRuntime().gameRules().initialLifeCount()
         );
         game.setSession(session);
     }
@@ -343,10 +343,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
         final GameEventManager gameEventManager = new DefaultGameEventManager();
 
-        currentGame = new GameContext(runtime.playConfig(), coinMechanism, gameEventManager);
+        currentGame = new GameContext(runtime, coinMechanism, gameEventManager);
         newGameSession(currentGame);
         stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
-        runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
+        runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.start();
 
         gameEventManager.addSubscriber(ui);
@@ -359,7 +359,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
-        runtime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
+        runtime.gameFlow().removeStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.stop();
         soundManager.dispose();
         currentGame.eventManager().removeAllSubscribers();
@@ -403,10 +403,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         if (currentGame != null) {
             try {
                 currentGame.session().newFrameState(clock.currentTick());
-                currentGame.playConfig().systems().updateSystem().updateEntities(currentGame);
+                currentGame.runtime().systems().updateSystem().updateEntities(currentGame);
 
                 // This can change the current game state!
-                currentGame.playConfig().gameFlow().update(currentGame);
+                currentGame.runtime().gameFlow().update(currentGame);
 
                 // IMPORTANT: The current game scene is up-to-date only at this point!
                 gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));

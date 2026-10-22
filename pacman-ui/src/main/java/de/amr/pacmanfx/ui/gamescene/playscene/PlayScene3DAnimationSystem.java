@@ -15,13 +15,12 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
@@ -136,11 +135,10 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
 
     public void createAnimations(EngineUIContext engine, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
-        final GameVariantPlayConfig config = runtime.playConfig();
         final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
 
         final GameLevel level = level3D.level();
-        final int numFlashes = config.gameRules().numLevelFlashes(level.number());
+        final int numFlashes = runtime.gameRules().numLevelFlashes(level.number());
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
         final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), uiConfig.worldSettings());
 

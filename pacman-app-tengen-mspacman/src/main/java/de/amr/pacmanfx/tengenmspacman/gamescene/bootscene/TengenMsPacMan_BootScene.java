@@ -67,7 +67,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
             ghost = uiConfig().renderConfig().createAnimatedGhost(
-                runtime().playConfig().systems().actorSpriteAnimController(),
+                runtime().systems().actorSpriteAnimController(),
                 engine.spriteAnimationSystem(),
                 GhostPersonality.RED_GHOST_SHADOW);
 
@@ -80,7 +80,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         final int stateTick = (int) game.state().timer().tickCount();
 

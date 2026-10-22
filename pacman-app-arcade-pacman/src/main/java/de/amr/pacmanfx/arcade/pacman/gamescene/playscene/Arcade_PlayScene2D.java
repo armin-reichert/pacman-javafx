@@ -121,7 +121,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             onDeactivate();
             // Avoid game over sound being played
             engine().soundManager().setEnabled(false);
-            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
+            runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
 

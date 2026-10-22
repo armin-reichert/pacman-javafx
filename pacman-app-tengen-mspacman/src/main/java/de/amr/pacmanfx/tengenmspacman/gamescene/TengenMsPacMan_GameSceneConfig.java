@@ -84,7 +84,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     public Named resolveCutSceneID(GameContext game) {
         final GameLevel level = game.session().level();
-        final OptionalInt cutSceneNumber = game.playConfig().gameRules().cutSceneAfterLevel(level.number());
+        final OptionalInt cutSceneNumber = game.runtime().gameRules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }

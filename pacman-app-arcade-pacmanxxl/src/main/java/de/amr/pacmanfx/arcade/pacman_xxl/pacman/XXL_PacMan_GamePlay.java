@@ -49,9 +49,9 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
-        final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.playConfig().worldMapManager();
+        final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.runtime().worldMapManager();
         mapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice

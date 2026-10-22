@@ -185,7 +185,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
+            runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
         updateOptions(game.session());
     }
@@ -332,7 +332,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private void saveHighScore(GameContext game) {
-        final ScoreSystem scoreSystem = game.playConfig().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.runtime().systems().scoreSystem();
         final Score highScore = game.session().hud().highScore();
         try {
             scoreSystem.save(highScore);

@@ -117,7 +117,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, null, session.hud());
         initScores(game);
 
-        game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.runtime().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
@@ -128,9 +128,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final GameRules rules = game.playConfig().gameRules();
-        final GameSystems systems = game.playConfig().systems();
-        final WorldMap worldMap = game.playConfig().worldMapManager().supplyWorldMap(levelNumber);
+        final GameRules rules = game.runtime().gameRules();
+        final GameSystems systems = game.runtime().systems();
+        final WorldMap worldMap = game.runtime().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntitySet();
 
         createAndAddEntities(entities, worldMap);
@@ -188,7 +188,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
             levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
-            game.playConfig().systems().levelCounterSystem().clear(levelCounter);
+            game.runtime().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -196,7 +196,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, 1);
@@ -232,7 +232,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.hud().gameScore().data().setEnabled(true);
 
-        final LevelCounterSystem levelCounterSystem = game.playConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.runtime().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -254,8 +254,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.playConfig().systems();
-        final GameRules rules = game.playConfig().gameRules();
+        final GameSystems systems = game.runtime().systems();
+        final GameRules rules = game.runtime().gameRules();
 
         level.selectNextBonus();
 

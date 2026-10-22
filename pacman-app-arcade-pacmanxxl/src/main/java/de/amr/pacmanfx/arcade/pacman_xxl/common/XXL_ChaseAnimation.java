@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
@@ -97,14 +97,14 @@ class XXL_ChaseAnimation {
 
     private void createPac(EngineUIContext engine, GameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig =  engine.uiConfig(runtime).renderConfig();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
         pac = actorFactory.createPacMan();
         pac.position().setX(numTilesX * TS);
         pac.show();
 
-        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
+        final WorldNavigationSystem navigator = runtime.systems().navigator();
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
         navigator.setSpeed(pac, PAC_FLEEING_SPEED);
@@ -118,7 +118,7 @@ class XXL_ChaseAnimation {
 
     private void createGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
         ghosts = new ArrayList<>(List.of(
             renderConfig.createAnimatedGhost(animController, spriteAnimationSystem, GhostPersonality.RED_GHOST_SHADOW),
@@ -157,8 +157,8 @@ class XXL_ChaseAnimation {
     }
 
     public void startGhostsChasePacMan(GameVariantRuntime runtime) {
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
-        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
+        final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = runtime.systems().navigator();
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
@@ -180,8 +180,8 @@ class XXL_ChaseAnimation {
     }
 
     private void letGhostsChasePacMan(GameVariantRuntime runtime) {
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
-        final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
+        final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = runtime.systems().navigator();
 
         moveActors(runtime);
 
@@ -237,7 +237,7 @@ class XXL_ChaseAnimation {
     }
 
     private void moveActors(GameVariantRuntime runtime) {
-        final var motor = runtime.playConfig().systems().motor();
+        final var motor = runtime.systems().motor();
         motor.move(pac);
         for (Ghost ghost : ghosts) {
             motor.move(ghost);

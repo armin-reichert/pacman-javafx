@@ -231,7 +231,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         marqueeTextView2.show();
 
         final GameVariantRenderConfig renderConfig     = uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
 
         msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
@@ -294,7 +294,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.runtime().playConfig().systems();
+                final GameSystems systems = scene.runtime().systems();
                 final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                 final WorldNavigationSystem nav = systems.navigator();
 
@@ -376,7 +376,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             }
 
             boolean letGhostMarchIn(GameContext game, TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = game.playConfig().systems();
+                final GameSystems systems = game.runtime().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();
 
@@ -421,8 +421,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.engine().optCurrentGame().ifPresent(game -> {
-                    final GameFlow flow = game.playConfig().gameFlow();
-                    final GameSystems systems = game.playConfig().systems();
+                    final GameFlow flow = game.runtime().gameFlow();
+                    final GameSystems systems = game.runtime().systems();
                     final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                     final MovementSystem motor = systems.motor();
                     final WorldNavigationSystem nav = systems.navigator();

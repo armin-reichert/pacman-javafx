@@ -76,7 +76,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     void initState() {
         view.createPacManAndGhosts(
             engine().uiConfig(runtime()).renderConfig(),
-            runtime().playConfig().systems().actorSpriteAnimController(),
+            runtime().systems().actorSpriteAnimController(),
             engine.spriteAnimationSystem()
         );
         view.hideEverything();
@@ -89,7 +89,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void startChasingPacMan(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final WorldNavigationSystem nav = systems.navigator();
 
         view.pulse.start();
@@ -113,7 +113,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final GameContext game = engine().optCurrentGame().orElse(null);
         if (game == null) return;
 
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 
@@ -143,7 +143,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void turnCardsStopPacMan(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final WorldNavigationSystem nav = systems.navigator();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
@@ -166,7 +166,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chaseGhosts(GameContext game, long tick) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final MovementSystem motor = systems.motor();
 
         view.pulse.triggerPulse();
@@ -190,7 +190,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         victim.state().setEnumValue(GhostState.EATEN);
         victim.hide();

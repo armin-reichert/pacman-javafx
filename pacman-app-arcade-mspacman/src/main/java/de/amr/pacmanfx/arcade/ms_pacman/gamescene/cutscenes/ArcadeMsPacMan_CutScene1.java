@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard(systems);
@@ -90,7 +90,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig     = engine.uiConfig(runtime()).renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
 
         pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(engine.spriteAnimationSystem()));

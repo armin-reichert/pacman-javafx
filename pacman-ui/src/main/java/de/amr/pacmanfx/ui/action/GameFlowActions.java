@@ -12,7 +12,6 @@ import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.input.KeyCode;
-import org.tinylog.Logger;
 
 import java.util.Set;
 
@@ -61,7 +60,7 @@ public class GameFlowActions {
                     }
 
                     engine.lifeCycle().suspendGame();
-                    game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
+                    game.runtime().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
                     engine.clock().start();
                 });
             }

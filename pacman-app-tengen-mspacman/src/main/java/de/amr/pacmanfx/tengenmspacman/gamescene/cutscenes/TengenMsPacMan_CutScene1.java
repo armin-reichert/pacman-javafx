@@ -96,7 +96,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
         final int tick = (int) game.state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(game.playConfig().systems().navigator());
+                getReady(game.runtime().systems().navigator());
                 clapperboard.show();
                 ClapperboardStateSystem.init(clapperboard);
                 playMusic();
@@ -144,7 +144,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void letActorsMove(GameContext game) {
-        List.of(pacMan, msPacMan, inky, pinky).forEach(game.playConfig().systems().motor()::move);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(game.runtime().systems().motor()::move);
         if (collided) {
             if (inky.position().y() > MIDDLE_LANE) {
                 inky.position().setY(MIDDLE_LANE);
@@ -156,8 +156,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     private void updateScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
-        final ActorSpriteAnimController animSystem = game.playConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.runtime().systems().navigator();
+        final ActorSpriteAnimController animSystem = game.runtime().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 
@@ -248,7 +248,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig     = uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
 

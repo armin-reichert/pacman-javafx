@@ -102,7 +102,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game.playConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+            game.runtime().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
 
         }
         ClapperboardStateSystem.update(clapperboard);
@@ -135,7 +135,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.playConfig().systems().motor();
+        final MovementSystem motor = game.runtime().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -144,7 +144,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
 
@@ -221,8 +221,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig        = uiConfig().renderConfig();
-        final ActorSpriteAnimController animController    = runtime().playConfig().systems().actorSpriteAnimController();
-        final WorldNavigationSystem worldNavigationSystem = runtime().playConfig().systems().navigator();
+        final ActorSpriteAnimController animController    = runtime().systems().actorSpriteAnimController();
+        final WorldNavigationSystem worldNavigationSystem = runtime().systems().navigator();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -253,7 +253,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.navigator();
 

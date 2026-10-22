@@ -37,14 +37,14 @@ public class GhostUpdateSystem {
             ? level.entitySet().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
             : level.entitySet().ghosts().toList();
 
-        final GameRules rules = game.playConfig().gameRules();
+        final GameRules rules = game.runtime().gameRules();
         final ActorSpeedRules speedRules = rules.actorSpeedRules();
 
         ghostsToUpdate.forEach(ghost -> {
             final float speed = speedRules.ghostSpeed(game, ghost);
             houseAccessSystem.update(ghost, level, speed);
             //TODO this is ugly
-            huntingSystem.update(game, level, ghost, game.playConfig().systems().ghostHuntingStrategy(ghost.personality()));
+            huntingSystem.update(game, level, ghost, game.runtime().systems().ghostHuntingStrategy(ghost.personality()));
             stateSystem.update(game, ghost);
             animationSystem.update(ghost);
         });

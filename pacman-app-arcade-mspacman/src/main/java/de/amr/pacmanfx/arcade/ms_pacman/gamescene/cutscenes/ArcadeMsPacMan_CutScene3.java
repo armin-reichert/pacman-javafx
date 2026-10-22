@@ -121,7 +121,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     // Scene controller state machine
 
     private void updateSceneState(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> {
@@ -201,7 +201,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     }
 
     private void updateDeliverJuniorState(GameContext game) {
-        final MovementSystem motor = game.playConfig().systems().motor();
+        final MovementSystem motor = game.runtime().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.position().x() <= 20 * TS && !stork.isBagReleasedFromBeak()) {

@@ -170,7 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public void onQuit() {
         engine().optCurrentGame().ifPresent(game -> {
             onDeactivate();
-            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
+            runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
 
@@ -271,7 +271,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
         final GameVariantRenderConfig renderConfig     = uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
 
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -119,7 +119,7 @@ public class XXL_OptionMenu extends OptionMenu {
         final String variantName = engine.gameVariantManager().currentVariantName();
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
 
-        final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
+        final WorldMapManager mapManager = runtime.worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
             final String message = "Expected XXL map manager but found %s".formatted(mapManager.getClass().getSimpleName());
             throw new IllegalStateException(message);
@@ -130,7 +130,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         // Init entries
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
-        meInitialLifeCount.setValue(runtime.playConfig().gameRules().initialLifeCount());
+        meInitialLifeCount.setValue(runtime.gameRules().initialLifeCount());
         meView3DEnabled.setValue(engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
         meCutScenesEnabled.setValue(engine.optCurrentGame().orElseThrow().session().cutScenesEnabled());
         meMapOrder.setValue(xxlMapManager.selectionMode());
@@ -157,7 +157,7 @@ public class XXL_OptionMenu extends OptionMenu {
         chaseAnimation.init(engine, runtime);
 
         chaseAnimationRenderer = engine.uiConfig(runtime).renderConfig().createVariantRenderer(
-            runtime.playConfig().systems().actorSpriteAnimController(),
+            runtime.systems().actorSpriteAnimController(),
             canvas);
     }
 
@@ -202,14 +202,14 @@ public class XXL_OptionMenu extends OptionMenu {
 
     private void onGameVariantNameChange(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
         engine.gameVariantManager().selectVariant(newID.name());
-        if (engine.gameVariantManager().currentRuntime().playConfig().gameRules() instanceof Arcade_GameRules rules) {
+        if (engine.gameVariantManager().currentRuntime().gameRules() instanceof Arcade_GameRules rules) {
             meInitialLifeCount.setValue(rules.initialLifeCount());
         }
 
     }
 
     private void onInitialLifeCountChange(ObservableValue<? extends Integer> obs, Integer oldValue, Integer newValue) {
-        if (engine.gameVariantManager().currentRuntime().playConfig().gameRules() instanceof Arcade_GameRules rules) {
+        if (engine.gameVariantManager().currentRuntime().gameRules() instanceof Arcade_GameRules rules) {
             rules.setInitialLifeCount(newValue);
         }
     }

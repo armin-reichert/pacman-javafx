@@ -58,7 +58,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig     = engine.uiConfig(runtime()).renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
         final var actorFactory                         = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
@@ -75,7 +75,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final CutScene2TimingComp timing = timing();
 
         timing.setTick(timing.tick() + 1);

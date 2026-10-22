@@ -133,7 +133,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
-                final GameSystems systems = game.playConfig().systems();
+                final GameSystems systems = game.runtime().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
@@ -161,7 +161,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
-                final GameSystems systems = game.playConfig().systems();
+                final GameSystems systems = game.runtime().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 
@@ -204,7 +204,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.view.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

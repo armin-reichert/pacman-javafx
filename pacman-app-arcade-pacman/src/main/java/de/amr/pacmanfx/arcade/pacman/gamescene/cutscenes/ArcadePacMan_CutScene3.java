@@ -49,7 +49,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig     = engine().uiConfig(runtime()).renderConfig();
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
@@ -67,16 +67,16 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
             return;
         }
 
-        final GameSystems sys = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         switch (sceneTick) {
-            case TICK_ANIMATION_START      -> startAnimation(sys);
-            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(sys);
+            case TICK_ANIMATION_START      -> startAnimation(systems);
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(systems);
             case TICK_ANIMATION_ENDS       -> game.state().triggerTimeout();
         }
 
-        sys.motor().move(pacMan);
-        sys.motor().move(blinky);
+        systems.motor().move(pacMan);
+        systems.motor().move(blinky);
     }
 
     private void startAnimation(GameSystems systems) {

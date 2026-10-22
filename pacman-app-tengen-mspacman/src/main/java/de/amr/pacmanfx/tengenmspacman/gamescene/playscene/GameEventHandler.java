@@ -65,7 +65,7 @@ class GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent e) {
         final GameContext game = e.game();
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
@@ -90,7 +90,7 @@ class GameEventHandler implements DefaultGameEventListener {
             final GameSession session = game.session();
             if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
                 final GameLevel level = session.level();
-                final int numFlashes = game.playConfig().gameRules().numLevelFlashes(level.number());
+                final int numFlashes = game.runtime().gameRules().numLevelFlashes(level.number());
                 gameScene.optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
                 gameScene.playLevelCompleteAnimation(game, level, numFlashes);
             }
@@ -115,7 +115,7 @@ class GameEventHandler implements DefaultGameEventListener {
     public void onLevelStarted(LevelStartedEvent e) {
         final GameContext game = e.game();
         final GameSession session = game.session();
-        final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = game.runtime().systems().actorSpriteAnimController();
 
         session.optLevel().ifPresent(level -> resetActorAnimations(animController, session, level));
     }

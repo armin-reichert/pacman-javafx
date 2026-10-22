@@ -62,10 +62,10 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        rules = game.playConfig().gameRules();
-        flow = game.playConfig().gameFlow();
-        gamePlay = game.playConfig().gamePlay();
-        systems = game.playConfig().systems();
+        rules = game.runtime().gameRules();
+        flow = game.runtime().gameFlow();
+        gamePlay = game.runtime().gamePlay();
+        systems = game.runtime().systems();
         session = game.session();
         hud = session.hud();
         onEnterState(game);

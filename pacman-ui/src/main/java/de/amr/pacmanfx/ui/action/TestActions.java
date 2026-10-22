@@ -30,7 +30,7 @@ public class TestActions {
             @Override
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
-                    game.playConfig().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
+                    game.runtime().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
                     engine.ui().showMessage("Cut scenes test"); //TODO localize
                 });
             }
@@ -38,7 +38,7 @@ public class TestActions {
             @Override
             public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
-                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
+                return game != null && game.runtime().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
@@ -46,7 +46,7 @@ public class TestActions {
             @Override
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
-                    game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
+                    game.runtime().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
                     engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
                 });
             }
@@ -54,7 +54,7 @@ public class TestActions {
             @Override
             public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
-                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
+                return game != null && game.runtime().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
@@ -62,7 +62,7 @@ public class TestActions {
             @Override
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
-                    game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
+                    game.runtime().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
                     engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
                 });
             }
@@ -70,7 +70,7 @@ public class TestActions {
             @Override
             public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
-                return game != null && game.playConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
+                return game != null && game.runtime().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
 

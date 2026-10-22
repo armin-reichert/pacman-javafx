@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
@@ -142,7 +142,7 @@ public class IntroSceneView {
     private void createMsPacManAndTheGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
-        final GameSystems systems = runtime.playConfig().systems();
+        final GameSystems systems = runtime.systems();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         final WorldNavigationSystem nav = systems.navigator();
 

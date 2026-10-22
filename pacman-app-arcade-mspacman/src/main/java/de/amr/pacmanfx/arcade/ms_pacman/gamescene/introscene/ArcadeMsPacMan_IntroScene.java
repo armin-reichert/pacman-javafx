@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
         view = new IntroSceneView(engine, runtime());
 
-        final ActorSpriteAnimController animController = runtime().playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime().systems().actorSpriteAnimController();
 
         ghostInSpotlight = 0;
         numTicksBeforeRising = 0;
@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letGhostWalkIn(GameContext game, Ghost ghost) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final WorldNavigationSystem nav = systems.navigator();
         final MovementSystem motor = systems.motor();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letMsPacManWalkIn(GameContext game, Pac msPacMan) {
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
         final WorldNavigationSystem nav = systems.navigator();
         final MovementSystem motor = systems.motor();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();

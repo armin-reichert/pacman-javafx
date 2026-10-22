@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
-            game.playConfig().systems().levelCounterSystem().clear(levelCounter);
+            game.runtime().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.playConfig().systems();
+        final GameSystems systems = game.runtime().systems();
 
         final GameLevel level = createLevel(game, 1);
 
@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             : createStaticBonus(level, symbolCode, randomFloat(9, 10));
         level.entitySet().add(bonus);
 
-        game.playConfig().systems().bonusState().setEdible(bonus);
+        game.runtime().systems().bonusState().setEdible(bonus);
 
         game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
@@ -172,8 +172,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
         }
 
-        final GameSystems systems = game.playConfig().systems();
-        final GameRules rules = game.playConfig().gameRules();
+        final GameSystems systems = game.runtime().systems();
+        final GameRules rules = game.runtime().gameRules();
 
         final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
         systems.bonusState().setEdible(movingBonus);

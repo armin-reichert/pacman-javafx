@@ -265,7 +265,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         onDeactivate();
         engine().soundManager().setEnabled(false);
         engine().optCurrentGame().ifPresent(game ->
-            runtime().playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER));
+            runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER));
     }
 
     // Other stuff

@@ -4,14 +4,13 @@
 
 package de.amr.pacmanfx.app.runtime;
 
-import de.amr.pacmanfx.core.gamestate.GameFlow;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.engine.EngineContext;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.Cartridge;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -90,20 +89,19 @@ public class DefaultGameVariantManager implements GameVariantManager {
         if (!isVariantRegistered(variantName)) {
             registerVariantConfig(variantName);
         }
-        runtimeByName(variantName).playConfig().worldMapManager().loadCustomMaps();
+        runtimeByName(variantName).worldMapManager().loadCustomMaps();
         Logger.info("Loaded custom maps for game variant {}", variantName);
         selectedVariantName.set(variantName);
     }
 
     private GameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
         final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantName);
-        final var variantRuntime = new DefaultGameVariantRuntime(cartridge, engine);
-        final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
-        gameFlow.addState(new Test_ShortTestState());
-        gameFlow.addState(new Test_MediumTestState());
-        gameFlow.addState(new Test_CutScenesTestState());
-        variantRuntime.playConfig().worldMapManager().loadMapPrototypes();
+        final var runtime = new DefaultGameVariantRuntime(cartridge, engine);
+        runtime.gameFlow().addState(new Test_ShortTestState());
+        runtime.gameFlow().addState(new Test_MediumTestState());
+        runtime.gameFlow().addState(new Test_CutScenesTestState());
+        runtime.worldMapManager().loadMapPrototypes();
         Logger.info("Loaded world maps for game variant {}", variantName);
-        return variantRuntime;
+        return runtime;
     }
 }

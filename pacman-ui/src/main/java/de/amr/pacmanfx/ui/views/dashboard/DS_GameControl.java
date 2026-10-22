@@ -60,7 +60,7 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            engine.optCurrentGame().get().playConfig().gameRules().actorCollisionRules().collisionDoubleCheckedProperty()
+            engine.optCurrentGame().get().runtime().gameRules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
@@ -87,7 +87,7 @@ public class DS_GameControl extends GameDashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof Test_CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(game.playConfig().gameRules().actorCollisionRules().isCollisionDoubleChecked());
+        cbCollisionCheckedTwice.setSelected(game.runtime().gameRules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
     private boolean canStartLevel(EngineUIContext engine, AbstractGameState gameState) {

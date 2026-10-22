@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -47,7 +46,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameVariantPlayConfig variantConfig = game.playConfig();
         final GameLevel level = session.level();
 
         if (stateTick == 1) {
@@ -56,7 +54,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         else if (stateTick == 2) {
             showPacAndGhosts(level.entitySet());
         }
-        else if (stateTick == game.playConfig().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTick == game.runtime().gameRules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entitySet().pac();
@@ -70,7 +68,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (stateTick >= game.playConfig().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTick >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
             gamePlay.update(game, level);
         }
 
@@ -78,7 +76,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             if (nextState == CommonGameStateID.GAME_INTRO) {
                 clear(game);
             }
-            variantConfig.gameFlow().enterGameState(game, nextState);
+            game.runtime().gameFlow().enterGameState(game, nextState);
         });
     }
 
@@ -95,7 +93,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        if (game.playConfig().gameRules().isLevelCompleted(level)) {
+        if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
         else if (game.session().thisFrame().pacKilled()) {

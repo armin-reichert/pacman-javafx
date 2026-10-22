@@ -70,7 +70,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Movement",  supplyGhostText(engine, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(engine, this::actorLocationText,  personality));
         addDynamicInfo("Animation", supplyGhostText(engine,
-            (_, ghost) -> ghostAnimationText(engine.optCurrentGame().get().playConfig().systems().actorSpriteAnimController(), ghost),
+            (_, ghost) -> ghostAnimationText(engine.optCurrentGame().get().runtime().systems().actorSpriteAnimController(), ghost),
             personality));
     }
 
@@ -152,7 +152,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacAnimationText(EngineUIContext context) {
         return () -> context.optCurrentGame().get().session().optLevel().map(level -> {
-            final ActorSpriteAnimController animSystem = context.optCurrentGame().get().playConfig().systems().actorSpriteAnimController();
+            final ActorSpriteAnimController animSystem = context.optCurrentGame().get().runtime().systems().actorSpriteAnimController();
             final Pac pac = level.entitySet().pac();
             final boolean stopped = pac.animation().isStopped();
             final boolean locked = pac.animation().isLocked();

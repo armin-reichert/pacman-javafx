@@ -37,7 +37,7 @@ public class SteeringActions {
         @Override
         public void execute(EngineUIContext engine) {
             engine.optCurrentGame().ifPresent(game -> {
-                final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
+                final WorldNavigationSystem navigator = game.runtime().systems().navigator();
                 game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
             });
         }

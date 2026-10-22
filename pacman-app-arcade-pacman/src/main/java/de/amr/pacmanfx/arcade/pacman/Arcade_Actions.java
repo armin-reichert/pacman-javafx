@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -45,7 +45,7 @@ public final class Arcade_Actions {
                     engine.soundManager().voice().stop();
                     engine.soundManager().setEnabled(true);
                     game.coinMechanism().insertCoin();
-                    game.playConfig().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                    game.runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                     game.eventManager().publishEvent(new CreditAddedEvent(1));
                     engine.uiConfig(runtime).optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
                 });
@@ -76,7 +76,7 @@ public final class Arcade_Actions {
             public void execute(EngineUIContext engine) {
                 engine.soundManager().voice().stop();
                 engine.optCurrentGame().ifPresent(game ->
-                    game.playConfig().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
+                    game.runtime().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
             }
 
             @Override

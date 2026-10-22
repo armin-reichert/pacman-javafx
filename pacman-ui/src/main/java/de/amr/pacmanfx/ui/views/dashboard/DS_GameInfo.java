@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.paint.Color;
 
@@ -93,7 +93,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(EngineUIContext context) {
-        return context.optCurrentGame().get().playConfig().gameRules();
+        return context.optCurrentGame().get().runtime().gameRules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
@@ -101,7 +101,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = context.optCurrentGame().get();
-            final ActorSpeedRules speedRules = game.playConfig().gameRules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.runtime().gameRules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

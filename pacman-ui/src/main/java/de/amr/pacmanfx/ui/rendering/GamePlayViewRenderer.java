@@ -10,7 +10,7 @@ import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.engine.GameVariantRuntime;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -85,7 +85,7 @@ public class GamePlayViewRenderer {
         //TODO This should not be done in every render frame!
 
         final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
         if (gameScene.view2D() != null) {
             final RenderingSurface renderingSurface = gameScene.view2D().renderingSurface();

@@ -239,7 +239,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = assertGame().session().level();
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
-        if (!assertGame().playConfig().gameRules().isLevelCompleted(level)) {
+        if (!assertGame().runtime().gameRules().isLevelCompleted(level)) {
             final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
             systems3D.animationSystem().setPowerMode(pac, true);
             playScene3D.animationSystem().startWallFlashing();
@@ -330,7 +330,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final House house = level.entitySet().entities().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
         final boolean cutSceneFollows = !assertGame().session().isAttractMode()
-            && assertGame().playConfig().gameRules().cutSceneAfterLevel(level.number()).isPresent();
+            && assertGame().runtime().gameRules().cutSceneAfterLevel(level.number()).isPresent();
 
         playScene3D.opacityProperty().set(0);
 

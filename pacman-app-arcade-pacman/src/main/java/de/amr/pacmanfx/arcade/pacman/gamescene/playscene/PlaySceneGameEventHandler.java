@@ -63,7 +63,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     public void onGameContinued(GameContinuedEvent e) {
         gameScene.engine().optCurrentGame().ifPresent(game -> {
             //TODO Does not belong here
-            final ActorSpriteAnimController animController = game.playConfig().systems().actorSpriteAnimController();
+            final ActorSpriteAnimController animController = game.runtime().systems().actorSpriteAnimController();
             game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
         });
     }
@@ -89,7 +89,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
                 final GameLevel level = game.session().level();
-                final int numFlashes = game.playConfig().gameRules().numLevelFlashes(level.number());
+                final int numFlashes = game.runtime().gameRules().numLevelFlashes(level.number());
                 gameScene.levelCompletedAnimation().play(level, numFlashes);
             } else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::playGameOverSound);

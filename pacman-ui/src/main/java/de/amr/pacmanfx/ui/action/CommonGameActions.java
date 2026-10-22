@@ -63,7 +63,7 @@ public final class CommonGameActions {
             @Override
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
-                    final ActorCollisionRules collisionRules = game.playConfig().gameRules().actorCollisionRules();
+                    final ActorCollisionRules collisionRules = game.runtime().gameRules().actorCollisionRules();
                     final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                     final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
                     collisionRules.collisionStrategyProperty().set(nextStrategy);
