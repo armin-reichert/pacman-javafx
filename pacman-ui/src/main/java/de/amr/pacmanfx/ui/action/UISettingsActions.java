@@ -99,7 +99,7 @@ public class UISettingsActions {
                 if (!engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = engine.translationManager().translate(
                         miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
-                    engine.ui().showShortMessage(msg);
+                    engine.ui().showMessage(msg);
                 }
             }
         };
@@ -112,7 +112,7 @@ public class UISettingsActions {
                     toggleBooleanProperty(view3DEnabledProperty);
                     final boolean enabled = view3DEnabledProperty.get();
                     if (!isPlaySceneRunning(engine.gameSceneManager())) {
-                        engine.ui().showShortMessage(engine.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                        engine.ui().showMessage(engine.translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                     }
                     if (isLevelPlaying(game.state())) {
                         if (engine.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {

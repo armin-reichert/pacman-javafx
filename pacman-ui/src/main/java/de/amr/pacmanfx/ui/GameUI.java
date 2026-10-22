@@ -122,7 +122,7 @@ public class GameUI implements GameEventListener {
             case GenericChangeEvent _ -> forceGameSceneReload = true;
 
             case HighScoreAccessErrorEvent failure -> {
-                showShortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
+                showMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
                 return;
             }
 
@@ -186,7 +186,7 @@ public class GameUI implements GameEventListener {
      * @param message  message text (supports {@link String#format})
      * @param args     formatting arguments
      */
-    public void showShortMessage(Duration duration, String message, Object... args) {
+    public void showMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
         flashMessageManager.showMessage(message.formatted(args), duration.toSeconds());
@@ -198,8 +198,8 @@ public class GameUI implements GameEventListener {
      * @param message message text
      * @param args    formatting arguments
      */
-    public void showShortMessage(String message, Object... args) {
-        showShortMessage(viewModel.flashMessageDurationProperty().get(), message, args);
+    public void showMessage(String message, Object... args) {
+        showMessage(viewModel.flashMessageDurationProperty().get(), message, args);
     }
 
     public void clearShortMessage() {

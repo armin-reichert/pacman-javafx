@@ -111,7 +111,7 @@ public final class TengenMsPacMan_Actions {
                         final boolean nextEnabledState = !gameOptionValues(session).boosterEnabled();
                         gameOptionValues(session).setBoosterEnabled(nextEnabledState);
                         if (nextEnabledState) {
-                            engine.ui().showShortMessage("Booster ON!"); //TODO localize
+                            engine.ui().showMessage("Booster ON!"); //TODO localize
                         }
                         //TODO hack: this should be done by entity update system!
                         level.entitySet().pac().assertComponent(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);

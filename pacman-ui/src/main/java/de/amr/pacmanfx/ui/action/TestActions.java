@@ -31,7 +31,7 @@ public class TestActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
-                    engine.ui().showShortMessage("Cut scenes test"); //TODO localize
+                    engine.ui().showMessage("Cut scenes test"); //TODO localize
                 });
             }
 
@@ -47,7 +47,7 @@ public class TestActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
-                    engine.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+                    engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
                 });
             }
 
@@ -63,7 +63,7 @@ public class TestActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.playConfig().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
-                    engine.ui().showShortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+                    engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
                 });
             }
 

@@ -44,7 +44,7 @@ public class SimulationActions {
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-                engine.ui().showShortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
@@ -53,7 +53,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engine) {
                 engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-                engine.ui().showShortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
@@ -66,7 +66,7 @@ public class SimulationActions {
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-                engine.ui().showShortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
@@ -75,7 +75,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engine) {
                 engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-                engine.ui().showShortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
@@ -84,7 +84,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engine) {
                 final boolean failure = !engine.clock().makeStep(true);
                 if (failure) {
-                    engine.ui().showShortMessage("Simulation step error!");
+                    engine.ui().showMessage("Simulation step error!");
                 }
             }
 
@@ -99,7 +99,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engine) {
                 final boolean failure = !engine.clock().makeSteps(10, true);
                 if (failure) {
-                    engine.ui().showShortMessage("Simulation steps error!");
+                    engine.ui().showMessage("Simulation steps error!");
                 }
             }
 
@@ -114,7 +114,7 @@ public class SimulationActions {
             public void execute(EngineUIContext engine) {
                 final GameClock gameClock = engine.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-                engine.ui().showShortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
+                engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
             }
         };
 
