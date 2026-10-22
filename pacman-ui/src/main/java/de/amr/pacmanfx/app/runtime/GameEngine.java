@@ -53,6 +53,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private final GameClock clock;
 
+    private final CoinMechanism coinMechanism;
+
     private final Input input;
 
     private final DirectoryWatchdog watchdog;
@@ -89,6 +91,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         this.renderManager = requireNonNull(renderManager);
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
+
+        coinMechanism = new CoinMechanism(99);
 
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -339,7 +343,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
         final GameEventManager gameEventManager = new DefaultGameEventManager();
 
-        currentGame = new GameContext(runtime.playConfig(), runtime.coinMechanism(), gameEventManager);
+        currentGame = new GameContext(runtime.playConfig(), coinMechanism, gameEventManager);
         newGameSession(currentGame);
         stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
         runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
