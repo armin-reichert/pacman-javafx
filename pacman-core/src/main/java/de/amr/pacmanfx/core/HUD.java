@@ -72,7 +72,7 @@ public class HUD {
             creditDisplay,
             gameScore,
             highScore,
-            additionalEntities.all()
+            additionalEntities
         );
     }
 

@@ -54,7 +54,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems systems = game.runtime().systems();
 
         final WorldMap worldMap = level.worldMap();
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         final Pac pac = level.entitySet().pac();
 
         pac.reset(); // initially invisible!

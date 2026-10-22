@@ -185,7 +185,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             final GameLevelEntitySet entitySet = level.entitySet();
             entitySet.pac().removeComponent(PacView3D.class);
             entitySet.ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
-            entitySet.entities().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
+            entitySet.anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
         });
     }
 
@@ -222,7 +222,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             return;
         }
 
-        level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus ->
+        level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animations3D().registry()));
 
         //TODO move out of this class?

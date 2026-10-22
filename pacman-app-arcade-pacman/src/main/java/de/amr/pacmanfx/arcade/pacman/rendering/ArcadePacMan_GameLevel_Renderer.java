@@ -71,7 +71,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
                 drawSprite(emptyMapSprite, 0, emptyPixelsOverMaze, false);
             }
             if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
-                final House house = level.entitySet().entities().theOne(House.class);
+                final House house = level.entitySet().theOne(House.class);
                 hideGhostHouseDoors(house);
             }
         }

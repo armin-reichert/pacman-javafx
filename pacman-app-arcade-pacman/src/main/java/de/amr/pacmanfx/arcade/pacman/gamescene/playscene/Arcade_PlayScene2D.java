@@ -88,7 +88,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         return Ufx.streamOf(
             createRenderableLevel(level),
 
-            level.entitySet().all().map(entity -> {
+            level.entitySet().stream().map(entity -> {
                 if (entity instanceof Energizer energizer) {
                     return GameEntityViewBuilder.builder()
                         .entity(energizer)

@@ -50,7 +50,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         ctx.save();
 
         drawMaze(renderInfo, 0, terrainLayer.emptyRowsOverMaze() * TS);
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         overPaintActorSprites(house, terrainLayer);
 
         final FoodState foodState = level.food();

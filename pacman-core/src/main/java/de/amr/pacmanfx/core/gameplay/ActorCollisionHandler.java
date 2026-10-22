@@ -57,7 +57,7 @@ public class ActorCollisionHandler {
 
     public void detectEdibleBonusCollision(GameLevel level) {
         final Pac pac = level.entitySet().pac();
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         frameState.setEdibleBonus(null);
         if (bonus != null && bonus.state().enumValue() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             frameState.setEdibleBonus(bonus);

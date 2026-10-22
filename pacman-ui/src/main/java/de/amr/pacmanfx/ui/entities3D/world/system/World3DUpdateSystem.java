@@ -21,10 +21,10 @@ public class World3DUpdateSystem {
         final GameLevelEntitySet entitySet = session.level().entitySet();
 
         updateLivesCounter3D(session.hud().livesCounter());
-        updateHouse3D(entitySet.entities().theOne(House.class), entitySet);
+        updateHouse3D(entitySet.theOne(House.class), entitySet);
         updatePac3D(entitySet.pac());
         updateGhosts3D(entitySet);
-        updateBonus3D(entitySet.entities().anyOfTypeOrNull(Bonus.class), animationRegistry);
+        updateBonus3D(entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
     private void updatePac3D(Pac pac) {

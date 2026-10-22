@@ -9,7 +9,7 @@ import java.util.List;
 public class LifetimeSystem {
 
     public void update(QuerySet<GameEntity> entities) {
-        final List<GameEntity> copy = entities.all().toList();
+        final List<GameEntity> copy = entities.stream().toList();
         for (GameEntity entity : copy) {
             if (entity.hasComponent(Lifetime.class)) {
                 entity.lifetime().becomeOlder();

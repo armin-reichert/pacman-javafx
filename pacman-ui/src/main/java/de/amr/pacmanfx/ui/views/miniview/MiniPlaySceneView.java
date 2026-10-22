@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
         final InfoMap energizerRenderInfo = pelletColor != null
             ? InfoMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
             : InfoMap.EMPTY_IMMUTABLE_MAP;
-        return level.entitySet().entities().all()
+        return level.entitySet().stream()
             .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : InfoMap.EMPTY_IMMUTABLE_MAP));
     }
 

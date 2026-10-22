@@ -17,44 +17,20 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelEntitySet {
-
-    private final QuerySet<GameEntity> entities = new QuerySet<>();
-
-    public void add(GameEntity entity) {
-        requireNonNull(entity);
-        entities.add(entity);
-    }
-
-    public void remove(GameEntity entity) {
-        requireNonNull(entity);
-        entities.remove(entity);
-    }
-
-    public void clear() {
-        entities.clear();
-    }
-
-    public Stream<? extends GameEntity> all() {
-        return entities.all();
-    }
-
-    public QuerySet<GameEntity> entities() {
-        return entities;
-    }
+public class GameLevelEntitySet extends QuerySet<GameEntity> {
 
     public Stream<Ghost> ghosts() {
-        return entities.ofType(Ghost.class).sorted(Comparator.comparing(Ghost::personality));
+        return elementsOfType(Ghost.class).sorted(Comparator.comparing(Ghost::personality));
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
-        return entities.ofType(Ghost.class).filter(ghost -> state.equals(ghost.state().enumValue()));
+        return elementsOfType(Ghost.class).filter(ghost -> state.equals(ghost.state().enumValue()));
     }
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> stateAlternatives) {
         requireNonNull(stateAlternatives);
-        return entities.ofType(Ghost.class).filter(ghost -> stateAlternatives.contains(ghost.state().enumValue()));
+        return elementsOfType(Ghost.class).filter(ghost -> stateAlternatives.contains(ghost.state().enumValue()));
     }
 
     /**
@@ -63,13 +39,13 @@ public class GameLevelEntitySet {
      */
     public Ghost ghost(GhostPersonality personality) {
         requireNonNull(personality);
-        return entities.ofType(Ghost.class)
+        return elementsOfType(Ghost.class)
             .filter(ghost -> ghost.personality() == personality)
             .findFirst()
             .orElseThrow();
     }
 
     public Pac pac() {
-        return entities.theOne(Pac.class);
+        return theOne(Pac.class);
     }
 }

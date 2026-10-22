@@ -65,13 +65,13 @@ public class Test_ShortTestState extends AbstractGameState {
             game.eventManager().publishEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            level.entitySet().entities().theOne(MessageView.class).hide();
+            level.entitySet().theOne(MessageView.class).hide();
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
-            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
@@ -80,7 +80,7 @@ public class Test_ShortTestState extends AbstractGameState {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
-            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
@@ -141,7 +141,7 @@ public class Test_ShortTestState extends AbstractGameState {
         // Ghosts stop
         level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(true));
 
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));

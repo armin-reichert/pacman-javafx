@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final House house = entities.entities().theOne(House.class);
+        final House house = entities.theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
@@ -132,7 +132,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final Bonus prevBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus prevBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
             if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
                 //TODO Can this happen in original game?
@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     private Bonus createMovingBonus(GameContext game, GameLevel level, int symbolCode) {
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         if (house == null) {
             throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
         }

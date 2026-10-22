@@ -34,7 +34,7 @@ public class EntityUpdateSystem {
 
         systems.ghostUpdate().update(game, level);
 
-        level.entitySet().entities().ofType(Energizer.class).forEach(energizer -> {
+        level.entitySet().elementsOfType(Energizer.class).forEach(energizer -> {
             final Vector2i tile = energizer.position().tile();
             final boolean eaten = level.food().hasEatenFoodAtTile(tile);
             final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
@@ -42,9 +42,9 @@ public class EntityUpdateSystem {
         });
 
 
-        level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
+        level.entitySet().anyOfType(Bonus.class).ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
 
         // Updates lifetime of entities like ghost points, bonus points etc.
-        systems.lifetime().update(level.entitySet().entities());
+        systems.lifetime().update(level.entitySet());
     }
 }

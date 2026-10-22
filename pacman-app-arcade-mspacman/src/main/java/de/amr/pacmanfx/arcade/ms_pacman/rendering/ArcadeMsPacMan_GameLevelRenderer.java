@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
                 final String brightMazeKey = "maze.bright.%d".formatted(colorMapIndex);
                 final Image brightMazeImage = assets.image(brightMazeKey);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
-                final House house = level.entitySet().entities().theOne(House.class);
+                final House house = level.entitySet().theOne(House.class);
                 hideGhostHouseDoors(house);
             }
             else {

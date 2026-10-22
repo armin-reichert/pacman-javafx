@@ -148,7 +148,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
         // when not escaping ghost, keep move direction at least until next intersection
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         final boolean intersection = terrain.isRealIntersectionTile(pacTile, house::contains);
         if (worldNavigation.info().moved && !intersection)
             return;
@@ -162,7 +162,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         } 
         else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 worldNavigation.setTargetTile(bonus.position().tile());
             }
@@ -180,7 +180,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
         final Vector2i pacTile = pac.position().tile();
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Vector2i bonusTile = bonus.position().tile();
             return bonus.state().enumValue() == BonusState.EDIBLE

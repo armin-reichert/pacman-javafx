@@ -62,7 +62,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         final MapCategory mapCategory = gameOptionValues(session).mapCategory();
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
-            final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+            final MessageView messageView = level.entitySet().theOne(MessageView.class);
             createAndStartMessageAnimation(messageView, game);
             timer().restartIndefinitely(); // animation completion triggers state exit
         }
@@ -91,7 +91,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         }
 
         // Show animated game over message moving horizontally over scene and wrapping around
-        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
         messageView.optComponent(MessageAnimationComp.class).ifPresent(messageAnimation -> {
             final var systems = (TengenMsPacMan_GameSystems) game.runtime().systems();
             if (messageAnimation.finished() && countdownAfter == 0) {
@@ -105,7 +105,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     @Override
     public void onExit(GameContext game) {
         session.level().clearMessage();
-        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
         messageView.removeComponent(MessageAnimationComp.class);
     }
 
@@ -134,7 +134,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     private Vector2f computeMessageStartPosition() {
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         final Vector2i houseSize = house.sizeInTiles();
         // Compute center position under house
         return house.floorplan().minTile()

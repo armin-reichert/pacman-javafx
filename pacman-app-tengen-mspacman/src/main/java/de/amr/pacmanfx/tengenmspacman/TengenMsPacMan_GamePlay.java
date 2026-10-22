@@ -154,7 +154,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
             final int bottomPos = (level.worldMap().numRows() - 1) * TS - HTS;
 
-            final var levelNumberDisplays = hud.additionalEntities().ofType(LevelNumberDisplay.class).toList();
+            final var levelNumberDisplays = hud.additionalEntities().elementsOfType(LevelNumberDisplay.class).toList();
             levelNumberDisplays.forEach(levelNumberDisplay -> levelNumberDisplay.levelNumber().setNumber(level.number()));
             if (levelNumberDisplays.size() != 2) {
                 Logger.error("There should exist exactly 2 level number displays in this HUD!");
@@ -261,7 +261,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final House house = entities.entities().theOne(House.class);
+        final House house = entities.theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
@@ -331,7 +331,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
-        final Bonus prevBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus prevBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
             if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
                 Logger.info("Previous bonus is still active, skip new bonus");
@@ -340,7 +340,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             level.entitySet().remove(prevBonus);
         }
 
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
@@ -353,7 +353,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final float speed = game.runtime().gameRules().actorSpeedRules().bonusSpeed(game, level);
 
-        final Bonus oldBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus oldBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (oldBonus != null) {
             level.entitySet().remove(oldBonus);
         }

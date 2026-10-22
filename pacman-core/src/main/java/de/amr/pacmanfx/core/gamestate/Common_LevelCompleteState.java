@@ -38,7 +38,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         systems.pacPower().stopAndReset(pac);
         pac.state().setEnumValue(PacState.SLEEPING);
 
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));

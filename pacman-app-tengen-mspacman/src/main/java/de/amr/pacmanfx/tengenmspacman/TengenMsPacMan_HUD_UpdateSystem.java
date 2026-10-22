@@ -57,7 +57,7 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         // Level numbers left and right
 
         final boolean levelNumbersVisible = gameOptionValues(session).mapCategory() != MapCategory.ARCADE;
-        session.hud().additionalEntities().ofType(LevelNumberDisplay.class)
+        session.hud().additionalEntities().elementsOfType(LevelNumberDisplay.class)
             .forEach(levelNumberDisplay -> levelNumberDisplay.visibility().setVisible(levelNumbersVisible));
     }
 }

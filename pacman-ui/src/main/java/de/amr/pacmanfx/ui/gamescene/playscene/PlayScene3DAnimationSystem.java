@@ -150,10 +150,10 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
         registry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         createHouseAnimations(house);
 
-        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
         MessageView3DBuilder.createAnim3D(messageView, registry);
 
         createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
@@ -289,7 +289,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
             }
         );
 
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
 
         registry.register(PlayScene3DAnimationID.PARTICLES, new ParticlesAnimation3D(
             house,

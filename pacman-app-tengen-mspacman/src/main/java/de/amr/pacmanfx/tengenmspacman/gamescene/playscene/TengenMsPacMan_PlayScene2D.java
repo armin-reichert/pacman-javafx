@@ -223,7 +223,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             worldMap.setConfigValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
-            final House house = level.entitySet().entities().theOne(House.class);
+            final House house = level.entitySet().theOne(House.class);
             final var doorData = house.door().assertComponent(DoorDataComp.class);
             doorData.setColor(mapImageSet.mapImage().colorScheme().door());
             Logger.info("Door color set to {}", doorData.color());
@@ -329,9 +329,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private Stream<GameEntityView> createEntityViews(GameLevel level, Vector2f offset) {
         final GameVariantRenderConfig renderConfig = uiConfig().renderConfig();
-        final Door door = level.entitySet().entities().theOne(House.class).door();
+        final Door door = level.entitySet().theOne(House.class).door();
         return Ufx.streamOf(
-            level.entitySet().all()
+            level.entitySet().stream()
                 .filter(entity -> entity != door)
                 .map(renderConfig::createEntityView)
                 .map(entityView -> entityView.newOffset(offset)),

@@ -85,7 +85,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
             drawGameStateInfo(game);
             session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
-                level.entitySet().all().forEach(actor -> drawMovingActorInfo(animController, actor));
+                level.entitySet().forEach(actor -> drawMovingActorInfo(animController, actor));
             });
             ctx.restore();
         });
@@ -240,7 +240,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
         // Mark intersection tiles
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         terrain.tiles()
             .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
             .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())

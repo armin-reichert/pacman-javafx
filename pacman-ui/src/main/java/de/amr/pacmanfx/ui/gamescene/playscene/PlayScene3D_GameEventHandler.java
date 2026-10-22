@@ -142,7 +142,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = assertGame().session().level().entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = assertGame().session().level().entitySet().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -158,8 +158,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = assertGame().session().level().entitySet()
-            .entities().theOne(MessageView.class);
+        final MessageView messageView = assertGame().session().level().entitySet().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -185,7 +184,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             playScene3D.replaceGameLevel3D(assertGame(), level);
             playScene3D.animationSystem().startEnergizerPumping(level3D);
-            final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+            final MessageView messageView = level.entitySet().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
@@ -269,7 +268,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final var center = switch (type) {
             case READY -> {
-                final House house = level.entitySet().entities().theOne(House.class);
+                final House house = level.entitySet().theOne(House.class);
                 yield house.centerPositionUnderHouse();
             }
             case TEST -> vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS);
@@ -300,7 +299,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
@@ -327,7 +326,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     private void onLevelComplete() {
         final GameViewModel viewModel = playScene3D.engine().ui().viewModel();
         final GameLevel level = assertGame().session().level();
-        final House house = level.entitySet().entities().theOne(House.class);
+        final House house = level.entitySet().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
         final boolean cutSceneFollows = !assertGame().session().isAttractMode()
             && assertGame().runtime().gameRules().cutSceneAfterLevel(level.number()).isPresent();
@@ -341,13 +340,13 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevelView3D level3D = assertLevel3D();
         playScene3D.animationSystem().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
         }
 
-        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
         MessageView3DAnimationSystem.hideMessageView(messageView);
 
         playLevelEndAnimation(
@@ -407,7 +406,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.animationSystem().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());
@@ -416,7 +415,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
-        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(assertGame(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());

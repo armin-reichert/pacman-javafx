@@ -58,7 +58,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         this.level3D = requireNonNull(level3D);
         setAnimationFactory(() -> {
             final GameLevelEntitySet entitySet = level3D.level().entitySet();
-            final House house = entitySet.entities().theOne(House.class);
+            final House house = entitySet.theOne(House.class);
             final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
             return new SequentialTransition(
                 pauseSecThen(0.5, () -> entitySet.ghosts().forEach(GameEntity::hide)),

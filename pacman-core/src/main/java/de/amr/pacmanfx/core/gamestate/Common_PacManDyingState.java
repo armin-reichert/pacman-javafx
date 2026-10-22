@@ -48,7 +48,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         });
 
         // Stop bonus movement. Note: this works also if the bonus has no movement component!
-        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusMoveAndJump().setBonusInactive(bonus);
         }
@@ -75,7 +75,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             pac.hide();
         }
         else if (stateTick == rules.pacDyingTiming().pacDeadTick()) {
-            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 level.entitySet().remove(bonus);
             }

@@ -157,14 +157,14 @@ public class GameLevel {
 
     public void clearMessage() {
         requireNonNull(entities);
-        final MessageView messageView = entities.entities().theOne(MessageView.class);
+        final MessageView messageView = entities.theOne(MessageView.class);
         messageView.type().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public void showMessage(MessageType messageType) {
         requireNonNull(entities);
         requireNonNull(messageType);
-        final MessageView messageView = entities.entities().theOne(MessageView.class);
+        final MessageView messageView = entities.theOne(MessageView.class);
         messageView.type().setMessageType(messageType);
         messageView.show();
     }
