@@ -6,13 +6,12 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Named;
 import de.amr.basics.ui.assets.AssetMap;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -86,19 +85,6 @@ public class GameUI implements GameEventListener {
 
         Logger.info("UI connected with engine");
         Logger.info(actionBindings);
-    }
-
-    public void onEnterGameVariant(GameVariantRuntime runtime) {
-        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
-        uiConfig.load(engine);
-        viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
-        engine.gameSceneManager().setGameSceneConfig(uiConfig.gameSceneConfig());
-        updateStageIcon(runtime);
-    }
-
-    public void onExitGameVariant(GameVariantRuntime runtime) {
-        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
-        uiConfig.unload(engine);
     }
 
     public void updateStageIcon(GameVariantRuntime runtime) {

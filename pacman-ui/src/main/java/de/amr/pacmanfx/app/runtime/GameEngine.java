@@ -352,7 +352,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
 
         if (ui != null) {
-            ui.onEnterGameVariant(runtime);
+            final GameVariantUIConfig uiConfig = uiConfig(runtime);
+            uiConfig.load(this);
+            ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
+            gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
+            ui.updateStageIcon(runtime);
         }
     }
 
@@ -364,7 +368,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         currentGame = null;
 
         if (ui != null) {
-            ui.onExitGameVariant(runtime);
+            final GameVariantUIConfig uiConfig = uiConfig(runtime);
+            uiConfig.unload(this);
         }
     }
 
