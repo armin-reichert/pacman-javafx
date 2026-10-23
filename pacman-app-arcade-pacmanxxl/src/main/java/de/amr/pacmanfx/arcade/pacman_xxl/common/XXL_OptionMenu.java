@@ -201,7 +201,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChange(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
-        engine.gameVariantManager().selectVariant(newID.name());
+        engine.gameVariantManager().selectVariant(engine, newID.name());
         if (engine.gameVariantManager().currentRuntime().gameRules() instanceof Arcade_GameRules rules) {
             meInitialLifeCount.setValue(rules.initialLifeCount());
         }

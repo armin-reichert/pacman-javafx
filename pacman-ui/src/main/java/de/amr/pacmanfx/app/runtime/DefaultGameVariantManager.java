@@ -24,20 +24,14 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
-    private EngineContext engine;
-
     private final Map<String, GameVariantRuntime> runtimesByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
     public DefaultGameVariantManager() {}
 
-    public void init(EngineContext engine) {
-        this.engine = requireNonNull(engine);
-    }
-
     @Override
-    public void registerVariantConfig(String variantName) {
+    public void registerVariantConfig(EngineContext engine, String variantName) {
         requireNonNull(variantName);
 
         final GameVariantRuntime gameVariantRuntime;
@@ -83,11 +77,11 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public void selectVariant(String variantName) {
+    public void selectVariant(EngineContext engine, String variantName) {
         requireNonNull(variantName);
 
         if (!isVariantRegistered(variantName)) {
-            registerVariantConfig(variantName);
+            registerVariantConfig(engine, variantName);
         }
         runtimeByName(variantName).worldMapManager().loadCustomMaps();
         Logger.info("Loaded custom maps for game variant {}", variantName);

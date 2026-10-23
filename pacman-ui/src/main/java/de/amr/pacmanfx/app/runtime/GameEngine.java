@@ -107,8 +107,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         this.gameVariantManager.selectedVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
-        gameVariantManager.init(this);
-
         clock.setPausableAction(this::simulate);
         clock.setPermanentAction(this::render);
 
@@ -127,7 +125,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
-        gameVariantManager.selectVariant(variantID.name());
+        gameVariantManager.selectVariant(this, variantID.name());
 
         gameViewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
         gameViewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);

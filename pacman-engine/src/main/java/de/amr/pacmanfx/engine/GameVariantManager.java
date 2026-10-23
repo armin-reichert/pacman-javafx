@@ -10,15 +10,13 @@ import javafx.beans.value.ChangeListener;
 
 public interface GameVariantManager {
 
-    void init(EngineContext engine);
-
-    void registerVariantConfig(String variantName);
+    void registerVariantConfig(EngineContext engine, String variantName);
 
     GameVariantRuntime runtimeByName(String variantName);
 
     GameVariantRuntime currentRuntime();
 
-    void selectVariant(String variantName);
+    void selectVariant(EngineContext engine, String variantName);
 
     StringProperty selectedVariantNameProperty();
 
