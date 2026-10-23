@@ -61,8 +61,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
     private final int initialLifeCount;
 
     public TengenMsPacMan_GameRules() {
-        actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.CENTER_DISTANCE);
-        actorCollisionRules.collisionDoubleCheckedProperty().set(true);
+        actorCollisionRules.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
+        actorCollisionRules.setCollisionDoubleChecked(true);
         scoringRules.mapCategoryProperty().bind(mapCategory);
         initialLifeCount = 3;
     }

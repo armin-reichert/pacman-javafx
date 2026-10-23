@@ -4,30 +4,25 @@
 
 package de.amr.pacmanfx.core.rules;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 public class ActorCollisionRules {
 
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+    private boolean collisionDoubleChecked = true;
 
-    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(CollisionStrategy.SAME_TILE);
+    private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
 
-    public BooleanProperty collisionDoubleCheckedProperty() {
+    public boolean isCollisionDoubleChecked() {
         return collisionDoubleChecked;
     }
 
-    public boolean isCollisionDoubleChecked() {
-        return collisionDoubleChecked.get();
-    }
-
-    public ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
-        return collisionStrategy;
+    public void setCollisionDoubleChecked(boolean collisionDoubleChecked) {
+        this.collisionDoubleChecked = collisionDoubleChecked;
     }
 
     public CollisionStrategy getCollisionStrategy() {
-        return collisionStrategy.get();
+        return collisionStrategy;
+    }
+
+    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+        this.collisionStrategy = collisionStrategy;
     }
 }

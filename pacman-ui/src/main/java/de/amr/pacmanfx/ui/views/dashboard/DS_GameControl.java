@@ -59,9 +59,8 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
 
-        cbCollisionCheckedTwice.setOnAction(_ ->
-            engine.optCurrentGame().get().runtime().gameRules().actorCollisionRules().collisionDoubleCheckedProperty()
-                .set(cbCollisionCheckedTwice.isSelected()));
+        cbCollisionCheckedTwice.setOnAction(_ -> engine.optCurrentGame().get().runtime().gameRules()
+            .actorCollisionRules().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
         credit.addListener((_, _, newValue) -> engine.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));

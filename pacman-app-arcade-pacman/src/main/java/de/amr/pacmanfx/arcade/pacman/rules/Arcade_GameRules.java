@@ -82,8 +82,8 @@ public class Arcade_GameRules implements GameRules {
 
     protected Arcade_GameRules() {
         actorCollisionRules = new ActorCollisionRules();
-        actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.SAME_TILE);
-        actorCollisionRules.collisionDoubleCheckedProperty().set(true);
+        actorCollisionRules.setCollisionStrategy(CollisionStrategy.SAME_TILE);
+        actorCollisionRules.setCollisionDoubleChecked(true);
 
         actorSpeedRules = new ArcadePacMan_ActorSpeedRules();
         initialLifeCount = 3;
