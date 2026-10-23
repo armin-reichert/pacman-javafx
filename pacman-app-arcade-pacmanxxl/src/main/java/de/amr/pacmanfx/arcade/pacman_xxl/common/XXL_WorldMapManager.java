@@ -125,7 +125,7 @@ public class XXL_WorldMapManager implements WorldMapManager, PathWatchEventListe
         for (File file : worldMapFiles) {
             WorldMap.fromFile(file).ifPresent(worldMap -> {
                 customMaps.add(worldMap);
-                Logger.debug("Custom map loaded from file '{}'", file);
+                Logger.info("Custom map loaded from file '{}'", file);
             });
         }
     }

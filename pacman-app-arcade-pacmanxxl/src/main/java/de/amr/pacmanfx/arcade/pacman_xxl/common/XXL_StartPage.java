@@ -73,8 +73,8 @@ public class XXL_StartPage implements StartPage {
     public void setEngine(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
         // Ensure both game variants are available
-        engine.gameVariantManager().registerVariantConfig(engine, GameVariantID.ARCADE_PACMAN_XXL.name());
-        engine.gameVariantManager().registerVariantConfig(engine, GameVariantID.ARCADE_MS_PACMAN_XXL.name());
+        engine.gameVariantManager().registerGameVariant(engine, GameVariantID.ARCADE_PACMAN_XXL.name());
+        engine.gameVariantManager().registerGameVariant(engine, GameVariantID.ARCADE_MS_PACMAN_XXL.name());
     }
 
     @Override
