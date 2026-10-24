@@ -107,9 +107,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        session.setCutScenesEnabled(true);
-        session.setLevel(null);
+        session.setValue(SessionKey.CUT_SCENES_ENABLED, true);
         session.setValue(SessionKey.GAME_RUNNING, false);
+        session.setLevel(null);
 
         configureHUD(game, null, session.hud());
         initScores(game);

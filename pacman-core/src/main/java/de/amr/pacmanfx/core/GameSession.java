@@ -33,8 +33,6 @@ public class GameSession {
 
     private final Map<Named, Object> values = new HashMap<>();
 
-    private boolean cutScenesEnabled;
-
     private boolean hudVisible;
 
     public GameSession(String variantName, GameCheats cheats, int initialLifeCount) {
@@ -92,14 +90,6 @@ public class GameSession {
 
     public GameCheats cheats() {
         return cheats;
-    }
-
-    public boolean cutScenesEnabled() {
-        return cutScenesEnabled;
-    }
-
-    public void setCutScenesEnabled(boolean enabled) {
-        cutScenesEnabled = enabled;
     }
 
     public <T> T value(Named key, Class<T> type) {

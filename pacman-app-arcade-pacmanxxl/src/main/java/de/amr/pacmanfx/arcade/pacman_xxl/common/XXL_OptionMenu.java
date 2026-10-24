@@ -6,7 +6,9 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.GameVariantRuntime;
@@ -132,7 +134,7 @@ public class XXL_OptionMenu extends OptionMenu {
         meGameVariantID.setValue(GameVariantID.valueOf(variantName));
         meInitialLifeCount.setValue(runtime.gameRules().initialLifeCount());
         meView3DEnabled.setValue(engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get());
-        meCutScenesEnabled.setValue(engine.optCurrentGame().orElseThrow().session().cutScenesEnabled());
+        meCutScenesEnabled.setValue(engine.optCurrentGame().orElseThrow().session().booleanValue(SessionKey.CUT_SCENES_ENABLED));
         meMapOrder.setValue(xxlMapManager.selectionMode());
         meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
@@ -219,7 +221,8 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        engine.optCurrentGame().orElseThrow().session().setCutScenesEnabled(newValue);
+        final GameContext game = engine.optCurrentGame().orElseThrow();
+        game.session().setValue(SessionKey.CUT_SCENES_ENABLED, newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

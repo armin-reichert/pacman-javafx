@@ -23,7 +23,7 @@ public class Tengen_LevelCompleteState extends Common_LevelCompleteState {
         }
 
         final boolean cutScene = rules.cutSceneAfterLevel(level.number()).isPresent();
-        if (cutScene && session.cutScenesEnabled()) {
+        if (cutScene && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }
 

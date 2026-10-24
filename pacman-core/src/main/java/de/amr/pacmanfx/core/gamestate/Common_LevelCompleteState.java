@@ -71,7 +71,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         }
 
         final boolean cutSceneFollows = rules.cutSceneAfterLevel(level.number()).isPresent();
-        if (cutSceneFollows && session.cutScenesEnabled()) {
+        if (cutSceneFollows && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }
 
