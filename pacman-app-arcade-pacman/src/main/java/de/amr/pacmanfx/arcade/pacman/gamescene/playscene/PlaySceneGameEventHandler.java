@@ -89,7 +89,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
             if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
-                final GameLevel level = game.session().level();
+                final GameLevel level = game.session().optLevel().orElseThrow();
                 final int numFlashes = game.runtime().gameRules().numLevelFlashes(level.number());
                 gameScene.levelCompletedAnimation().play(level, numFlashes);
             } else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {

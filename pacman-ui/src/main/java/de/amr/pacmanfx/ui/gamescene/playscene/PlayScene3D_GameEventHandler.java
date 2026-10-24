@@ -88,7 +88,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(playScene3D.engine().ui().viewModel().common3DSettings(), assertGame().session().level());
+            handleTestState(playScene3D.engine().ui().viewModel().common3DSettings(), assertGame().session().optLevel().orElseThrow());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -144,7 +144,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = assertGame().session().level().entitySet().theOne(MessageView.class);
+        final MessageView messageView = level3D.level().entitySet().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -160,7 +160,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         final GameLevelView3D level3D = assertLevel3D();
-        final MessageView messageView = assertGame().session().level().entitySet().theOne(MessageView.class);
+        final MessageView messageView = level3D.level().entitySet().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -176,8 +176,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
-        final GameLevel level = assertGame().session().level();
         final GameLevelView3D level3D = assertLevel3D();
+        final GameLevel level = level3D.level();
         final State<GameContext> newState = assertGame().state();
 
         level3D.replaceLevelCounter3D(assertGame().session().hud().levelCounter());
@@ -237,7 +237,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
-        final GameLevel level = assertGame().session().level();
+        final GameLevel level = assertLevel3D().level();
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
         if (!assertGame().runtime().gameRules().isLevelCompleted(level)) {
@@ -295,7 +295,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void onPacManDying() {
-        final GameLevel level = assertGame().session().level();
+        final GameLevel level = assertLevel3D().level();
 
         assertGame().state().timer().resetToIndefiniteDuration();
 
@@ -328,7 +328,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onLevelComplete() {
         final GameViewModel viewModel = playScene3D.engine().ui().viewModel();
-        final GameLevel level = assertGame().session().level();
+        final GameLevel level = assertLevel3D().level();
         final House house = level.entitySet().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
         final boolean cutSceneFollows = !assertGame().session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
@@ -400,7 +400,6 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGameOver() {
         final GameSession session = assertGame().session();
-        final GameLevel level = session.level();
         final GameLevelView3D level3D = assertLevel3D();
 
         if (!session.booleanValue(SessionKey.DEMO_LEVEL_MODE) && RandomNumbers.chance(0.25)) {
@@ -409,7 +408,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.animationSystem().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
-        final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level3D.level().entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Bonus3DUpdateSystem updateSystem3D = GameSystems3D.reqSystem(Bonus3DUpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.animations3D().registry());

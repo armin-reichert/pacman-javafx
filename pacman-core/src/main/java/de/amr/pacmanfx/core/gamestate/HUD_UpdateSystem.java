@@ -27,7 +27,7 @@ public class HUD_UpdateSystem {
         // when the level starts.
         int numLivesShown = numLives - 1;
         if (session.optLevel().isPresent()) {
-            final GameLevel level = session.level();
+            final GameLevel level = session.optLevel().get();
             final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING
                 || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
             if (starting && !level.entitySet().pac().isVisible()) {

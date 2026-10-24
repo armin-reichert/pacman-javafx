@@ -77,7 +77,7 @@ public class ValueMap {
         valueMap.put(key, value);
     }
 
-    public void clearValue(Named key) {
+    public void removeValue(Named key) {
         requireNonNull(key);
         valueMap.remove(key);
     }

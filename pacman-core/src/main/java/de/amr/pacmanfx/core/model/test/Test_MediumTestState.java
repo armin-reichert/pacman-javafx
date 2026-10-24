@@ -38,12 +38,12 @@ public class Test_MediumTestState extends AbstractGameState {
         game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         configureLevelForTest(game);
-        gamePlay.startLevel(game, session.level());
+        gamePlay.startLevel(game, session.optLevel().orElseThrow());
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
@@ -80,7 +80,7 @@ public class Test_MediumTestState extends AbstractGameState {
     }
 
     private void configureLevelForTest(GameContext game) {
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final Pac pac = level.entitySet().pac();
 
         session.setValue(SessionKey.HUD_VISIBLE, true);

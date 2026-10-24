@@ -69,7 +69,7 @@ public final class CheatActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
-                    final GameLevel level = session.level();
+                    final GameLevel level = session.optLevel().orElseThrow();
                     level.food().eatPellets();
                     session.cheats().notifyCheatUsed();
                     game.eventManager().publishEvent(
@@ -91,7 +91,7 @@ public final class CheatActions {
             public void execute(EngineUIContext context) {
                 context.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
-                    final GameLevel level = session.level();
+                    final GameLevel level = session.optLevel().orElseThrow();
 
                     session.cheats().notifyCheatUsed();
 

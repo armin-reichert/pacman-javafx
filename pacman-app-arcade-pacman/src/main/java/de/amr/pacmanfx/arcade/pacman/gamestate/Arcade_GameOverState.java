@@ -23,7 +23,7 @@ public class Arcade_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
 
         level.showMessage(MessageType.GAME_OVER);
         session.hud().creditDisplay().show();
@@ -40,10 +40,10 @@ public class Arcade_GameOverState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            final GameLevel level = session.level();
+            final GameLevel level = session.optLevel().orElseThrow();
             level.entitySet().theOne(MessageView.class).hide();
             session.cheats().clear();
-            session.setLevel(null);
+            session.removeValue(SessionKey.GAME_LEVEL);
             flow.enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);

@@ -49,7 +49,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     private void onPacEatsPellet(PacEatsFoodEvent e) {
         final GameSession session = game.session();
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final GameRules rules = game.runtime().gameRules();
         final Pac pac = e.pac();
 
@@ -68,7 +68,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     private void onPacEatsEnergizer(PacEatsFoodEvent e) {
         final GameSession session = game.session();
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final GameRules rules = game.runtime().gameRules();
         final Pac pac = e.pac();
 
@@ -102,7 +102,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         final GamePlay gamePlay = game.runtime().gamePlay();
 
         final GameSession session = game.session();
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final Bonus bonus = e.bonus();
 
         // Bonus value depends on game variant and bonus type

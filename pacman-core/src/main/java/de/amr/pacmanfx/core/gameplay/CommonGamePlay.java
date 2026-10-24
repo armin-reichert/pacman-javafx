@@ -91,7 +91,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = createLevel(game, levelNumber);
         session.hud().gameScore().data().setLevelNumber(levelNumber);
 
-        session.setLevel(level);
+        session.setValue(SessionKey.GAME_LEVEL, level);
         session.setValue(SessionKey.DEMO_LEVEL_MODE, false);
 
         return level;
@@ -102,8 +102,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-
-        final GameLevel currentLevel = session.level();
+        final GameLevel currentLevel = session.optLevel().orElseThrow();
         final int lastLevelNumber = game.runtime().gameRules().lastLevelNumber();
 
         if (currentLevel.number() < lastLevelNumber) {
@@ -260,7 +259,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 }
             }
         }
-        else if (session.level().entitySet().pac().cheats().isImmune()) {
+        else if (session.optLevel().orElseThrow().entitySet().pac().cheats().isImmune()) {
             return;
         }
 

@@ -55,7 +55,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private ImageView createLevelInfoView(GameContext game, GameLevelView3D level3D) {
-        final GameLevel level = game.session().level();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         final ImageView levelInfo = new ImageView();
         final double infoWidth = tilesPx(level.worldMap().numCols());

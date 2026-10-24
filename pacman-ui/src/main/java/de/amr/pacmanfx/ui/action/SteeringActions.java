@@ -49,7 +49,7 @@ public class SteeringActions {
             return game != null
                 && game.session().optLevel().isPresent()
                 && !game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
-                && !game.session().level().entitySet().pac().cheats().isUsingAutopilot();
+                && !game.session().optLevel().orElseThrow().entitySet().pac().cheats().isUsingAutopilot();
         }
     }
 

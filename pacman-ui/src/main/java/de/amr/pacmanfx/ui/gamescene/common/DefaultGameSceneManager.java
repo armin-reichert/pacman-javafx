@@ -167,7 +167,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         }
 
         final GameSession session = game.session();
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final Pac pac = level.entitySet().pac();
 
         playScene3D.replaceGameLevel3D(game, level);

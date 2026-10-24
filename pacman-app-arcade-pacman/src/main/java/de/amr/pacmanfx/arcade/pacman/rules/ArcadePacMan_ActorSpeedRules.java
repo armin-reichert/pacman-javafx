@@ -41,7 +41,7 @@ public class ArcadePacMan_ActorSpeedRules implements ActorSpeedRules {
 
     @Override
     public float ghostSpeed(GameContext game, Ghost ghost) {
-        final GameLevel level = game.session().level();
+        final GameLevel level = game.session().optLevel().orElseThrow();
         final House house = level.entitySet().theOne(House.class);
 
         final int levelNumber = level.number();

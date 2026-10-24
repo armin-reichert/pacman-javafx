@@ -46,7 +46,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = session.level();
+        level = session.optLevel().orElseThrow();
 
         countdownAfter = 0;
 
@@ -105,7 +105,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        session.level().clearMessage();
+        session.optLevel().orElseThrow().clearMessage();
         final MessageView messageView = level.entitySet().theOne(MessageView.class);
         messageView.removeComponent(MessageAnimationComp.class);
     }

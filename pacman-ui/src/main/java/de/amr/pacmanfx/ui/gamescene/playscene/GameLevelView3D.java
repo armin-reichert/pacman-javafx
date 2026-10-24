@@ -89,7 +89,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         this.uiConfig = requireNonNull(uiConfig);
 
         final GameSession session = game.session();
-        this.level = session.level();
+        this.level = session.optLevel().orElseThrow();
 
         final WorldMap worldMap = level.worldMap();
         final House house = level.entitySet().theOne(House.class);

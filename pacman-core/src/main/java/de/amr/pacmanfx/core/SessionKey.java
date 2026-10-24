@@ -10,6 +10,7 @@ public enum SessionKey implements Named {
     CUT_SCENES_ENABLED,
     DEMO_LEVEL_MODE,
     FRAME_STATE,
+    GAME_LEVEL,
     GAME_OVER_STATE_TICKS,
     GAME_RUNNING,
     HUD_VISIBLE,

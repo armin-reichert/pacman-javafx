@@ -118,7 +118,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
         session.setValue(SessionKey.CUT_SCENES_ENABLED, true);
         session.setValue(SessionKey.GAME_RUNNING, false);
-        session.setLevel(null);
+        session.removeValue(SessionKey.GAME_LEVEL);
 
         // Add game options display on top of maze and level number boxes at left and right side below the maze
         final HUD hud = session.hud();
@@ -221,7 +221,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         configurePacAndGhosts(entities, game.runtime().systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
-        session.setLevel(level);
+        session.setValue(SessionKey.GAME_LEVEL, level);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         final long gameOverTicks = gameOptionValues(session).mapCategory() == MapCategory.ARCADE
@@ -286,7 +286,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setLevelNumber(demoLevel.number());
         session.hud().gameScore().data().setEnabled(true);
 
-        session.setLevel(demoLevel);
+        session.setValue(SessionKey.GAME_LEVEL, demoLevel);
         session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
 
         return demoLevel;

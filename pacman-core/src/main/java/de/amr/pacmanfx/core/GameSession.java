@@ -16,8 +16,6 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession extends ValueMap {
 
-    private GameLevel level;
-
     private final HUD hud;
 
     private final GameCheats cheats;
@@ -42,22 +40,8 @@ public class GameSession extends ValueMap {
         });
     }
 
-    public void setLevel(GameLevel level) {
-        this.level = level;
-    }
-
     public Optional<GameLevel> optLevel() {
-        return Optional.ofNullable(level);
-    }
-
-    /**
-     * @return the current game level. If there is no current game level, throws an exception!
-     */
-    public GameLevel level() {
-        if (level != null) {
-            return level;
-        }
-        throw new IllegalStateException("No game level exists at this time");
+        return Optional.ofNullable(value(SessionKey.GAME_LEVEL, GameLevel.class));
     }
 
     public HUD hud() {

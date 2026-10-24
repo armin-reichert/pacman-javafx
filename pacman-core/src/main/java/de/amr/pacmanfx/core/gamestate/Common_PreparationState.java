@@ -19,7 +19,7 @@ public final class Common_PreparationState extends AbstractGameState {
         // We might enter this state from the demo level playing state
         session.optLevel().ifPresent(level -> {
             level.entitySet().theOne(MessageView.class).hide();
-            session.setLevel(null);
+            session.removeValue(SessionKey.GAME_LEVEL);
         });
 
         session.setValue(SessionKey.NUM_LIVES, game.runtime().gameRules().initialLifeCount());

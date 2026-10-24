@@ -24,7 +24,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = game.session().level();
+        level = game.session().optLevel().orElseThrow();
 
         level.entitySet().theOne(MessageView.class).hide();
 

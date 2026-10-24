@@ -27,7 +27,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
     public void onPacPowerStarts(PacPowerStartsEvent e) {
         final GameSystems systems = game.runtime().systems();
         final long durationTicks = e.powerDurationTicks();
-        final GameLevel level = game.session().level();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         level.huntingTimer().stop();
 
@@ -44,7 +44,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacPowerStartsFading(PacPowerStartsFadingEvent e) {
-        final GameLevel level = game.session().level();
+        final GameLevel level = game.session().optLevel().orElseThrow();
         level.entitySet().ghosts().forEach(ghost -> ghost.state().setPacPowerFading(true));
 
         Logger.info("Pac power started fading. Power ticks remaining: {}", e.pac().power().ticksRemaining());
@@ -52,7 +52,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacPowerEnds(PacPowerEndsEvent e) {
-        final GameLevel level = game.session().level();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(false);

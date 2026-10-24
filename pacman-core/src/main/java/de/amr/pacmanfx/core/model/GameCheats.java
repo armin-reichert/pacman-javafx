@@ -54,7 +54,7 @@ public class GameCheats {
 
     public void update(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || !session.booleanValue(SessionKey.GAME_RUNNING)) {
             return;
         }

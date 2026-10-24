@@ -27,7 +27,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = session.level();
+        level = session.optLevel().orElseThrow();
         pac = level.entitySet().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);

@@ -25,7 +25,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameLevel level = session.level();
+        final GameLevel level = session.optLevel().orElseThrow();
         final OptionalInt cutSceneNumber = rules.cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent() && cutSceneNumber.getAsInt() == rules.lastCutSceneNumber();
 

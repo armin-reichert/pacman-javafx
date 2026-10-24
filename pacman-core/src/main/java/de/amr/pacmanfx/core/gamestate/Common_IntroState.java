@@ -22,9 +22,10 @@ public final class Common_IntroState extends AbstractGameState {
         hud.highScore().data().setEnabled(true);
         hud.highScore().show();
         hud.creditDisplay().show();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
 
-        session.setLevel(null);
+        session.setValue(SessionKey.HUD_VISIBLE, true);
+        session.removeValue(SessionKey.GAME_LEVEL);
+
         timer().resetToIndefiniteDuration();
     }
 

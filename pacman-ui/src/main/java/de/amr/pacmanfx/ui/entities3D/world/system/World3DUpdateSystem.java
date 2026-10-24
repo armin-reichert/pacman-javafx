@@ -18,7 +18,7 @@ public class World3DUpdateSystem {
 
     public void updateEntities(GameContext game, AnimationRegistry animationRegistry) {
         final GameSession session = game.session();
-        final GameLevelEntitySet entitySet = session.level().entitySet();
+        final GameLevelEntitySet entitySet = session.optLevel().orElseThrow().entitySet();
 
         updateLivesCounter3D(session.hud().livesCounter());
         updateHouse3D(entitySet.theOne(House.class), entitySet);

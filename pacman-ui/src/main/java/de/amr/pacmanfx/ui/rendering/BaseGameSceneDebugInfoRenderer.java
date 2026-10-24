@@ -99,8 +99,9 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
             gameState.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.timer().tickCount())
         );
         if (game.session().optLevel().isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState)) {
-            final HuntingTimer ht = game.session().level().huntingTimer();
-            text += " %s (Tick %d)".formatted(ht.currentHuntingPhase(), ht.tickCount());
+            final GameLevel level = game.session().optLevel().get();
+            final HuntingTimer huntingTimer = level.huntingTimer();
+            text += " %s (Tick %d)".formatted(huntingTimer.currentHuntingPhase(), huntingTimer.tickCount());
         }
         ctx.setFill(debugTextFill);
         ctx.setFont(debugTextFont);
