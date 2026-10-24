@@ -22,13 +22,13 @@ public final class Common_PreparationState extends AbstractGameState {
             session.setLevel(null);
         });
 
-        session.setValue(SessionKey.NUM_LIVES, session.initialNumLives());
+        session.setValue(SessionKey.NUM_LIVES, game.runtime().gameRules().initialLifeCount());
+        session.setValue(SessionKey.HUD_VISIBLE, true);
 
         hud.creditDisplay().show();
         hud.gameScore().show();
         hud.levelCounter().show();
         hud.livesCounter().hide();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
     }
 
     @Override

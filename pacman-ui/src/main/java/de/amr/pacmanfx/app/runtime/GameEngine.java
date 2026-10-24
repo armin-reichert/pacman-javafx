@@ -396,13 +396,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private void simulate() {
         try {
-            if (currentGame != null) {
-                currentGame.session().setFrameState(new FrameState(clock.currentTick()));
-                currentGame.runtime().systems().entityUpdateSystem().updateEntities(currentGame);
-                currentGame.runtime().gameFlow().update(currentGame);
-                // Now the current game scene is up-to-date!
-                gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
-            }
+            currentGame.session().setFrameState(new FrameState(clock.currentTick()));
+            currentGame.runtime().systems().entityUpdateSystem().updateEntities(currentGame);
+            currentGame.runtime().gameFlow().update(currentGame);
+            // Now the current game scene is up-to-date!
+            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
         }
         catch (Exception x) {
             fatalError(x);

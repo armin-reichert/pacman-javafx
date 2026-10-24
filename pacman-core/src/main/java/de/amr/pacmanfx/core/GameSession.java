@@ -20,24 +20,21 @@ public class GameSession extends ValueMap {
 
     private GameLevel level;
 
-    private final int initialNumLives;
-
     private final HUD hud;
 
     private final GameCheats cheats;
 
-    public GameSession(String variantName, GameCheats cheats, int initialLifeCount) {
+    public GameSession(String variantName, GameCheats cheats, int lifeCount) {
         super(new HashMap<>());
 
         requireNonNull(variantName);
         requireNonNull(cheats);
 
         this.cheats = requireNonNull(cheats);
-        this.initialNumLives = initialLifeCount;
 
         hud = new HUD(variantName);
 
-        setValue(SessionKey.NUM_LIVES, initialLifeCount);
+        setValue(SessionKey.NUM_LIVES, lifeCount);
         frameState = new FrameState(0);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
@@ -45,10 +42,6 @@ public class GameSession extends ValueMap {
                 hud.highScore().data().setEnabled(false);
             }
         });
-    }
-
-    public int initialNumLives() {
-        return initialNumLives;
     }
 
     public void setLevel(GameLevel level) {
