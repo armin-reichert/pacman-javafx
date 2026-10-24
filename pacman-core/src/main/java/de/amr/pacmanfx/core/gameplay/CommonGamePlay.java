@@ -122,9 +122,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.runtime().gameRules();
         final GameSession session = game.session();
+        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
         final Pac pac = level.entitySet().pac();
 
-        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(session.frameState());
+        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(thisFrame);
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
@@ -141,13 +142,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         collisionHandler.detectCollisions(level);
 
-        checkIfPacFoundEdibleItem(game, level, session.frameState());
-        checkIfPacGetsKilled(game.session(), game.runtime().gameRules(), session.frameState());
-        if (session.frameState().pacKilled()) {
+        checkIfPacFoundEdibleItem(game, level, thisFrame);
+        checkIfPacGetsKilled(game.session(), game.runtime().gameRules(), thisFrame);
+        if (thisFrame.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            checkIfGhostsGetKilled(game, level, session.frameState());
+            checkIfGhostsGetKilled(game, level, thisFrame);
         }
     }
 
@@ -223,32 +224,32 @@ public abstract class CommonGamePlay implements GamePlay {
         highScore.position().set(14 * TS, TS);
     }
 
-    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
+    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState thisFrame) {
         final Pac pac = level.entitySet().pac();
         final GameSystems systems = game.runtime().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
         final ScoringRules scoringRules = game.runtime().gameRules().scoringRules();
 
-        if (frameState.foodFound()) {
+        if (thisFrame.foodFound()) {
             digestionSystem.endStarving(pac);
-            final Vector2i foodTile = frameState.foodFoundTile();
+            final Vector2i foodTile = thisFrame.foodFoundTile();
             level.food().markFoodEatenAt(foodTile);
             if (scoringRules.isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
             game.eventManager().publishEvent(
-                new PacEatsFoodEvent(pac, frameState.energizerFound(), false, game.session().frameState().tick()));
+                new PacEatsFoodEvent(pac, thisFrame.energizerFound(), false, thisFrame.tick()));
         }
         else {
             digestionSystem.starve(pac);
         }
 
-        if (frameState.foundEdibleBonus()) {
-            game.eventManager().publishEvent(new BonusEatenEvent(frameState.edibleBonus()));
+        if (thisFrame.foundEdibleBonus()) {
+            game.eventManager().publishEvent(new BonusEatenEvent(thisFrame.edibleBonus()));
         }
     }
 
-    private void checkIfPacGetsKilled(GameSession session, GameRules rules, FrameState frameState) {
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, FrameState thisFrame) {
         // Check for optional attract mode safe period
         if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             if (rules.demoLevelMinDurationSec().isPresent()) {
@@ -263,20 +264,20 @@ public abstract class CommonGamePlay implements GamePlay {
             return;
         }
 
-        final boolean pacMeetsKiller = frameState.ghostsCollidingWithPac().stream()
+        final boolean pacMeetsKiller = thisFrame.ghostsCollidingWithPac().stream()
             .anyMatch(ghost -> ghost.state().enumValue() == GhostState.HUNTING_PAC);
 
-        frameState.setPacKilled(pacMeetsKiller);
+        thisFrame.setPacKilled(pacMeetsKiller);
     }
 
-    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, FrameState frameState) {
-        if (frameState.detectedPacGhostCollision()) {
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, FrameState thisFrame) {
+        if (thisFrame.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
-            frameState.ghostsCollidingWithPac().stream()
+            thisFrame.ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.state().enumValue() == GhostState.FRIGHTENED)
-                .forEach(frameState.ghostsKilled()::add);
+                .forEach(thisFrame.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            frameState.ghostsKilled().forEach(ghost -> pacEatsGhost(game, level, ghost));
+            thisFrame.ghostsKilled().forEach(ghost -> pacEatsGhost(game, level, ghost));
         }
     }
 

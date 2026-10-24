@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public class Test_MediumTestState extends AbstractGameState {
@@ -58,14 +59,16 @@ public class Test_MediumTestState extends AbstractGameState {
             }
         }
         else {
+            final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+
             gamePlay.update(game, level);
             if (rules.isLevelCompleted(level)) {
                 flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
-            else if (session.frameState().pacKilled()) {
+            else if (thisFrame.pacKilled()) {
                 triggerTimeout();
             }
-            else if (session.frameState().hasGhostBeenKilled()) {
+            else if (thisFrame.hasGhostBeenKilled()) {
                 flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }

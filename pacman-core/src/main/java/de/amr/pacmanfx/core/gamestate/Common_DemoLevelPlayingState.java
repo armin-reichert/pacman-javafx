@@ -94,13 +94,14 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
+        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
         if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
-        else if (game.session().frameState().pacKilled()) {
+        else if (thisFrame.pacKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
-        else if (game.session().frameState().hasGhostBeenKilled()) {
+        else if (thisFrame.hasGhostBeenKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
         return Optional.empty(); // keep game state

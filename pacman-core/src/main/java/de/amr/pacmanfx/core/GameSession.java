@@ -16,8 +16,6 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession extends ValueMap {
 
-    private FrameState frameState;
-
     private GameLevel level;
 
     private final HUD hud;
@@ -35,7 +33,7 @@ public class GameSession extends ValueMap {
         hud = new HUD(variantName);
 
         setValue(SessionKey.NUM_LIVES, lifeCount);
-        frameState = new FrameState(0);
+        setValue(SessionKey.FRAME_STATE, new FrameState(0));
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
@@ -68,13 +66,5 @@ public class GameSession extends ValueMap {
 
     public GameCheats cheats() {
         return cheats;
-    }
-
-    public void setFrameState(FrameState frameState) {
-        this.frameState = requireNonNull(frameState);
-    }
-
-    public FrameState frameState() {
-        return frameState;
     }
 }

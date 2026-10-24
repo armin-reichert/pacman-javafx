@@ -7,10 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -73,7 +70,9 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onUpdate(GameContext game) {
-        onUpdateState(game, game.session().frameState().tick(), timer().tickCount());
+        final FrameState frameState = game.session().value(SessionKey.FRAME_STATE, FrameState.class);
+        final long globalTick = frameState.tick();
+        onUpdateState(game, globalTick, timer().tickCount());
     }
 
     protected void showPacAndGhosts(GameLevelEntitySet entities) {
