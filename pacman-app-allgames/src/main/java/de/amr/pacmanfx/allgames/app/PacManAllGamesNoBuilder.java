@@ -92,6 +92,7 @@ public class PacManAllGamesNoBuilder extends Application {
         startPages.addPage(engine, new ArcadeMsPacMan_StartPage());
         startPages.addPage(engine, new TengenMsPacMan_StartPage());
         startPages.addPage(engine, new XXL_StartPage("Pac-Man XXL games")); //TODO localize
+        startPages.rootPane().setSelectedIndex(0);
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
 
@@ -99,15 +100,10 @@ public class PacManAllGamesNoBuilder extends Application {
         playView.populateDashboard(TengenDashboardFactory.instance());
 
         engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
-
-        // This must happen *after* UI has been set!
-        startPages.rootPane().setSelectedIndex(0);
     }
 
     @Override
     public void stop() {
-        if (engine != null) {
-            engine.terminate();
-        }
+        engine.terminate();
     }
 }
