@@ -11,6 +11,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import java.util.stream.Stream;
@@ -63,7 +64,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     public void onActivate() {
         currentState = SceneState.DARK;
         engine().optCurrentGame().ifPresent(game -> {
-            game.session().setHudVisible(false);
+            game.session().setValue(SessionKey.HUD_VISIBLE, false);
             //TODO This is only a temporary solution
             setHUDStyle(game.session().hud());
         });

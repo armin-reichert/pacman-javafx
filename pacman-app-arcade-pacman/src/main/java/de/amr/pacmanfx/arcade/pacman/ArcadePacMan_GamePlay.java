@@ -90,7 +90,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    protected static final int GAME_OVER_STATE_TICKS = 90;
+    protected static final long GAME_OVER_STATE_TICKS = 90L;
 
     public static GameFlow createGameFlow() {
         final var gameFlow = new GameFlow("Arcade Pac-Man Game Flow");

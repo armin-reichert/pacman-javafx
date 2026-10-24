@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 
 public final class Common_IntroState extends AbstractGameState {
 
@@ -21,7 +22,7 @@ public final class Common_IntroState extends AbstractGameState {
         hud.highScore().data().setEnabled(true);
         hud.highScore().show();
         hud.creditDisplay().show();
-        session.setHudVisible(true);
+        session.setValue(SessionKey.HUD_VISIBLE, true);
 
         session.setLevel(null);
         timer().resetToIndefiniteDuration();

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 
 /**
  * Corresponds to the screen showing all these random symbols from the Arcade video memory.
@@ -19,7 +20,7 @@ public final class Common_BootState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         timer().restartIndefinitely();
-        game.session().setHudVisible(false);
+        game.session().setValue(SessionKey.HUD_VISIBLE, false);
     }
 
     @Override

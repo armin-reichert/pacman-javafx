@@ -33,8 +33,6 @@ public class GameSession {
 
     private final Map<Named, Object> values = new HashMap<>();
 
-    private boolean hudVisible;
-
     public GameSession(String variantName, GameCheats cheats, int initialLifeCount) {
         requireNonNull(variantName);
         requireNonNull(cheats);
@@ -78,14 +76,6 @@ public class GameSession {
 
     public HUD hud() {
         return hud;
-    }
-
-    public boolean isHUDVisible() {
-        return hudVisible;
-    }
-
-    public void setHudVisible(boolean hudVisible) {
-        this.hudVisible = hudVisible;
     }
 
     public GameCheats cheats() {

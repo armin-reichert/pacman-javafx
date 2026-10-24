@@ -129,7 +129,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             final HUD hud = session.hud();
             hud.levelCounter().show();
             hud.livesCounter().show();
-            session.setHudVisible(true);
+            session.setValue(SessionKey.HUD_VISIBLE, true);
 
             session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
         });
@@ -147,7 +147,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().show();
-            session.setHudVisible(true);
+            session.setValue(SessionKey.HUD_VISIBLE, true);
         });
     }
 

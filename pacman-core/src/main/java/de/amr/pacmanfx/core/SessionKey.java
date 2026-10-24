@@ -11,6 +11,7 @@ public enum SessionKey implements Named {
     DEMO_LEVEL_MODE,
     GAME_OVER_STATE_TICKS,
     GAME_RUNNING,
+    HUD_VISIBLE,
     LEVEL_START_TIME_MILLIS,
     NUM_LIVES
 }

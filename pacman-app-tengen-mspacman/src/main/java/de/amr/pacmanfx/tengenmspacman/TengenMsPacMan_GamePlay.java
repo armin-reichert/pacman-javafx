@@ -275,7 +275,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel demoLevel = createLevel(game, 1);
 
-        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, 120);
+        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, 120L);
 
         final Pac pac = demoLevel.entitySet().pac();
         // There are maps that cannot be handled with Arcade-steering logic

@@ -16,6 +16,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -159,7 +160,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
-            session.setHudVisible(false);
+            session.setValue(SessionKey.HUD_VISIBLE, false);
 
             final var actions = TengenMsPacMan_Actions.instance();
             final Joypad joypad = engine.input().joypad();

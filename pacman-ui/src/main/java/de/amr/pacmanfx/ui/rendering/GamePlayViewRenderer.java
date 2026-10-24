@@ -11,6 +11,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -64,7 +65,7 @@ public class GamePlayViewRenderer {
         renderManager.clearRenderQueue();
 
         // HUD
-        if (session.isHUDVisible()) {
+        if (session.booleanValue(SessionKey.HUD_VISIBLE)) {
             GameEntityViewBuilder.streamOfViews(session.hud().allEntities(), RenderingLayer.HUD)
                 .forEach(renderManager::addRenderable);
         }

@@ -9,10 +9,7 @@ import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.CanvasFill;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
@@ -72,7 +69,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
                 GhostPersonality.RED_GHOST_SHADOW);
 
             final GameSession session = game.session();
-            session.setHudVisible(false);
+            session.setValue(SessionKey.HUD_VISIBLE, false);
             //TODO temporary solution
             setHUDStyle(session.hud());
         });

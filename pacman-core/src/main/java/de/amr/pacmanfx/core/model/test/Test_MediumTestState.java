@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -79,7 +80,7 @@ public class Test_MediumTestState extends AbstractGameState {
         final GameLevel level = session.level();
         final Pac pac = level.entitySet().pac();
 
-        session.setHudVisible(true);
+        session.setValue(SessionKey.HUD_VISIBLE, true);
 
         pac.show();
         systems.actorSpriteAnimController().playSelected(pac);

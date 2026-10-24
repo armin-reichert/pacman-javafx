@@ -19,6 +19,7 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -125,7 +126,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
-            game.session().setHudVisible(false);
+            game.session().setValue(SessionKey.HUD_VISIBLE, false);
             spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
             final Joypad joypad = engine.input().joypad();

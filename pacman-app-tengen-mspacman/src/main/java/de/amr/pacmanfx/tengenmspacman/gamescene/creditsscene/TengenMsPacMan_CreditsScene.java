@@ -10,6 +10,7 @@ import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarView;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
@@ -106,7 +107,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
             fadeProgress = 0;
             displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
-            game.session().setHudVisible(false);
+            game.session().setValue(SessionKey.HUD_VISIBLE, false);
         });
     }
 

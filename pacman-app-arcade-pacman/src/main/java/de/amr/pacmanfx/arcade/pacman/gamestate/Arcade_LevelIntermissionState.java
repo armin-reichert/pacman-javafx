@@ -22,7 +22,7 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
         hud.highScore().hide();
         hud.livesCounter().hide();
         hud.levelCounter().show();
-        session.setHudVisible(true);
+        session.setValue(SessionKey.HUD_VISIBLE, true);
 
         timer().resetToIndefiniteDuration();
     }

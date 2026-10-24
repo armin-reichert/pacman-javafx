@@ -35,7 +35,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
         hud.levelCounter().show();
         hud.gameScore().show();
         hud.highScore().show();
-        session.setHudVisible(true);
+        session.setValue(SessionKey.HUD_VISIBLE, true);
 
         hud.highScore().data().setEnabled(true);
 
