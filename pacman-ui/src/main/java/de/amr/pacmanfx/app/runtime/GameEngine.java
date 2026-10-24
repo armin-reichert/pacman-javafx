@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
+import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
@@ -378,34 +379,33 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private void startBackgroundServices() {
         watchdog.startWatching();
-        Logger.info("Custom map directory is getting watched!");
+        Logger.info("Custom map directory is watched now!");
 
         spriteAnimationSystem.start();
+
         if (ui != null) {
             ui.startShortMessageSystem();
         }
 
+        // Load 3D meshes by accessing the singleton instance
         //noinspection ResultOfMethodCallIgnored
-        PacManMeshes3D.instance(); // loads 3D assets as side effect of accessing the singleton
+        PacManMeshes3D.instance();
     }
 
     // --- Game loop
 
     private void simulate() {
-        if (currentGame != null) {
-            try {
-                currentGame.session().newFrameState(clock.currentTick());
-                currentGame.runtime().systems().updateSystem().updateEntities(currentGame);
-
-                // This can change the current game state!
+        try {
+            if (currentGame != null) {
+                currentGame.session().setFrameState(new FrameState(clock.currentTick()));
+                currentGame.runtime().systems().entityUpdateSystem().updateEntities(currentGame);
                 currentGame.runtime().gameFlow().update(currentGame);
-
-                // IMPORTANT: The current game scene is up-to-date only at this point!
+                // Now the current game scene is up-to-date!
                 gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
             }
-            catch (Exception x) {
-                fatalError(x);
-            }
+        }
+        catch (Exception x) {
+            fatalError(x);
         }
     }
 
@@ -420,8 +420,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void fatalError(Throwable reason) {
+        Logger.error(reason, "*** KA-TAS-TRO-PHE! SOMETHING VERY BAD HAPPENED!");
         suspendGame();
         ui.showMessage(Duration.seconds(60), translate("error.oh_no_my_program") + "\n" + reason.getMessage());
-        Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }

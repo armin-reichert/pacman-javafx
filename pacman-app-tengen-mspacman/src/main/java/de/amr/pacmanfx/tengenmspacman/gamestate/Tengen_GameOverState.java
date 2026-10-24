@@ -11,6 +11,7 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -67,7 +68,7 @@ public class Tengen_GameOverState extends AbstractGameState {
             timer().restartIndefinitely(); // animation completion triggers state exit
         }
         else {
-            timer().restartTicks(session.gameOverStateTicks());
+            timer().restartTicks(session.value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
         }
     }
 

@@ -61,10 +61,10 @@ public class Test_MediumTestState extends AbstractGameState {
             if (rules.isLevelCompleted(level)) {
                 flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
-            else if (session.thisFrame().pacKilled()) {
+            else if (session.frameState().pacKilled()) {
                 triggerTimeout();
             }
-            else if (session.thisFrame().hasGhostBeenKilled()) {
+            else if (session.frameState().hasGhostBeenKilled()) {
                 flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }

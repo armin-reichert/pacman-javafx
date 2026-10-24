@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 public class GamePlayOptions {
 
-    public enum Key implements GameSession.SessionValueKey {GAME_PLAY_OPTIONS};
+    public enum Key implements Named { GAME_PLAY_OPTIONS }
 
     public static final int DEFAULT_START_LEVEL = 1;
     public static final int DEFAULT_NUM_CONTINUES = 4;

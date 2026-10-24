@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -16,8 +17,6 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession {
 
-    public interface SessionValueKey {}
-
     private FrameState frameState;
 
     private GameLevel level;
@@ -28,15 +27,11 @@ public class GameSession {
 
     private final int initialNumLives;
 
-    private int numLives;
-
     private final HUD hud;
 
     private final GameCheats cheats;
 
-    private final Map<SessionValueKey, Object> values = new HashMap<>();
-
-    private int gameOverStateTicks;
+    private final Map<Named, Object> values = new HashMap<>();
 
     private long levelStartTimeMillis;
 
@@ -48,12 +43,13 @@ public class GameSession {
         requireNonNull(variantName);
         requireNonNull(cheats);
 
+        this.cheats = requireNonNull(cheats);
         this.initialNumLives = initialLifeCount;
-        this.cheats = cheats;
-        this.hud = new HUD(variantName);
 
-        numLives = initialLifeCount;
-        newFrameState(0);
+        hud = new HUD(variantName);
+
+        setValue(SessionKey.NUM_LIVES, initialLifeCount);
+        frameState = new FrameState(0);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
@@ -62,20 +58,8 @@ public class GameSession {
         });
     }
 
-    public void newFrameState(long tick) {
-        frameState = new FrameState(tick);
-    }
-
     public int initialNumLives() {
         return initialNumLives;
-    }
-
-    public int numLives() {
-        return numLives;
-    }
-
-    public void setNumLives(int numLives) {
-        this.numLives = numLives;
     }
 
     public void setLevel(GameLevel level) {
@@ -136,7 +120,7 @@ public class GameSession {
         cutScenesEnabled = enabled;
     }
 
-    public <T> T value(SessionValueKey key, Class<T> type) {
+    public <T> T value(Named key, Class<T> type) {
         requireNonNull(key);
         final Object value = values.get(key);
         if (value != null) {
@@ -145,26 +129,26 @@ public class GameSession {
         return null;
     }
 
-    public void setValue(SessionValueKey key, Object value) {
+    public int intValue(Named key) {
+        return value(key, Integer.class);
+    }
+
+    public void setValue(Named key, Object value) {
         requireNonNull(key);
         values.put(key, value);
     }
 
-    public void clearValue(SessionValueKey key) {
+    public void clearValue(Named key) {
         requireNonNull(key);
         values.remove(key);
     }
 
-    public FrameState thisFrame() {
+    public void setFrameState(FrameState frameState) {
+        this.frameState = requireNonNull(frameState);
+    }
+
+    public FrameState frameState() {
         return frameState;
-    }
-
-    public int gameOverStateTicks() {
-        return gameOverStateTicks;
-    }
-
-    public void setGameOverStateTicks(int gameOverStateTicks) {
-        this.gameOverStateTicks = gameOverStateTicks;
     }
 
     public long levelStartTimeMillis() {

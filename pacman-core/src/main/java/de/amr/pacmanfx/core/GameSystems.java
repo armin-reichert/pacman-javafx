@@ -122,7 +122,7 @@ public class GameSystems {
 
     // Global systems
 
-    public EntityUpdateSystem updateSystem() {
+    public EntityUpdateSystem entityUpdateSystem() {
         return entityUpdateSystem;
     }
 

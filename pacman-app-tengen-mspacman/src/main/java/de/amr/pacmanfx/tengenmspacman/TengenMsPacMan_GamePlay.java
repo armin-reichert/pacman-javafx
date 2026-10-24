@@ -15,10 +15,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
@@ -227,8 +224,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(level);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
-        session.setGameOverStateTicks(gameOptionValues(session).mapCategory() == MapCategory.ARCADE
-            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
+        final long gameOverTicks = gameOptionValues(session).mapCategory() == MapCategory.ARCADE
+            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS;
+        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, gameOverTicks);
 
         return level;
     }
@@ -277,7 +275,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel demoLevel = createLevel(game, 1);
 
-        session.setGameOverStateTicks(120);
+        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, 120);
 
         final Pac pac = demoLevel.entitySet().pac();
         // There are maps that cannot be handled with Arcade-steering logic

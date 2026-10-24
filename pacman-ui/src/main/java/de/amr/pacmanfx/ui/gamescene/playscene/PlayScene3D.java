@@ -210,7 +210,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     public void onTick(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final long tick = session.thisFrame().tick();
+        final long tick = session.frameState().tick();
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);

@@ -317,7 +317,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevelView3D level3D) {
         final GameSession session = assertGame().session();
-        session.thisFrame().ghostsKilled().forEach(ghost -> {
+        session.frameState().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, playScene3D.uiConfig(), index);
         });

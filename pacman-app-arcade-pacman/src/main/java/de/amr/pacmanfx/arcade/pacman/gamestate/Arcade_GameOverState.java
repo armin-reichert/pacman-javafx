@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.gamestate;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -33,7 +34,7 @@ public class Arcade_GameOverState extends AbstractGameState {
         } catch (IOException e) {
             game.eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
-        timer().restartTicks(session.gameOverStateTicks());
+        timer().restartTicks(session.value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
     }
 
     @Override

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -32,7 +33,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
-        session.setNumLives(1);
+        session.setValue(SessionKey.NUM_LIVES, 1);
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.worldNavigation().setPaused(true);
@@ -96,10 +97,10 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
-        else if (game.session().thisFrame().pacKilled()) {
+        else if (game.session().frameState().pacKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
-        else if (game.session().thisFrame().hasGhostBeenKilled()) {
+        else if (game.session().frameState().hasGhostBeenKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
         return Optional.empty(); // keep game state

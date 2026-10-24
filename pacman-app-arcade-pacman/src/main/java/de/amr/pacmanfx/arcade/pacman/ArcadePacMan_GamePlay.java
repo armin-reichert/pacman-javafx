@@ -18,10 +18,7 @@ import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.ElroyComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -160,7 +157,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, GAME_OVER_STATE_TICKS);
 
         return level;
     }

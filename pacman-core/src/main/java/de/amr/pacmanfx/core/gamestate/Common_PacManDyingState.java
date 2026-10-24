@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -84,8 +85,9 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
         if (timer().hasExpired()) {
             level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
-            session.setNumLives(session.numLives() - 1);
-            flow.enterGameState(game, session.numLives() == 0
+            int newNumLives = session.value(SessionKey.NUM_LIVES, Integer.class) - 1;
+            session.setValue(SessionKey.NUM_LIVES, newNumLives);
+            flow.enterGameState(game, newNumLives == 0
                 ? CommonGameStateID.GAME_OVER
                 : CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }

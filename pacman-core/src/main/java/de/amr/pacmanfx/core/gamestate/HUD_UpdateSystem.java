@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.textview.TextView;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -15,15 +16,16 @@ public class HUD_UpdateSystem {
 
     public void update(HUD hud, GameContext game) {
         final GameSession session = game.session();
+        final int numLives = session.value(SessionKey.NUM_LIVES, Integer.class);
 
         final LivesCounter livesCounter = hud.livesCounter();
-        livesCounter.data().setNumLives(session.numLives());
+        livesCounter.data().setNumLives(numLives);
 
         // Normally the lives counter shows a Pac symbol for each remaining live (without the Pac inside the maze)
         // When a new game or a level starts/continues, Pac-Man is invisible for some short time. During this time,
         // the level counter shows an additional entry and Pac-Man seems to "hop" from the lives counter into the maze
         // when the level starts.
-        int numLivesShown = session.numLives() - 1;
+        int numLivesShown = numLives - 1;
         if (session.optLevel().isPresent()) {
             final GameLevel level = session.level();
             final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING

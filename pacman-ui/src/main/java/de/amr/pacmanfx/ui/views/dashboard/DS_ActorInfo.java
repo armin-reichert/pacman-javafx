@@ -13,6 +13,7 @@ import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -61,7 +62,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<?> supplyLivesCount(EngineUIContext engine) {
         return fnLevelInfo(engine, _ -> {
             final GameSession session = engine.optCurrentGame().map(GameContext::session).orElse(null);
-            return session != null ? session.numLives() : 0;
+            return session != null ? session.intValue(SessionKey.NUM_LIVES) : 0;
         });
     }
 

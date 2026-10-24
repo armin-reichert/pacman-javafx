@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 
 public final class Common_PreparationState extends AbstractGameState {
 
@@ -21,7 +22,7 @@ public final class Common_PreparationState extends AbstractGameState {
             session.setLevel(null);
         });
 
-        session.setNumLives(session.initialNumLives());
+        session.setValue(SessionKey.NUM_LIVES, session.initialNumLives());
 
         hud.creditDisplay().show();
         hud.gameScore().show();

@@ -12,6 +12,7 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -123,7 +124,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
         final Pac pac = level.entitySet().pac();
 
-        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(session.thisFrame());
+        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(session.frameState());
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
@@ -140,13 +141,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         collisionHandler.detectCollisions(level);
 
-        checkIfPacFoundEdibleItem(game, level, session.thisFrame());
-        checkIfPacGetsKilled(game.session(), game.runtime().gameRules(), session.thisFrame());
-        if (session.thisFrame().pacKilled()) {
+        checkIfPacFoundEdibleItem(game, level, session.frameState());
+        checkIfPacGetsKilled(game.session(), game.runtime().gameRules(), session.frameState());
+        if (session.frameState().pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            checkIfGhostsGetKilled(game, level, session.thisFrame());
+            checkIfGhostsGetKilled(game, level, session.frameState());
         }
     }
 
@@ -197,7 +198,8 @@ public abstract class CommonGamePlay implements GamePlay {
         if (gameScore.data().extraLifeReached()) {
             // Do not forget to clear the flag!
             scoreSystem.clearExtraLife(gameScore);
-            session.setNumLives(session.numLives() + 1);
+            final int newNumLives = session.intValue(SessionKey.NUM_LIVES) + 1;
+            session.setValue(SessionKey.NUM_LIVES, newNumLives);
             game.eventManager().publishEvent(new SpecialScoreEvent(gameScore.data().points()));
         }
     }
@@ -235,7 +237,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 activateNextBonus(game, level);
             }
             game.eventManager().publishEvent(
-                new PacEatsFoodEvent(pac, frameState.energizerFound(), false, game.session().thisFrame().tick()));
+                new PacEatsFoodEvent(pac, frameState.energizerFound(), false, game.session().frameState().tick()));
         }
         else {
             digestionSystem.starve(pac);

@@ -9,6 +9,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -77,7 +78,7 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Pac lives",      () -> engine.optCurrentGame().get().session().numLives());
+        addDynamicInfo("Pac lives",      () -> engine.optCurrentGame().get().session().intValue(SessionKey.NUM_LIVES));
         addDynamicInfo("Hunting Phase",  fnLevelInfo(engine, this::fmtHuntingPhase));
         addDynamicInfo("-Running",       fnLevelInfo(engine, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicInfo("-Remaining",     fnLevelInfo(engine, level -> fmtHuntingTicksRemaining(level.huntingTimer())));

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
@@ -48,9 +49,10 @@ public final class CheatActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
-                    session.setNumLives(session.numLives() + 3);
+                    final int newNumLives = session.intValue(SessionKey.NUM_LIVES) + 3;
+                    session.setValue(SessionKey.NUM_LIVES, newNumLives);
                     session.cheats().notifyCheatUsed();
-                    final String msg = engine.translationManager().translate("flash.cheat_add_lives", session.numLives());
+                    final String msg = engine.translationManager().translate("flash.cheat_add_lives", newNumLives);
                     engine.ui().showMessage(msg);
                 });
             }
