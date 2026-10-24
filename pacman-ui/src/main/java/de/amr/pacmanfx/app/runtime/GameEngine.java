@@ -131,7 +131,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
 
         if (ui != null) {
-            ui.updateStageIcon(gameVariantManager.currentRuntime());
             ui.show();
         }
 
@@ -338,7 +337,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     //TODO This method is messy and needs a cleanup!
     private void enterGameVariant(GameVariantRuntime runtime) {
-
         final GameEventManager gameEventManager = new DefaultGameEventManager();
 
         currentGame = new GameContext(runtime, coinMechanism, gameEventManager);
@@ -351,12 +349,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
         gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
 
+        final GameVariantUIConfig uiConfig = uiConfig(runtime);
+        gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
         if (ui != null) {
-            final GameVariantUIConfig uiConfig = uiConfig(runtime);
-            uiConfig.load(this);
-            ui.viewModel().maze3DSettings().init(uiConfig.worldSettings().maze());
-            gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-            ui.updateStageIcon(runtime);
+            ui.initForGameVariant(uiConfig);
         }
     }
 

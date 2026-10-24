@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.assets.AssetMap;
+import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
@@ -87,12 +87,10 @@ public class GameUI implements GameEventListener {
         Logger.info(actionBindings);
     }
 
-    public void updateStageIcon(GameVariantRuntime runtime) {
-        final AssetMap assets = engine.uiConfig(runtime).assets();
-        final Image icon = assets.image("app_icon");
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
-        }
+    public void initForGameVariant(GameVariantUIConfig uiConfig) {
+        uiConfig.load(engine);
+        viewModel.maze3DSettings().init(uiConfig.worldSettings().maze());
+        updateAppIcon(uiConfig);
     }
 
     @Override
@@ -148,6 +146,9 @@ public class GameUI implements GameEventListener {
     // --- General commands ---
 
     public void show() {
+        final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
+        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
+        updateAppIcon(uiConfig);
         stage.centerOnScreen();
         stage.show();
     }
@@ -155,7 +156,6 @@ public class GameUI implements GameEventListener {
     public void setFullScreen(boolean value) {
         stage.setFullScreen(value);
     }
-
 
     public void startShortMessageSystem() {
         flashMessageManager.startAnimationTimer();
@@ -223,5 +223,12 @@ public class GameUI implements GameEventListener {
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionEnterFullScreen(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().simulationActions().actionToggleMuted(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().editorActions().actionOpenEditor(), commonActionBindings);
+    }
+
+    private void updateAppIcon(GameVariantUIConfig uiConfig) {
+        final Image appIcon = uiConfig.assets().image("app_icon");
+        if (appIcon != null) {
+            stage.getIcons().setAll(appIcon);
+        }
     }
 }
