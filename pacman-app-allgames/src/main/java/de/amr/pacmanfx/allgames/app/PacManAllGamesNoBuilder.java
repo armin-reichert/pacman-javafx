@@ -70,7 +70,15 @@ public class PacManAllGamesNoBuilder extends Application {
             XXL_PacMan_Cartridge.CARTRIDGE,
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
+    }
+
+    @Override
+    public void start(Stage stage) {
+        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), loadDefaultSettings());
+
         engine = new GameEngine(
+            ui,
             new DefaultGameVariantManager(),
             new DefaultGameSceneManager(),
             new DefaultGameViewManager(),
@@ -78,12 +86,6 @@ public class PacManAllGamesNoBuilder extends Application {
             new DefaultSoundManager(),
             new SpriteAnimationSystem(60)
         );
-    }
-
-    @Override
-    public void start(Stage stage) {
-        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), loadDefaultSettings());
 
         final StartPagesView startPages = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         startPages.addPage(engine, new ArcadePacMan_StartPage());
@@ -92,7 +94,6 @@ public class PacManAllGamesNoBuilder extends Application {
         startPages.addPage(engine, new XXL_StartPage("Pac-Man XXL games")); //TODO localize
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
-        engine.setUI(ui);
 
         final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
         playView.populateDashboard(TengenDashboardFactory.instance());

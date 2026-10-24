@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
@@ -71,13 +70,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private final SpriteAnimationSystem spriteAnimationSystem;
 
-    private GameUI ui;
+    private final GameUI ui;
 
     private GameContext currentGame;
 
     private StateChangeEventMapper stateChangeEventMapper;
 
     public GameEngine(
+        GameUI ui,
         GameVariantManager gameVariantManager,
         GameSceneManager gameSceneManager,
         GameViewManager gameViewManager,
@@ -85,6 +85,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         SoundManager soundManager,
         SpriteAnimationSystem spriteAnimationSystem)
     {
+        this.ui = requireNonNull(ui);
         this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
         this.gameViewManager = requireNonNull(gameViewManager);
@@ -112,12 +113,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         if (!validateUserDirs()) {
             throw new IllegalStateException("User directory validation failed");
         }
-    }
 
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
         ui.setEngine(this);
-        //TODO Analyse why exactly view manager needs UI to initialized
         gameViewManager.init(this);
     }
 
@@ -362,11 +359,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         soundManager.dispose();
         currentGame.eventManager().removeAllSubscribers();
         currentGame = null;
-
-        if (ui != null) {
-            final GameVariantUIConfig uiConfig = uiConfig(runtime);
-            uiConfig.unload(this);
-        }
+        uiConfig(runtime).unload(this);
     }
 
     private void onViewChanged(Named oldViewID, Named newViewID) {

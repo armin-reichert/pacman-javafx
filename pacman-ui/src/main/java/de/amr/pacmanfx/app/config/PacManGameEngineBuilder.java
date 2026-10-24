@@ -112,6 +112,7 @@ public class PacManGameEngineBuilder {
             validateConfigurationData();
 
             final var engine = new GameEngine(
+                new GameUI(stage, width, height, uiSettings),
                 new DefaultGameVariantManager(),
                 new DefaultGameSceneManager(),
                 new DefaultGameViewManager(),
@@ -119,8 +120,6 @@ public class PacManGameEngineBuilder {
                 new DefaultSoundManager(),
                 new SpriteAnimationSystem(60)
             );
-
-            engine.setUI(new GameUI(stage, width, height, uiSettings));
 
             // Requires that UI has been assigned to game:
 
