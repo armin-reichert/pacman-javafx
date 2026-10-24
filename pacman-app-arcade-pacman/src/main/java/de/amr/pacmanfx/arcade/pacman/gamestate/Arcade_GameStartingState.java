@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
@@ -58,7 +59,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
             pac.state().setEnumValue(PacState.ACTIVE);
 
             game.coinMechanism().consumeCoin();
-            session.setGameRunning(true);
+            session.setValue(SessionKey.GAME_RUNNING, true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

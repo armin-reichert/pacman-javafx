@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 
 public class Common_GameOrLevelStartingState extends AbstractGameState {
 
@@ -30,7 +31,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     }
 
     private CommonGameStateID computeNextState(GameContext game) {
-        if (session.isGameRunning()) {
+        if (session.booleanValue(SessionKey.GAME_RUNNING)) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (gamePlay.canStart(game)) {

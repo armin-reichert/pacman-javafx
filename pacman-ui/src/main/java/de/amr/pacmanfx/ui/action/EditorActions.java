@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -115,7 +116,7 @@ public class EditorActions {
         }
         if (engine.viewManager().isSelected(GameViewID.GAMEPLAY)) {
             if (engine.optCurrentGame().isEmpty()) return true;
-            return !engine.optCurrentGame().get().session().isGameRunning();
+            return !engine.optCurrentGame().get().session().booleanValue(SessionKey.GAME_RUNNING);
         }
         return false;
     }

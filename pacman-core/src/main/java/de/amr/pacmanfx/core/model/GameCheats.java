@@ -55,7 +55,7 @@ public class GameCheats {
     public void update(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || !game.session().isGameRunning()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || !session.booleanValue(SessionKey.GAME_RUNNING)) {
             return;
         }
         final Pac pac = level.entitySet().pac();

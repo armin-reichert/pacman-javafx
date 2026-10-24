@@ -50,7 +50,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         countdownAfter = 0;
 
-        session.setGameRunning(false);
+        session.setValue(SessionKey.GAME_RUNNING, false);
         session.cheats().clear();
 
         try {

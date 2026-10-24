@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
@@ -75,7 +76,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         else if (stateTick == TICK_START_PLAYING) {
             lockPacAndGhosts(level.entitySet(), false);
             game.coinMechanism().consumeCoin();
-            session.setGameRunning(true);
+            session.setValue(SessionKey.GAME_RUNNING, true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

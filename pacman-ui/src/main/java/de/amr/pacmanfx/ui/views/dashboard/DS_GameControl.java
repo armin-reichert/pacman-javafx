@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
@@ -97,6 +98,6 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     private boolean canEnterNextLevel(GameSession session, AbstractGameState gameState) {
-        return session.isGameRunning() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
+        return session.booleanValue(SessionKey.GAME_RUNNING) && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
     }
 }

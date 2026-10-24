@@ -9,6 +9,7 @@ import de.amr.basics.Named;
 public enum SessionKey implements Named {
     DEMO_LEVEL_MODE,
     GAME_OVER_STATE_TICKS,
+    GAME_RUNNING,
     LEVEL_START_TIME_MILLIS,
     NUM_LIVES
 }

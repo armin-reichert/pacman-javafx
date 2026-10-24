@@ -25,8 +25,6 @@ public class GameSession {
 
     private GameLevel level;
 
-    private boolean gameRunning;
-
     private final int initialNumLives;
 
     private final HUD hud;
@@ -94,14 +92,6 @@ public class GameSession {
 
     public GameCheats cheats() {
         return cheats;
-    }
-
-    public boolean isGameRunning() {
-        return gameRunning;
-    }
-
-    public void setGameRunning(boolean gameRunning) {
-        this.gameRunning = gameRunning;
     }
 
     public boolean cutScenesEnabled() {

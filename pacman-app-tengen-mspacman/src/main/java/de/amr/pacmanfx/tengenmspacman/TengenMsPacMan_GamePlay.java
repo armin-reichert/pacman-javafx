@@ -118,7 +118,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
         session.setCutScenesEnabled(true);
         session.setLevel(null);
-        session.setGameRunning(false);
+        session.setValue(SessionKey.GAME_RUNNING, false);
 
         // Add game options display on top of maze and level number boxes at left and right side below the maze
         final HUD hud = session.hud();
