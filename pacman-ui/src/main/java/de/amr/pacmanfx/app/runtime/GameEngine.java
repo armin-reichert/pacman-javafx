@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext, TranslationManager {
 
-    static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
+    private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
         "de.amr.pacmanfx.ui.localized_texts", GameEngine.class.getModule());
 
     private final GameClock clock;
@@ -96,23 +96,21 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
         clock = new DefaultGameClock();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+        clock.setPausableAction(this::simulate);
+        clock.setPermanentAction(this::render);
 
         input = new Input();
 
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        this.gameViewManager.currentViewIDProperty().addListener(
+        gameViewManager.currentViewIDProperty().addListener(
             (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
 
-        this.gameVariantManager.selectedVariantNameProperty().addListener(
+        gameVariantManager.currentVariantIDProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
-        clock.setPausableAction(this::simulate);
-        clock.setPermanentAction(this::render);
-
-        final boolean ok = validateUserDirs();
-        if (!ok) {
-            throw new IllegalStateException("GameBox: User directory validation failed");
+        if (!validateUserDirs()) {
+            throw new IllegalStateException("User directory validation failed");
         }
     }
 
@@ -246,7 +244,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
             clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
             clock.start();
-        } else {
+        }
+        else {
             fatalError(new IllegalStateException("Game cannot be started, no game is currently selected"));
         }
     }
@@ -258,7 +257,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
             gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
             gameSceneManager.removeCurrentGameScene();
             clock.stop();
-        } else {
+        }
+        else {
             fatalError(new IllegalStateException("Game cannot be suspended, no game is currently selected"));
         }
     }
@@ -267,7 +267,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     public void newGameSession(GameContext game) {
         requireNonNull(game);
         final GameSession session = new GameSession(
-            gameVariantManager.currentVariantName(),
+            gameVariantManager.currentVariantID(),
             new GameCheats(),
             gameVariantManager.currentRuntime().gameRules().initialLifeCount()
         );
@@ -287,12 +287,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public void enterGameVariant(String variantName) {
-        enterGameVariant(gameVariantManager.runtimeByName(variantName));
+        enterGameVariant(gameVariantManager.variantRuntime(variantName));
     }
 
     @Override
     public void exitGameVariant(String variantName) {
-        exitGameVariant(gameVariantManager.runtimeByName(variantName));
+        exitGameVariant(gameVariantManager.variantRuntime(variantName));
     }
 
     @Override
@@ -326,12 +326,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
         if (oldVariantName != null) {
             Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-            final GameVariantRuntime oldRuntime = gameVariantManager.runtimeByName(oldVariantName);
+            final GameVariantRuntime oldRuntime = gameVariantManager.variantRuntime(oldVariantName);
             exitGameVariant(oldRuntime);
         }
         if (newVariantName != null) {
             Logger.info(">>> Enter game variant '{}'", newVariantName);
-            final GameVariantRuntime newRuntime = gameVariantManager.runtimeByName(newVariantName);
+            final GameVariantRuntime newRuntime = gameVariantManager.variantRuntime(newVariantName);
             enterGameVariant(newRuntime);
         }
     }
@@ -388,7 +388,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void startBackgroundServices() {
-        watchdog().startWatching();
+        watchdog.startWatching();
         Logger.info("Custom map directory is getting watched!");
 
         spriteAnimationSystem.start();
@@ -412,7 +412,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
                 currentGame.runtime().gameFlow().update(currentGame);
 
                 // IMPORTANT: The current game scene is up-to-date only at this point!
-                gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
+                gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
             }
             catch (Exception x) {
                 fatalError(x);

@@ -69,7 +69,7 @@ public class StageTitleManager {
                 }
                 return "";
             },
-            engine.gameVariantManager().selectedVariantNameProperty(),
+            engine.gameVariantManager().currentVariantIDProperty(),
             engine.gameSceneManager().currentGameSceneProperty(),
             engine.clock().updatesDisabledProperty(),
             engine.ui().viewModel().debugModeOnProperty(),
@@ -98,7 +98,7 @@ public class StageTitleManager {
     }
 
     private String stageTitle(boolean paused, boolean is3D) {
-        final String gameVariantName = engine.gameVariantManager().currentVariantName();
+        final String gameVariantName = engine.gameVariantManager().currentVariantID();
         if (gameVariantName == null) {
             return "";
         }

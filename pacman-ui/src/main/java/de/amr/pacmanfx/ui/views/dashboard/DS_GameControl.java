@@ -90,7 +90,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     private boolean canStartLevel(EngineUIContext engine, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(engine.gameVariantManager().currentVariantName());
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(engine.gameVariantManager().currentVariantID());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !engine.optCurrentGame().get().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

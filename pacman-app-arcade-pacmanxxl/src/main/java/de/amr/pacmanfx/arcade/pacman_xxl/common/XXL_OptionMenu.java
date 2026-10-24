@@ -116,7 +116,7 @@ public class XXL_OptionMenu extends OptionMenu {
     public void init(EngineUIContext engine) {
         this.engine = engine;
 
-        final String variantName = engine.gameVariantManager().currentVariantName();
+        final String variantName = engine.gameVariantManager().currentVariantID();
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
 
         final WorldMapManager mapManager = runtime.worldMapManager();

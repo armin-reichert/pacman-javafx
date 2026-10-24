@@ -48,13 +48,13 @@ public class UISettingsActions {
         actionShowHelp = new GameAction<>("show_help") {
             @Override
             public void execute(EngineUIContext engine) {
-                final String variantName = engine.gameVariantManager().currentVariantName();
+                final String variantName = engine.gameVariantManager().currentVariantID();
                 engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(variantName);
             }
 
             @Override
             public boolean isEnabled(EngineUIContext engine) {
-                final String variantName = engine.gameVariantManager().currentVariantName();
+                final String variantName = engine.gameVariantManager().currentVariantID();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 final GameSceneManager gameSceneManager = engine.gameSceneManager();
                 return isArcadeGame &&
