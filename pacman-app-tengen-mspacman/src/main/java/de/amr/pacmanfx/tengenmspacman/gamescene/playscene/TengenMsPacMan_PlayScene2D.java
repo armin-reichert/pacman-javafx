@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -290,7 +290,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private GameLevelView createGameLevelView(GameLevel level, Vector2f offset, long tick) {
-        final InfoMap renderInfo = InfoMap.create();
+        final ValueMap renderInfo = ValueMap.create();
         final WorldMap worldMap = level.worldMap();
 
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
@@ -302,26 +302,26 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final boolean highlighted = flashing != null && flashing.isHighlighted();
         final int flashingIndex = flashing != null ? flashing.flashingIndex() : -1;
 
-        renderInfo.put(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY, mapCategory);
-        renderInfo.put(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+        renderInfo.setValue(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY, mapCategory);
+        renderInfo.setValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
 
-        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
-        renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
+        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        renderInfo.setValue(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
 
         if (highlighted) {
             final int imageIndex = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
             final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(imageIndex);
-            renderInfo.put(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
-            renderInfo.put(LevelRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
+            renderInfo.setValue(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
+            renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
         }
         else {
-            renderInfo.put(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
+            renderInfo.setValue(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
             if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
                 final int spriteIndex = strangeMap15AnimationFrame(tick);
-                renderInfo.put(LevelRenderInfoKey.MAZE_SPRITE,
+                renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE,
                     NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
             } else {
-                renderInfo.put(LevelRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
+                renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
             }
         }
 

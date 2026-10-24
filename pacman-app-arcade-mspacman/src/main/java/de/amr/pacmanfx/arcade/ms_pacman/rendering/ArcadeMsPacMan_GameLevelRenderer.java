@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
     }
 
-    public void renderGameLevel(GameLevel level, InfoMap info) {
+    public void renderGameLevel(GameLevel level, ValueMap info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
@@ -64,8 +64,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
         ctx.scale(scaling(), scaling());
         ctx.setImageSmoothing(true);
 
-        if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
-            if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+        if (info.booleanValue(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
+            if (info.booleanValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
                 final String brightMazeKey = "maze.bright.%d".formatted(colorMapIndex);
                 final Image brightMazeImage = assets.image(brightMazeKey);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
                 drawSprite(emptyMazeSprite, 0, emptyPixelsOverMaze, false);
             }
         }
-        else if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
+        else if (info.booleanValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptyPixelsOverMaze, false);
         }

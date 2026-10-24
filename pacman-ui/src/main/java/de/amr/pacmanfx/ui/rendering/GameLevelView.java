@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.rendering;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
  */
 public record GameLevelView(
     GameLevel level,
-    InfoMap renderInfo,
+    ValueMap renderInfo,
     RenderingLayer layer,
     int z,
     Vector2f offset

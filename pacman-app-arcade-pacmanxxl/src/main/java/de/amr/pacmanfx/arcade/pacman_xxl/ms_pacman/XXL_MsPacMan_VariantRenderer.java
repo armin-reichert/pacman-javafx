@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -40,9 +40,9 @@ public class XXL_MsPacMan_VariantRenderer extends ArcadeMsPacMan_VariantRenderer
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel _, InfoMap _, RenderingLayer _, int _, Vector2f _),
-                 GameEntityView(House _, RenderingLayer _, int _, Vector2f _, InfoMap _),
-                 GameEntityView(Energizer _, RenderingLayer _, int _, Vector2f _, InfoMap _)
+            case GameLevelView(GameLevel _, ValueMap _, RenderingLayer _, int _, Vector2f _),
+                 GameEntityView(House _, RenderingLayer _, int _, Vector2f _, ValueMap _),
+                 GameEntityView(Energizer _, RenderingLayer _, int _, Vector2f _, ValueMap _)
                 -> levelRenderer.render(r, tick);
 
             default -> super.render(r, tick);

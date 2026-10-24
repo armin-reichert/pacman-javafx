@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.rendering.BaseRenderer;
@@ -50,7 +50,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {}
 
-    public void renderGameLevel(GameLevel level, InfoMap info) {
+    public void renderGameLevel(GameLevel level, ValueMap info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
@@ -58,19 +58,19 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
         ctx.scale(scaling(), scaling());
         ctx.setImageSmoothing(true);
 
-        if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
+        if (info.booleanValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
-            if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+            if (info.booleanValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
                 if (assets.containsAsset("maze.bright")) {
-                    info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
+                    info.setValue(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
                 }
-                final var brightMazeImage = info.get(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
+                final var brightMazeImage = info.value(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
             } else {
                 final RectShort emptyMapSprite = spriteSheet().findSpriteSequence(SpriteID.MAP_EMPTY)[0];
                 drawSprite(emptyMapSprite, 0, emptyPixelsOverMaze, false);
             }
-            if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
+            if (info.booleanValue(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
                 final House house = level.entitySet().theOne(House.class);
                 hideGhostHouseDoors(house);
             }

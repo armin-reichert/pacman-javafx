@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.rendering;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -60,29 +60,29 @@ public class GenericLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)
+            case GameLevelView(GameLevel level, ValueMap renderInfo, RenderingLayer _, int _, Vector2f _)
                 -> draw(level, renderInfo);
 
-            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
+            case GameEntityView(House house, RenderingLayer _, int _, Vector2f _, ValueMap renderInfo)
                 -> houseRenderer.drawHouse(house, renderInfo);
 
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap renderInfo)
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, ValueMap renderInfo)
                 -> draw(energizer, renderInfo);
 
             default -> super.render(r, tick);
         }
     }
 
-    public void draw(GameLevel level, InfoMap renderInfo) {
+    public void draw(GameLevel level, ValueMap renderInfo) {
         requireNonNull(level);
         requireNonNull(renderInfo);
 
-        if (renderInfo.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
-            terrainRenderer.setMapColoring(renderInfo.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
+        if (renderInfo.booleanValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+            terrainRenderer.setMapColoring(renderInfo.booleanValue(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.draw(level.worldMap());
         }
         else {
-            final TerrainMapColoring mapColoring = renderInfo.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
+            final TerrainMapColoring mapColoring = renderInfo.value(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(level.worldMap());
 
@@ -98,9 +98,9 @@ public class GenericLevelRenderer extends BaseRenderer {
         }
     }
 
-    private void draw(Energizer energizer, InfoMap renderInfo) {
+    private void draw(Energizer energizer, ValueMap renderInfo) {
         if (energizer.isVisible() && energizer.state().on()) {
-            final Color pelletColor = renderInfo.get(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
+            final Color pelletColor = renderInfo.value(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, Color.class);
             final Vector2f center = energizer.position().asVector2f();
             ctx.save();
             ctx.setFill(pelletColor);

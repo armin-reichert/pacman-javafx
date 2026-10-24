@@ -4,22 +4,17 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.Named;
+import de.amr.basics.ValueMap;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSession {
-
-    public static boolean DEFAULT_BOOLEAN_VALUE = false;
-    public static int     DEFAULT_INT_VALUE = 0;
-    public static long    DEFAULT_LONG_VALUE = 0;
+public class GameSession extends ValueMap {
 
     private FrameState frameState;
 
@@ -31,9 +26,9 @@ public class GameSession {
 
     private final GameCheats cheats;
 
-    private final Map<Named, Object> values = new HashMap<>();
-
     public GameSession(String variantName, GameCheats cheats, int initialLifeCount) {
+        super(new HashMap<>());
+
         requireNonNull(variantName);
         requireNonNull(cheats);
 
@@ -80,40 +75,6 @@ public class GameSession {
 
     public GameCheats cheats() {
         return cheats;
-    }
-
-    public <T> T value(Named key, Class<T> type) {
-        requireNonNull(key);
-        final Object value = values.get(key);
-        if (value != null) {
-            return type.cast(value);
-        }
-        return null;
-    }
-
-    public boolean booleanValue(Named key) {
-        final Boolean value = value(key, Boolean.class);
-        return value != null ? value : DEFAULT_BOOLEAN_VALUE;
-    }
-
-    public int intValue(Named key) {
-        final Integer value = value(key, Integer.class);
-        return value != null ? value : DEFAULT_INT_VALUE;
-    }
-
-    public long longValue(Named key) {
-        final Long value = value(key, Long.class);
-        return value != null ? value : DEFAULT_LONG_VALUE;
-    }
-
-    public void setValue(Named key, Object value) {
-        requireNonNull(key);
-        values.put(key, value);
-    }
-
-    public void clearValue(Named key) {
-        requireNonNull(key);
-        values.remove(key);
     }
 
     public void setFrameState(FrameState frameState) {

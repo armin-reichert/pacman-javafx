@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.miniview;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -154,15 +154,15 @@ public class MiniPlaySceneView {
     }
 
     private GameLevelView createLevelView(GameLevel level) {
-        final InfoMap renderInfo = InfoMap.create();
-        renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-        renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
-        renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
+        final ValueMap renderInfo = ValueMap.create();
+        renderInfo.setValue(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+        renderInfo.setValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        renderInfo.setValue(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
         final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(viewModel, level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
-            renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
+            renderInfo.setValue(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
         }
 
         return new GameLevelView(level, renderInfo, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
@@ -170,14 +170,14 @@ public class MiniPlaySceneView {
 
     private Stream<GameEntityView> createEntityViews() {
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
-        final InfoMap energizerRenderInfo = pelletColor != null
-            ? InfoMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
-            : InfoMap.EMPTY_IMMUTABLE_MAP;
+        final ValueMap energizerRenderInfo = pelletColor != null
+            ? ValueMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
+            : ValueMap.EMPTY_IMMUTABLE_MAP;
         return level.entitySet().stream()
-            .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : InfoMap.EMPTY_IMMUTABLE_MAP));
+            .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : ValueMap.EMPTY_IMMUTABLE_MAP));
     }
 
-    private GameEntityView createEntityView(GameEntity entity, InfoMap renderInfo) {
+    private GameEntityView createEntityView(GameEntity entity, ValueMap renderInfo) {
         return GameEntityViewBuilder.builder()
             .entity(entity)
             .layer(RenderingLayer.MINI_VIEW_OVERLAY)

@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.uilib.view2d;
 
-public enum LevelRenderInfoKey {
+import de.amr.basics.Named;
+
+public enum LevelRenderInfoKey implements Named {
     ENERGIZERS_SHOWN,
     SHOW_BRIGHT_MAZE,
     SHOW_EMPTY_MAZE,

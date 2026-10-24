@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
-import de.amr.basics.InfoMap;
+import de.amr.basics.ValueMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -82,9 +82,9 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         // Only available for generic level renderer in XXL game variants
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
-        final InfoMap energizerRenderInfo = pelletColor != null
-            ? InfoMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
-            : InfoMap.EMPTY_IMMUTABLE_MAP;
+        final ValueMap energizerRenderInfo = pelletColor != null
+            ? ValueMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
+            : ValueMap.EMPTY_IMMUTABLE_MAP;
 
         return Ufx.streamOf(
             createRenderableLevel(level),
@@ -197,9 +197,9 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     }
 
     private GameLevelView createRenderableLevel(GameLevel level) {
-        final var renderInfo = InfoMap.create();
-        renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-        renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        final var renderInfo = ValueMap.create();
+        renderInfo.setValue(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.setValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         boolean showBrightMaze = false;
         boolean mazeIsFlashing = false;
         if (levelCompletedAnimation != null) {
@@ -209,13 +209,13 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 mazeIsFlashing = flashingState.isFlashing();
             }
         }
-        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
-        renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
+        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
+        renderInfo.setValue(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
 
         final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(engine.ui().viewModel(), level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
-            renderInfo.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
+            renderInfo.setValue(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
         }
 
         return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
