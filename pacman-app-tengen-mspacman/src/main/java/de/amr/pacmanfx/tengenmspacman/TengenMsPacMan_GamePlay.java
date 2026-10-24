@@ -287,7 +287,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setEnabled(true);
 
         session.setLevel(demoLevel);
-        session.setAttractMode(true);
+        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
 
         return demoLevel;
     }
@@ -300,7 +300,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         prepareLevelForPlaying(game, level);
 
-        session.setLevelStartTimeMillis(System.currentTimeMillis());
+        session.setValue(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
         session.hud().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
@@ -399,7 +399,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return switch (type) {
             case NO_MESSAGE -> null; //TODO delete this message type
             case READY -> NES_Palette.color(0x28);
-            case GAME_OVER ->session.isAttractMode() ? Color.valueOf(colorScheme.wallStroke()) : NES_Palette.color(0x11);
+            case GAME_OVER -> session.booleanValue(SessionKey.DEMO_LEVEL_MODE)
+                ? Color.valueOf(colorScheme.wallStroke()) : NES_Palette.color(0x11);
         };
     }
 }

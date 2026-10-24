@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
@@ -18,7 +19,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
         actionBindingsRegistry().dispose();
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
         } else {
             actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().steeringActions().bindings());

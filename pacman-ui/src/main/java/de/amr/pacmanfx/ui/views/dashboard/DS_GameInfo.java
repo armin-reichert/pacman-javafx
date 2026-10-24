@@ -44,7 +44,7 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Game Scene", fnGameSceneInfo(engine, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicInfo("Level Number", fnLevelInfo(engine,
-            level -> (engine.optCurrentGame().get().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+            level -> (engine.optCurrentGame().get().session().booleanValue(SessionKey.DEMO_LEVEL_MODE) ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
         addDynamicInfo("World Map", fnLevelInfo(engine,

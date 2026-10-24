@@ -15,6 +15,7 @@ import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -178,7 +179,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindingsRegistry();
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             bindingsRegistry.registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
             engine().soundManager().setEnabled(false);

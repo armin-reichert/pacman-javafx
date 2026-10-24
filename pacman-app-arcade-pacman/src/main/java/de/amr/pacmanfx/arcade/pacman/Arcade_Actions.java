@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -61,7 +62,7 @@ public final class Arcade_Actions {
                 }
 
                 // In demo level, coin can always be inserted
-                if (game.session().isAttractMode()) {
+                if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
                     return true;
                 }
 

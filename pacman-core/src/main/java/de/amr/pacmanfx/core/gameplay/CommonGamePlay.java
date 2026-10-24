@@ -92,7 +92,7 @@ public abstract class CommonGamePlay implements GamePlay {
         session.hud().gameScore().data().setLevelNumber(levelNumber);
 
         session.setLevel(level);
-        session.setAttractMode(false);
+        session.setValue(SessionKey.DEMO_LEVEL_MODE, false);
 
         return level;
     }
@@ -250,10 +250,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void checkIfPacGetsKilled(GameSession session, GameRules rules, FrameState frameState) {
         // Check for optional attract mode safe period
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             if (rules.demoLevelMinDurationSec().isPresent()) {
                 final long minDurationMillis = (long) (rules.demoLevelMinDurationSec().get() * 1000);
-                final long levelDurationMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
+                final long levelDurationMillis = System.currentTimeMillis() - session.longValue(SessionKey.LEVEL_START_TIME_MILLIS);
                 if (levelDurationMillis <= minDurationMillis) {
                     return;
                 }

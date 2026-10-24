@@ -212,7 +212,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setLevelNumber(level.number());
 
         session.setLevel(level);
-        session.setAttractMode(true);
+        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
 
         return level;
     }
@@ -224,7 +224,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
 
         prepareLevelForPlaying(game, level);
-        session.setLevelStartTimeMillis(System.currentTimeMillis());
+        session.setValue(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
         session.cheats().update(game);
 
         session.hud().gameScore().data().setEnabled(true);

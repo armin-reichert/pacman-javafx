@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -47,7 +48,7 @@ public class SteeringActions {
             final GameContext game = engine.optCurrentGame().orElse(null);
             return game != null
                 && game.session().optLevel().isPresent()
-                && !game.session().isAttractMode()
+                && !game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
                 && !game.session().level().entitySet().pac().cheats().isUsingAutopilot();
         }
     }

@@ -17,11 +17,13 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession {
 
+    public static boolean DEFAULT_BOOLEAN_VALUE = false;
+    public static int     DEFAULT_INT_VALUE = 0;
+    public static long    DEFAULT_LONG_VALUE = 0;
+
     private FrameState frameState;
 
     private GameLevel level;
-
-    private boolean attractMode;
 
     private boolean gameRunning;
 
@@ -32,8 +34,6 @@ public class GameSession {
     private final GameCheats cheats;
 
     private final Map<Named, Object> values = new HashMap<>();
-
-    private long levelStartTimeMillis;
 
     private boolean cutScenesEnabled;
 
@@ -96,14 +96,6 @@ public class GameSession {
         return cheats;
     }
 
-    public void setAttractMode(boolean attractMode) {
-        this.attractMode = attractMode;
-    }
-
-    public boolean isAttractMode() {
-        return attractMode;
-    }
-
     public boolean isGameRunning() {
         return gameRunning;
     }
@@ -129,8 +121,19 @@ public class GameSession {
         return null;
     }
 
+    public boolean booleanValue(Named key) {
+        final Boolean value = value(key, Boolean.class);
+        return value != null ? value : DEFAULT_BOOLEAN_VALUE;
+    }
+
     public int intValue(Named key) {
-        return value(key, Integer.class);
+        final Integer value = value(key, Integer.class);
+        return value != null ? value : DEFAULT_INT_VALUE;
+    }
+
+    public long longValue(Named key) {
+        final Long value = value(key, Long.class);
+        return value != null ? value : DEFAULT_LONG_VALUE;
     }
 
     public void setValue(Named key, Object value) {
@@ -149,13 +152,5 @@ public class GameSession {
 
     public FrameState frameState() {
         return frameState;
-    }
-
-    public long levelStartTimeMillis() {
-        return levelStartTimeMillis;
-    }
-
-    public void setLevelStartTimeMillis(long levelStartTimeMillis) {
-        this.levelStartTimeMillis = levelStartTimeMillis;
     }
 }

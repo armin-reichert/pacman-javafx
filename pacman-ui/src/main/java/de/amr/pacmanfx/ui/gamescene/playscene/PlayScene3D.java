@@ -11,6 +11,7 @@ import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
@@ -236,7 +237,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         perspectiveManager.updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
-            soundEffects.setEnabled(!session.isAttractMode());
+            soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
             soundEffects.playAmbientGameLevelSound(game, level);
         });
     }

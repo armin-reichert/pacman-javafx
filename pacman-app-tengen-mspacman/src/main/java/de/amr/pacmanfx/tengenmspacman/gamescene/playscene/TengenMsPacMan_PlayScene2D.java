@@ -18,6 +18,7 @@ import de.amr.pacmanfx.app.config.GameVariantRenderConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
@@ -161,7 +162,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         session.optLevel().ifPresent(level -> {
             ensureActorAnimationsCreated(level, gameOptionValues(session).boosterEnabled());
             optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
-                soundEffects.setEnabled(!session.isAttractMode());
+                soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
                 soundEffects.playAmbientGameLevelSound(game, level);
             });
         });
@@ -229,7 +230,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             Logger.info("Door color set to {}", doorData.color());
         }
 
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             acceptDemoLevel();
         } else {
             acceptNormalLevel();

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.Named;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -65,7 +66,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     protected Named computeNextStateID() {
         // Just in case: if demo level was completed, go back to intro scene
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return CommonGameStateID.GAME_INTRO;
         }
 

@@ -9,6 +9,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -125,7 +126,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         actionBindingsRegistry().dispose();
 
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             // In demo level, allow going back to options screen
             actionBindingsRegistry().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings(joypad));
         }

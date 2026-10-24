@@ -12,6 +12,7 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -151,7 +152,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameSession session = assertGame().session();
         final AbstractGameState state = assertGame().state();
 
-        final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
+        final boolean silent = session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || state.id() instanceof TestStateID;
 
         if (!silent) {
             optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
@@ -328,7 +329,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = assertGame().session().level();
         final House house = level.entitySet().theOne(House.class);
         final House3DSystem houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
-        final boolean cutSceneFollows = !assertGame().session().isAttractMode()
+        final boolean cutSceneFollows = !assertGame().session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
             && assertGame().runtime().gameRules().cutSceneAfterLevel(level.number()).isPresent();
 
         playScene3D.opacityProperty().set(0);
@@ -400,7 +401,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = session.level();
         final GameLevelView3D level3D = assertLevel3D();
 
-        if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
+        if (!session.booleanValue(SessionKey.DEMO_LEVEL_MODE) && RandomNumbers.chance(0.25)) {
             playScene3D.engine().ui().showMessage(Duration.seconds(2.5), playScene3D.textPicker().selectNextText());
         }
 

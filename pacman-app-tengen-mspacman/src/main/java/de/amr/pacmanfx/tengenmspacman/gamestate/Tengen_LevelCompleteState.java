@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.basics.Named;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.Common_LevelCompleteState;
 
@@ -17,7 +18,7 @@ public class Tengen_LevelCompleteState extends Common_LevelCompleteState {
 
     @Override
     protected Named computeNextStateID() {
-        if (session.isAttractMode()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME;
         }
 

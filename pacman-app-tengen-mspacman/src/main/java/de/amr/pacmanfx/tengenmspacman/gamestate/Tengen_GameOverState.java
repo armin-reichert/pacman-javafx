@@ -62,7 +62,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         level.showMessage(MessageType.GAME_OVER);
 
         final MapCategory mapCategory = gameOptionValues(session).mapCategory();
-        if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
+        if (!session.booleanValue(SessionKey.DEMO_LEVEL_MODE) && mapCategory != MapCategory.ARCADE) {
             final MessageView messageView = level.entitySet().theOne(MessageView.class);
             createAndStartMessageAnimation(messageView, game);
             timer().restartIndefinitely(); // animation completion triggers state exit
@@ -82,7 +82,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         }
 
         if (timer().hasExpired()) {
-            if (session.isAttractMode()) {
+            if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
                 flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }

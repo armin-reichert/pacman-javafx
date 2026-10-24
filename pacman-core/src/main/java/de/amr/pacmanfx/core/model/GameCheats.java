@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
@@ -54,7 +55,7 @@ public class GameCheats {
     public void update(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        if (session.isAttractMode() || !game.session().isGameRunning()) {
+        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || !game.session().isGameRunning()) {
             return;
         }
         final Pac pac = level.entitySet().pac();

@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
@@ -72,7 +73,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     public void onGameStarted(GameStartedEvent e) {
         gameScene.engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
-            final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+            final boolean silent = session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || game.state().id() instanceof TestStateID;
             if (!silent) {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
             }

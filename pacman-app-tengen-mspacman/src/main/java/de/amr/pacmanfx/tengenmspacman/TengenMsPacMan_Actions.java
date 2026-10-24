@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -71,7 +72,7 @@ public final class TengenMsPacMan_Actions {
             @Override
             public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
-                return game != null && game.session().isAttractMode();
+                return game != null && game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE);
             }
         };
 

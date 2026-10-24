@@ -10,6 +10,7 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -77,7 +78,8 @@ class GameEventHandler implements DefaultGameEventListener {
     public void onGameStarted(GameStartedEvent e) {
         final GameContext game = e.game();
         final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+        final boolean silent = session.booleanValue(SessionKey.DEMO_LEVEL_MODE)
+            || game.state().id() instanceof TestStateID;
         if (!silent) {
             gameScene.optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::playGameReadySound);
         }

@@ -6,10 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -65,7 +62,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         session.setLevel(level);
-        session.setAttractMode(true);
+        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
 
         session.hud().gameScore().data().setLevelNumber(levelNumber);
         session.hud().levelCounter().data().setEnabled(false);

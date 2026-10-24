@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.help;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -37,7 +38,7 @@ public class HelpInfo {
         final GameContext game = engine.optCurrentGame().get();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
-        final boolean demoLevel = session.isAttractMode();
+        final boolean demoLevel = session.booleanValue(SessionKey.DEMO_LEVEL_MODE);
 
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             addInfoForIntroScene();

@@ -324,6 +324,6 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(GameSession session) {
-        return session.optLevel().filter(_ -> !session.isAttractMode());
+        return session.optLevel().filter(_ -> !session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
     }
 }
