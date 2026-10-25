@@ -320,8 +320,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
-                final GameScene currentGameScene = gameSceneManager().currentGameScene();
-                final GamePlayView playView = viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                final GameScene currentGameScene = gameSceneManager.currentGameScene();
+                final GamePlayView playView = gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
                 playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -335,10 +335,10 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
             default -> {}
         }
 
-        if (gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+        if (gameSceneManager instanceof DefaultGameSceneManager defaultGameSceneManager) {
             defaultGameSceneManager.updateGameSceneAndForceReload(this, forceGameSceneReload);
         }
-        gameSceneManager().optCurrentGameScene()
+        gameSceneManager.optCurrentGameScene()
             .flatMap(GameScene::optGameEventHandler)
             .ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
