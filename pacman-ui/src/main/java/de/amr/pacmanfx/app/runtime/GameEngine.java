@@ -11,8 +11,12 @@ import de.amr.basics.ui.rendering.RenderManager;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
+import de.amr.pacmanfx.core.event.GameEvent;
+import de.amr.pacmanfx.core.event.GenericChangeEvent;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -25,6 +29,7 @@ import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -127,9 +132,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
 
-        if (ui != null) {
-            ui.show();
-        }
+        ui.show(uiConfig(currentGame.runtime()));
 
         Platform.runLater(this::startBackgroundServices);
     }
@@ -312,6 +315,34 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         return true;
     }
 
+    //TODO This code belongs elsewhere and needs review
+    private void handleGameEvent(GameEvent gameEvent) {
+        boolean forceGameSceneReload = false;
+        switch (gameEvent) {
+            case LevelCreatedEvent levelCreatedEvent -> {
+                final GameScene currentGameScene = gameSceneManager().currentGameScene();
+                final GamePlayView playView = viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
+            }
+
+            case GenericChangeEvent _ -> forceGameSceneReload = true;
+
+            case HighScoreAccessErrorEvent failure -> {
+                ui.showMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
+                return;
+            }
+
+            default -> {}
+        }
+
+        if (gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
+            defaultGameSceneManager.updateGameSceneAndForceReload(this, forceGameSceneReload);
+        }
+        gameSceneManager().optCurrentGameScene()
+            .flatMap(GameScene::optGameEventHandler)
+            .ifPresent(handler -> handler.onGameEvent(gameEvent));
+    }
+
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
         if (oldVariantName != null) {
             Logger.info("<<< Exit Game variant '{}'", oldVariantName);
@@ -335,13 +366,13 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.start();
 
-        gameEventManager.addSubscriber(ui);
+        gameEventManager.addSubscriber(this::handleGameEvent);
         gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
         gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-        ui.initForGameVariant(uiConfig);
+        ui.initForGameVariant(this, uiConfig);
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
