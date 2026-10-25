@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -19,39 +19,39 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.bareKey;
 
 public class GameFlowActions {
 
-    private final GameAction<EngineUIContext> actionStartGame;
-    private final GameAction<EngineUIContext> actionQuit;
-    private final GameAction<EngineUIContext> actionLetGameStateExpire;
-    private final GameAction<EngineUIContext> actionRestartIntro;
+    private final GameAction<EngineContext> actionStartGame;
+    private final GameAction<EngineContext> actionQuit;
+    private final GameAction<EngineContext> actionLetGameStateExpire;
+    private final GameAction<EngineContext> actionRestartIntro;
 
-    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
+    private final Set<ActionKeyBinding<EngineContext>> bindings;
 
     public GameFlowActions() {
 
         actionStartGame = new GameAction<>("start_game") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.lifeCycle().startGame();
             }
         };
 
         actionQuit = new GameAction<>("quit") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.viewManager().optCurrentView().ifPresent(QuitHandler::onQuit);
             }
         };
 
         actionLetGameStateExpire = new GameAction<>("let_game_state_expire") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
             }
         };
 
         actionRestartIntro = new GameAction<>("restart_intro") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final AbstractGameState gameState = game.state();
 
@@ -72,23 +72,23 @@ public class GameFlowActions {
         );
     }
 
-    public GameAction<EngineUIContext> actionLetGameStateExpire() {
+    public GameAction<EngineContext> actionLetGameStateExpire() {
         return actionLetGameStateExpire;
     }
 
-    public GameAction<EngineUIContext> actionQuit() {
+    public GameAction<EngineContext> actionQuit() {
         return actionQuit;
     }
 
-    public GameAction<EngineUIContext> actionRestartIntro() {
+    public GameAction<EngineContext> actionRestartIntro() {
         return actionRestartIntro;
     }
 
-    public GameAction<EngineUIContext> actionStartGame() {
+    public GameAction<EngineContext> actionStartGame() {
         return actionStartGame;
     }
 
-    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
+    public Set<ActionKeyBinding<EngineContext>> bindings() {
         return bindings;
     }
 }

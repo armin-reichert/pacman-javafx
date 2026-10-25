@@ -13,14 +13,13 @@ import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -34,7 +33,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void init(EngineUIContext context) {
+    public void init(EngineContext context) {
         addDynamicInfo("Pac Name",  supplyPacStateAndName(context));
         addDynamicInfo("Lives",     supplyLivesCount(context));
         addDynamicInfo("Visible",   supplyPacText(context, this::actorVisibilityText));
@@ -52,21 +51,21 @@ public class DS_ActorInfo extends GameDashboardSection {
         addGhostInfo(context, GhostPersonality.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyPacStateAndName(EngineUIContext engine) {
+    private Supplier<String> supplyPacStateAndName(EngineContext engine) {
         return () -> engine.optCurrentGame().flatMap(game -> game.session().optLevel())
             .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
     }
 
-    private Supplier<?> supplyLivesCount(EngineUIContext engine) {
+    private Supplier<?> supplyLivesCount(EngineContext engine) {
         return fnLevelInfo(engine, _ -> {
             final GameSession session = engine.optCurrentGame().map(GameContext::session).orElse(null);
             return session != null ? session.numLives() : 0;
         });
     }
 
-    private void addGhostInfo(EngineUIContext engine, GhostPersonality personality) {
+    private void addGhostInfo(EngineContext engine, GhostPersonality personality) {
         addDynamicInfo(ghostName(personality), supplyGhostText(engine, this::ghostNameAndStateText, personality));
         addDynamicInfo("Movement",  supplyGhostText(engine, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(engine, this::actorLocationText,  personality));
@@ -118,7 +117,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyPacPowerText(EngineUIContext appContext) {
+    private Supplier<String> supplyPacPowerText(EngineContext appContext) {
         return () -> appContext.optCurrentGame().get().session().optLevel()
             .map(level -> level.entitySet().pac())
             .map(this::pacPowerText)
@@ -131,12 +130,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<?> supplyPacText(EngineUIContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
+    private Supplier<?> supplyPacText(EngineContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
         return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entitySet().pac()));
     }
 
     private Supplier<?> supplyGhostText(
-        EngineUIContext appContext,
+        EngineContext appContext,
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
         return fnLevelInfo(appContext, level -> {
@@ -151,7 +150,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
-    private Supplier<String> supplyPacAnimationText(EngineUIContext context) {
+    private Supplier<String> supplyPacAnimationText(EngineContext context) {
         return () -> context.optCurrentGame().get().session().optLevel().map(level -> {
             final ActorSpriteAnimController animSystem = context.optCurrentGame().get().runtime().systems().actorSpriteAnimController();
             final Pac pac = level.entitySet().pac();

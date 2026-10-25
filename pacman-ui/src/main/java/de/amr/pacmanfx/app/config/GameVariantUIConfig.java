@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -17,9 +17,9 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    void load(EngineUIContext engine);
+    void load(EngineContext engine);
 
-    void unload(EngineUIContext engine);
+    void unload(EngineContext engine);
 
     /**
      * @return the game scene configuration (mapping game states to game scenes).

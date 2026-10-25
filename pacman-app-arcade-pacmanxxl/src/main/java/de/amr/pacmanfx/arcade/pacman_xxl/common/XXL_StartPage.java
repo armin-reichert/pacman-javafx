@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
@@ -46,7 +46,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private EngineUIContext engine;
+    private EngineContext engine;
 
     public XXL_StartPage(String title) {
         this.title = title;
@@ -70,7 +70,7 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setEngine(EngineUIContext engine) {
+    public void setEngine(EngineContext engine) {
         this.engine = requireNonNull(engine);
         // Ensure both game variants are available
         engine.gameVariantManager().registerVariant(engine, GameVariantID.ARCADE_PACMAN_XXL.name());

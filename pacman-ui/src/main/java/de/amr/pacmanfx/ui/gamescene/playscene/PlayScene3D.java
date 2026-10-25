@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -193,7 +193,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onInput() {
-        final Optional<GameAction<EngineUIContext>> executedAction =
+        final Optional<GameAction<EngineContext>> executedAction =
             executeMatchingAction(actionBindingsRegistry(), engine());
 
         //TODO Rethink this

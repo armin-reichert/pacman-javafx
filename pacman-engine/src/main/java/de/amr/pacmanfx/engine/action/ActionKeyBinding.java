@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.engine.action;
 
-import de.amr.pacmanfx.engine.EngineContext;
+import de.amr.pacmanfx.engine.EngineCoreContext;
 import javafx.scene.input.KeyCodeCombination;
 
-public record ActionKeyBinding<C extends EngineContext>(GameAction<C> action, KeyCodeCombination... keyCombinations) {}
+public record ActionKeyBinding<C extends EngineCoreContext>(GameAction<C> action, KeyCodeCombination... keyCombinations) {}

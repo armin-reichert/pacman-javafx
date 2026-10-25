@@ -17,7 +17,7 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.gamescene.GameSceneSwitchType;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -51,11 +51,11 @@ public class DefaultGameSceneManager implements GameSceneManager {
 
     public DefaultGameSceneManager() {}
 
-    public void forceGameSceneUpdate(EngineUIContext engine) {
+    public void forceGameSceneUpdate(EngineContext engine) {
         updateGameSceneAndForceReload(engine, true);
     }
 
-    public void updateGameSceneAndForceReload(EngineUIContext engine, boolean forceReload) {
+    public void updateGameSceneAndForceReload(EngineContext engine, boolean forceReload) {
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
         final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
 

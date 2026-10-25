@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -46,10 +46,10 @@ public final class ContextMenuSupport {
     }
 
     public static MenuItem addLocalizedActionItem(
-        EngineUIContext engine,
+        EngineContext engine,
         ContextMenu menu,
         TranslationManager translator,
-        GameAction<EngineUIContext> action,
+        GameAction<EngineContext> action,
         String globalAssetsKey,
         Object... args)
     {

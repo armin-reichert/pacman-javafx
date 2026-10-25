@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -18,17 +18,17 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class TestActions {
 
-    private final GameAction<EngineUIContext> actionTestCutScenes;
-    private final GameAction<EngineUIContext> actionTestLevelShort;
-    private final GameAction<EngineUIContext> actionTestLevelMedium;
+    private final GameAction<EngineContext> actionTestCutScenes;
+    private final GameAction<EngineContext> actionTestLevelShort;
+    private final GameAction<EngineContext> actionTestLevelMedium;
 
-    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
+    private final Set<ActionKeyBinding<EngineContext>> bindings;
 
     public TestActions() {
 
         actionTestCutScenes = new GameAction<>("test_cut_scenes") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.runtime().gameFlow().enterGameState(game, TestStateID.CUT_SCENE_TEST);
                     engine.ui().showMessage("Cut scenes test"); //TODO localize
@@ -36,7 +36,7 @@ public class TestActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.runtime().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
@@ -44,7 +44,7 @@ public class TestActions {
 
         actionTestLevelShort = new GameAction<>("short_level_test") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.runtime().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_S);
                     engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
@@ -52,7 +52,7 @@ public class TestActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.runtime().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
@@ -60,7 +60,7 @@ public class TestActions {
 
         actionTestLevelMedium = new GameAction<>("medium_level_test") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     game.runtime().gameFlow().restartGameState(game, TestStateID.LEVEL_TEST_M);
                     engine.ui().showMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
@@ -68,7 +68,7 @@ public class TestActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.runtime().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
@@ -81,19 +81,19 @@ public class TestActions {
         );
     }
 
-    public GameAction<EngineUIContext> actionTestCutScenes() {
+    public GameAction<EngineContext> actionTestCutScenes() {
         return actionTestCutScenes;
     }
 
-    public GameAction<EngineUIContext> actionTestLevelShort() {
+    public GameAction<EngineContext> actionTestLevelShort() {
         return actionTestLevelShort;
     }
 
-    public GameAction<EngineUIContext> actionTestLevelMedium() {
+    public GameAction<EngineContext> actionTestLevelMedium() {
         return actionTestLevelMedium;
     }
 
-    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
+    public Set<ActionKeyBinding<EngineContext>> bindings() {
         return bindings;
     }
 }

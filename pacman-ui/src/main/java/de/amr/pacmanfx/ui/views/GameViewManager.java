@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
 
 public interface GameViewManager {
 
-    void init(EngineUIContext engine);
+    void init(EngineContext engine);
 
     <V extends GameView> V assertView(Named id, Class<V> viewClass);
 

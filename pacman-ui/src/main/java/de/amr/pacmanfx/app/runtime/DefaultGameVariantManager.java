@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.engine.CartridgeRegistry;
-import de.amr.pacmanfx.engine.EngineContext;
+import de.amr.pacmanfx.engine.EngineCoreContext;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.config.Cartridge;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,7 +30,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public DefaultGameVariantManager() {}
 
     @Override
-    public void registerVariant(EngineContext engine, String variantName) {
+    public void registerVariant(EngineCoreContext engine, String variantName) {
         requireNonNull(engine);
         requireNonNull(variantName);
         try {
@@ -75,7 +75,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public void selectVariant(EngineContext engine, String variantName) {
+    public void selectVariant(EngineCoreContext engine, String variantName) {
         requireNonNull(engine);
         requireNonNull(variantName);
         if (!variantExists(variantName)) {
@@ -85,7 +85,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         currentVariantID.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(EngineContext engine, String variantName) {
+    private GameVariantRuntime createGameVariantRuntime(EngineCoreContext engine, String variantName) {
         final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantName);
         final var runtime = new DefaultGameVariantRuntime(cartridge, engine);
         runtime.gameFlow().addState(new Test_ShortTestState());

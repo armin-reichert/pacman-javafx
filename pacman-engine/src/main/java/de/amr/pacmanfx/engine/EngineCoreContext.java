@@ -12,7 +12,7 @@ import de.amr.pacmanfx.engine.sound.SoundManager;
 
 import java.util.Optional;
 
-public interface EngineContext {
+public interface EngineCoreContext {
 
     GameClock clock();
 

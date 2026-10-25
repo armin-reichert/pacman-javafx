@@ -9,7 +9,7 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -29,13 +29,13 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public class StageTitleManager {
 
-    private final EngineUIContext engine;
+    private final EngineContext engine;
 
     private final StringBinding startAndPlayViewBinding;
 
     private final Stage stage;
 
-    public StageTitleManager(EngineUIContext engine, Stage stage) {
+    public StageTitleManager(EngineContext engine, Stage stage) {
         this.engine = requireNonNull(engine);
         this.stage = requireNonNull(stage);
         startAndPlayViewBinding = createStartAndPlayViewTitleBinding();

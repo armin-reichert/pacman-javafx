@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.engine.action;
 
-import de.amr.pacmanfx.engine.EngineContext;
+import de.amr.pacmanfx.engine.EngineCoreContext;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultActionBindingsRegistry<C extends EngineContext> implements ActionBindingsRegistry<C> {
+public class DefaultActionBindingsRegistry<C extends EngineCoreContext> implements ActionBindingsRegistry<C> {
 
     private final String name;
 

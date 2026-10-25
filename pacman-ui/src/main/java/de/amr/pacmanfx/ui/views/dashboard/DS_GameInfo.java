@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
 import de.amr.pacmanfx.core.GameVariantRuntime;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -36,7 +36,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void init(EngineUIContext engine) {
+    public void init(EngineContext engine) {
         addDynamicInfo("Game State",  () -> engine.optCurrentGame().get().state().name());
 
         addDynamicInfo("State Timer", () -> stateTimerInfo(engine.optCurrentGame().get().state()));
@@ -93,12 +93,12 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Maze flashes",   fnLevelInfo(engine, level -> fmtNumFlashes(rules(engine), level)));
     }
 
-    private GameRules rules(EngineUIContext context) {
+    private GameRules rules(EngineContext context) {
         return context.optCurrentGame().get().runtime().gameRules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
-        EngineUIContext context,
+        EngineContext context,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = context.optCurrentGame().get();

@@ -52,9 +52,9 @@ public class GameUI implements GameEventListener {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
+    private final ActionBindingsRegistry<EngineContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
-    private EngineUIContext engine;
+    private EngineContext engine;
 
     private StageTitleManager stageTitleManager;
 
@@ -74,7 +74,7 @@ public class GameUI implements GameEventListener {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setEngine(EngineUIContext engine) {
+    public void setEngine(EngineContext engine) {
         this.engine = requireNonNull(engine);
 
         stageTitleManager = new StageTitleManager(engine, stage);
@@ -218,7 +218,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void bindCommonActions() {
-        final Set<ActionKeyBinding<EngineUIContext>> commonActionBindings = CommonGameActions.instance().bindings();
+        final Set<ActionKeyBinding<EngineContext>> commonActionBindings = CommonGameActions.instance().bindings();
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionToggleKeyboardMonitor(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionEnterFullScreen(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().simulationActions().actionToggleMuted(), commonActionBindings);

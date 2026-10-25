@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -26,7 +26,7 @@ public final class DefaultGameViewManager implements GameViewManager {
     public DefaultGameViewManager() {}
 
     @Override
-    public void init(EngineUIContext engine) {
+    public void init(EngineContext engine) {
         requireNonNull(engine);
 
         views.put(GameViewID.START_PAGES, new StartPagesView(engine.translationManager()));

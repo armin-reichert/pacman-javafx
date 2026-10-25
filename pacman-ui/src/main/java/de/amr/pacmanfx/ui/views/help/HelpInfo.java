@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -27,12 +27,12 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    private final EngineUIContext engine;
+    private final EngineContext engine;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(EngineUIContext engine) {
+    public HelpInfo(EngineContext engine) {
         this.engine = requireNonNull(engine);
 
         final GameContext game = engine.optCurrentGame().get();

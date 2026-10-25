@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -21,23 +21,23 @@ import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 
 public class SimulationActions {
 
-    private final GameAction<EngineUIContext> actionFaster;
-    private final GameAction<EngineUIContext> actionFastest;
-    private final GameAction<EngineUIContext> actionSlower;
-    private final GameAction<EngineUIContext> actionSlowest;
-    private final GameAction<EngineUIContext> actionOneStep;
-    private final GameAction<EngineUIContext> actionTenSteps;
-    private final GameAction<EngineUIContext> actionReset;
-    private final GameAction<EngineUIContext> actionTogglePaused;
-    private final GameAction<EngineUIContext> actionToggleMuted;
+    private final GameAction<EngineContext> actionFaster;
+    private final GameAction<EngineContext> actionFastest;
+    private final GameAction<EngineContext> actionSlower;
+    private final GameAction<EngineContext> actionSlowest;
+    private final GameAction<EngineContext> actionOneStep;
+    private final GameAction<EngineContext> actionTenSteps;
+    private final GameAction<EngineContext> actionReset;
+    private final GameAction<EngineContext> actionTogglePaused;
+    private final GameAction<EngineContext> actionToggleMuted;
 
-    private final Set<ActionKeyBinding<EngineUIContext>> bindings;
+    private final Set<ActionKeyBinding<EngineContext>> bindings;
 
     public SimulationActions() {
 
         actionFaster = new GameAction<>("simulation_faster") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final GameClock clock = engine.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -50,7 +50,7 @@ public class SimulationActions {
 
         actionFastest = new GameAction<>("simulation_fastest") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
                 engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -59,7 +59,7 @@ public class SimulationActions {
 
         actionSlower = new GameAction<>("simulation_slower") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final GameClock clock = engine.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -72,7 +72,7 @@ public class SimulationActions {
 
         actionSlowest = new GameAction<>("simulation_slowest") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 engine.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
                 engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -81,7 +81,7 @@ public class SimulationActions {
 
         actionOneStep = new GameAction<>("simulation_one_step") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final boolean failure = !engine.clock().makeStep(true);
                 if (failure) {
                     engine.ui().showMessage("Simulation step error!");
@@ -89,14 +89,14 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 return engine.clock().areUpdatesDisabled();
             }
         };
 
         actionTenSteps = new GameAction<>("simulation_ten_steps") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final boolean failure = !engine.clock().makeSteps(10, true);
                 if (failure) {
                     engine.ui().showMessage("Simulation steps error!");
@@ -104,14 +104,14 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 return engine.clock().areUpdatesDisabled();
             }
         };
 
         actionReset = new GameAction<>("simulation_reset") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final GameClock gameClock = engine.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
                 engine.ui().showMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
@@ -120,7 +120,7 @@ public class SimulationActions {
 
         actionTogglePaused = new GameAction<>("toggle_paused") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 final GameClock gameClock = engine.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.areUpdatesDisabled();
@@ -131,14 +131,14 @@ public class SimulationActions {
             }
 
             @Override
-            public boolean isEnabled(EngineUIContext engine) {
+            public boolean isEnabled(EngineContext engine) {
                 return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleMuted = new GameAction<>("toggle_muted") {
             @Override
-            public void execute(EngineUIContext engine) {
+            public void execute(EngineContext engine) {
                 toggleBooleanProperty(engine.ui().viewModel().muteProperty());
             }
         };
@@ -156,43 +156,43 @@ public class SimulationActions {
         );
     }
 
-    public GameAction<EngineUIContext> actionFaster() {
+    public GameAction<EngineContext> actionFaster() {
         return actionFaster;
     }
 
-    public GameAction<EngineUIContext> actionFastest() {
+    public GameAction<EngineContext> actionFastest() {
         return actionFastest;
     }
 
-    public GameAction<EngineUIContext> actionSlower() {
+    public GameAction<EngineContext> actionSlower() {
         return actionSlower;
     }
 
-    public GameAction<EngineUIContext> actionSlowest() {
+    public GameAction<EngineContext> actionSlowest() {
         return actionSlowest;
     }
 
-    public GameAction<EngineUIContext> actionOneStep() {
+    public GameAction<EngineContext> actionOneStep() {
         return actionOneStep;
     }
 
-    public GameAction<EngineUIContext> actionTenSteps() {
+    public GameAction<EngineContext> actionTenSteps() {
         return actionTenSteps;
     }
 
-    public GameAction<EngineUIContext> actionReset() {
+    public GameAction<EngineContext> actionReset() {
         return actionReset;
     }
 
-    public GameAction<EngineUIContext> actionTogglePaused() {
+    public GameAction<EngineContext> actionTogglePaused() {
         return actionTogglePaused;
     }
 
-    public GameAction<EngineUIContext> actionToggleMuted() {
+    public GameAction<EngineContext> actionToggleMuted() {
         return actionToggleMuted;
     }
 
-    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
+    public Set<ActionKeyBinding<EngineContext>> bindings() {
         return bindings;
     }
 }

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.engine.EngineContext;
+import de.amr.pacmanfx.engine.EngineCoreContext;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.config.Cartridge;
 
@@ -30,7 +30,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
     private final GameVariantUIConfig uiConfig;
 
-    public DefaultGameVariantRuntime(Cartridge cartridge, EngineContext engine) {
+    public DefaultGameVariantRuntime(Cartridge cartridge, EngineCoreContext engine) {
         requireNonNull(cartridge);
         requireNonNull(engine);
 
