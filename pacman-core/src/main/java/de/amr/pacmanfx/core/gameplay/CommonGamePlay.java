@@ -198,8 +198,8 @@ public abstract class CommonGamePlay implements GamePlay {
         if (gameScore.data().extraLifeReached()) {
             // Do not forget to clear the flag!
             scoreSystem.clearExtraLife(gameScore);
-            final int newNumLives = session.intValue(SessionKey.NUM_LIVES) + 1;
-            session.setValue(SessionKey.NUM_LIVES, newNumLives);
+            final int newNumLives = session.numLives() + 1;
+            session.setNumLives(newNumLives);
             game.eventManager().publishEvent(new SpecialScoreEvent(gameScore.data().points()));
         }
     }

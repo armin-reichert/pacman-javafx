@@ -49,8 +49,8 @@ public final class CheatActions {
             public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
-                    final int newNumLives = session.intValue(SessionKey.NUM_LIVES) + 3;
-                    session.setValue(SessionKey.NUM_LIVES, newNumLives);
+                    final int newNumLives = session.numLives() + 3;
+                    session.setNumLives(newNumLives);
                     session.cheats().notifyCheatUsed();
                     final String msg = engine.translationManager().translate("flash.cheat_add_lives", newNumLives);
                     engine.ui().showMessage(msg);

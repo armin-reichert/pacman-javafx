@@ -13,5 +13,4 @@ public enum SessionKey implements Named {
     GAME_RUNNING,
     HUD_VISIBLE,
     LEVEL_START_TIME_MILLIS,
-    NUM_LIVES
 }

@@ -33,7 +33,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
-        session.setValue(SessionKey.NUM_LIVES, 1);
+        session.setNumLives(1);
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.worldNavigation().setPaused(true);

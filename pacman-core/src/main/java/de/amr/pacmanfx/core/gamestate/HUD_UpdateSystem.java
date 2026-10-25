@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.textview.TextView;
-import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -16,7 +15,7 @@ public class HUD_UpdateSystem {
 
     public void update(HUD hud, GameContext game) {
         final GameSession session = game.session();
-        final int numLives = session.value(SessionKey.NUM_LIVES, Integer.class);
+        final int numLives = session.numLives();
 
         final LivesCounter livesCounter = hud.livesCounter();
         livesCounter.data().setNumLives(numLives);

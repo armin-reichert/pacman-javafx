@@ -22,6 +22,8 @@ public class GameSession extends ValueMap {
 
     private GameLevel level;
 
+    private int numLives;
+
     private FrameState thisFrame;
 
     public GameSession(String variantName, GameCheats cheats, int lifeCount) {
@@ -31,8 +33,7 @@ public class GameSession extends ValueMap {
         this.cheats = requireNonNull(cheats);
 
         hud = new HUD(variantName);
-
-        setValue(SessionKey.NUM_LIVES, lifeCount);
+        numLives = Validations.requireNonNegativeInt(lifeCount);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
@@ -52,7 +53,7 @@ public class GameSession extends ValueMap {
     }
 
     public void setLevel(GameLevel level) {
-        this.level = level;
+        this.level = requireNonNull(level);
     }
 
     public void removeLevel() {
@@ -61,6 +62,14 @@ public class GameSession extends ValueMap {
 
     public Optional<GameLevel> optLevel() {
         return Optional.ofNullable(level);
+    }
+
+    public int numLives() {
+        return numLives;
+    }
+
+    public void setNumLives(int numLives) {
+        this.numLives = Validations.requireNonNegativeInt(numLives);
     }
 
     public HUD hud() {

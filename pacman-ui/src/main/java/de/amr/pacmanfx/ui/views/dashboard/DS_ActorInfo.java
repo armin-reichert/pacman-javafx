@@ -62,7 +62,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<?> supplyLivesCount(EngineUIContext engine) {
         return fnLevelInfo(engine, _ -> {
             final GameSession session = engine.optCurrentGame().map(GameContext::session).orElse(null);
-            return session != null ? session.intValue(SessionKey.NUM_LIVES) : 0;
+            return session != null ? session.numLives() : 0;
         });
     }
 
