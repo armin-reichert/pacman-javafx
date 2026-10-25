@@ -32,7 +32,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         session.setValue(SessionKey.HUD_VISIBLE, true);
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
-        session.setValue(SessionKey.GAME_LEVEL, level);
+        session.setLevel(level);
         session.setValue(SessionKey.NUM_LIVES, 1);
 
         level.entitySet().ghosts().forEach(ghost -> {
@@ -83,7 +83,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     private void clear(GameContext game) {
         game.session().optLevel().orElseThrow().entitySet().clear();
-        game.session().removeValue(SessionKey.GAME_LEVEL);
+        game.session().removeLevel();
         Logger.info("Demo level has been removed");
     }
 
@@ -94,7 +94,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+        final FrameState thisFrame = session.thisFrame();
         if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }

@@ -24,7 +24,7 @@ public final class Common_IntroState extends AbstractGameState {
         hud.creditDisplay().show();
 
         session.setValue(SessionKey.HUD_VISIBLE, true);
-        session.removeValue(SessionKey.GAME_LEVEL);
+        session.removeLevel();
 
         timer().resetToIndefiniteDuration();
     }

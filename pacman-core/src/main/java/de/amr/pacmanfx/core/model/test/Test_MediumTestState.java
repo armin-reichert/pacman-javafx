@@ -59,7 +59,7 @@ public class Test_MediumTestState extends AbstractGameState {
             }
         }
         else {
-            final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+            final FrameState thisFrame = session.thisFrame();
 
             gamePlay.update(game, level);
             if (rules.isLevelCompleted(level)) {

@@ -113,7 +113,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         if (game == null) return Stream.empty();
 
         final GameSession session = game.session();
-        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+        final FrameState thisFrame = session.thisFrame();
         final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return session.optLevel()
             .map(level -> Ufx.<Renderable>streamOf(

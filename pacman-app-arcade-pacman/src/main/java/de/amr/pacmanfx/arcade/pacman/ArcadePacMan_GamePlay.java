@@ -109,7 +109,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         session.setValue(SessionKey.CUT_SCENES_ENABLED, true);
         session.setValue(SessionKey.GAME_RUNNING, false);
-        session.removeValue(SessionKey.GAME_LEVEL);
+        session.removeLevel();
 
         configureHUD(game, null, session.hud());
         initScores(game);
@@ -156,7 +156,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configurePacAndGhosts(entities, systems, worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
-        session.setValue(SessionKey.GAME_LEVEL, level);
+        session.setLevel(level);
         session.setValue(SessionKey.GAME_OVER_STATE_TICKS, GAME_OVER_STATE_TICKS);
 
         return level;
@@ -211,7 +211,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.hud().gameScore().data().setLevelNumber(level.number());
 
-        session.setValue(SessionKey.GAME_LEVEL, level);
+        session.setLevel(level);
         session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
 
         return level;

@@ -211,7 +211,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onTick(GameContext game) {
         final GameSession session = game.session();
-        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+        final FrameState thisFrame = session.thisFrame();
         final long tick = thisFrame.tick();
 
         if (session.optLevel().isEmpty()) {

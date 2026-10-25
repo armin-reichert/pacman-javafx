@@ -43,7 +43,7 @@ public class Arcade_GameOverState extends AbstractGameState {
             final GameLevel level = session.optLevel().orElseThrow();
             level.entitySet().theOne(MessageView.class).hide();
             session.cheats().clear();
-            session.removeValue(SessionKey.GAME_LEVEL);
+            session.removeLevel();
             flow.enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);

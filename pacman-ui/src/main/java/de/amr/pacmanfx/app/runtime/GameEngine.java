@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
-import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
@@ -397,7 +396,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     private void simulate() {
         final long tick = clock.currentTick();
         try {
-            currentGame.session().setValue(SessionKey.FRAME_STATE, new FrameState(tick));
+            currentGame.session().newFrameState(tick);
             currentGame.runtime().systems().entityUpdateSystem().updateEntities(currentGame);
             currentGame.runtime().gameFlow().update(currentGame);
             // Now the current game scene is up-to-date!

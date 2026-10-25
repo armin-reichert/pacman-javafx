@@ -70,9 +70,8 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onUpdate(GameContext game) {
-        final FrameState frameState = game.session().value(SessionKey.FRAME_STATE, FrameState.class);
-        final long globalTick = frameState.tick();
-        onUpdateState(game, globalTick, timer().tickCount());
+        final FrameState thisFrame = game.session().thisFrame();
+        onUpdateState(game, thisFrame.tick(), timer().tickCount());
     }
 
     protected void showPacAndGhosts(GameLevelEntitySet entities) {

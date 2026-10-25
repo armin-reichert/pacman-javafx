@@ -91,7 +91,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = createLevel(game, levelNumber);
         session.hud().gameScore().data().setLevelNumber(levelNumber);
 
-        session.setValue(SessionKey.GAME_LEVEL, level);
+        session.setLevel(level);
         session.setValue(SessionKey.DEMO_LEVEL_MODE, false);
 
         return level;
@@ -121,7 +121,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.runtime().gameRules();
         final GameSession session = game.session();
-        final FrameState thisFrame = session.value(SessionKey.FRAME_STATE, FrameState.class);
+        final FrameState thisFrame = session.thisFrame();
         final Pac pac = level.entitySet().pac();
 
         final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(thisFrame);
