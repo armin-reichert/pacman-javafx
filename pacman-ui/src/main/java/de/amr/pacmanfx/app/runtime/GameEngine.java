@@ -393,7 +393,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         ui.clearShortMessage();
         ui.mainScene().replaceGameView(newView);
-        ui.stageTitleManager().update(newViewID);
+        ui.stageTitleManager().update(this, newViewID);
     }
 
     private void startBackgroundServices() {
