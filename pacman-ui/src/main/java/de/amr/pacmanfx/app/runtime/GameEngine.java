@@ -230,12 +230,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
             newGameSession(currentGame);
             currentGame.runtime().gamePlay().startSession(currentGame);
 
-            if (ui != null) {
-                ui.mainScene().setGameSession(currentGame.session());
-            } else {
-                Logger.error("No UI has been attached to engine!");
-            }
-
+            ui.mainScene().setGameSession(currentGame.session());
             gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
             clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -272,10 +267,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public void terminate() {
-        if (ui != null) {
-            ui.stopShortMessageSystem();
-        }
         suspendGame();
+        ui.stopShortMessageSystem();
         spriteAnimationSystem.stop();
         watchdog.dispose();
         Logger.info("Application terminated. There is no way back!");
@@ -348,9 +341,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-        if (ui != null) {
-            ui.initForGameVariant(uiConfig);
-        }
+        ui.initForGameVariant(uiConfig);
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
@@ -369,23 +360,15 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         final GameView newView = gameViewManager.assertView(newViewID);
         newView.onEnter();
 
-        if (ui != null) {
-            ui.clearShortMessage();
-            ui.mainScene().replaceGameView(newView);
-            ui.stageTitleManager().update(newViewID);
-        }
+        ui.clearShortMessage();
+        ui.mainScene().replaceGameView(newView);
+        ui.stageTitleManager().update(newViewID);
     }
 
     private void startBackgroundServices() {
         watchdog.startWatching();
-        Logger.info("Custom map directory is watched now!");
-
         spriteAnimationSystem.start();
-
-        if (ui != null) {
-            ui.startShortMessageSystem();
-        }
-
+        ui.startShortMessageSystem();
         // Load 3D meshes by accessing the singleton instance
         //noinspection ResultOfMethodCallIgnored
         PacManMeshes3D.instance();
