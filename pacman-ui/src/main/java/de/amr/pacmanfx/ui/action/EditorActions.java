@@ -78,7 +78,7 @@ public class EditorActions {
     // Private
 
     private void startEditor(EngineContext engine, TileMapEditor editor) {
-        engine.lifeCycle().suspendGame();
+        engine.lifeCycle().endSession();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }

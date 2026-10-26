@@ -2,15 +2,11 @@ package de.amr.pacmanfx.engine;
 
 public interface EngineLifecycle {
 
-    void startGame();
+    void startSession();
 
-    void suspendGame();
+    void endSession();
 
     void createNewSession();
 
     void terminate();
-
-    void enterGameVariant(String variantName);
-
-    void exitGameVariant(String variantName);
 }

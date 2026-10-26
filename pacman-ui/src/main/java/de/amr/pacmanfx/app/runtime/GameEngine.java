@@ -227,9 +227,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     // EngineLifecycle
 
     @Override
-    public void startGame() {
-        createNewSession();
-
+    public void startSession() {
         ui.mainScene().setGameSession(currentGame.session());
         currentGame.runtime().gamePlay().startSession(currentGame);
         gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
@@ -239,16 +237,11 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     }
 
     @Override
-    public void suspendGame() {
-        if (currentGame != null) {
-            soundManager.stopAll();
-            gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
-            gameSceneManager.removeCurrentGameScene();
-            clock.stop();
-        }
-        else {
-            fatalError(new IllegalStateException("Game cannot be suspended, no game is currently selected"));
-        }
+    public void endSession() {
+        soundManager.stopAll();
+        gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
+        gameSceneManager.removeCurrentGameScene();
+        clock.stop();
     }
 
     @Override
@@ -262,21 +255,11 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     @Override
     public void terminate() {
-        suspendGame();
+        endSession();
         ui.stopShortMessageSystem();
         spriteAnimationSystem.stop();
         watchdog.dispose();
         Logger.info("Application terminated. There is no way back!");
-    }
-
-    @Override
-    public void enterGameVariant(String variantName) {
-        enterGameVariant(gameVariantManager.variantRuntime(variantName));
-    }
-
-    @Override
-    public void exitGameVariant(String variantName) {
-        exitGameVariant(gameVariantManager.variantRuntime(variantName));
     }
 
     @Override
@@ -427,7 +410,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     private void fatalError(Throwable reason) {
         Logger.error(reason, "*** KA-TAS-TRO-PHE! SOMETHING VERY BAD HAPPENED!");
-        suspendGame();
+        endSession();
         ui.showMessage(Duration.seconds(60), translate("error.oh_no_my_program") + "\n" + reason.getMessage());
     }
 }
