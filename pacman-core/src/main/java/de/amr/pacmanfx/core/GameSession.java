@@ -16,6 +16,8 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession extends ValueMap {
 
+    private final String variantName;
+
     private final HUD hud;
 
     private final GameCheats cheats;
@@ -26,15 +28,15 @@ public class GameSession extends ValueMap {
 
     private FrameState thisFrame;
 
-    public GameSession(String variantName, GameCheats cheats, int lifeCount) {
+    public GameSession(String variantName, int lifeCount) {
         super(new HashMap<>());
 
-        requireNonNull(variantName);
-        this.cheats = requireNonNull(cheats);
-
-        hud = new HUD(variantName);
+        this.variantName = requireNonNull(variantName);
         numLives = Validations.requireNonNegativeInt(lifeCount);
 
+        hud = new HUD(variantName);
+
+        cheats = new GameCheats();
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
                 hud.highScore().data().setEnabled(false);
@@ -42,6 +44,10 @@ public class GameSession extends ValueMap {
         });
 
         newFrameState(0);
+    }
+
+    public String variantName() {
+        return variantName;
     }
 
     public void newFrameState(long tick) {

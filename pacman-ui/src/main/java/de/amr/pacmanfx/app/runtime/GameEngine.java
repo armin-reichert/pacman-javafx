@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
@@ -229,19 +228,14 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     @Override
     public void startGame() {
-        if (currentGame != null) {
-            newGameSession(currentGame);
-            currentGame.runtime().gamePlay().startSession(currentGame);
+        createNewSession();
 
-            ui.mainScene().setGameSession(currentGame.session());
-            gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
+        ui.mainScene().setGameSession(currentGame.session());
+        currentGame.runtime().gamePlay().startSession(currentGame);
+        gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
 
-            clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-            clock.start();
-        }
-        else {
-            fatalError(new IllegalStateException("Game cannot be started, no game is currently selected"));
-        }
+        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+        clock.start();
     }
 
     @Override
@@ -258,14 +252,12 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     }
 
     @Override
-    public void newGameSession(GameContext game) {
-        requireNonNull(game);
-        final GameSession session = new GameSession(
+    public void createNewSession() {
+        final var session = new GameSession(
             gameVariantManager.currentVariantID(),
-            new GameCheats(),
             gameVariantManager.currentRuntime().gameRules().initialLifeCount()
         );
-        game.setSession(session);
+        currentGame.setSession(session);
     }
 
     @Override
@@ -361,7 +353,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         final GameEventManager gameEventManager = new DefaultGameEventManager();
 
         currentGame = new GameContext(runtime, coinMechanism, gameEventManager);
-        newGameSession(currentGame);
+
         stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
         runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.start();
@@ -373,6 +365,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
         ui.initForGameVariant(this, uiConfig);
+
+        createNewSession();
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
