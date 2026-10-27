@@ -379,11 +379,9 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     // --- Game loop
 
     private void simulate() {
-        final long tick = clock.currentTick();
+        currentGame.session().newFrameState(clock.currentTick());
         try {
-            currentGame.session().newFrameState(tick);
-            currentGame.runtime().systems().entityUpdateSystem().updateEntities(currentGame);
-            currentGame.runtime().gameFlow().update(currentGame);
+            currentGame.runtime().systems().gameUpdateSystem().updateGame(currentGame);
             // Now the current game scene is up-to-date!
             gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
         }
@@ -393,12 +391,12 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     }
 
     private void render() {
-        try {
-            if (gameViewManager.isGamePlayViewSelected()) {
+        if (gameViewManager.isGamePlayViewSelected()) {
+            try {
                 gameViewManager.gamePlayView().render();
+            } catch (Exception x) {
+                fatalError(x);
             }
-        } catch (Exception x) {
-            fatalError(x);
         }
     }
 

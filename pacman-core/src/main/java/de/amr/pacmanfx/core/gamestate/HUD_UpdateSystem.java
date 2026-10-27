@@ -11,9 +11,14 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.level.GameLevel;
 
+import static java.util.Objects.requireNonNull;
+
 public class HUD_UpdateSystem {
 
-    public void update(HUD hud, GameContext game) {
+    public void updateHUD(GameContext game, HUD hud) {
+        requireNonNull(game);
+        requireNonNull(hud);
+
         final GameSession session = game.session();
         final int numLives = session.numLives();
 

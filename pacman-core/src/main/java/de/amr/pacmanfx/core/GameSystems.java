@@ -16,13 +16,13 @@ import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.world.WorldRoamingSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
-import de.amr.pacmanfx.core.gamestate.EntityUpdateSystem;
+import de.amr.pacmanfx.core.gamestate.GameSimulation;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
 
-    protected final EntityUpdateSystem entityUpdateSystem = new EntityUpdateSystem();
+    protected final GameSimulation gameSimulation = new GameSimulation();
 
     protected final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
@@ -122,15 +122,15 @@ public class GameSystems {
 
     // Global systems
 
-    public EntityUpdateSystem entityUpdateSystem() {
-        return entityUpdateSystem;
+    public GameSimulation gameUpdateSystem() {
+        return gameSimulation;
     }
 
     public HUD_UpdateSystem hudUpdateSystem() {
         return hudUpdateSystem;
     }
 
-    public LifetimeSystem lifetime() {
+    public LifetimeSystem lifetimeSystem() {
         return lifetime;
     }
 
@@ -181,8 +181,7 @@ public class GameSystems {
 
     // Ghost systems
 
-
-    public GhostUpdateSystem ghostUpdate() {
+    public GhostUpdateSystem ghostUpdateSystem() {
         return ghostUpdateSystem;
     }
 
