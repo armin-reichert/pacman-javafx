@@ -12,10 +12,8 @@ import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
@@ -31,7 +29,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -290,32 +287,14 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         return true;
     }
 
-    //TODO This code belongs elsewhere and needs review
     private void handleGameEvent(GameEvent gameEvent) {
-        boolean forceGameSceneReload = false;
-        switch (gameEvent) {
-            case LevelCreatedEvent levelCreatedEvent -> {
-                final GameScene currentGameScene = gameSceneManager.currentGameScene();
-                final GamePlayView playView = gameViewManager.gamePlayView();
-                playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
-            }
+        gameViewManager.currentView().handleGameEvent(gameEvent);
 
-            case GenericChangeEvent _ -> forceGameSceneReload = true;
-
-            case HighScoreAccessErrorEvent failure -> {
-                ui.showMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
-                return;
-            }
-
-            default -> {}
-        }
-
+        //TODO check this
         if (gameSceneManager instanceof DefaultGameSceneManager defaultGameSceneManager) {
-            defaultGameSceneManager.updateGameSceneAndForceReload(this, forceGameSceneReload);
+            defaultGameSceneManager.updateGameSceneAndForceReload(this, gameEvent instanceof GenericChangeEvent);
         }
-        gameSceneManager.optCurrentGameScene()
-            .flatMap(GameScene::optGameEventHandler)
-            .ifPresent(handler -> handler.onGameEvent(gameEvent));
+        gameSceneManager.currentGameScene().optGameEventHandler().ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
 
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {

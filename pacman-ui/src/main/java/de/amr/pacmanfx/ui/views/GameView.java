@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views;
 
+import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.input.Input;
@@ -28,4 +29,6 @@ public interface GameView extends QuitHandler {
     void onEnter();
 
     void onExit();
+
+    void handleGameEvent(GameEvent gameEvent);
 }

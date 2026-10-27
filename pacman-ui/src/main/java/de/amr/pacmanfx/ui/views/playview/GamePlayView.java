@@ -6,10 +6,14 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameVariantRuntime;
+import de.amr.pacmanfx.core.event.GameEvent;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -30,8 +34,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
@@ -104,6 +110,18 @@ public class GamePlayView implements GameView {
         installMainSceneResizeHandler();
     }
 
+    @Override
+    public void handleGameEvent(GameEvent gameEvent) {
+        final GameSceneManager gameSceneManager = engine.gameSceneManager();
+        if (gameEvent instanceof LevelCreatedEvent levelCreatedEvent) {
+            final GameScene currentGameScene = gameSceneManager.currentGameScene();
+            acceptLevel(currentGameScene, levelCreatedEvent.level());
+        }
+        else if (gameEvent instanceof HighScoreAccessErrorEvent(IOException reason)) {
+            engine.ui().showMessage(Duration.seconds(5), "Accessing high score failed!\n%s", reason.getMessage());
+        }
+    }
+
     public Layers layers() {
         return layers;
     }
@@ -121,24 +139,6 @@ public class GamePlayView implements GameView {
     public void showHelp(String variantName) {
         requireNonNull(variantName);
         layers.helpLayer().popupHelpInfo(new HelpInfo(engine), 2, variantName);
-    }
-
-    public void acceptLevel(GameScene currentGameScene, GameLevel level) {
-        requireNonNull(currentGameScene);
-        requireNonNull(level);
-
-        if (!(currentGameScene instanceof AbstractGameScene gameScene)) {
-            Logger.error("Illegal game scene class {}", currentGameScene.getClass());
-            return;
-        }
-
-        final GameVariantUIConfig uiConfig = engine.uiConfig(engine.gameVariantManager().currentRuntime());
-
-        // Level changed: adjust game scene size by reembedding
-        layers.gameSceneLayer().embedGameScene(engine.ui(), uiConfig, gameScene);
-        layers.miniViewLayer().setLevel(level);
-
-        contextMenuManager.hideContextMenu();
     }
 
     public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
@@ -210,6 +210,24 @@ public class GamePlayView implements GameView {
     }
 
     // Private
+
+    private void acceptLevel(GameScene currentGameScene, GameLevel level) {
+        requireNonNull(currentGameScene);
+        requireNonNull(level);
+
+        if (!(currentGameScene instanceof AbstractGameScene gameScene)) {
+            Logger.error("Illegal game scene class {}", currentGameScene.getClass());
+            return;
+        }
+
+        final GameVariantUIConfig uiConfig = engine.uiConfig(engine.gameVariantManager().currentRuntime());
+
+        // Level changed: adjust game scene size by reembedding
+        layers.gameSceneLayer().embedGameScene(engine.ui(), uiConfig, gameScene);
+        layers.miniViewLayer().setLevel(level);
+
+        contextMenuManager.hideContextMenu();
+    }
 
     private void updateDashboard() {
         if (layers.overlayLayer().isVisible()) {

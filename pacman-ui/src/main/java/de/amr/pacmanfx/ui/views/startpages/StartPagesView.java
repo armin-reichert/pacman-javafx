@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineContext;
@@ -60,6 +61,9 @@ public class StartPagesView implements GameView {
             .map(i -> i == -1 ? null : pages.get(nextIndex(i)).title()
         ));
     }
+
+    @Override
+    public void handleGameEvent(GameEvent gameEvent) {}
 
     public void addPage(EngineContext engine, StartPage startPage) {
         requireNonNull(engine);
