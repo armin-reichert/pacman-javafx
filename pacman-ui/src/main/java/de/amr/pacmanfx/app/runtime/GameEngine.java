@@ -242,10 +242,9 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     @Override
     public void createNewSession() {
-        final var session = new GameSession(
-            gameVariantManager.currentVariantID(),
-            gameVariantManager.currentRuntime().gameRules().initialLifeCount()
-        );
+        final HUD hud = new HUD(gameVariantManager.currentVariantID());
+        final int numLives = gameVariantManager.currentRuntime().gameRules().initialLifeCount();
+        final var session = new GameSession(hud, numLives);
         currentGame.setSession(session);
     }
 
