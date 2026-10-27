@@ -103,6 +103,10 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         input = new Input();
 
+        if (!validateUserDirs()) {
+            throw new IllegalStateException("User directory validation failed");
+        }
+
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         simulation = new GameSimulation();
@@ -111,10 +115,6 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         gameVariantManager.currentVariantIDProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
-
-        if (!validateUserDirs()) {
-            throw new IllegalStateException("User directory validation failed");
-        }
 
         ui.setEngine(this);
         gameViewManager.init(this);
