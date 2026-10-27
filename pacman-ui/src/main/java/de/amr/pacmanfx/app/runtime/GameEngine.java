@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
+import de.amr.pacmanfx.core.gamestate.GameSimulation;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
@@ -71,6 +72,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     private final SpriteAnimationSystem spriteAnimationSystem;
 
+    private final GameSimulation simulation;
+
     private final GameUI ui;
 
     private GameContext currentGame;
@@ -104,6 +107,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         input = new Input();
 
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+
+        simulation = new GameSimulation();
 
         gameViewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
 
@@ -381,7 +386,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     private void simulate() {
         currentGame.session().newFrameState(clock.currentTick());
         try {
-            currentGame.runtime().systems().gameUpdateSystem().updateGame(currentGame);
+            simulation.updateGame(currentGame);
             // Now the current game scene is up-to-date!
             gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
         }

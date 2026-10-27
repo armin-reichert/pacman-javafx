@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSimulation {
+public final class GameSimulation {
 
     public void updateGame(GameContext game) {
         requireNonNull(game);
