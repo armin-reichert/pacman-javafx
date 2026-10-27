@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.app.runtime;
 
-import de.amr.basics.Named;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.rendering.RenderManager;
@@ -30,10 +29,8 @@ import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -108,8 +105,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        gameViewManager.currentViewIDProperty().addListener(
-            (_, oldViewID, newViewID) -> onViewChanged(oldViewID, newViewID));
+        gameViewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
 
         gameVariantManager.currentVariantIDProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
@@ -126,10 +122,10 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         requireNonNull(variantID);
         gameVariantManager.selectVariant(this, variantID.name());
 
-        gameViewManager.currentViewIDProperty().set(GameViewID.START_PAGES);
-        gameViewManager.assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
+        gameViewManager.selectStartPagesView();
+        gameViewManager.startPagesView().rootPane().setSelectedIndex(0);
 
-        gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().init(this);
+        gameViewManager.gamePlayView().dashboard().init(this);
 
         ui.show(uiConfig(currentGame.runtime()));
 
@@ -230,7 +226,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     public void startSession() {
         ui.mainScene().setGameSession(currentGame.session());
         currentGame.runtime().gamePlay().startSession(currentGame);
-        gameViewManager.currentViewIDProperty().set(GameViewID.GAMEPLAY);
+        gameViewManager.selectGamePlayView();
 
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
         clock.start();
@@ -296,7 +292,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameScene currentGameScene = gameSceneManager.currentGameScene();
-                final GamePlayView playView = gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+                final GamePlayView playView = gameViewManager.gamePlayView();
                 playView.acceptLevel(currentGameScene, levelCreatedEvent.level());
             }
 
@@ -361,16 +357,15 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         uiConfig(runtime).unload(this);
     }
 
-    private void onViewChanged(Named oldViewID, Named newViewID) {
-        if (oldViewID != null) {
-            gameViewManager.assertView(oldViewID).onExit();
+    private void onViewChanged(GameView oldView, GameView newView) {
+        if (oldView != null) {
+            oldView.onExit();
         }
-        final GameView newView = gameViewManager.assertView(newViewID);
         newView.onEnter();
 
         ui.clearShortMessage();
         ui.mainScene().replaceGameView(newView);
-        ui.stageTitleManager().update(this, newViewID);
+        ui.stageTitleManager().update(this, newView);
     }
 
     private void startBackgroundServices() {
@@ -400,8 +395,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     private void render() {
         try {
-            if (gameViewManager.isSelected(GameViewID.GAMEPLAY)) {
-                gameViewManager.assertView(GameViewID.GAMEPLAY, GamePlayView.class).render();
+            if (gameViewManager.isGamePlayViewSelected()) {
+                gameViewManager.gamePlayView().render();
             }
         } catch (Exception x) {
             fatalError(x);

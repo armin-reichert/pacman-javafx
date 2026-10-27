@@ -10,7 +10,6 @@ import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -30,7 +29,7 @@ public class EditorView implements GameView {
     public void ensureEditorCreated(EngineContext engine) {
         if (editor == null) {
             editor = new TileMapEditor(engine.ui().stage(), new Pac3DShapeFactory());
-            editor.setOnQuit(_ -> engine.viewManager().currentViewIDProperty().set(GameViewID.START_PAGES));
+            editor.setOnQuit(_ -> engine.viewManager().selectStartPagesView());
             final MenuItem miQuitEditor = new MenuItem(engine.translationManager().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);

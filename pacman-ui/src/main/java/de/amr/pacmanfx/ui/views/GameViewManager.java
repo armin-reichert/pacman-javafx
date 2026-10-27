@@ -4,29 +4,37 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
-
-import java.util.Optional;
 
 public interface GameViewManager {
 
     void init(EngineContext engine);
 
-    <V extends GameView> V assertView(Named id, Class<V> viewClass);
+    ObjectProperty<GameView> currentViewProperty();
 
-    default GameView assertView(Named id) {
-        return assertView(id, GameView.class);
+    default GameView currentView() {
+        return currentViewProperty().get();
     }
 
-    <V extends GameView> Optional<V> optView(Named id, Class<V> viewClass);
+    StartPagesView startPagesView();
 
-    ObjectProperty<Named> currentViewIDProperty();
+    void selectStartPagesView();
 
-    Named currentViewID();
+    boolean isStartPagesViewSelected();
 
-    Optional<GameView> optCurrentView();
+    GamePlayView gamePlayView();
 
-    boolean isSelected(Named id);
+    void selectGamePlayView();
+
+    boolean isGamePlayViewSelected();
+
+    EditorView editorView();
+
+    void selectEditorView();
+
+    boolean isEditorViewSelected();
 }

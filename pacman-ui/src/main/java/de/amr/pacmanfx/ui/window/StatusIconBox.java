@@ -7,7 +7,6 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
@@ -76,10 +75,8 @@ public class StatusIconBox implements Disposable {
         setTooltip(iconCheated,   engine.translationManager().translate("status_icon.cheated"));
 
         // Hide status icon box in editor view
-        rootPane().visibleProperty().bind(
-            viewManager.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
-                .or(viewManager.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
-        );
+        rootPane().visibleProperty().bind(viewManager.currentViewProperty()
+            .map(_ -> viewManager.isGamePlayViewSelected() || viewManager.isStartPagesViewSelected()));
 
         iconMuted.visibleProperty().bind(viewModel.muteProperty());
         icon3D.visibleProperty().bind(viewModel.common3DSettings().view3DEnabledProperty());

@@ -23,7 +23,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
     @Override
     public void update(EngineContext engine) {
         super.update(engine);
-        engine.viewManager().optCurrentView().ifPresent(view -> updateInfo(engine, view));
+        updateInfo(engine, engine.viewManager().currentView());
     }
 
     private void updateInfo(EngineContext engine, GameView view) {

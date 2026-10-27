@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -12,16 +11,17 @@ import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.util.EnumMap;
-import java.util.Optional;
-
 import static java.util.Objects.requireNonNull;
 
 public final class DefaultGameViewManager implements GameViewManager {
 
-    private final ObjectProperty<Named> currentViewID = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameView> currentView = new SimpleObjectProperty<>();
 
-    private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
+    private StartPagesView startPagesView;
+
+    private GamePlayView gamePlayView;
+
+    private EditorView editorView;
 
     public DefaultGameViewManager() {}
 
@@ -29,66 +29,60 @@ public final class DefaultGameViewManager implements GameViewManager {
     public void init(EngineContext engine) {
         requireNonNull(engine);
 
-        views.put(GameViewID.START_PAGES, new StartPagesView(engine.translationManager()));
-        views.put(GameViewID.GAMEPLAY, new GamePlayView(engine));
-        views.put(GameViewID.EDITOR, new EditorView());
+        startPagesView = new StartPagesView(engine.translationManager());
+        gamePlayView = new GamePlayView(engine);
+        editorView = new EditorView();
 
-        currentViewID.set(GameViewID.START_PAGES);
+        currentView.set(startPagesView);
     }
 
     @Override
-    public ObjectProperty<Named> currentViewIDProperty() {
-        return currentViewID;
+    public ObjectProperty<GameView> currentViewProperty() {
+        return currentView;
     }
 
     @Override
-    public Named currentViewID() {
-        return currentViewID.get();
+    public StartPagesView startPagesView() {
+        return startPagesView;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <GV extends GameView> GV assertView(Named viewID, Class<GV> gameViewClass) {
-        requireNonNull(viewID);
-        requireNonNull(gameViewClass);
-
-        if (!(viewID instanceof GameViewID)) {
-            throw new IllegalArgumentException(viewID + " is not a GameViewID");
-        }
-        final GameView gameView = views.get(viewID);
-        if (gameView == null) {
-            throw new IllegalStateException("No view found for ID: " + viewID);
-        }
-        if (!gameViewClass.isInstance(gameView)) {
-            throw new IllegalStateException(
-                "View for ID " + viewID + " is not of expected type " + gameViewClass.getName() +
-                    " but was " + gameView.getClass().getName()
-            );
-        }
-        return (GV) gameView;
+    public void selectStartPagesView() {
+        currentView.set(startPagesView);
     }
 
     @Override
-    public Optional<GameView> optCurrentView() {
-        return optView(currentViewID(), GameView.class);
+    public boolean isStartPagesViewSelected() {
+        return currentView() == startPagesView;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <GV extends GameView> Optional<GV> optView(Named viewID, Class<GV> gameViewClass) {
-        requireNonNull(viewID);
-        requireNonNull(gameViewClass);
-
-        if (!(viewID instanceof GameViewID)) {
-            throw new IllegalArgumentException(viewID + " is not a GameViewID");
-        }
-        final GameView view = views.get(viewID);
-        return gameViewClass.isInstance(view) ? Optional.of((GV) view) : Optional.empty();
+    public GamePlayView gamePlayView() {
+        return gamePlayView;
     }
 
     @Override
-    public boolean isSelected(Named id) {
-        requireNonNull(id);
-        return currentViewID().name().equals(id.name());
+    public void selectGamePlayView() {
+        currentView.set(gamePlayView);
+    }
+
+    @Override
+    public boolean isGamePlayViewSelected() {
+        return currentView() == gamePlayView;
+    }
+
+    @Override
+    public EditorView editorView() {
+        return editorView;
+    }
+
+    @Override
+    public void selectEditorView() {
+        currentView.set(editorView);
+    }
+
+    @Override
+    public boolean isEditorViewSelected() {
+        return currentView() == editorView;
     }
 }

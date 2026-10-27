@@ -69,7 +69,7 @@ public class MainScene {
 
         sceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(engine.gameSceneManager()),
-            engine.viewManager().currentViewIDProperty(),
+            engine.viewManager().currentViewProperty(),
             engine.gameSceneManager().currentGameSceneProperty()
         ));
 

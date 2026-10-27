@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineContext;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -132,7 +131,7 @@ public class SimulationActions {
 
             @Override
             public boolean isEnabled(EngineContext engine) {
-                return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
+                return engine.viewManager().isGamePlayViewSelected();
             }
         };
 

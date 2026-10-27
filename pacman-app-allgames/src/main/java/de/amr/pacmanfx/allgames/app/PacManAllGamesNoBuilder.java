@@ -29,7 +29,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
@@ -87,7 +86,7 @@ public class PacManAllGamesNoBuilder extends Application {
             new SpriteAnimationSystem(60)
         );
 
-        final StartPagesView startPages = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPages = engine.viewManager().startPagesView();
         startPages.addPage(engine, new ArcadePacMan_StartPage());
         startPages.addPage(engine, new ArcadeMsPacMan_StartPage());
         startPages.addPage(engine, new TengenMsPacMan_StartPage());
@@ -96,7 +95,7 @@ public class PacManAllGamesNoBuilder extends Application {
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
 
-        final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engine.viewManager().gamePlayView();
         playView.populateDashboard(TengenDashboardFactory.instance());
 
         engine.showGameVariant(GameVariantID.ARCADE_PACMAN);

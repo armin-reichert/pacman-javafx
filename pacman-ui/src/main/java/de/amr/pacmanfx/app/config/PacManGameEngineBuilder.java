@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.DefaultGameViewManager;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -123,10 +122,10 @@ public class PacManGameEngineBuilder {
 
             // Requires that UI has been assigned to game:
 
-            final StartPagesView startPagesView = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+            final StartPagesView startPagesView = engine.viewManager().startPagesView();
             createStartPages().forEach(page -> startPagesView.addPage(engine, page));
 
-            final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+            final GamePlayView playView = engine.viewManager().gamePlayView();
             playView.populateDashboard(dashboardFactory);
 
             return Optional.of(engine);

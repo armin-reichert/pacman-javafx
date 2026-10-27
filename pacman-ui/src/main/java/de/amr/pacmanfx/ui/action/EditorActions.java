@@ -85,7 +85,7 @@ public class EditorActions {
 
     private Optional<TileMapEditor> openMapEditor(EngineContext engine) {
         final GameUI ui = engine.ui();
-        final EditorView editorView = engine.viewManager().assertView(GameViewID.EDITOR, EditorView.class);
+        final EditorView editorView = engine.viewManager().editorView();
         editorView.ensureEditorCreated(engine);
         if (!trySelectEditorView(engine)) {
             ui.showMessage("Cannot open the map editor.");
@@ -96,12 +96,8 @@ public class EditorActions {
 
     private boolean trySelectEditorView(EngineContext engine) {
         requireNonNull(engine);
-        if (engine.viewManager().optView(GameViewID.EDITOR, EditorView.class).isEmpty()) {
-            Logger.info("Editor view has not been created yet");
-            return false;
-        }
         if (canOpenEditor(engine)) {
-            engine.viewManager().currentViewIDProperty().set(GameViewID.EDITOR);
+            engine.viewManager().selectEditorView();
             return true;
         }
         else {
@@ -111,10 +107,10 @@ public class EditorActions {
     }
 
     private boolean canOpenEditor(EngineContext engine) {
-        if (engine.viewManager().isSelected(GameViewID.START_PAGES)) {
+        if (engine.viewManager().isStartPagesViewSelected()) {
             return true;
         }
-        if (engine.viewManager().isSelected(GameViewID.GAMEPLAY)) {
+        if (engine.viewManager().isGamePlayViewSelected()) {
             if (engine.optCurrentGame().isEmpty()) return true;
             return !engine.optCurrentGame().get().session().booleanValue(SessionKey.GAME_RUNNING);
         }

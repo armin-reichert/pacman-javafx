@@ -10,9 +10,9 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSyste
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -81,7 +80,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         }
         nextGameScene.activate();
 
-        final GamePlayView playView = engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class);
+        final GamePlayView playView = engine.viewManager().gamePlayView();
         playView.replaceGameScene(currentGameScene(), nextGameScene);
 
         session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));

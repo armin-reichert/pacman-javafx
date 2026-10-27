@@ -9,13 +9,12 @@ import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.GameVariantRuntime;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -138,7 +137,7 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        final StartPagesView startPagesView = engine.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPagesView = engine.viewManager().startPagesView();
         startPagesView.rootPane().pauseProgress();
     }
 

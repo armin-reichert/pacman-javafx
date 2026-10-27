@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.basics.Named;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameVariantRuntime;
@@ -12,8 +11,7 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.editor.EditorView;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.beans.binding.StringBinding;
 import javafx.stage.Stage;
 
@@ -39,13 +37,13 @@ public class StageTitleManager {
         stage.titleProperty().bind(startAndPlayViewBinding);
     }
 
-    public void update(EngineContext engine, Named viewID) {
-        if (viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY) {
+    public void update(EngineContext engine, GameView view) {
+        final GameViewManager viewManager = engine.viewManager();
+        if (view == viewManager.startPagesView() || view == viewManager.gamePlayView()) {
             stage.titleProperty().bind(startAndPlayViewBinding);
         }
-        else if (viewID == GameViewID.EDITOR) {
-            engine.viewManager().optView(GameViewID.EDITOR, EditorView.class)
-                .flatMap(EditorView::optTitleSupplier).ifPresent(supplier -> {
+        else if (view == viewManager.editorView()) {
+            viewManager.editorView().optTitleSupplier().ifPresent(supplier -> {
                 stage.titleProperty().unbind();
                 stage.setTitle(supplier.get());
             });
@@ -57,11 +55,11 @@ public class StageTitleManager {
     private StringBinding createStartAndPlayViewTitleBinding(EngineContext engine) {
         return createStringBinding(
             () -> {
-                final Named id = engine.viewManager().currentViewID();
-                if (id == GameViewID.START_PAGES || id == GameViewID.GAMEPLAY) {
+                final GameViewManager viewManager = engine.viewManager();
+                if (viewManager.isStartPagesViewSelected() || viewManager.isGamePlayViewSelected()) {
                     return optCurrentViewTitle(engine).orElse(titleForCurrentGameScene(engine));
                 }
-                if (id == GameViewID.EDITOR) {
+                if (viewManager.isEditorViewSelected()) {
                     return optCurrentViewTitle(engine).orElse(("Map Editor"));
                 }
                 return "";
@@ -71,12 +69,12 @@ public class StageTitleManager {
             engine.clock().updatesDisabledProperty(),
             engine.ui().viewModel().debugModeOnProperty(),
             engine.ui().viewModel().common3DSettings().view3DEnabledProperty(),
-            engine.viewManager().currentViewIDProperty()
+            engine.viewManager().currentViewProperty()
         );
     }
 
     private Optional<String> optCurrentViewTitle(EngineContext engine) {
-        final GameView currentView = engine.viewManager().optCurrentView().orElse(null);
+        final GameView currentView = engine.viewManager().currentView();
         return currentView == null ? Optional.empty() : currentView.optTitleSupplier().map(Supplier::get);
     }
 

@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
@@ -13,7 +12,8 @@ import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.MainScene;
 import de.amr.pacmanfx.ui.window.StageTitleManager;
@@ -152,26 +152,28 @@ public class GameUI {
     // private
 
     private void connectKeyboard(EngineContext engine) {
-        engine.input().keyboard().enabledProperty().bind(engine.viewManager().currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
-        engine.input().keyboard().addStateListener(kb -> handleKeyboardStateChange(engine, kb));
-        engine.input().keyboard().filterKeyEventsFrom(mainScene.scene());
+        final Keyboard keyboard = engine.input().keyboard();
+        keyboard.enabledProperty().bind(engine.viewManager().currentViewProperty()
+            .map(view -> viewAcceptsKeyboardInput(engine.viewManager(), view)));
+        keyboard.addStateListener(kb -> handleKeyboardStateChange(engine, kb));
+        keyboard.filterKeyEventsFrom(mainScene.scene());
     }
 
     private void handleKeyboardStateChange(EngineContext engine, Keyboard keyboard) {
         if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
-            final Named currentViewID = engine.viewManager().currentViewID();
-            if (viewAcceptsKeyboardInput(currentViewID)) {
+            final GameView currentView = engine.viewManager().currentView();
+            if (viewAcceptsKeyboardInput(engine.viewManager(), currentView)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (executeMatchingAction(actionBindings, engine).isEmpty()) {
-                    engine.viewManager().assertView(currentViewID).onInput(engine.input());
+                    engine.viewManager().currentView().onInput(engine.input());
                 }
             }
         }
     }
 
     //TODO improve
-    private static boolean viewAcceptsKeyboardInput(Named viewID) {
-        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
+    private static boolean viewAcceptsKeyboardInput(GameViewManager viewManager, GameView view) {
+        return view == viewManager.startPagesView() || view == viewManager.gamePlayView();
     }
 
     private void bindCommonActions() {

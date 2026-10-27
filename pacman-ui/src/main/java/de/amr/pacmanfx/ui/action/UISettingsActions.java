@@ -13,8 +13,6 @@ import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
-import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.input.KeyCode;
 
@@ -49,7 +47,7 @@ public class UISettingsActions {
             @Override
             public void execute(EngineContext engine) {
                 final String variantName = engine.gameVariantManager().currentVariantID();
-                engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).showHelp(variantName);
+                engine.viewManager().gamePlayView().showHelp(variantName);
             }
 
             @Override
@@ -67,12 +65,12 @@ public class UISettingsActions {
         actionToggleDashboard = new GameAction<>("toggle_dashboard") {
             @Override
             public void execute(EngineContext engine) {
-                engine.viewManager().assertView(GameViewID.GAMEPLAY, GamePlayView.class).dashboard().toggleVisibility();
+                engine.viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
             public boolean isEnabled(EngineContext engine) {
-                return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
+                return engine.viewManager().isGamePlayViewSelected();
             }
         };
 
@@ -125,7 +123,7 @@ public class UISettingsActions {
 
             @Override
             public boolean isEnabled(EngineContext engine) {
-                return engine.viewManager().isSelected(GameViewID.GAMEPLAY);
+                return engine.viewManager().isGamePlayViewSelected();
             }
 
             private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {

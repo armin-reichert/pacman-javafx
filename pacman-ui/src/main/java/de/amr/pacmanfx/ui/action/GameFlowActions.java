@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineContext;
@@ -38,7 +37,7 @@ public class GameFlowActions {
         actionQuit = new GameAction<>("quit") {
             @Override
             public void execute(EngineContext engine) {
-                engine.viewManager().optCurrentView().ifPresent(QuitHandler::onQuit);
+                engine.viewManager().currentView().onQuit();
             }
         };
 
