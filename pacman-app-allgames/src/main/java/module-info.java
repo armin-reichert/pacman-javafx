@@ -17,6 +17,7 @@ module de.amr.pacmanfx.allgames {
     requires de.amr.pacmanfx.arcade.pacman_xxl;
     requires de.amr.pacmanfx.tengenmspacman;
     requires de.amr.basics.ui;
+    requires pacman.javafx.pacman.app;
 
     exports de.amr.pacmanfx.allgames.app;
 }

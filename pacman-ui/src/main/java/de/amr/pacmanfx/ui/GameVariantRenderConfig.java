@@ -2,7 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.app.config;
+package de.amr.pacmanfx.ui;
+
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ecs.GameEntity;
@@ -51,4 +52,3 @@ public interface GameVariantRenderConfig extends Disposable {
 
     Image createBonusPointsImage(int bonusCode);
 }
-

@@ -6,12 +6,12 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.gamescene.GameSceneEmbedding;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
+import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;

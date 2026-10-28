@@ -12,6 +12,7 @@ dependencies {
         project(":pacman-ui-lib"),
         project(":pacman-engine"),
         project(":pacman-ui"),
+        project(":pacman-app"),
         libs.bundles.tinylog
     )
     testImplementation(libs.junit.jupiter.api)

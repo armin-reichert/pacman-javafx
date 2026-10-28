@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.app.config.GameVariantUIConfig;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;

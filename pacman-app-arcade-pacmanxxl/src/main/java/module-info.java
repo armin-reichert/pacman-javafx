@@ -21,6 +21,7 @@ open module de.amr.pacmanfx.arcade.pacman_xxl {
     requires de.amr.pacmanfx.arcade.pacman;
     requires jdk.jfr;
     requires java.xml; requires de.amr.pacmanfx.engine;
+    requires pacman.javafx.pacman.app;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl.app;
     exports de.amr.pacmanfx.arcade.pacman_xxl.common;

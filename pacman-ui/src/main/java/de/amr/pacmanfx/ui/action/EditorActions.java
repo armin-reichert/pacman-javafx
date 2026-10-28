@@ -11,7 +11,6 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.EngineContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;

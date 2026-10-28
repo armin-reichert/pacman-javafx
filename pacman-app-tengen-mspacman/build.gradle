@@ -12,6 +12,7 @@ dependencies {
         project(":pacman-engine"),
         project(":pacman-ui-lib"),
         project(":pacman-ui"),
+        project(":pacman-app"),
         libs.bundles.tinylog,
         libs.gson
     )

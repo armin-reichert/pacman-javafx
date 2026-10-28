@@ -16,6 +16,7 @@ dependencies {
         project(":pacman-engine"),
         project(":pacman-ui-lib"),
         project(":pacman-ui"),
+        project(":pacman-app"),
         project(":pacman-app-arcade-pacman"),
         project(":pacman-app-arcade-pacmanxxl"),
         project(":pacman-app-arcade-mspacman"),

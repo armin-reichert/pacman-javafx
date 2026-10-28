@@ -32,6 +32,7 @@ include(
         "pacman-engine",
         "pacman-ui-lib",
         "pacman-ui",
+        "pacman-app",
         "pacman-app-arcade-pacman",
         "pacman-app-arcade-mspacman",
         "pacman-app-arcade-pacmanxxl",
