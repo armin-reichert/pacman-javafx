@@ -115,7 +115,7 @@ public class UISettingsActions {
                     if (isLevelPlaying(game.state())) {
                         if (engine.gameSceneManager() instanceof DefaultGameSceneManager defaultGameSceneManager) {
                             //TODO This is dubious, must be revisited
-                            defaultGameSceneManager.forceGameSceneUpdate(engine);
+                            defaultGameSceneManager.reloadGameScene(engine);
                         }
                     }
                 });

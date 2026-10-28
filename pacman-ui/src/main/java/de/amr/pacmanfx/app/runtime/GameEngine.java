@@ -288,8 +288,10 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         gameViewManager.currentView().handleGameEvent(gameEvent);
 
         //TODO check this
+        final GameVariantRuntime runtime = gameVariantManager.currentRuntime();
+        final boolean reload = gameEvent instanceof GenericChangeEvent;
         if (gameSceneManager instanceof DefaultGameSceneManager defaultGameSceneManager) {
-            defaultGameSceneManager.updateGameSceneAndForceReload(this, gameEvent instanceof GenericChangeEvent);
+            defaultGameSceneManager.updateGameSceneWithReload(this, uiConfig(runtime), reload);
         }
         gameSceneManager.currentGameScene().optGameEventHandler().ifPresent(handler -> handler.onGameEvent(gameEvent));
     }
@@ -318,6 +320,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         spriteAnimationSystem.start();
 
         gameEventManager.addSubscriber(this::handleGameEvent);
+
+        //TODO This does not belomg here
         gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
         gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
 
