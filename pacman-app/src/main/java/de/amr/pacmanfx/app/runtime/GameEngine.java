@@ -12,9 +12,6 @@ import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
-import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
@@ -318,10 +315,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         spriteAnimationSystem.start();
 
         currentGame.eventManager().addSubscriber(this::handleGameEvent);
-
-        //TODO This does not belong here
-        //currentGame.eventManager().addSubscriber(new PacEatingEventHandler(currentGame));
-        //currentGame.eventManager().addSubscriber(new PacPowerEventHandler(currentGame));
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
