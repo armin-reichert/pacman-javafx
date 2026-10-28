@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.window;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -31,13 +31,13 @@ public class StageTitleManager {
 
     private final Stage stage;
 
-    public StageTitleManager(EngineContext engine, Stage stage) {
+    public StageTitleManager(EngineUIContext engine, Stage stage) {
         this.stage = requireNonNull(stage);
         startAndPlayViewBinding = createStartAndPlayViewTitleBinding(engine);
         stage.titleProperty().bind(startAndPlayViewBinding);
     }
 
-    public void update(EngineContext engine, GameView view) {
+    public void update(EngineUIContext engine, GameView view) {
         final GameViewManager viewManager = engine.viewManager();
         if (view == viewManager.startPagesView() || view == viewManager.gamePlayView()) {
             stage.titleProperty().bind(startAndPlayViewBinding);
@@ -52,7 +52,7 @@ public class StageTitleManager {
 
     // Private area
 
-    private StringBinding createStartAndPlayViewTitleBinding(EngineContext engine) {
+    private StringBinding createStartAndPlayViewTitleBinding(EngineUIContext engine) {
         return createStringBinding(
             () -> {
                 final GameViewManager viewManager = engine.viewManager();
@@ -73,12 +73,12 @@ public class StageTitleManager {
         );
     }
 
-    private Optional<String> optCurrentViewTitle(EngineContext engine) {
+    private Optional<String> optCurrentViewTitle(EngineUIContext engine) {
         final GameView currentView = engine.viewManager().currentView();
         return currentView == null ? Optional.empty() : currentView.optTitleSupplier().map(Supplier::get);
     }
 
-    private String titleForCurrentGameScene(EngineContext engine) {
+    private String titleForCurrentGameScene(EngineUIContext engine) {
         final GameScene gameScene = engine.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = engine.ui().viewModel();
 
@@ -92,7 +92,7 @@ public class StageTitleManager {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(EngineContext engine, boolean paused, boolean is3D) {
+    private String stageTitle(EngineUIContext engine, boolean paused, boolean is3D) {
         final String gameVariantName = engine.gameVariantManager().currentVariantID();
         if (gameVariantName == null) {
             return "";

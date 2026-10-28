@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.GameVariantRuntime;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -41,7 +41,7 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
-    private EngineContext engine;
+    private EngineUIContext engine;
 
     private final Timeline chaseAnimationTimer;
     private XXL_ChaseAnimation chaseAnimation;
@@ -115,7 +115,7 @@ public class XXL_OptionMenu extends OptionMenu {
         );
     }
 
-    public void init(EngineContext engine) {
+    public void init(EngineUIContext engine) {
         this.engine = engine;
 
         final String variantName = engine.gameVariantManager().currentVariantID();

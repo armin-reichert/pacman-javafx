@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -45,9 +45,9 @@ public final class CommonGameActions {
     private final TestActions sceneTestActions;
     private final UISettingsActions uiSettingsActions;
 
-    private final GameAction<EngineContext> actionToggleCollisionStrategy;
+    private final GameAction<EngineUIContext> actionToggleCollisionStrategy;
 
-    private final Set<ActionKeyBinding<EngineContext>> commonBindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> commonBindings;
 
     private CommonGameActions() {
         simulationActions = new SimulationActions();
@@ -61,7 +61,7 @@ public final class CommonGameActions {
 
         actionToggleCollisionStrategy = new GameAction<>("toggle_collision_strategy") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final ActorCollisionRules collisionRules = game.runtime().gameRules().actorCollisionRules();
                     final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
@@ -72,7 +72,7 @@ public final class CommonGameActions {
             }
         };
 
-        final Set<ActionKeyBinding<EngineContext>> bindings = new HashSet<>();
+        final Set<ActionKeyBinding<EngineUIContext>> bindings = new HashSet<>();
         bindings.addAll(simulationActions.bindings());
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(editorActions.bindings());
@@ -114,11 +114,11 @@ public final class CommonGameActions {
         return uiSettingsActions;
     }
 
-    public GameAction<EngineContext> actionToggleCollisionStrategy() {
+    public GameAction<EngineUIContext> actionToggleCollisionStrategy() {
         return actionToggleCollisionStrategy;
     }
 
-    public Set<ActionKeyBinding<EngineContext>> bindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> bindings() {
         return commonBindings;
     }
 }

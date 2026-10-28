@@ -8,7 +8,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -47,7 +47,7 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
 
-    protected EngineContext engine;
+    protected EngineUIContext engine;
 
     protected AbstractGameScene gameScene;
 
@@ -83,7 +83,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setEngine(EngineContext engine) {
+    public void setEngine(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
         init(engine, config.gameVariant());
     }
@@ -115,7 +115,7 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    protected GameStartButton createStartButton(EngineContext engine) {
+    protected GameStartButton createStartButton(EngineUIContext engine) {
         final var button = new GameStartButton("START!");
         button.setOnAction(_ -> {
             runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engine);
@@ -129,7 +129,7 @@ public class FlyerStartPage implements StartPage {
         return button;
     }
 
-    private void init(EngineContext engine, String gameVariantName) {
+    private void init(EngineUIContext engine, String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;

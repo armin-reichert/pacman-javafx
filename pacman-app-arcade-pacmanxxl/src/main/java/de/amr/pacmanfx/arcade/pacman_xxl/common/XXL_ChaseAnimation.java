@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.GameVariantRuntime;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 
@@ -67,12 +67,12 @@ class XXL_ChaseAnimation {
         this.offsetY = offsetY;
     }
 
-    public void init(EngineContext engine, GameVariantRuntime runtime) {
+    public void init(EngineUIContext engine, GameVariantRuntime runtime) {
         createPac(engine, runtime);
         createGhosts(engine, runtime);
     }
 
-    public void simulate(EngineContext engine, GameVariantRuntime runtime) {
+    public void simulate(EngineUIContext engine, GameVariantRuntime runtime) {
         switch (state) {
             case GHOSTS_CHASING_PAC -> letGhostsChasePacMan(runtime);
             case PAC_CHASING_GHOSTS -> letPacManChaseGhosts(engine, runtime);
@@ -95,7 +95,7 @@ class XXL_ChaseAnimation {
             .build();
     }
 
-    private void createPac(EngineContext engine, GameVariantRuntime runtime) {
+    private void createPac(EngineUIContext engine, GameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig =  engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
@@ -116,7 +116,7 @@ class XXL_ChaseAnimation {
         pacView = createView(pac);
     }
 
-    private void createGhosts(EngineContext engine, GameVariantRuntime runtime) {
+    private void createGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
@@ -130,7 +130,7 @@ class XXL_ChaseAnimation {
         ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));
     }
 
-    private void letPacManChaseGhosts(EngineContext engine, GameVariantRuntime runtime) {
+    private void letPacManChaseGhosts(EngineUIContext engine, GameVariantRuntime runtime) {
         if (ghosts.isEmpty()) {
             createGhosts(engine, runtime);
             collisionCount = 0;

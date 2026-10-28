@@ -15,7 +15,7 @@ import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
 
-    protected EngineContext engine;
+    protected EngineUIContext engine;
 
     public AbstractGameScene() {
         final var view2D = new GameSceneView2D();
@@ -37,7 +37,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
         view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
         setComponent(GameSceneView2D.class, view2D);
 
-        final ActionBindingsRegistry<EngineContext> actionBindings = new DefaultActionBindingsRegistry<>(
+        final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>(
             "Action Bindings for '%s'".formatted(this));
         setComponent(ActionBindingsRegistry.class, actionBindings);
     }
@@ -49,7 +49,7 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
     }
 
     @SuppressWarnings("unchecked")
-    public ActionBindingsRegistry<EngineContext> actionBindingsRegistry() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindingsRegistry() {
         return assertComponent(ActionBindingsRegistry.class);
     }
 
@@ -82,11 +82,11 @@ public abstract class AbstractGameScene extends Composition<Object> implements G
 
     // Accessors
 
-    public EngineContext engine() {
+    public EngineUIContext engine() {
         return engine;
     }
 
-    public final void setEngine(EngineContext engine) {
+    public final void setEngine(EngineUIContext engine) {
         requireNonNull(engine);
         if (this.engine != null) {
             Logger.debug("Engine already assigned to game scene {}", this);

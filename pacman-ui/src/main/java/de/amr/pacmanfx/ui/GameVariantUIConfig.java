@@ -17,9 +17,9 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    void load(EngineContext engine);
+    void load(EngineUIContext engine);
 
-    void unload(EngineContext engine);
+    void unload(EngineUIContext engine);
 
     /**
      * @return the game scene configuration (mapping game states to game scenes).

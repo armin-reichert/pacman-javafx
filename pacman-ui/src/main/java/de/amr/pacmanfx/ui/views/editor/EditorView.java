@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import javafx.scene.control.MenuItem;
@@ -27,7 +27,7 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(EngineContext engine) {
+    public void ensureEditorCreated(EngineUIContext engine) {
         if (editor == null) {
             editor = new TileMapEditor(engine.ui().stage(), new Pac3DShapeFactory());
             editor.setOnQuit(_ -> engine.viewManager().selectStartPagesView());
@@ -46,7 +46,7 @@ public class EditorView implements GameView {
     public void handleGameEvent(GameEvent gameEvent) {}
 
     @Override
-    public ActionBindingsRegistry<EngineContext> actionBindings() { return ActionBindingsRegistry.empty(); }
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() { return ActionBindingsRegistry.empty(); }
 
     @Override
     public void onEnter() {

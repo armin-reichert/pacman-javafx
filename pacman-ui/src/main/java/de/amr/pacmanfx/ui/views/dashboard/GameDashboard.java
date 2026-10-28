@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import org.tinylog.Logger;
 
@@ -22,7 +22,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
     }
 
     public void populate(
-        EngineContext engine,
+        EngineUIContext engine,
         DashboardFactory dashboardFactory,
         List<DashboardSectionSettings> sectionSettings)
     {
@@ -40,11 +40,11 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         }
     }
 
-    public void init(EngineContext engine) {
+    public void init(EngineUIContext engine) {
         sections().forEach(section -> section.init(engine));
     }
 
-    public void update(EngineContext engine) {
+    public void update(EngineUIContext engine) {
         requireNonNull(engine);
         sections()
             .filter(GameDashboardSection::isExpanded)

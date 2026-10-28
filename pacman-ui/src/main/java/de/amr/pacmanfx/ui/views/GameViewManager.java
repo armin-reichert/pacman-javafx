@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -12,7 +12,7 @@ import javafx.beans.property.ObjectProperty;
 
 public interface GameViewManager {
 
-    void init(EngineContext engine);
+    void init(EngineUIContext engine);
 
     ObjectProperty<GameView> currentViewProperty();
 

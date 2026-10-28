@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import javafx.scene.input.KeyCode;
 
@@ -31,16 +31,16 @@ public final class Arcade_Actions {
         return SingletonHolder.SINGLETON;
     }
 
-    private final GameAction<EngineContext> actionInsertCoin;
-    private final GameAction<EngineContext> actionStartPlaying;
+    private final GameAction<EngineUIContext> actionInsertCoin;
+    private final GameAction<EngineUIContext> actionStartPlaying;
 
-    private final Set<ActionKeyBinding<EngineContext>> gameStartActionBindings;
+    private final Set<ActionKeyBinding<EngineUIContext>> gameStartActionBindings;
 
     private Arcade_Actions() {
 
         actionInsertCoin = new GameAction<>("insert_coin") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
                     engine.soundManager().voice().stop();
@@ -53,7 +53,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext engine) {
+            public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -74,14 +74,14 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.soundManager().voice().stop();
                 engine.optCurrentGame().ifPresent(game ->
                     game.runtime().gameFlow().enterState(game, Arcade_GameState.GAME_OR_LEVEL_STARTING.state()));
             }
 
             @Override
-            public boolean isEnabled(EngineContext engine) {
+            public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game == null) return false;
 
@@ -101,15 +101,15 @@ public final class Arcade_Actions {
         );
     }
 
-    public GameAction<EngineContext> actionInsertCoin() {
+    public GameAction<EngineUIContext> actionInsertCoin() {
         return actionInsertCoin;
     }
 
-    public GameAction<EngineContext> actionStartPlaying() {
+    public GameAction<EngineUIContext> actionStartPlaying() {
         return actionStartPlaying;
     }
 
-    public Set<ActionKeyBinding<EngineContext>> gameStartActionBindings() {
+    public Set<ActionKeyBinding<EngineUIContext>> gameStartActionBindings() {
         return gameStartActionBindings;
     }
 }

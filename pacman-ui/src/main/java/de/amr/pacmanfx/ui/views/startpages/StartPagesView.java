@@ -8,7 +8,7 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -65,7 +65,7 @@ public class StartPagesView implements GameView {
     @Override
     public void handleGameEvent(GameEvent gameEvent) {}
 
-    public void addPage(EngineContext engine, StartPage startPage) {
+    public void addPage(EngineUIContext engine, StartPage startPage) {
         requireNonNull(engine);
         requireNonNull(startPage);
 
@@ -104,7 +104,7 @@ public class StartPagesView implements GameView {
     public void onQuit() {}
 
     @Override
-    public ActionBindingsRegistry<EngineContext> actionBindings() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() {
         return ActionBindingsRegistry.empty();
     }
 

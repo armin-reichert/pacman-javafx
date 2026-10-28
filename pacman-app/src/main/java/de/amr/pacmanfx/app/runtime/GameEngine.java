@@ -22,7 +22,7 @@ import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class GameEngine implements EngineLifecycle, EngineContext, TranslationManager {
+public final class GameEngine implements EngineLifecycle, EngineUIContext, TranslationManager {
 
     private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
         "de.amr.pacmanfx.ui.localized_texts", GameEngine.class.getModule());

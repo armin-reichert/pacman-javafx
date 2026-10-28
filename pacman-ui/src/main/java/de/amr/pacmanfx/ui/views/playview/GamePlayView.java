@@ -14,7 +14,7 @@ import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -56,15 +56,15 @@ public class GamePlayView implements GameView {
         StackPane iconLayer)
     {}
 
-    private final ActionBindingsRegistry<EngineContext> actionBindings;
+    private final ActionBindingsRegistry<EngineUIContext> actionBindings;
     private final StackPane root;
     private final Layers layers;
     private final GameDashboard dashboard;
-    private final EngineContext engine;
+    private final EngineUIContext engine;
     private final ContextMenuManager contextMenuManager;
     private final GamePlayViewRenderer renderer = new GamePlayViewRenderer(this);
 
-    public GamePlayView(EngineContext engine) {
+    public GamePlayView(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
 
         actionBindings = new DefaultActionBindingsRegistry<>("Action Bindings for GamePlayView");
@@ -168,7 +168,7 @@ public class GamePlayView implements GameView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingsRegistry<EngineContext> actionBindings() {
+    public ActionBindingsRegistry<EngineUIContext> actionBindings() {
         return actionBindings;
     }
 

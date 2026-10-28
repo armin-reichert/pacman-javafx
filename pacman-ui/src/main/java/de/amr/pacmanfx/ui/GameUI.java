@@ -42,7 +42,7 @@ public class GameUI {
 
     private final GameViewModel viewModel;
 
-    private final ActionBindingsRegistry<EngineContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
+    private final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>("Global Action Bindings");
 
     private StageTitleManager stageTitleManager;
 
@@ -62,7 +62,7 @@ public class GameUI {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setEngine(EngineContext engine) {
+    public void setEngine(EngineUIContext engine) {
         stageTitleManager = new StageTitleManager(engine, stage);
         mainScene.setEngine(engine);
         engine.soundManager().muteProperty().bind(viewModel.muteProperty());
@@ -73,7 +73,7 @@ public class GameUI {
         Logger.info(actionBindings);
     }
 
-    public void initForGameVariant(EngineContext engine, GameVariantUIConfig uiConfig) {
+    public void initForGameVariant(EngineUIContext engine, GameVariantUIConfig uiConfig) {
         uiConfig.load(engine);
         viewModel.maze3DSettings().init(uiConfig.worldSettings().maze());
         updateAppIcon(uiConfig);
@@ -150,7 +150,7 @@ public class GameUI {
 
     // private
 
-    private void connectKeyboard(EngineContext engine) {
+    private void connectKeyboard(EngineUIContext engine) {
         final Keyboard keyboard = engine.input().keyboard();
         keyboard.enabledProperty().bind(engine.viewManager().currentViewProperty()
             .map(view -> viewAcceptsKeyboardInput(engine.viewManager(), view)));
@@ -158,7 +158,7 @@ public class GameUI {
         keyboard.filterKeyEventsFrom(mainScene.scene());
     }
 
-    private void handleKeyboardStateChange(EngineContext engine, Keyboard keyboard) {
+    private void handleKeyboardStateChange(EngineUIContext engine, Keyboard keyboard) {
         if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
             final GameView currentView = engine.viewManager().currentView();
             if (viewAcceptsKeyboardInput(engine.viewManager(), currentView)) {
@@ -176,7 +176,7 @@ public class GameUI {
     }
 
     private void bindCommonActions() {
-        final Set<ActionKeyBinding<EngineContext>> commonActionBindings = CommonGameActions.instance().bindings();
+        final Set<ActionKeyBinding<EngineUIContext>> commonActionBindings = CommonGameActions.instance().bindings();
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionToggleKeyboardMonitor(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().uiSettingsActions().actionEnterFullScreen(), commonActionBindings);
         actionBindings.selectAnyMatchingBinding(CommonGameActions.instance().simulationActions().actionToggleMuted(), commonActionBindings);

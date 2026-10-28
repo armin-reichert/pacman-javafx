@@ -12,7 +12,7 @@ import de.amr.pacmanfx.engine.EngineCoreContext;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 
-public interface EngineContext extends EngineCoreContext {
+public interface EngineUIContext extends EngineCoreContext {
 
     GameSceneManager gameSceneManager();
 

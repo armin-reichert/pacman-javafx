@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.GameVariantRuntime;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
@@ -134,7 +134,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
     private Pool<EnergizerParticle3D> particlePool;
 
 
-    public void createAnimations(EngineContext engine, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
+    public void createAnimations(EngineUIContext engine, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
         final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
 
         final GameLevel level = level3D.level();

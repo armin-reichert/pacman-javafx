@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneDebugView;
@@ -32,7 +32,7 @@ public class GamePlayViewRenderer {
         this.playView = requireNonNull(playView);
     }
 
-    public void render(EngineContext engine) {
+    public void render(EngineUIContext engine) {
         requireNonNull(engine);
         if (engine.optCurrentGame().isEmpty()) {
             return;
@@ -52,7 +52,7 @@ public class GamePlayViewRenderer {
     }
 
     private void render(
-        EngineContext engine,
+        EngineUIContext engine,
         RenderManager renderManager,
         GameViewModel viewModel,
         GameVariantRuntime runtime,

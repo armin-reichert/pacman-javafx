@@ -17,7 +17,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
-import de.amr.pacmanfx.ui.EngineContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -41,22 +41,22 @@ public final class TengenMsPacMan_Actions {
         return SingletonHolder.SINGLETON;
     }
 
-    private final GameAction<EngineContext> actionEnterStartScreen;
-    private final GameAction<EngineContext> actionQuitDemoLevel;
-    private final GameAction<EngineContext> actionStartPlaying;
-    private final GameAction<EngineContext> actionTogglePlaySceneDisplayMode;
-    private final GameAction<EngineContext> actionToggleJoypadBindingsDisplayed;
-    private final GameAction<EngineContext> actionTogglePacBooster;
-    private final GameAction<EngineContext> actionSelectNextJoypadKeyBinding;
+    private final GameAction<EngineUIContext> actionEnterStartScreen;
+    private final GameAction<EngineUIContext> actionQuitDemoLevel;
+    private final GameAction<EngineUIContext> actionStartPlaying;
+    private final GameAction<EngineUIContext> actionTogglePlaySceneDisplayMode;
+    private final GameAction<EngineUIContext> actionToggleJoypadBindingsDisplayed;
+    private final GameAction<EngineUIContext> actionTogglePacBooster;
+    private final GameAction<EngineUIContext> actionSelectNextJoypadKeyBinding;
 
-    private Set<ActionKeyBinding<EngineContext>> steeringBindings;
-    private Set<ActionKeyBinding<EngineContext>> localBindings;
+    private Set<ActionKeyBinding<EngineUIContext>> steeringBindings;
+    private Set<ActionKeyBinding<EngineUIContext>> localBindings;
 
     private TengenMsPacMan_Actions() {
 
         actionEnterStartScreen = new GameAction<>("enter_start_screen") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
@@ -64,13 +64,13 @@ public final class TengenMsPacMan_Actions {
 
         actionQuitDemoLevel = new GameAction<>("quit_demo_level") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
 
             @Override
-            public boolean isEnabled(EngineContext engine) {
+            public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 return game != null && game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE);
             }
@@ -78,7 +78,7 @@ public final class TengenMsPacMan_Actions {
 
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
                     .enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING));
             }
@@ -86,7 +86,7 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePlaySceneDisplayMode = new GameAction<>("toggle_play_scene_display_mode") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 final TengenMsPacMan_UISettings uiSettings = TengenMsPacMan_UISettings.instance();
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
                 uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
@@ -95,14 +95,14 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext context) {
+            public boolean isEnabled(EngineUIContext context) {
                 return context.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 
         actionToggleJoypadBindingsDisplayed = new GameAction<>("toggle_joypad_bindings_displayed") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 final TengenMsPacMan_UISettings uiSettings = TengenMsPacMan_UISettings.instance();
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
             }
@@ -110,7 +110,7 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction<>("toggle_pac_booster") {
             @Override
-            public void execute(EngineContext engine) {
+            public void execute(EngineUIContext engine) {
                 engine.optCurrentGame().ifPresent(game -> {
                     final GameSession session = game.session();
                     session.optLevel().ifPresent(level -> {
@@ -126,7 +126,7 @@ public final class TengenMsPacMan_Actions {
             }
 
             @Override
-            public boolean isEnabled(EngineContext engine) {
+            public boolean isEnabled(EngineUIContext engine) {
                 final GameContext game = engine.optCurrentGame().orElse(null);
                 if (game != null) {
                     final GameSession session = game.session();
@@ -138,7 +138,7 @@ public final class TengenMsPacMan_Actions {
 
         actionSelectNextJoypadKeyBinding = new GameAction<>("select_next_joypad_binding") {
             @Override
-            public void execute(EngineContext context) {
+            public void execute(EngineUIContext context) {
                 context.input().joypad().selectNextBinding();
             }
         };
@@ -161,7 +161,7 @@ public final class TengenMsPacMan_Actions {
         );
     }
 
-    public Set<ActionKeyBinding<EngineContext>> steeringBindings(Joypad joypad) {
+    public Set<ActionKeyBinding<EngineUIContext>> steeringBindings(Joypad joypad) {
         if (steeringBindings == null) {
             createSteeringBindings(joypad);
         }
@@ -180,38 +180,38 @@ public final class TengenMsPacMan_Actions {
         );
     }
 
-    public Set<ActionKeyBinding<EngineContext>> localBindings(Joypad joypad) {
+    public Set<ActionKeyBinding<EngineUIContext>> localBindings(Joypad joypad) {
         if (localBindings == null) {
             createLocalBindings(joypad);
         }
         return localBindings;
     }
 
-    public GameAction<EngineContext> actionEnterStartScreen() {
+    public GameAction<EngineUIContext> actionEnterStartScreen() {
         return actionEnterStartScreen;
     }
 
-    public GameAction<EngineContext> actionQuitDemoLevel() {
+    public GameAction<EngineUIContext> actionQuitDemoLevel() {
         return actionQuitDemoLevel;
     }
 
-    public GameAction<EngineContext> actionStartPlaying() {
+    public GameAction<EngineUIContext> actionStartPlaying() {
         return actionStartPlaying;
     }
 
-    public GameAction<EngineContext> actionTogglePlaySceneDisplayMode() {
+    public GameAction<EngineUIContext> actionTogglePlaySceneDisplayMode() {
         return actionTogglePlaySceneDisplayMode;
     }
 
-    public GameAction<EngineContext> actionToggleJoypadBindingsDisplayed() {
+    public GameAction<EngineUIContext> actionToggleJoypadBindingsDisplayed() {
         return actionToggleJoypadBindingsDisplayed;
     }
 
-    public GameAction<EngineContext> actionTogglePacBooster() {
+    public GameAction<EngineUIContext> actionTogglePacBooster() {
         return actionTogglePacBooster;
     }
 
-    public GameAction<EngineContext> actionSelectNextJoypadKeyBinding() {
+    public GameAction<EngineUIContext> actionSelectNextJoypadKeyBinding() {
         return actionSelectNextJoypadKeyBinding;
     }
 
