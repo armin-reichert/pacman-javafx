@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
-import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -79,6 +78,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
     public GameEngine(
         GameClock clock,
+        CoinMechanism coinMechanism,
         GameUI ui,
         GameVariantManager gameVariantManager,
         GameSceneManager gameSceneManager,
@@ -88,6 +88,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         SpriteAnimationSystem spriteAnimationSystem)
     {
         this.clock = requireNonNull(clock);
+        this.coinMechanism = requireNonNull(coinMechanism);
         this.ui = requireNonNull(ui);
         this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
@@ -96,7 +97,6 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
 
-        coinMechanism = new CoinMechanism(99);
         simulation = new GameSimulation();
         input = new Input();
 

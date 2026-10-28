@@ -19,6 +19,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.CartridgeRegistry;
@@ -80,6 +81,7 @@ public class PacManAllGamesNoBuilder extends Application {
 
         engine = new GameEngine(
             new DefaultGameClock(GameConstants.SIMULATION_FPS),
+            new CoinMechanism(99),
             ui,
             new DefaultGameVariantManager(),
             new DefaultGameSceneManager(),
