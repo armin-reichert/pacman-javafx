@@ -23,6 +23,8 @@ import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
+import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
+import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -90,7 +92,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    private final GameEventHandler eventHandler = new GameEventHandler(this);
+    private final GameEventHandler sceneGameEventHandler = new GameEventHandler(this);
+
+    private PacEatingEventHandler pacEatingEventHandler;
+
+    private PacPowerEventHandler pacPowerEventHandler;
 
     public TengenMsPacMan_PlayScene2D() {
         view2D().setRenderingSurface(new RenderingSurface());
@@ -104,7 +110,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<GameEventListener> optGameEventHandler() {
-        return Optional.of(eventHandler);
+        return Optional.of(sceneGameEventHandler);
     }
 
     @Override
@@ -150,12 +156,25 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             hud.levelCounter().show();
             hud.livesCounter().show();
             session.setValue(SessionKey.HUD_VISIBLE, true);
+
+            pacEatingEventHandler = new PacEatingEventHandler(game);
+            pacPowerEventHandler = new  PacPowerEventHandler(game);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
+            game.eventManager().addSubscriber(pacPowerEventHandler);
+
         });
     }
 
     @Override
     public void onDeactivate() {
         view2D().setClipRect(null);
+        engine().optCurrentGame().ifPresent(game -> {
+            levelCompletedAnimation = null;
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacEatingEventHandler = null;
+            pacPowerEventHandler = null;
+        });
     }
 
     @Override
@@ -280,13 +299,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
             animController.setAnimations(pac, renderConfig.createPacAnimations(engine.spriteAnimationSystem()));
-            eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
+            sceneGameEventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
         level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost, renderConfig.createGhostAnimations(engine.spriteAnimationSystem(), ghost.personality()));
-                eventHandler.resetGhostAnimation(animController, ghost);
+                sceneGameEventHandler.resetGhostAnimation(animController, ghost);
             }
         });
     }

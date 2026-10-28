@@ -115,8 +115,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             levelCompletedAnimation = new LevelCompletedAnimation();
             levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
             pacEatingEventHandler = new PacEatingEventHandler(game);
-            game.eventManager().addSubscriber(pacEatingEventHandler);
             pacPowerEventHandler = new  PacPowerEventHandler(game);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
             game.eventManager().addSubscriber(pacPowerEventHandler);
         });
     }
