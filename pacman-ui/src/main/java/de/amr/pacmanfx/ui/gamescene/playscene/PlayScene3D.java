@@ -15,6 +15,8 @@ import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
+import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
+import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -32,6 +34,7 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
+import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
@@ -68,7 +71,11 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     private ChangeListener<DrawMode> drawModeChangeListener;
 
-    private PlayScene3D_GameEventHandler gameEventHandler;
+    private PlayScene3D_GameEventHandler scene3DGameEventHandler;
+
+    private PacEatingEventHandler pacEatingEventHandler;
+
+    private PacPowerEventHandler pacPowerEventHandler;
 
     private GameLevelView3D level3D;
 
@@ -90,7 +97,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         animationSystem = new PlayScene3DAnimationSystem(animations3D());
 
         perspectiveManager = new PerspectiveManager(view3D().camera());
-        gameEventHandler = new PlayScene3D_GameEventHandler(this);
+        scene3DGameEventHandler = new PlayScene3D_GameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
@@ -122,7 +129,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     public Optional<GameEventListener> optGameEventHandler() {
-        return Optional.of(gameEventHandler);
+        return Optional.of(scene3DGameEventHandler);
     }
 
     @Override
@@ -152,7 +159,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         drawModeChangeListener = null;
-        gameEventHandler = null;
+        scene3DGameEventHandler = null;
 
         animationSystem.dispose();
 
@@ -175,6 +182,13 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
         registerActionBindings();
         assertComponent(GameSceneView3D.class).subScene().setFill(Color.BLACK);
+
+        engine().optCurrentGame().ifPresent(game -> {
+            pacEatingEventHandler = new PacEatingEventHandler(game);
+            pacPowerEventHandler = new  PacPowerEventHandler(game);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
+            game.eventManager().addSubscriber(pacPowerEventHandler);
+        });
     }
 
     @Override
@@ -182,12 +196,20 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         perspectiveManager.activeIDProperty().unbind();
         engine.ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
+
         // Remove actor 3D view components
-        engine().optCurrentGame().flatMap(game -> game.session().optLevel()).ifPresent(level -> {
-            final GameLevelEntitySet entitySet = level.entitySet();
-            entitySet.pac().removeComponent(PacView3D.class);
-            entitySet.ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
-            entitySet.anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
+        engine().optCurrentGame().ifPresent(game -> {
+            game.session().optLevel().ifPresent(level -> {
+                final GameLevelEntitySet entitySet = level.entitySet();
+                entitySet.pac().removeComponent(PacView3D.class);
+                entitySet.ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
+                entitySet.anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
+            });
+
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacEatingEventHandler = null;
+            pacPowerEventHandler = null;
         });
     }
 

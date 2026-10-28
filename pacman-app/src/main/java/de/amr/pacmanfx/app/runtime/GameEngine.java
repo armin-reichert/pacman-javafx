@@ -311,19 +311,17 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     //TODO This method is messy and needs a cleanup!
     private void enterGameVariant(GameVariantRuntime runtime) {
-        final GameEventManager gameEventManager = new DefaultGameEventManager();
+        currentGame = new GameContext(runtime, coinMechanism, new DefaultGameEventManager());
 
-        currentGame = new GameContext(runtime, coinMechanism, gameEventManager);
-
-        stateChangeEventMapper = new StateChangeEventMapper(gameEventManager);
+        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
         runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.start();
 
-        gameEventManager.addSubscriber(this::handleGameEvent);
+        currentGame.eventManager().addSubscriber(this::handleGameEvent);
 
-        //TODO This does not belomg here
-        gameEventManager.addSubscriber(new PacEatingEventHandler(currentGame));
-        gameEventManager.addSubscriber(new PacPowerEventHandler(currentGame));
+        //TODO This does not belong here
+        //currentGame.eventManager().addSubscriber(new PacEatingEventHandler(currentGame));
+        //currentGame.eventManager().addSubscriber(new PacPowerEventHandler(currentGame));
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());

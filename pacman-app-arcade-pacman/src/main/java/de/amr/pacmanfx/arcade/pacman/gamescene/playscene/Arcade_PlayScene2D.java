@@ -17,6 +17,8 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
+import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
+import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -49,7 +51,11 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  */
 public class Arcade_PlayScene2D extends AbstractGameScene {
 
-    private final PlaySceneGameEventHandler eventHandler = new PlaySceneGameEventHandler(this);
+    private final PlaySceneGameEventHandler sceneGameEventHandler = new PlaySceneGameEventHandler(this);
+
+    private PacEatingEventHandler pacEatingEventHandler;
+
+    private PacPowerEventHandler pacPowerEventHandler;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -64,7 +70,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<GameEventListener> optGameEventHandler() {
-        return Optional.of(eventHandler);
+        return Optional.of(sceneGameEventHandler);
     }
 
     @Override
@@ -108,6 +114,21 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         engine().optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = new LevelCompletedAnimation();
             levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
+            pacEatingEventHandler = new PacEatingEventHandler(game);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
+            pacPowerEventHandler = new  PacPowerEventHandler(game);
+            game.eventManager().addSubscriber(pacPowerEventHandler);
+        });
+    }
+
+    @Override
+    protected void onDeactivate() {
+        engine().optCurrentGame().ifPresent(game -> {
+            levelCompletedAnimation = null;
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacEatingEventHandler = null;
+            pacPowerEventHandler = null;
         });
     }
 
