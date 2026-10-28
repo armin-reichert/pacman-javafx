@@ -78,6 +78,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
     private StateChangeEventMapper stateChangeEventMapper;
 
     public GameEngine(
+        GameClock clock,
         GameUI ui,
         GameVariantManager gameVariantManager,
         GameSceneManager gameSceneManager,
@@ -86,6 +87,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         SoundManager soundManager,
         SpriteAnimationSystem spriteAnimationSystem)
     {
+        this.clock = requireNonNull(clock);
         this.ui = requireNonNull(ui);
         this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
@@ -95,11 +97,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
 
         coinMechanism = new CoinMechanism(99);
-
-        clock = new DefaultGameClock(GameConstants.SIMULATION_FPS);
-        clock.setPausableAction(this::simulate);
-        clock.setPermanentAction(this::render);
-
+        simulation = new GameSimulation();
         input = new Input();
 
         if (!validateUserDirs()) {
@@ -107,7 +105,8 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
         }
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        simulation = new GameSimulation();
+        clock.setPausableAction(this::simulate);
+        clock.setPermanentAction(this::render);
 
         gameViewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
 

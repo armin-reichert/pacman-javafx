@@ -10,6 +10,8 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.app.runtime.DefaultGameVariantManager;
 import de.amr.pacmanfx.app.runtime.GameEngine;
+import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.DefaultGameSceneManager;
@@ -111,6 +113,7 @@ public class PacManGameEngineBuilder {
             validateConfigurationData();
 
             final var engine = new GameEngine(
+                new DefaultGameClock(GameConstants.SIMULATION_FPS),
                 new GameUI(stage, width, height, uiSettings),
                 new DefaultGameVariantManager(),
                 new DefaultGameSceneManager(),

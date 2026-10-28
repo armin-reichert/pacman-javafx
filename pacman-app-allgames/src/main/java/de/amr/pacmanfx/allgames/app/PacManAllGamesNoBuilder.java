@@ -19,8 +19,10 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.CartridgeRegistry;
+import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
@@ -77,6 +79,7 @@ public class PacManAllGamesNoBuilder extends Application {
         final GameUI ui = new GameUI(stage, sceneSize.x(), sceneSize.y(), loadDefaultSettings());
 
         engine = new GameEngine(
+            new DefaultGameClock(GameConstants.SIMULATION_FPS),
             ui,
             new DefaultGameVariantManager(),
             new DefaultGameSceneManager(),
