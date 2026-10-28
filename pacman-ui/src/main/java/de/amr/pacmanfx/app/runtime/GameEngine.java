@@ -96,8 +96,7 @@ public final class GameEngine implements EngineLifecycle, EngineContext, Transla
 
         coinMechanism = new CoinMechanism(99);
 
-        clock = new DefaultGameClock();
-        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
+        clock = new DefaultGameClock(GameConstants.SIMULATION_FPS);
         clock.setPausableAction(this::simulate);
         clock.setPermanentAction(this::render);
 

@@ -37,14 +37,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultGameClock implements GameClock {
 
-    public static final int DEFAULT_FRAME_RATE = 60;
-
     /**
      * The desired frame rate. Changing this property rebuilds the internal
      * {@link Timeline}. If the clock was running, it is stopped and restarted
      * with the new timing.
      */
-    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_FRAME_RATE) {
+    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(60) {
         @Override
         protected void invalidated() {
             final boolean runningWhenChanged = isRunning();
@@ -90,10 +88,14 @@ public class DefaultGameClock implements GameClock {
     private Consumer<Throwable> errorHandler = x -> Logger.error(x, "Game clock encountered error");
 
     /**
-     * Creates a new game clock with the default target frame rate.
+     * Creates a new game clock with the given target frame rate.
      * The internal {@link Timeline} is initialized immediately.
      */
-    public DefaultGameClock() {
+    public DefaultGameClock(int fps) {
+        if (fps < 1) {
+            throw new IllegalArgumentException("Frame rate must be a positive integer");
+        }
+        setTargetFrameRate(fps);
         rebuildTimeline();
         timeline.statusProperty().addListener((_, oldStatus, newStatus) ->
             Logger.info("Clock status {} -> {}, target FPS: {} Hz", oldStatus, newStatus, targetFrameRate()));
