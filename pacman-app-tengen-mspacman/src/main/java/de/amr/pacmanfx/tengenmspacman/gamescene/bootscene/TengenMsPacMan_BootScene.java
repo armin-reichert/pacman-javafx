@@ -69,7 +69,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
                 GhostPersonality.RED_GHOST_SHADOW);
 
             final GameSession session = game.session();
-            session.setValue(SessionKey.HUD_VISIBLE, false);
+            session.store(SessionKey.HUD_VISIBLE, false);
             //TODO temporary solution
             setHUDStyle(session.hud());
         });

@@ -29,7 +29,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         hud.livesCounter().hide();
         hud.levelCounter().show();
         hud.creditDisplay().show();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
+        session.store(SessionKey.HUD_VISIBLE, true);
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);

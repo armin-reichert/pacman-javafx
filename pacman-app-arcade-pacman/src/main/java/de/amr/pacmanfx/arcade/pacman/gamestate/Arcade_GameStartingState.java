@@ -35,7 +35,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
         hud.levelCounter().show();
         hud.gameScore().show();
         hud.highScore().show();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
+        session.store(SessionKey.HUD_VISIBLE, true);
 
         hud.highScore().data().setEnabled(true);
 
@@ -59,7 +59,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
             pac.state().setEnumValue(PacState.ACTIVE);
 
             game.coinMechanism().consumeCoin();
-            session.setValue(SessionKey.GAME_RUNNING, true);
+            session.store(SessionKey.GAME_RUNNING, true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

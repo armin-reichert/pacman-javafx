@@ -107,7 +107,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
             fadeProgress = 0;
             displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
-            game.session().setValue(SessionKey.HUD_VISIBLE, false);
+            game.session().store(SessionKey.HUD_VISIBLE, false);
         });
     }
 

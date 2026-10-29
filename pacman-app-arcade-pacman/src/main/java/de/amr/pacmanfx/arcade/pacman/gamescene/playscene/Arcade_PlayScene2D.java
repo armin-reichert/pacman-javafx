@@ -92,7 +92,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
         final ValueMap energizerRenderInfo = pelletColor != null
             ? ValueMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
-            : ValueMap.EMPTY_IMMUTABLE_MAP;
+            : ValueMap.EMPTY_VALUE_MAP;
 
         return Ufx.streamOf(
             createRenderableLevel(level),
@@ -225,8 +225,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     private GameLevelView createRenderableLevel(GameLevel level) {
         final var renderInfo = ValueMap.create();
-        renderInfo.setValue(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-        renderInfo.setValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        renderInfo.store(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.store(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         boolean showBrightMaze = false;
         boolean mazeIsFlashing = false;
         if (levelCompletedAnimation != null) {
@@ -236,13 +236,13 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 mazeIsFlashing = flashingState.isFlashing();
             }
         }
-        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
-        renderInfo.setValue(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
+        renderInfo.store(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
+        renderInfo.store(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
 
         final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(engine.ui().viewModel(), level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
-            renderInfo.setValue(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
+            renderInfo.store(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
         }
 
         return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);

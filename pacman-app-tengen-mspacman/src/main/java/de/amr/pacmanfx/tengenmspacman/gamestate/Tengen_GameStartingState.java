@@ -50,7 +50,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         hud.levelCounter().show();
         hud.gameScore().show();
         hud.highScore().show();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
+        session.store(SessionKey.HUD_VISIBLE, true);
 
         hud.highScore().data().setEnabled(true);
 
@@ -76,7 +76,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         else if (stateTick == TICK_START_PLAYING) {
             lockPacAndGhosts(level.entitySet(), false);
             game.coinMechanism().consumeCoin();
-            session.setValue(SessionKey.GAME_RUNNING, true);
+            session.store(SessionKey.GAME_RUNNING, true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

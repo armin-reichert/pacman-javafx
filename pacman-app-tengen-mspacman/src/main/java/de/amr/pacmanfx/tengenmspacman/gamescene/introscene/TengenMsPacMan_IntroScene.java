@@ -126,7 +126,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
-            game.session().setValue(SessionKey.HUD_VISIBLE, false);
+            game.session().store(SessionKey.HUD_VISIBLE, false);
             spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
             final Joypad joypad = engine.input().joypad();

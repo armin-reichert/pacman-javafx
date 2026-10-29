@@ -27,7 +27,7 @@ public class Arcade_GameOverState extends AbstractGameState {
 
         level.showMessage(MessageType.GAME_OVER);
         session.hud().creditDisplay().show();
-        session.setValue(SessionKey.GAME_RUNNING, false);
+        session.store(SessionKey.GAME_RUNNING, false);
         session.cheats().clear();
         try {
             systems.scoreSystem().saveHighScoreIfNeeded(hud.highScore());

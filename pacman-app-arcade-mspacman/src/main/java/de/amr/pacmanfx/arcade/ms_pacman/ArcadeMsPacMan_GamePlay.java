@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevel level = createLevel(game, 1);
 
         session.setLevel(level);
-        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
+        session.store(SessionKey.DEMO_LEVEL_MODE, true);
 
         final Pac pac = level.entitySet().pac();
         pac.cheats().setImmune(false);

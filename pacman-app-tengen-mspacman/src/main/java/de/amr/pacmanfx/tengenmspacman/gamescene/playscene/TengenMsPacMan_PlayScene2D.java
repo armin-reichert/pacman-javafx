@@ -139,7 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             final HUD hud = session.hud();
             hud.levelCounter().show();
             hud.livesCounter().show();
-            session.setValue(SessionKey.HUD_VISIBLE, true);
+            session.store(SessionKey.HUD_VISIBLE, true);
 
             session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
         });
@@ -157,7 +157,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().show();
-            session.setValue(SessionKey.HUD_VISIBLE, true);
+            session.store(SessionKey.HUD_VISIBLE, true);
 
             pacEatingEventHandler = new PacEatingEventHandler(game);
             pacPowerEventHandler = new PacPowerEventHandler(game);
@@ -329,26 +329,26 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final boolean highlighted = flashing != null && flashing.isHighlighted();
         final int flashingIndex = flashing != null ? flashing.flashingIndex() : -1;
 
-        renderInfo.setValue(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY, mapCategory);
-        renderInfo.setValue(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+        renderInfo.store(TengenMsPacMan_RenderInfoKey.MAP_CATEGORY, mapCategory);
+        renderInfo.store(TengenMsPacMan_RenderInfoKey.MAP_IMAGE_SET, mapImageSet);
 
-        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
-        renderInfo.setValue(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
+        renderInfo.store(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        renderInfo.store(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
 
         if (highlighted) {
             final int imageIndex = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
             final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(imageIndex);
-            renderInfo.setValue(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
-            renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
+            renderInfo.store(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
+            renderInfo.store(LevelRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
         }
         else {
-            renderInfo.setValue(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
+            renderInfo.store(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
             if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
                 final int spriteIndex = strangeMap15AnimationFrame(tick);
-                renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE,
+                renderInfo.store(LevelRenderInfoKey.MAZE_SPRITE,
                     NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
             } else {
-                renderInfo.setValue(LevelRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
+                renderInfo.store(LevelRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
             }
         }
 

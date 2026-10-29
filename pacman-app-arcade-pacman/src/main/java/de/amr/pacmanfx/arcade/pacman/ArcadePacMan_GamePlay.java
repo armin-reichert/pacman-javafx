@@ -107,8 +107,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        session.setValue(SessionKey.CUT_SCENES_ENABLED, true);
-        session.setValue(SessionKey.GAME_RUNNING, false);
+        session.store(SessionKey.CUT_SCENES_ENABLED, true);
+        session.store(SessionKey.GAME_RUNNING, false);
         session.removeLevel();
 
         configureHUD(game, null, session.hud());
@@ -157,7 +157,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
-        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, GAME_OVER_STATE_TICKS);
+        session.store(SessionKey.GAME_OVER_STATE_TICKS, GAME_OVER_STATE_TICKS);
 
         return level;
     }
@@ -212,7 +212,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setLevelNumber(level.number());
 
         session.setLevel(level);
-        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
+        session.store(SessionKey.DEMO_LEVEL_MODE, true);
 
         return level;
     }
@@ -224,7 +224,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
 
         prepareLevelForPlaying(game, level);
-        session.setValue(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
+        session.store(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
         session.cheats().update(game);
 
         session.hud().gameScore().data().setEnabled(true);

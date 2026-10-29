@@ -115,9 +115,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         options.setBoosterEnabled(false);
         options.setCanStartNewGame(false);
 
-        session.setValue(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
-        session.setValue(SessionKey.CUT_SCENES_ENABLED, true);
-        session.setValue(SessionKey.GAME_RUNNING, false);
+        session.store(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
+        session.store(SessionKey.CUT_SCENES_ENABLED, true);
+        session.store(SessionKey.GAME_RUNNING, false);
         session.removeLevel();
 
         // Add game options display on top of maze and level number boxes at left and right side below the maze
@@ -226,7 +226,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         final long gameOverTicks = gameOptionValues(session).mapCategory() == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS;
-        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, gameOverTicks);
+        session.store(SessionKey.GAME_OVER_STATE_TICKS, gameOverTicks);
 
         return level;
     }
@@ -275,7 +275,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel demoLevel = createLevel(game, 1);
 
-        session.setValue(SessionKey.GAME_OVER_STATE_TICKS, 120L);
+        session.store(SessionKey.GAME_OVER_STATE_TICKS, 120L);
 
         final Pac pac = demoLevel.entitySet().pac();
         // There are maps that cannot be handled with Arcade-steering logic
@@ -287,7 +287,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setEnabled(true);
 
         session.setLevel(demoLevel);
-        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
+        session.store(SessionKey.DEMO_LEVEL_MODE, true);
 
         return demoLevel;
     }
@@ -300,7 +300,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         prepareLevelForPlaying(game, level);
 
-        session.setValue(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
+        session.store(SessionKey.LEVEL_START_TIME_MILLIS, System.currentTimeMillis());
         session.hud().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 

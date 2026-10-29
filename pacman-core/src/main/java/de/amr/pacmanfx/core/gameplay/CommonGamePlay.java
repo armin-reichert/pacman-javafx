@@ -92,7 +92,7 @@ public abstract class CommonGamePlay implements GamePlay {
         session.hud().gameScore().data().setLevelNumber(levelNumber);
 
         session.setLevel(level);
-        session.setValue(SessionKey.DEMO_LEVEL_MODE, false);
+        session.store(SessionKey.DEMO_LEVEL_MODE, false);
 
         return level;
     }

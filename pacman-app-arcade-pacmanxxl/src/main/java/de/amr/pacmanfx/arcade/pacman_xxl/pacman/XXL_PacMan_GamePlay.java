@@ -62,7 +62,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         session.setLevel(level);
-        session.setValue(SessionKey.DEMO_LEVEL_MODE, true);
+        session.store(SessionKey.DEMO_LEVEL_MODE, true);
 
         session.hud().gameScore().data().setLevelNumber(levelNumber);
         session.hud().levelCounter().data().setEnabled(false);

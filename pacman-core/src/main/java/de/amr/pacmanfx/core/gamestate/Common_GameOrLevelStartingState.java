@@ -17,7 +17,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         hud.gameScore().show();
         hud.highScore().show();
-        session.setValue(SessionKey.HUD_VISIBLE, true);
+        session.store(SessionKey.HUD_VISIBLE, true);
     }
 
     @Override

@@ -155,14 +155,14 @@ public class MiniPlaySceneView {
 
     private GameLevelView createLevelView(GameLevel level) {
         final ValueMap renderInfo = ValueMap.create();
-        renderInfo.setValue(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-        renderInfo.setValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-        renderInfo.setValue(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
-        renderInfo.setValue(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
+        renderInfo.store(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.store(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+        renderInfo.store(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        renderInfo.store(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
         final TerrainMapColoring terrainMapColoring = RenderingUtil.findMapColoring(viewModel, level.worldMap());
         if (terrainMapColoring != null) {
             // Only available for generic level renderer in XXL game variants
-            renderInfo.setValue(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
+            renderInfo.store(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, terrainMapColoring);
         }
 
         return new GameLevelView(level, renderInfo, RenderingLayer.MINI_VIEW_OVERLAY, 0, Vector2f.ZERO);
@@ -172,9 +172,9 @@ public class MiniPlaySceneView {
         final Color pelletColor = RenderingUtil.findPelletColor(level.worldMap()).orElse(null);
         final ValueMap energizerRenderInfo = pelletColor != null
             ? ValueMap.singletonMap(GenericLevelRenderer.RenderInfoKey.PELLET_COLOR, pelletColor)
-            : ValueMap.EMPTY_IMMUTABLE_MAP;
+            : ValueMap.EMPTY_VALUE_MAP;
         return level.entitySet().stream()
-            .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : ValueMap.EMPTY_IMMUTABLE_MAP));
+            .map(e -> createEntityView(e, e instanceof Energizer ? energizerRenderInfo : ValueMap.EMPTY_VALUE_MAP));
     }
 
     private GameEntityView createEntityView(GameEntity entity, ValueMap renderInfo) {

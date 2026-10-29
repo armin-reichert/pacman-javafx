@@ -62,7 +62,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
             // Empty maze is shown when level is complete and when the flashing animation is running
             if (info.booleanValue(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
                 if (assets.containsAsset("maze.bright")) {
-                    info.setValue(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
+                    info.store(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
                 }
                 final var brightMazeImage = info.value(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);

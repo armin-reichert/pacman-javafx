@@ -160,7 +160,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
-            session.setValue(SessionKey.HUD_VISIBLE, false);
+            session.store(SessionKey.HUD_VISIBLE, false);
 
             final var actions = TengenMsPacMan_Actions.instance();
             final Joypad joypad = engine.input().joypad();

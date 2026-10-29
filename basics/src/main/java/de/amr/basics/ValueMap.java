@@ -23,22 +23,22 @@ public class ValueMap {
         return new ValueMap(new HashMap<>());
     }
 
-    public static final ValueMap EMPTY_IMMUTABLE_MAP = new ValueMap(Map.of()) {
+    public static final ValueMap EMPTY_VALUE_MAP = new ValueMap(Map.of()) {
         @Override
-        public <T> T value(Object key, Class<T> expectedValueClass) {
+        public <T> T value(Object key, Class<T> expectedType) {
             throw new UnsupportedOperationException("Cannot get value from empty immutable map");
         }
 
         @Override
-        public void setValue(Object key, Object value) {
+        public void store(Object key, Object value) {
             throw new UnsupportedOperationException("Cannot put value into empty immutable map");
         }
     };
 
-    private final Map<Object, Object> valueMap;
+    private final Map<Object, Object> map;
 
-    protected ValueMap(Map<Object, Object> valueMap) {
-        this.valueMap = valueMap;
+    protected ValueMap(Map<Object, Object> map) {
+        this.map = requireNonNull(map);
     }
 
     public boolean booleanValue(Named key) {
@@ -56,29 +56,29 @@ public class ValueMap {
         return value != null ? value : DEFAULT_LONG_VALUE;
     }
 
-    public <T> T value(Object key, Class<T> expectedValueClass) {
+    public <T> T value(Object key, Class<T> expectedType) {
         requireNonNull(key);
-        requireNonNull(expectedValueClass);
+        requireNonNull(expectedType);
 
-        final Object value = valueMap.get(key);
+        final Object value = map.get(key);
         if (value == null) {
             return null;
         }
-        if (expectedValueClass.isInstance(value)) {
-            return expectedValueClass.cast(value);
+        if (expectedType.isInstance(value)) {
+            return expectedType.cast(value);
         }
         throw new IllegalArgumentException("Key '%s' is not mapped to a value of class '%s'"
-            .formatted(key, expectedValueClass.getSimpleName()));
+            .formatted(key, expectedType.getSimpleName()));
     }
 
-    public void setValue(Object key, Object value) {
+    public void store(Object key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        valueMap.put(key, value);
+        map.put(key, value);
     }
 
-    public void removeValue(Named key) {
+    public void remove(Named key) {
         requireNonNull(key);
-        valueMap.remove(key);
+        map.remove(key);
     }
 }

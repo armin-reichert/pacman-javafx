@@ -222,7 +222,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
         final GameContext game = engine.optCurrentGame().orElseThrow();
-        game.session().setValue(SessionKey.CUT_SCENES_ENABLED, newValue);
+        game.session().store(SessionKey.CUT_SCENES_ENABLED, newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

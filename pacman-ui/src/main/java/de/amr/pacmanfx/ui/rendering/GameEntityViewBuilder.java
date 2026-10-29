@@ -101,7 +101,7 @@ public class GameEntityViewBuilder {
     private RenderingLayer layer;
     private int z = 0;
     private Vector2f offset = Vector2f.ZERO;
-    private ValueMap renderInfo = ValueMap.EMPTY_IMMUTABLE_MAP;
+    private ValueMap renderInfo = ValueMap.EMPTY_VALUE_MAP;
 
     private GameEntityViewBuilder() {}
 
