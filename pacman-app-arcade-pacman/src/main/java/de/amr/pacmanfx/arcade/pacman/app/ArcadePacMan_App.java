@@ -31,7 +31,7 @@ public class ArcadePacMan_App extends Application {
             .buildEngine()
             .orElseThrow(IllegalStateException::new);
 
-        engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        engine.selectGameVariantAndShowUI(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override

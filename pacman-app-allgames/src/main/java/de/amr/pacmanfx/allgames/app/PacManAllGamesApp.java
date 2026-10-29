@@ -54,7 +54,7 @@ public class PacManAllGamesApp extends Application {
             .orElseThrow(IllegalStateException::new);
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
-        engine.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        engine.selectGameVariantAndShowUI(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override

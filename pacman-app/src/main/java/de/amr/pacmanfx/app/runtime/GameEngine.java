@@ -114,12 +114,14 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameViewManager.init(this);
     }
 
-    public void showGameVariant(GameVariantID variantID) {
+    public void selectGameVariantAndShowUI(GameVariantID variantID) {
         requireNonNull(variantID);
-        gameVariantManager.selectVariant(this, variantID.name());
 
+        gameVariantManager.selectVariant(this, variantID.name());
         gameViewManager.onVariantSelected(variantID);
+
         ui.show(uiConfig(currentGame.runtime()));
+
         Platform.runLater(this::startBackgroundServices);
     }
 

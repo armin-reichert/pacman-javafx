@@ -34,7 +34,7 @@ public class TengenMsPacMan_App extends Application {
             .buildEngine()
             .orElseThrow(IllegalStateException::new);
 
-        engine.showGameVariant(TENGEN_MS_PACMAN);
+        engine.selectGameVariantAndShowUI(TENGEN_MS_PACMAN);
     }
 
     @Override

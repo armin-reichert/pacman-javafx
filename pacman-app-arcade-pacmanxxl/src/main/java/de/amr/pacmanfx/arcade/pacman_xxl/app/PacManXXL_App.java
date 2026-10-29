@@ -34,7 +34,7 @@ public class PacManXXL_App extends Application {
             .orElseThrow(IllegalStateException::new);
 
         engine.watchdog().addEventListener(XXL_WorldMapManager.instance());
-        engine.showGameVariant(GameVariantID.ARCADE_PACMAN_XXL);
+        engine.selectGameVariantAndShowUI(GameVariantID.ARCADE_PACMAN_XXL);
     }
 
     @Override
