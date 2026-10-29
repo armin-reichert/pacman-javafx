@@ -338,7 +338,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         try {
             scoreSystem.save(highScore);
         } catch (IOException x) {
-            game.eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
+            game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
         }
     }
 

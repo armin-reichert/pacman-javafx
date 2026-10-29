@@ -315,7 +315,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entitySet().ghosts().forEach(GameEntity::show);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        game.eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
+        game.runtime().eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
     }
 
     // Playing level
@@ -370,7 +370,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         );
         systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
 
-        game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
+        game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
 
     private MessageView createMessageView(House house, GameSession session, NES_WorldMapColorScheme colorScheme) {

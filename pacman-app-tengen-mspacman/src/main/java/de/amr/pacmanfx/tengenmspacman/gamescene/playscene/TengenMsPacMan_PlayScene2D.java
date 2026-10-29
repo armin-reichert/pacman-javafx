@@ -161,8 +161,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
             pacEatingEventHandler = new PacEatingEventHandler(game);
             pacPowerEventHandler = new PacPowerEventHandler(game);
-            game.eventManager().addSubscriber(pacEatingEventHandler);
-            game.eventManager().addSubscriber(pacPowerEventHandler);
+            game.runtime().eventManager().addSubscriber(pacEatingEventHandler);
+            game.runtime().eventManager().addSubscriber(pacPowerEventHandler);
 
         });
     }
@@ -173,11 +173,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         engine().optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
             if (pacEatingEventHandler != null) {
-                game.eventManager().removeSubscriber(pacEatingEventHandler);
+                game.runtime().eventManager().removeSubscriber(pacEatingEventHandler);
                 pacEatingEventHandler = null;
             }
             if (pacPowerEventHandler != null) {
-                game.eventManager().removeSubscriber(pacPowerEventHandler);
+                game.runtime().eventManager().removeSubscriber(pacPowerEventHandler);
                 pacPowerEventHandler = null;
             }
         });

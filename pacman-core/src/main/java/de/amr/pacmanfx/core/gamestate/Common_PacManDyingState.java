@@ -57,7 +57,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         timer().resetToIndefiniteDuration();
 
         //TODO: needed? Scene controllers stop sounds already?
-        game.eventManager().publishEvent(new StopAllSoundsEvent());
+        game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());
     }
 
     @Override
@@ -69,7 +69,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         }
         else if (stateTick == rules.pacDyingTiming().animationStartTick()) {
             systems.pacAnimation().startDyingAnimation(pac);
-            game.eventManager().publishEvent(new PacDyingEvent(pac));
+            game.runtime().eventManager().publishEvent(new PacDyingEvent(pac));
         }
         else if (stateTick == rules.pacDyingTiming().hidePacTick()) {
             pac.hide();
@@ -79,7 +79,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             if (bonus != null) {
                 level.entitySet().remove(bonus);
             }
-            game.eventManager().publishEvent(new PacDeadEvent(game, pac));
+            game.runtime().eventManager().publishEvent(new PacDeadEvent(game, pac));
         }
 
         if (timer().hasExpired()) {

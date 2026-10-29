@@ -12,6 +12,8 @@ import de.amr.pacmanfx.core.rules.GameRules;
 
 public interface GameVariantRuntime {
 
+    GameEventManager eventManager();
+
     GameSystems systems();
 
     GamePlay gamePlay();

@@ -47,7 +47,7 @@ public final class Arcade_Actions {
                     engine.soundManager().setEnabled(true);
                     game.coinMechanism().insertCoin();
                     game.runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
-                    game.eventManager().publishEvent(new CreditAddedEvent(1));
+                    game.runtime().eventManager().publishEvent(new CreditAddedEvent(1));
                     engine.uiConfig(runtime).optSoundEffects().ifPresent(PacManGameSoundEffects::playCoinInsertedSound);
                 });
             }

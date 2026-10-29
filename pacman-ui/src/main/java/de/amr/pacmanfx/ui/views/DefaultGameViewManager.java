@@ -42,8 +42,12 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     @Override
     public void onVariantSelected(GameVariantID variantID) {
-        selectStartPagesView();
         gamePlayView.dashboard().init(engine);
+        selectStartPagesView();
+        final Carousel carousel = startPagesView.rootPane();
+        if (!carousel.getItems().isEmpty()) {
+            carousel.setSelectedIndex(0);
+        }
     }
 
     @Override
@@ -59,10 +63,6 @@ public final class DefaultGameViewManager implements GameViewManager {
     @Override
     public void selectStartPagesView() {
         currentView.set(startPagesView);
-        final Carousel carousel = startPagesView.rootPane();
-        if (!carousel.getItems().isEmpty()) {
-            carousel.setSelectedIndex(0);
-        }
     }
 
     @Override

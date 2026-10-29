@@ -16,6 +16,9 @@ public class DefaultGameEventManager implements GameEventManager {
 
     private final Set<GameEventListener> subscribers = new HashSet<>();
 
+    public DefaultGameEventManager() {
+    }
+
     @Override
     public void addSubscriber(GameEventListener subscriber) {
         requireNonNull(subscriber);

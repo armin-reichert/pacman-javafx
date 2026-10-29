@@ -236,7 +236,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.showMessage(MessageType.READY);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        game.eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
+        game.runtime().eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
     }
 
     // Playing level
@@ -268,7 +268,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         systems.bonusState().setEdible(bonus);
         bonus.show();
 
-        game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
+        game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
 
     protected MessageView createMessageView(House house) {

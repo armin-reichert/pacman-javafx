@@ -35,7 +35,7 @@ public class Test_ShortTestState extends AbstractGameState {
         lastTestedLevelNumber = rules.lastLevelNumber() == Integer.MAX_VALUE ? 25 : rules.lastLevelNumber();
 
         final GameLevel level = gamePlay.buildNormalLevel(game, 1);
-        game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
+        game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         level.entitySet().pac().show();
         level.entitySet().ghosts().forEach(GameEntity::show);
@@ -62,7 +62,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
             level.showMessage(MessageType.READY);
 
-            game.eventManager().publishEvent(new TestStartedEvent(level));
+            game.runtime().eventManager().publishEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
             level.entitySet().theOne(MessageView.class).hide();
@@ -116,7 +116,7 @@ public class Test_ShortTestState extends AbstractGameState {
         points.show();
         level.entitySet().add(points);
 
-        game.eventManager().publishEvent(new BonusEatenEvent(bonus));
+        game.runtime().eventManager().publishEvent(new BonusEatenEvent(bonus));
     }
 
     @Override

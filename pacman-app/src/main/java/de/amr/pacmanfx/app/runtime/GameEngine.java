@@ -71,8 +71,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private GameContext currentGame;
 
-    private StateChangeEventMapper stateChangeEventMapper;
-
     public GameEngine(
         GameClock clock,
         CoinMechanism coinMechanism,
@@ -305,13 +303,13 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     //TODO This method is messy and needs a cleanup!
     private void enterGameVariant(GameVariantRuntime runtime) {
-        currentGame = new GameContext(runtime, coinMechanism, new DefaultGameEventManager());
+        currentGame = new GameContext(runtime, coinMechanism);
 
-        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
-        runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
+//        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
+//        runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.start();
 
-        currentGame.eventManager().addSubscriber(this::handleGameEvent);
+        currentGame.runtime().eventManager().addSubscriber(this::handleGameEvent);
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
@@ -321,10 +319,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
-        runtime.gameFlow().removeStateChangeListener(stateChangeEventMapper);
+//        runtime.gameFlow().removeStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.stop();
         soundManager.dispose();
-        currentGame.eventManager().removeAllSubscribers();
+        currentGame.runtime().eventManager().removeAllSubscribers();
         currentGame = null;
         uiConfig(runtime).unload(this);
     }

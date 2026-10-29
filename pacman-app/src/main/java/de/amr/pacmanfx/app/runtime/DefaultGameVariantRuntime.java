@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.app.runtime;
 
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
@@ -17,6 +18,8 @@ import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import static java.util.Objects.requireNonNull;
 
 public final class DefaultGameVariantRuntime implements GameVariantRuntime {
+
+    private final DefaultGameEventManager gameEventManager;
 
     private final GameSystems systems;
 
@@ -45,6 +48,9 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
         } catch (Exception cause) {
             throw new RuntimeException("Could not create UI configuration from class " + cartridge.uiConfigClass(), cause);
         }
+
+        gameEventManager = new DefaultGameEventManager();
+        gameFlow.addStateChangeListener(new StateChangeEventMapper(gameEventManager));
     }
 
     public GameVariantUIConfig uiConfig() {
@@ -54,6 +60,11 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
     @Override
     public GameSystems systems() {
         return systems;
+    }
+
+    @Override
+    public DefaultGameEventManager eventManager() {
+        return gameEventManager;
     }
 
     @Override
