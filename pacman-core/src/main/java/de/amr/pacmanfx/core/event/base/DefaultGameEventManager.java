@@ -47,6 +47,7 @@ public class DefaultGameEventManager implements GameEventManager {
         if (Logger.isTraceEnabled()) {
             Logger.trace("Publish game event: {}", event);
         }
-        subscribers.forEach(subscriber -> subscriber.onGameEvent(event));
+        // Make copy to avoid ConcurrentModificationException
+        Set.copyOf(subscribers).forEach(subscriber -> subscriber.onGameEvent(event));
     }
 }
