@@ -12,14 +12,11 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.views.MenuBuildingSupport.*;
 
 /**
  * Context menu for the play scene in 2D/3D mode.
@@ -55,14 +52,14 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         perspectiveIDProperty = settings3D.cameraPerspectiveIDProperty();
 
-        addLocalizedTitleItem(this, translator, "context_menu.scene_display");
-        addLocalizedActionItem(playScene3D.engine(), this, translator,
+        addLocalizedTitleItem(getItems(), translator, "context_menu.scene_display");
+        addLocalizedActionItem(playScene3D.engine(), getItems(), translator,
             CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
-        addLocalizedCheckBox(this, translator, playScene3D.engine().ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
-        addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
+        addLocalizedCheckBox(getItems(), translator, playScene3D.engine().ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
+        addLocalizedTitleItem(getItems(), translator, "context_menu.select_perspective");
 
         for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem radio = addLocalizedRadioButton(this, translator, "perspective_id_" + id.name());
+            final RadioMenuItem radio = addLocalizedRadioButton(getItems(), translator, "perspective_id_" + id.name());
             radio.setOnAction(_ -> perspectiveIDProperty.set(id));
             radio.setUserData(id);
             radio.setToggleGroup(perspectivesGroup);
@@ -71,12 +68,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             }
         }
 
-        addLocalizedTitleItem(this, translator, "context_menu.pacman");
-        addLocalizedCheckBox(this, translator, cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(this, translator, cheats.pacImmuneProperty(), "context_menu.immunity");
-        addSeparator(this);
-        addLocalizedCheckBox(this, translator, playScene3D.engine().ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(playScene3D.engine(), this, translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedTitleItem(getItems(), translator, "context_menu.pacman");
+        addLocalizedCheckBox(getItems(), translator, cheats.pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(getItems(), translator, cheats.pacImmuneProperty(), "context_menu.immunity");
+        addSeparator(getItems());
+        addLocalizedCheckBox(getItems(), translator, playScene3D.engine().ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(playScene3D.engine(), getItems(), translator, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         perspectiveIDProperty.addListener(perspectiveChangeHandler);
     }

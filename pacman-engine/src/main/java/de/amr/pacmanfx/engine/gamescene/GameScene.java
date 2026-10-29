@@ -10,16 +10,17 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.engine.QuitHandler;
 import javafx.scene.SubScene;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface GameScene extends Disposable, QuitHandler {
 
-    default Optional<ContextMenu> optContextMenu() {
-        return Optional.empty();
+    default List<MenuItem> contextMenuItems() {
+        return List.of();
     }
 
     default Optional<GameEventListener> optGameEventHandler() {

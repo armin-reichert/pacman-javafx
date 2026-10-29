@@ -36,15 +36,17 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.TerrainMapColoring;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.engine.action.ActionExecutor.runAction;
-import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.views.MenuBuildingSupport.*;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -125,10 +127,14 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     protected void onDeactivate() {
         engine().optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
-            game.eventManager().removeSubscriber(pacEatingEventHandler);
-            game.eventManager().removeSubscriber(pacPowerEventHandler);
-            pacEatingEventHandler = null;
-            pacPowerEventHandler = null;
+            if (pacEatingEventHandler != null) {
+                game.eventManager().removeSubscriber(pacEatingEventHandler);
+                pacEatingEventHandler = null;
+            }
+            if (pacPowerEventHandler != null) {
+                game.eventManager().removeSubscriber(pacPowerEventHandler);
+                pacPowerEventHandler = null;
+            }
         });
     }
 
@@ -149,14 +155,14 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    public Optional<ContextMenu> optContextMenu() {
+    public List<MenuItem> contextMenuItems() {
         final CheatActions cheatActions = CommonGameActions.instance().cheatActions();
 
-        final var contextMenu = new ContextMenu();
+        final var menuItems = new ArrayList<MenuItem>();
 
         engine().optCurrentGame().ifPresent(game -> {
-            addLocalizedTitleItem(contextMenu, engine().translationManager(), "context_menu.pacman");
-            addLocalizedCheckBox(contextMenu, engine().translationManager(),
+            addLocalizedTitleItem(menuItems, engine().translationManager(), "context_menu.pacman");
+            addLocalizedCheckBox(menuItems, engine().translationManager(),
                 game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
@@ -165,7 +171,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                     runAction(cheatActions.actionDeactivateAutopilot(), engine());
                 }
             });
-            addLocalizedCheckBox(contextMenu, engine().translationManager(),
+            addLocalizedCheckBox(menuItems, engine().translationManager(),
                 game.session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
@@ -174,13 +180,13 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                     runAction(cheatActions.actionDeactivateImmunity(), engine());
                 }
             });
-            addSeparator(contextMenu);
-            addLocalizedCheckBox(contextMenu, engine().translationManager(), engine.ui().viewModel().muteProperty(), "context_menu.muted");
-            addLocalizedActionItem(engine(), contextMenu, engine().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addSeparator(menuItems);
+            addLocalizedCheckBox(menuItems, engine().translationManager(), engine.ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedActionItem(engine(), menuItems, engine().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         });
 
-        return Optional.of(contextMenu);
+        return menuItems;
     }
 
     @Override

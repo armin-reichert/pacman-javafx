@@ -34,7 +34,6 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
-import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneAnimations3DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameSceneView3D;
@@ -49,13 +48,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.SubScene;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -206,10 +206,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
                 entitySet.anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
             });
 
-            game.eventManager().removeSubscriber(pacEatingEventHandler);
-            game.eventManager().removeSubscriber(pacPowerEventHandler);
-            pacEatingEventHandler = null;
-            pacPowerEventHandler = null;
+            if (pacEatingEventHandler != null) {
+                game.eventManager().removeSubscriber(pacEatingEventHandler);
+                pacEatingEventHandler = null;
+            }
+            if (pacPowerEventHandler != null) {
+                game.eventManager().removeSubscriber(pacPowerEventHandler);
+                pacPowerEventHandler = null;
+            }
         });
     }
 
@@ -281,9 +285,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    public Optional<ContextMenu> optContextMenu() {
+    public List<MenuItem> contextMenuItems() {
         contextMenu = new PlaySceneContextMenu(this);
-        return Optional.of(contextMenu);
+        return contextMenu.getItems();
     }
 
     @Override

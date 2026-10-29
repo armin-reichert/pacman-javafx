@@ -43,21 +43,23 @@ import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.animation.FlashingState;
-import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -67,7 +69,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
-import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.views.MenuBuildingSupport.*;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
@@ -170,10 +172,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         view2D().setClipRect(null);
         engine().optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
-            game.eventManager().removeSubscriber(pacEatingEventHandler);
-            game.eventManager().removeSubscriber(pacPowerEventHandler);
-            pacEatingEventHandler = null;
-            pacPowerEventHandler = null;
+            if (pacEatingEventHandler != null) {
+                game.eventManager().removeSubscriber(pacEatingEventHandler);
+                pacEatingEventHandler = null;
+            }
+            if (pacPowerEventHandler != null) {
+                game.eventManager().removeSubscriber(pacPowerEventHandler);
+                pacPowerEventHandler = null;
+            }
         });
     }
 
@@ -198,19 +204,19 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    public Optional<ContextMenu> optContextMenu() {
+    public List<MenuItem> contextMenuItems() {
         final TengenMsPacMan_UISettings uiSettings = TengenMsPacMan_UISettings.instance();
         final TranslationManager translations = engine().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
-        final var contextMenu = new ContextMenu();
+        final var menu = new ContextMenu();
 
         engine().optCurrentGame().ifPresent(game -> {
-            final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "context_menu.scaled_to_fit");
+            final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu.getItems(), translations, "context_menu.scaled_to_fit");
             miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
             miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
 
-            final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "context_menu.scrolling");
+            final RadioMenuItem miScrolling = addLocalizedRadioButton(menu.getItems(), translations, "context_menu.scrolling");
             miScrolling.setSelected(displayMode == SCROLLING);
             miScrolling.setOnAction(_ -> uiSettings.playSceneDisplay.set(SCROLLING));
 
@@ -218,15 +224,15 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             miScaledToFit.setToggleGroup(toggleGroup);
             miScrolling.setToggleGroup(toggleGroup);
 
-            addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-            addLocalizedCheckBox(contextMenu, translations, game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-            addLocalizedCheckBox(contextMenu, translations, game.session().cheats().pacImmuneProperty(), "context_menu.immunity");
-            addSeparator(contextMenu);
-            addLocalizedCheckBox(contextMenu, translations, engine.ui().viewModel().muteProperty(), "context_menu.muted");
-            addLocalizedActionItem(engine(), contextMenu, translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addLocalizedTitleItem(menu.getItems(), translations, "context_menu.pacman");
+            addLocalizedCheckBox(menu.getItems(), translations, game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+            addLocalizedCheckBox(menu.getItems(), translations, game.session().cheats().pacImmuneProperty(), "context_menu.immunity");
+            addSeparator(menu.getItems());
+            addLocalizedCheckBox(menu.getItems(), translations, engine.ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedActionItem(engine(), menu.getItems(), translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
         });
 
-        return Optional.of(contextMenu);
+        return menu.getItems();
     }
 
     @Override
