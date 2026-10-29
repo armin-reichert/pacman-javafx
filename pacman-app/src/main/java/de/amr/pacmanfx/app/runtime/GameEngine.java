@@ -11,7 +11,6 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
@@ -301,25 +300,21 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         }
     }
 
-    //TODO This method is messy and needs a cleanup!
     private void enterGameVariant(GameVariantRuntime runtime) {
+        final GameVariantUIConfig uiConfig = uiConfig(runtime);
+
         currentGame = new GameContext(runtime, coinMechanism);
-
-//        stateChangeEventMapper = new StateChangeEventMapper(currentGame.eventManager());
-//        runtime.gameFlow().addStateChangeListener(stateChangeEventMapper);
-        spriteAnimationSystem.start();
-
         currentGame.runtime().eventManager().addSubscriber(this::handleGameEvent);
 
-        final GameVariantUIConfig uiConfig = uiConfig(runtime);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
+
         ui.initForGameVariant(this, uiConfig);
 
         createNewSession();
+        spriteAnimationSystem.start();
     }
 
     private void exitGameVariant(GameVariantRuntime runtime) {
-//        runtime.gameFlow().removeStateChangeListener(stateChangeEventMapper);
         spriteAnimationSystem.stop();
         soundManager.dispose();
         currentGame.runtime().eventManager().removeAllSubscribers();
