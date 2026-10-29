@@ -160,7 +160,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             session.setValue(SessionKey.HUD_VISIBLE, true);
 
             pacEatingEventHandler = new PacEatingEventHandler(game);
-            pacPowerEventHandler = new  PacPowerEventHandler(game);
+            pacPowerEventHandler = new PacPowerEventHandler(game);
             game.eventManager().addSubscriber(pacEatingEventHandler);
             game.eventManager().addSubscriber(pacPowerEventHandler);
 
