@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views;
 
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -37,4 +38,6 @@ public interface GameViewManager {
     void selectEditorView();
 
     boolean isEditorViewSelected();
+
+    void onVariantSelected(GameVariantID variantID);
 }

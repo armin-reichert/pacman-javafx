@@ -118,13 +118,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         requireNonNull(variantID);
         gameVariantManager.selectVariant(this, variantID.name());
 
-        gameViewManager.selectStartPagesView();
-        gameViewManager.startPagesView().rootPane().setSelectedIndex(0);
-
-        gameViewManager.gamePlayView().dashboard().init(this);
-
+        gameViewManager.onVariantSelected(variantID);
         ui.show(uiConfig(currentGame.runtime()));
-
         Platform.runLater(this::startBackgroundServices);
     }
 
