@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -82,17 +82,16 @@ public class StatusIconBox implements Disposable {
         icon3D.visibleProperty().bind(viewModel.common3DSettings().view3DEnabledProperty());
     }
 
-    public void bind(GameCheats cheats) {
-        iconAutopilot.visibleProperty().unbind();
-        iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
-
-        iconCheated.visibleProperty().unbind();
-        iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
-
-        iconImmune.visibleProperty().unbind();
-        iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
-
+    public void onSessionStart(GameSession session) {
+        unbindIcons();
+        iconAutopilot.visibleProperty().bind(session.cheats().pacUsingAutopilotProperty());
+        iconCheated.visibleProperty().bind(session.cheats().cheatUsedProperty());
+        iconImmune.visibleProperty().bind(session.cheats().pacImmuneProperty());
         Logger.info("Status icons (autopilot, cheated, immunity) bound");
+    }
+
+    public void onSessionEnd() {
+        unbindIcons();
     }
 
     @Override
@@ -121,5 +120,15 @@ public class StatusIconBox implements Disposable {
     // keep box compact, show visible items only
     private void rearrangeIcons(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
         hbox.getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
+    }
+
+    private void unbindIcons() {
+        iconAutopilot.visibleProperty().unbind();
+        iconAutopilot.setVisible(false);
+        iconCheated.visibleProperty().unbind();
+        iconCheated.setVisible(false);
+        iconImmune.visibleProperty().unbind();
+        iconImmune.setVisible(false);
+        Logger.info("Status icons (autopilot, cheated, immunity) unbound");
     }
 }

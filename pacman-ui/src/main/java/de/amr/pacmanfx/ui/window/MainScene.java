@@ -77,9 +77,13 @@ public class MainScene {
         keyboardInfoPopup.setEngine(engine);
     }
 
-    public void setGameSession(GameSession session) {
+    public void onSessionStart(GameSession session) {
         requireNonNull(session);
-        statusIconBox.bind(session.cheats());
+        statusIconBox.onSessionStart(session);
+    }
+
+    public void onSessionEnd() {
+        statusIconBox.onSessionEnd();
     }
 
     public void replaceGameView(GameView gameView) {

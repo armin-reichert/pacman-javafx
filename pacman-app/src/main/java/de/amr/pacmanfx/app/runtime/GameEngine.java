@@ -215,16 +215,16 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public void startSession() {
-        ui.mainScene().setGameSession(currentGame.session());
+        ui.mainScene().onSessionStart(currentGame.session());
         currentGame.runtime().gamePlay().startSession(currentGame);
         gameViewManager.selectGamePlayView();
-
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
         clock.start();
     }
 
     @Override
     public void endSession() {
+        ui.mainScene().onSessionEnd();
         soundManager.stopAll();
         gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
         gameSceneManager.removeCurrentGameScene();
