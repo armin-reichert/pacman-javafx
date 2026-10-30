@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameSimulation {
 
-    public void updateGame(GameContext game) {
+    public void makeStep(GameContext game) {
         requireNonNull(game);
         final GameVariantRuntime runtime = game.runtime();
         game.session().optLevel().ifPresent(level -> updateLevel(runtime.systems(), game, level));

@@ -347,7 +347,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     private void simulate() {
         currentGame.session().initFrame(clock.currentTick());
         try {
-            simulation.updateGame(currentGame);
+            simulation.makeStep(currentGame);
             // Now the current game scene is up-to-date!
             gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
         }
