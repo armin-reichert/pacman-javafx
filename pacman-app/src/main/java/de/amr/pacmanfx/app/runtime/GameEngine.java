@@ -134,14 +134,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     public String translate(String key, Object... args) {
         requireNonNull(key);
         if (textBundle().containsKey(key)) {
-            return replaceEscapeSequences(MessageFormat.format(textBundle().getString(key), args));
+            final String message = MessageFormat.format(textBundle().getString(key), args);
+            return message.replace("\\n", "\n");
         }
         Logger.error("Missing localized text for key {}", key);
         return "[" + key + "]";
-    }
-
-    private static String replaceEscapeSequences(String s) {
-        return s.replace("\\n", "\n");
     }
 
     // Interface GameEngineContext
