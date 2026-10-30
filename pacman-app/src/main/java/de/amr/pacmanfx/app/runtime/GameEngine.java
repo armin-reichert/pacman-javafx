@@ -214,8 +214,16 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     // EngineLifecycle
 
     @Override
+    public void createNewSession() {
+        final HUD hud = new HUD(gameVariantManager.currentVariantID());
+        final int numLives = gameVariantManager.currentRuntime().gameRules().initialLifeCount();
+        final var session = new GameSession(hud, numLives);
+        currentGame.setSession(session);
+    }
+
+    @Override
     public void startSession() {
-        ui.mainScene().onSessionStart(currentGame.session());
+        ui.onSessionStart(currentGame.session());
         currentGame.runtime().gamePlay().startSession(currentGame);
         gameViewManager.selectGamePlayView();
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -224,19 +232,11 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public void endSession() {
-        ui.mainScene().onSessionEnd();
+        ui.onSessionEnd();
         soundManager.stopAll();
         gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
         gameSceneManager.removeCurrentGameScene();
         clock.stop();
-    }
-
-    @Override
-    public void createNewSession() {
-        final HUD hud = new HUD(gameVariantManager.currentVariantID());
-        final int numLives = gameVariantManager.currentRuntime().gameRules().initialLifeCount();
-        final var session = new GameSession(hud, numLives);
-        currentGame.setSession(session);
     }
 
     @Override

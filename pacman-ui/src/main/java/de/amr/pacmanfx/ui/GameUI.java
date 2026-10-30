@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSessionLifetimeListener;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
@@ -26,7 +28,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
-public class GameUI {
+public class GameUI implements GameSessionLifetimeListener {
 
     public static final int MIN_STAGE_WIDTH  = 280;
 
@@ -146,6 +148,18 @@ public class GameUI {
 
     public void clearShortMessage() {
         flashMessageManager.clearMessage();
+    }
+
+    // --- Interface GameSessionLifetimeListener
+
+    @Override
+    public void onSessionStart(GameSession session) {
+        mainScene.onSessionStart(session);
+    }
+
+    @Override
+    public void onSessionEnd() {
+        mainScene.onSessionEnd();
     }
 
     // private

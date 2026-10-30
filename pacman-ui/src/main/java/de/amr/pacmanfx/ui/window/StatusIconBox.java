@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSessionLifetimeListener;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -23,7 +24,7 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
-public class StatusIconBox implements Disposable {
+public class StatusIconBox implements GameSessionLifetimeListener, Disposable {
 
     private final StackPane rootPane = new StackPane();
     private final HBox hbox = new HBox();
@@ -82,6 +83,7 @@ public class StatusIconBox implements Disposable {
         icon3D.visibleProperty().bind(viewModel.common3DSettings().view3DEnabledProperty());
     }
 
+    @Override
     public void onSessionStart(GameSession session) {
         unbindIcons();
         iconAutopilot.visibleProperty().bind(session.cheats().pacUsingAutopilotProperty());
@@ -90,6 +92,7 @@ public class StatusIconBox implements Disposable {
         Logger.info("Status icons (autopilot, cheated, immunity) bound");
     }
 
+    @Override
     public void onSessionEnd() {
         unbindIcons();
     }

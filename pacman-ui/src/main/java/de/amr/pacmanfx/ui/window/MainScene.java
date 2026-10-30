@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSessionLifetimeListener;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
@@ -24,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The main scene of the game.
  */
-public class MainScene {
+public class MainScene implements GameSessionLifetimeListener {
 
     private final Scene scene;
 
@@ -77,11 +78,13 @@ public class MainScene {
         keyboardInfoPopup.setEngine(engine);
     }
 
+    @Override
     public void onSessionStart(GameSession session) {
         requireNonNull(session);
         statusIconBox.onSessionStart(session);
     }
 
+    @Override
     public void onSessionEnd() {
         statusIconBox.onSessionEnd();
     }
