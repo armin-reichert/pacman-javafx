@@ -105,7 +105,7 @@ public class PacManAllGamesNoBuilder extends Application {
         final GamePlayView playView = engine.viewManager().gamePlayView();
         playView.populateDashboard(TengenDashboardFactory.instance());
 
-        engine.selectGameVariantAndShowUI(GameVariantID.ARCADE_PACMAN);
+        engine.show(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override

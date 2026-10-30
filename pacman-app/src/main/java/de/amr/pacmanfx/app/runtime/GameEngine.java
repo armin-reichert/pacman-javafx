@@ -112,7 +112,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameViewManager.init(this);
     }
 
-    public void selectGameVariantAndShowUI(GameVariantID variantID) {
+    public void show(GameVariantID variantID) {
         requireNonNull(variantID);
 
         gameVariantManager.selectVariant(this, variantID.name());
