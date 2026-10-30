@@ -157,12 +157,6 @@ public class GamePlayView implements GameView {
         contextMenuManager.hideContextMenu();
     }
 
-    public void render() {
-        updateDashboard();
-        updateMiniView();
-        renderer.render(engine);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameView interface
     // -----------------------------------------------------------------------------------------------------------------
@@ -207,6 +201,13 @@ public class GamePlayView implements GameView {
     @Override
     public StackPane rootPane() {
         return root;
+    }
+
+    @Override
+    public void render() {
+        updateDashboard();
+        updateMiniView();
+        renderer.render(engine);
     }
 
     // Private

@@ -75,4 +75,7 @@ public class EditorView implements GameView {
     public Optional<Supplier<String>> optTitleSupplier() {
         return Optional.of(editor.ui().titleProperty()::get);
     }
+
+    @Override
+    public void render() {}
 }

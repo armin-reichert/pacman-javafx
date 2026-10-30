@@ -116,6 +116,9 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
+    @Override
+    public void render() {}
+
     // Private area
 
     private int nextIndex(int index) {

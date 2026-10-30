@@ -357,12 +357,10 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void render() {
-        if (gameViewManager.isGamePlayViewSelected()) {
-            try {
-                gameViewManager.gamePlayView().render();
-            } catch (Exception x) {
-                fatalError(x);
-            }
+        try {
+            gameViewManager.currentView().render();
+        } catch (Exception x) {
+            fatalError(x);
         }
     }
 

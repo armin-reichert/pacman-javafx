@@ -31,4 +31,6 @@ public interface GameView extends QuitHandler {
     void onExit();
 
     void handleGameEvent(GameEvent gameEvent);
+
+    void render();
 }
