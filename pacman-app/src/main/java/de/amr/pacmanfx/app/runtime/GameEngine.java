@@ -72,6 +72,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     public GameEngine(
         GameClock clock,
+        GameSimulation simulation,
         CoinMechanism coinMechanism,
         GameUI ui,
         GameVariantManager gameVariantManager,
@@ -82,6 +83,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         SpriteAnimationSystem spriteAnimationSystem)
     {
         this.clock = requireNonNull(clock);
+        this.simulation = requireNonNull(simulation);
         this.coinMechanism = requireNonNull(coinMechanism);
         this.ui = requireNonNull(ui);
         this.gameVariantManager = requireNonNull(gameVariantManager);
@@ -91,7 +93,6 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
 
-        simulation = new GameSimulation();
         input = new Input();
 
         if (!validateUserDirs()) {
@@ -250,7 +251,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     @Override
     public GameVariantUIConfig uiConfig(GameVariantRuntime runtime) {
         if (!(runtime instanceof DefaultGameVariantRuntime runtimeImpl)) {
-            throw new IllegalArgumentException("Illegal game variant runtime type" + runtime.getClass().getSimpleName());
+            throw new IllegalArgumentException("Illegal game variant runtime type: " + runtime.getClass().getSimpleName());
         }
         return runtimeImpl.uiConfig();
     }
@@ -345,6 +346,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     // --- Game loop
 
     private void simulate() {
+        if (currentGame == null) {
+            return; // should never happen
+        }
         currentGame.session().initFrame(clock.currentTick());
         try {
             simulation.makeStep(currentGame);

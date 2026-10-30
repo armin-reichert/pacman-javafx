@@ -22,6 +22,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.gamestate.GameSimulation;
 import de.amr.pacmanfx.engine.CartridgeRegistry;
 import de.amr.pacmanfx.engine.DefaultGameClock;
 import de.amr.pacmanfx.engine.sound.DefaultSoundManager;
@@ -81,6 +82,7 @@ public class PacManAllGamesNoBuilder extends Application {
 
         engine = new GameEngine(
             new DefaultGameClock(GameConstants.SIMULATION_FPS),
+            new GameSimulation(),
             new CoinMechanism(99),
             ui,
             new DefaultGameVariantManager(),
