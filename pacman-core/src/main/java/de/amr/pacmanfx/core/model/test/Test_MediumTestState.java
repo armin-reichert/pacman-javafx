@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public class Test_MediumTestState extends AbstractGameState {
@@ -59,7 +59,7 @@ public class Test_MediumTestState extends AbstractGameState {
             }
         }
         else {
-            final FrameState thisFrame = session.thisFrame();
+            final Frame thisFrame = session.thisFrame();
 
             gamePlay.update(game, level);
             if (rules.isLevelCompleted(level)) {

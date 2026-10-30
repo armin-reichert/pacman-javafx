@@ -27,7 +27,7 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -319,7 +319,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevelView3D level3D) {
         final GameSession session = assertGame().session();
-        final FrameState thisFrame = session.thisFrame();
+        final Frame thisFrame = session.thisFrame();
         thisFrame.ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, playScene3D.uiConfig(), index);

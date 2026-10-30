@@ -94,7 +94,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        final FrameState thisFrame = session.thisFrame();
+        final Frame thisFrame = session.thisFrame();
         if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }

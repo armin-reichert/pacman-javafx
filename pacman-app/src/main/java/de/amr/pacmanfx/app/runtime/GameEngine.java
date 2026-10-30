@@ -345,7 +345,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     // --- Game loop
 
     private void simulate() {
-        currentGame.session().newFrameState(clock.currentTick());
+        currentGame.session().initFrame(clock.currentTick());
         try {
             simulation.updateGame(currentGame);
             // Now the current game scene is up-to-date!

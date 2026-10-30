@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FrameState {
+public class Frame {
 
     private final long tick;
 
@@ -24,7 +24,7 @@ public class FrameState {
     private final List<Ghost> ghostsKilled = new ArrayList<>();
     private final Set<Ghost> ghostsCollidingWithPac = new HashSet<>(4);
 
-    public FrameState(long tick) {
+    public Frame(long tick) {
         this.tick = tick;
     }
 

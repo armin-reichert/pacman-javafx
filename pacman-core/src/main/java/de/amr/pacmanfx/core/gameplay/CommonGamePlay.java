@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -121,7 +121,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.runtime().gameRules();
         final GameSession session = game.session();
-        final FrameState thisFrame = session.thisFrame();
+        final Frame thisFrame = session.thisFrame();
         final Pac pac = level.entitySet().pac();
 
         final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(thisFrame);
@@ -223,7 +223,7 @@ public abstract class CommonGamePlay implements GamePlay {
         highScore.position().set(14 * TS, TS);
     }
 
-    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState thisFrame) {
+    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, Frame thisFrame) {
         final Pac pac = level.entitySet().pac();
         final GameSystems systems = game.runtime().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
@@ -248,7 +248,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void checkIfPacGetsKilled(GameSession session, GameRules rules, FrameState thisFrame) {
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, Frame thisFrame) {
         // Check for optional attract mode safe period
         if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             if (rules.demoLevelMinDurationSec().isPresent()) {
@@ -269,7 +269,7 @@ public abstract class CommonGamePlay implements GamePlay {
         thisFrame.setPacKilled(pacMeetsKiller);
     }
 
-    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, FrameState thisFrame) {
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, Frame thisFrame) {
         if (thisFrame.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             thisFrame.ghostsCollidingWithPac().stream()

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 
@@ -20,16 +20,16 @@ import static java.util.Objects.requireNonNull;
 
 public class ActorCollisionHandler {
 
-    private final FrameState frameState;
+    private final Frame frame;
     private boolean doubleChecked;
     private CollisionStrategy strategy = CollisionStrategy.SAME_TILE;
     
-    public ActorCollisionHandler(FrameState frameState) {
-        this.frameState = requireNonNull(frameState);
+    public ActorCollisionHandler(Frame frame) {
+        this.frame = requireNonNull(frame);
     }
 
-    public FrameState step() {
-        return frameState;
+    public Frame step() {
+        return frame;
     }
 
     public void setStrategy(CollisionStrategy strategy) {
@@ -49,18 +49,18 @@ public class ActorCollisionHandler {
     public void detectPacGhostCollision(GameLevel level) {
         final Pac pac = level.entitySet().pac();
         final List<Ghost> ghosts = level.entitySet().ghosts().toList();
-        frameState.ghostsCollidingWithPac().clear();
+        frame.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(frameState.ghostsCollidingWithPac()::add);
+            .forEach(frame.ghostsCollidingWithPac()::add);
     }
 
     public void detectEdibleBonusCollision(GameLevel level) {
         final Pac pac = level.entitySet().pac();
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
-        frameState.setEdibleBonus(null);
+        frame.setEdibleBonus(null);
         if (bonus != null && bonus.state().enumValue() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            frameState.setEdibleBonus(bonus);
+            frame.setEdibleBonus(bonus);
         }
     }
 
@@ -68,8 +68,8 @@ public class ActorCollisionHandler {
         final Pac pac = level.entitySet().pac();
         final Vector2i pacTile = pac.position().tile();
         if (level.food().hasFoodAtTile(pacTile)) {
-            frameState.setFoodFoundTile(pacTile);
-            frameState.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));
+            frame.setFoodFoundTile(pacTile);
+            frame.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));
         }
     }
 }

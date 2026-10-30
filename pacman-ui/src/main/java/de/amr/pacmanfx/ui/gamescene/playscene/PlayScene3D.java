@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -237,7 +237,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onTick(GameContext game) {
         final GameSession session = game.session();
-        final FrameState thisFrame = session.thisFrame();
+        final Frame thisFrame = session.thisFrame();
         final long tick = thisFrame.tick();
 
         if (session.optLevel().isEmpty()) {

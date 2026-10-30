@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.FrameState;
+import de.amr.pacmanfx.core.gamestate.Frame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -121,7 +121,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         if (game == null) return Stream.empty();
 
         final GameSession session = game.session();
-        final FrameState thisFrame = session.thisFrame();
+        final Frame thisFrame = session.thisFrame();
         final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return session.optLevel()
             .map(level -> Ufx.<Renderable>streamOf(
