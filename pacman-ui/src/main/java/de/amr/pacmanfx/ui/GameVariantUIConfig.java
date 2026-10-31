@@ -39,7 +39,7 @@ public interface GameVariantUIConfig extends Disposable {
     /**
      * @return the game-variant specific text translations
      */
-    TranslationManager translations();
+    TranslationManager translationManager();
 
     /**
      * @return the factory for creating the 3D actors for this game variant

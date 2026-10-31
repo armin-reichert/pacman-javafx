@@ -75,8 +75,7 @@ public class GameUI implements GameSessionLifetimeListener {
         Logger.info(actionBindings);
     }
 
-    public void initForGameVariant(EngineUIContext engine, GameVariantUIConfig uiConfig) {
-        uiConfig.load(engine);
+    public void applyConfig(GameVariantUIConfig uiConfig) {
         viewModel.maze3DSettings().init(uiConfig.worldSettings().maze());
         updateAppIcon(uiConfig);
     }

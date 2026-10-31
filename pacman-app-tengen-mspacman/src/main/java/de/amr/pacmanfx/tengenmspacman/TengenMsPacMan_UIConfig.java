@@ -155,7 +155,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public TranslationManager translations() {
+    public TranslationManager translationManager() {
         return () -> textBundle;
     }
 

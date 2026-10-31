@@ -70,7 +70,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer (PacManGameSoundID.PAC_MAN_POWER,    RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final TranslationManager translations;
+    private final TranslationManager translationManager;
     private final Factory3D factory3D;
     private final GameSceneConfig gameSceneConfig;
 
@@ -79,7 +79,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     private PacManGameSoundEffects soundEffects;
 
     public ArcadePacMan_UIConfig() {
-        translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
+        translationManager = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
         factory3D = DefaultFactory3D.instance();
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
     }
@@ -148,8 +148,8 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public TranslationManager translations() {
-        return translations;
+    public TranslationManager translationManager() {
+        return translationManager;
     }
 
     @Override

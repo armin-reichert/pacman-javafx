@@ -298,14 +298,13 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void enterGameVariant(GameVariantRuntime runtime) {
-        final GameVariantUIConfig uiConfig = uiConfig(runtime);
-
         currentGame = new GameContext(runtime, coinMechanism);
         currentGame.runtime().eventManager().addSubscriber(this::handleGameEvent);
 
+        final GameVariantUIConfig uiConfig = uiConfig(runtime);
+        uiConfig.load(this);
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-
-        ui.initForGameVariant(this, uiConfig);
+        ui.applyConfig(uiConfig);
 
         createNewSession();
         spriteAnimationSystem.start();

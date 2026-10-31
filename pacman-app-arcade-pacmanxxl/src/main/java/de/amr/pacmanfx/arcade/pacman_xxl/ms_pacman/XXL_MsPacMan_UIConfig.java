@@ -58,7 +58,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
     );
 
-    private final TranslationManager translations;
+    private final TranslationManager translationManager;
     private final ArcadeMsPacMan_Factory3D factory3D;
     private final ArcadeMsPacMan_GameSceneConfig gameSceneConfig;
 
@@ -68,7 +68,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
     public XXL_MsPacMan_UIConfig() {
         assets = new AssetMap();
-        translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
+        translationManager = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
         factory3D = ArcadeMsPacMan_Factory3D.instance();
         gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
     }
@@ -137,8 +137,8 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public TranslationManager translations() {
-        return translations;
+    public TranslationManager translationManager() {
+        return translationManager;
     }
 
     @Override

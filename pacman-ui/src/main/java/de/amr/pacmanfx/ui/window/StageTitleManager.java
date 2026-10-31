@@ -106,7 +106,7 @@ public class StageTitleManager {
 
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
         final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
-        final TranslationManager translationManager = uiConfig.translations();
+        final TranslationManager translationManager = uiConfig.translationManager();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (translationManager.textBundle() != null
             && translationManager.textBundle().containsKey(titleKey)) {

@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private final Factory3D factory3D;
     private final GameSceneConfig gameSceneConfig;
-    private final TranslationManager translations;
+    private final TranslationManager translationManager;
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
     private AssetMap assets;
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
         gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
-        translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
+        translationManager = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
     }
 
     @Override
@@ -163,8 +163,8 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public TranslationManager translations() {
-        return translations;
+    public TranslationManager translationManager() {
+        return translationManager;
     }
 
     @Override
