@@ -41,8 +41,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameEngine implements EngineLifecycle, EngineUIContext, TranslationManager {
 
-    private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(
-        "de.amr.pacmanfx.ui.localized_texts", GameEngine.class.getModule());
+    private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.app.localized_texts");
 
     private final GameClock clock;
 
