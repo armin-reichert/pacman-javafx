@@ -30,14 +30,14 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public DefaultGameVariantManager() {}
 
     @Override
-    public void registerVariant(EngineCoreContext engine, String variantName) {
+    public void registerVariant(EngineCoreContext engine, String variantID) {
         requireNonNull(engine);
-        requireNonNull(variantName);
+        requireNonNull(variantID);
         try {
-            final GameVariantRuntime runtime = createGameVariantRuntime(engine, variantName);
-            runtimesByID.put(variantName, runtime);
+            final GameVariantRuntime runtime = createGameVariantRuntime(engine, variantID);
+            runtimesByID.put(variantID, runtime);
         } catch (Exception x) {
-            throw new RuntimeException("Game variant '%s' could not be registered".formatted(variantName), x);
+            throw new RuntimeException("Game variant '%s' could not be registered".formatted(variantID), x);
         }
     }
 
@@ -63,35 +63,34 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariantRuntime variantRuntime(String variantName) {
-        requireNonNull(variantName);
-        return runtimesByID.get(variantName);
+    public GameVariantRuntime variantRuntime(String variantID) {
+        requireNonNull(variantID);
+        return runtimesByID.get(variantID);
     }
 
     @Override
-    public boolean variantExists(String variantName) {
-        requireNonNull(variantName);
-        return runtimesByID.containsKey(variantName);
+    public boolean variantExists(String variantID) {
+        requireNonNull(variantID);
+        return runtimesByID.containsKey(variantID);
     }
 
     @Override
-    public void selectVariant(EngineCoreContext engine, String variantName) {
+    public void selectVariant(EngineCoreContext engine, String variantID) {
         requireNonNull(engine);
-        requireNonNull(variantName);
-        if (!variantExists(variantName)) {
-            registerVariant(engine, variantName);
+        requireNonNull(variantID);
+        if (!variantExists(variantID)) {
+            registerVariant(engine, variantID);
         }
-        variantRuntime(variantName).worldMapManager().loadCustomMaps();
-        currentVariantID.set(variantName);
+        variantRuntime(variantID).worldMapManager().loadCustomMaps();
+        currentVariantID.set(variantID);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(EngineCoreContext engine, String variantName) {
-        final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantName);
+    private GameVariantRuntime createGameVariantRuntime(EngineCoreContext engine, String variantID) {
+        final Cartridge cartridge = CartridgeRegistry.instance().getCartridgeByName(variantID);
         final var runtime = new DefaultGameVariantRuntime(cartridge, engine);
         runtime.gameFlow().addState(new Test_ShortTestState());
         runtime.gameFlow().addState(new Test_MediumTestState());
         runtime.gameFlow().addState(new Test_CutScenesTestState());
-        runtime.worldMapManager().loadMapPrototypes();
         return runtime;
     }
 }

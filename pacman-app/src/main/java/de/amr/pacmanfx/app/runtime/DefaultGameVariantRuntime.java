@@ -42,6 +42,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
         gameFlow = cartridge.gameFlowFactory().get();
         gameRules = cartridge.gameRulesFactory().get();
         worldMapManager = cartridge.worldMapManagerFactory().get();
+        worldMapManager.loadMapPrototypes();
 
         try {
             uiConfig = (GameVariantUIConfig) cartridge.uiConfigClass().getConstructor().newInstance();
