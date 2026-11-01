@@ -4,9 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.gamestate.AbstractGameState;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.action.ActionKeyBinding;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -21,7 +18,7 @@ public class GameFlowActions {
     private final GameAction<EngineUIContext> actionStartGame;
     private final GameAction<EngineUIContext> actionQuit;
     private final GameAction<EngineUIContext> actionLetGameStateExpire;
-    private final GameAction<EngineUIContext> actionRestartIntro;
+    private final GameAction<EngineUIContext> actionRestartSession;
 
     private final Set<ActionKeyBinding<EngineUIContext>> bindings;
 
@@ -48,25 +45,21 @@ public class GameFlowActions {
             }
         };
 
-        actionRestartIntro = new GameAction<>("restart_intro") {
+        // Copied from MAME to restart the "machine"
+        actionRestartSession = new GameAction<>("restart_session") {
             @Override
             public void execute(EngineUIContext engine) {
-                engine.optCurrentGame().ifPresent(game -> {
-                    final AbstractGameState gameState = game.state();
+                engine.lifeCycle().restartSession();
+            }
 
-                    if (gameState.id() instanceof TestStateID) {
-                        gameState.onExit(game);
-                    }
-
-                    engine.lifeCycle().endSession();
-                    game.runtime().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
-                    engine.clock().start();
-                });
+            @Override
+            public boolean isEnabled(EngineUIContext engine) {
+                return engine.optCurrentGame().isPresent();
             }
         };
 
         bindings = Set.of(
-            new ActionKeyBinding<>(actionStartGame, bareKey(KeyCode.F3)),
+            new ActionKeyBinding<>(actionRestartSession, bareKey(KeyCode.F3)),
             new ActionKeyBinding<>(actionQuit, bareKey(KeyCode.Q))
         );
     }
@@ -79,8 +72,8 @@ public class GameFlowActions {
         return actionQuit;
     }
 
-    public GameAction<EngineUIContext> actionRestartIntro() {
-        return actionRestartIntro;
+    public GameAction<EngineUIContext> actionRestartSession() {
+        return actionRestartSession;
     }
 
     public GameAction<EngineUIContext> actionStartGame() {

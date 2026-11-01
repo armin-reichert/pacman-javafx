@@ -55,10 +55,10 @@ public class DS_GameControl extends GameDashboardSection {
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
-        setGameAction(engine, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engine, buttonGroupLevelActions[GAME_LEVEL_QUIT],        CommonGameActions.instance().gameFlowActions().actionRestartSession());
         setGameAction(engine, buttonGroupLevelActions[GAME_LEVEL_NEXT],        CommonGameActions.instance().cheatActions().actionEnterNextLevel());
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
-        setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartIntro());
+        setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartSession());
 
         cbCollisionCheckedTwice.setOnAction(_ -> engine.optCurrentGame().get().runtime().gameRules()
             .actorCollisionRules().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));

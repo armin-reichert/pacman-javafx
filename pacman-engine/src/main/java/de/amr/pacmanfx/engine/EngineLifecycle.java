@@ -6,6 +6,8 @@ public interface EngineLifecycle {
 
     void endSession();
 
+    void restartSession();
+
     void createNewSession();
 
     void terminate();

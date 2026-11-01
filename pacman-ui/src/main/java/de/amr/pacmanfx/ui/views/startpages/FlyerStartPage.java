@@ -21,7 +21,6 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.stream.Stream;
@@ -116,11 +115,8 @@ public class FlyerStartPage implements StartPage {
     }
 
     protected GameStartButton createStartButton(EngineUIContext engine) {
-        final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> {
-            runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engine);
-            Logger.info("START BUTTON PRESSED!");
-        });
+        final var button = new GameStartButton("START!"); //TODO localize
+        button.setOnAction(_ -> runAction(CommonGameActions.instance().gameFlowActions().actionStartGame(), engine));
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

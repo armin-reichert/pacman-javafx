@@ -11,7 +11,9 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
+import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
@@ -233,6 +235,17 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
         gameSceneManager.removeCurrentGameScene();
         clock.stop();
+    }
+
+    @Override
+    public void restartSession() {
+        final AbstractGameState gameState = currentGame.state();
+        if (gameState.id() instanceof TestStateID) {
+            gameState.onExit(currentGame);
+        }
+        endSession();
+        createNewSession();
+        startSession();
     }
 
     @Override
