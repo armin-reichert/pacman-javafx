@@ -39,5 +39,5 @@ public interface GameViewManager {
 
     boolean isEditorViewSelected();
 
-    void onVariantSelected(GameVariantID variantID);
+    void onVariantSelected(EngineUIContext engine, String variantID);
 }

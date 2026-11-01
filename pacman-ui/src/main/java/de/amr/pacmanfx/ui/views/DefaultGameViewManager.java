@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -13,13 +12,9 @@ import de.amr.pacmanfx.uilib.controls.Carousel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import static java.util.Objects.requireNonNull;
-
 public final class DefaultGameViewManager implements GameViewManager {
 
     private final ObjectProperty<GameView> currentView = new SimpleObjectProperty<>();
-
-    private EngineUIContext engine;
 
     private StartPagesView startPagesView;
 
@@ -31,17 +26,16 @@ public final class DefaultGameViewManager implements GameViewManager {
 
     @Override
     public void init(EngineUIContext engine) {
-        this.engine = requireNonNull(engine);
-
         startPagesView = new StartPagesView(engine.translationManager());
         gamePlayView = new GamePlayView(engine);
         editorView = new EditorView();
 
+        //TODO Check if necessary
         selectStartPagesView();
     }
 
     @Override
-    public void onVariantSelected(GameVariantID variantID) {
+    public void onVariantSelected(EngineUIContext engine, String variantID) {
         gamePlayView.dashboard().init(engine);
         selectStartPagesView();
         final Carousel carousel = startPagesView.rootPane();

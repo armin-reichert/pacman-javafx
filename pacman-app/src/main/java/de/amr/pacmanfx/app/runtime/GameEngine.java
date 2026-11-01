@@ -117,7 +117,9 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         requireNonNull(variantID);
 
         gameVariantManager.selectVariant(this, variantID.name());
-        gameViewManager.onVariantSelected(variantID);
+
+        //TODO Use variant ID listener?
+        gameViewManager.onVariantSelected(this, variantID.name());
 
         ui.show(uiConfig(currentGame.runtime()));
 
