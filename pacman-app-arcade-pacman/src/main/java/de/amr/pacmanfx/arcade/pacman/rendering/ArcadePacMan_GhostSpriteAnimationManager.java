@@ -16,53 +16,54 @@ public class ArcadePacMan_GhostSpriteAnimationManager extends LazySpriteAnimatio
     
     private final GhostPersonality personality;
 
-    public ArcadePacMan_GhostSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+    public ArcadePacMan_GhostSpriteAnimationManager(SpriteAnimationSystem animationSystem, GhostPersonality personality) {
+        super(animationSystem);
         this.personality = Objects.requireNonNull(personality);
-        setFactory(id -> createAnimation(id, spriteAnimationSystem));
+        setFactory(id -> createAnimation(id, animationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem animationSystem) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.BLINKY_PATCHED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

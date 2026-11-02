@@ -81,12 +81,12 @@ public class SpriteAnimationBuilder {
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final SpriteAnimation animation = new SpriteAnimation(spriteAnimationSystem);
+        final SpriteAnimation animation = new SpriteAnimation();
         animation.setLoop(data.loop);
-        animation.setSprites(data.sprites);
+        animation.setSprites(spriteAnimationSystem, data.sprites);
         animation.setFrameDurationTicks(data.frameTicks);
         if (data.initiallyStopped) {
-            animation.stop();
+            animation.stop(spriteAnimationSystem);
         }
         data = null; // signals build has been called and data are consumed
         return animation;

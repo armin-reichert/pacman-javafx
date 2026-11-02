@@ -20,13 +20,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class LazySpriteAnimationManager implements SpriteAnimationManager {
 
+    protected final SpriteAnimationSystem animationSystem;
+
     private Map<Named, SpriteAnimation> animationsByName;
 
     private Named selectedName;
 
     private Function<Named, SpriteAnimation> factory;
 
-    protected LazySpriteAnimationManager() {}
+    protected LazySpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        this.animationSystem = requireNonNull(animationSystem);
+    }
 
     private void ensureMapCreated() {
         if (animationsByName == null) {
@@ -102,7 +106,7 @@ public class LazySpriteAnimationManager implements SpriteAnimationManager {
     public void playSelected() {
         final SpriteAnimation anim = currentAnimation();
         if (anim != null) {
-            anim.start();
+            anim.start(animationSystem);
         }
     }
 
@@ -110,7 +114,7 @@ public class LazySpriteAnimationManager implements SpriteAnimationManager {
     public void stopSelected() {
         final SpriteAnimation anim = currentAnimation();
         if (anim != null) {
-            anim.stop();
+            anim.stop(animationSystem);
         }
     }
 
@@ -118,7 +122,7 @@ public class LazySpriteAnimationManager implements SpriteAnimationManager {
     public void resetSelected() {
         final SpriteAnimation anim = currentAnimation();
         if (anim != null) {
-            anim.reset();
+            anim.reset(animationSystem);
         }
     }
 

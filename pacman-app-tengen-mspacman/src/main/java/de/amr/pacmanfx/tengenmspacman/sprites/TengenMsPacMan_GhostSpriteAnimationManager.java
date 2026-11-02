@@ -20,35 +20,36 @@ public class TengenMsPacMan_GhostSpriteAnimationManager extends LazySpriteAnimat
 
     private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem, GhostPersonality personality) {
+    public TengenMsPacMan_GhostSpriteAnimationManager(SpriteAnimationSystem animationSystem, GhostPersonality personality) {
+        super(animationSystem);
         this.personality = requireNonNull(personality);
-        setFactory(id -> createAnimation(id, spriteAnimationSystem));
+        setFactory(id -> createAnimation(id, animationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem animationSystem) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };

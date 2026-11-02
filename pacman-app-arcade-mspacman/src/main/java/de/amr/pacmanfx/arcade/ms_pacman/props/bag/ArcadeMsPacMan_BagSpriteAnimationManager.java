@@ -14,15 +14,16 @@ public class ArcadeMsPacMan_BagSpriteAnimationManager extends LazySpriteAnimatio
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_BagSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
+    public ArcadeMsPacMan_BagSpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(BLUE_BAG))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         });

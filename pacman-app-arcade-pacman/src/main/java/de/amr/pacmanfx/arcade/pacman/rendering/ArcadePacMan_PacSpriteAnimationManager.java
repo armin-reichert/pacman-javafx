@@ -15,34 +15,35 @@ public class ArcadePacMan_PacSpriteAnimationManager extends LazySpriteAnimationM
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacSpriteAnimationManager(SpriteAnimationSystem animationSystem, ArcadePacMan_SpriteSheet spriteSheet) {
+        super(animationSystem);
         this.spriteSheet = spriteSheet;
-        setFactory(id -> createAnimation(id, spriteAnimationSystem));
+        setFactory(id -> createAnimation(id, animationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem animationSystem) {
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case AnimationID.ANIM_BIG_PAC_MAN -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

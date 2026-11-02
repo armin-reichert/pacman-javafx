@@ -12,13 +12,14 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 
 class DressRaptureAnimation extends LazySpriteAnimationManager {
 
-    public DressRaptureAnimation(SpriteAnimationSystem spriteAnimationSystem) {
-        setFactory(id -> switch (id) {
+    public DressRaptureAnimation(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
 
+        setFactory(id -> switch (id) {
             case SpriteID.RED_GHOST_STRETCHED -> new SpriteAnimationBuilder()
                 .sprites(ArcadePacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.RED_GHOST_STRETCHED))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Unknown animation ID: " + id);
         });

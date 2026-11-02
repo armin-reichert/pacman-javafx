@@ -9,8 +9,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Drives all sprite animations in the game. Provides a container where sprite animations are registered. Only active
  * animations stored in this container are animated.
@@ -27,7 +25,7 @@ public class SpriteAnimationSystem {
         timeline.setCycleCount(Animation.INDEFINITE);
         final var frame = new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
             for (SpriteAnimation animation : animationContainer.activeAnimations()) {
-                animation.tick();
+                animation.tick(this);
             }
         });
         timeline.getKeyFrames().setAll(frame);

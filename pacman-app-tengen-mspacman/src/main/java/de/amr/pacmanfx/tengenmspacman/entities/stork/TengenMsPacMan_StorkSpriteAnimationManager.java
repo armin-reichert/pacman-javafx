@@ -16,16 +16,17 @@ public class TengenMsPacMan_StorkSpriteAnimationManager extends LazySpriteAnimat
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     public TengenMsPacMan_StorkSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
-        setFactory(id -> createAnimation(id, spriteAnimationSystem));
+        super(spriteAnimationSystem);
+        setFactory(this::createAnimation);
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
+    private SpriteAnimation createAnimation(Named animationID) {
         if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(STORK))
                 .frameTicks(8)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
         }
         throw new IllegalArgumentException("Illegal animation ID: " + animationID);
     }

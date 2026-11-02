@@ -13,60 +13,61 @@ public class TengenMsPacMan_PacSpriteAnimationManager extends LazySpriteAnimatio
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
+    public TengenMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(pacDyingSprites(spriteSheet))
                 .frameTicks(8)
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER))
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PAC_TURNING_AWAY))
                 .frameTicks(15)
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PAC_TURNING_AWAY))
                 .frameTicks(15)
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case TengenMsPacMan_AnimationID.ANIM_JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         });

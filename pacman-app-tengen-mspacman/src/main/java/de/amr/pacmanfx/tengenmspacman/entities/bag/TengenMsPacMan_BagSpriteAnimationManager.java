@@ -15,17 +15,18 @@ public class TengenMsPacMan_BagSpriteAnimationManager extends LazySpriteAnimatio
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_BagSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
+    public TengenMsPacMan_BagSpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.BLUE_BAG))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         });

@@ -12,32 +12,33 @@ public class ArcadeMsPacMan_PacSpriteAnimationManager extends LazySpriteAnimatio
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
-        setFactory(id -> createAnimation(id, spriteAnimationSystem));
+    public ArcadeMsPacMan_PacSpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
+        setFactory(id -> createAnimation(id, animationSystem));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem spriteAnimationSystem) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationSystem animationSystem) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             case CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
-                .build(spriteAnimationSystem);
+                .build(animationSystem);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

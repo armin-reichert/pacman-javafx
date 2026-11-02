@@ -5,16 +5,12 @@ package de.amr.basics.ui.spriteanim;
 
 import de.amr.basics.math.RectShort;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
 
 /**
  * Plays a sequence of image regions ("sprites") to create an animation effect.
  */
 public class SpriteAnimation {
-
-    private final SpriteAnimationSystem spriteAnimationSystem;
 
     private RectShort[] sprites;
     private int frame;
@@ -24,9 +20,7 @@ public class SpriteAnimation {
     private int frameDurationTicks;
     private int smallTick;
 
-    public SpriteAnimation(SpriteAnimationSystem spriteAnimationSystem) {
-        this.spriteAnimationSystem = Objects.requireNonNull(spriteAnimationSystem);
-
+    public SpriteAnimation() {
         sprites = new RectShort[0];
         frame = 0;
         loop = false;
@@ -35,42 +29,42 @@ public class SpriteAnimation {
         setFrameDurationTicks(1);
     }
 
-    public void tick() {
+    public void tick(SpriteAnimationSystem animationSystem) {
         if (!running) {
             return;
         }
         if (smallTick == frameDurationTicks - 1) {
-            advanceFrame();
+            advanceFrame(animationSystem);
             smallTick = 0;
         } else {
             ++smallTick;
         }
     }
 
-    public void start() {
+    public void start(SpriteAnimationSystem animationSystem) {
         if (!running) {
-            spriteAnimationSystem.animationContainer().add(this);
+            animationSystem.animationContainer().add(this);
             running = true;
         }
     }
 
-    public void stop() {
-        spriteAnimationSystem.animationContainer().remove(this);
+    public void stop(SpriteAnimationSystem animationSystem) {
+        animationSystem.animationContainer().remove(this);
         running = false;
     }
 
-    public void reset() {
-        stop();
+    public void reset(SpriteAnimationSystem animationSystem) {
+        stop(animationSystem);
         frame = 0;
         smallTick = 0;
     }
 
-    public void advanceFrame() {
+    public void advanceFrame(SpriteAnimationSystem animationSystem) {
         if (frame == sprites.length - 1) {
             if (loop) {
                 frame = 0;
             } else {
-                stop();
+                stop(animationSystem);
             }
         } else {
             ++frame;
@@ -78,7 +72,7 @@ public class SpriteAnimation {
         smallTick = 0;
     }
 
-    public void setSprites(RectShort[] sprites) {
+    public void setSprites(SpriteAnimationSystem animationSystem, RectShort[] sprites) {
         if (this.sprites == sprites) {
             return;
         }
@@ -86,7 +80,7 @@ public class SpriteAnimation {
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprites array is empty");
         }
-        reset();
+        reset(animationSystem);
     }
 
     public void setFrameDurationTicks(int numTicks) {

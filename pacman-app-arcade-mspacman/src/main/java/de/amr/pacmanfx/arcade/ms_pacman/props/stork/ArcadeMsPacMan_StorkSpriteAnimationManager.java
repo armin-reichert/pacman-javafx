@@ -12,14 +12,15 @@ public class ArcadeMsPacMan_StorkSpriteAnimationManager extends LazySpriteAnimat
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_StorkSpriteAnimationManager(SpriteAnimationSystem spriteAnimationSystem) {
+    public ArcadeMsPacMan_StorkSpriteAnimationManager(SpriteAnimationSystem animationSystem) {
+        super(animationSystem);
         setFactory(id -> {
             if (id == CommonSpriteAnimationID.STORK_FLYING) {
                 return new SpriteAnimationBuilder()
                     .sprites(spriteSheet.findSpriteSequence(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build(spriteAnimationSystem);
+                    .build(animationSystem);
             }
             throw new IllegalArgumentException("Illegal animation ID: " + id);
         });
