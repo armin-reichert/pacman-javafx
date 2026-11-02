@@ -16,8 +16,8 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimationContainer {
 
     private final Set<SpriteAnimation> activeAnimations = new HashSet<>();
-    private final Set<SpriteAnimation> animationsWaitingToBeAdded = new HashSet<>();
-    private final Set<SpriteAnimation> animationsWaitingToBeRemoved = new HashSet<>();
+    private final Set<SpriteAnimation> waitingToBeAdded = new HashSet<>();
+    private final Set<SpriteAnimation> waitingToBeRemoved = new HashSet<>();
 
     private boolean clearRequested;
 
@@ -26,19 +26,19 @@ public class SpriteAnimationContainer {
     public void update() {
         if (clearRequested) {
             activeAnimations.clear();
-            animationsWaitingToBeAdded.clear();
-            animationsWaitingToBeRemoved.clear();
+            waitingToBeAdded.clear();
+            waitingToBeRemoved.clear();
             clearRequested = false;
         }
 
-        if (!animationsWaitingToBeRemoved.isEmpty()) {
-            activeAnimations.removeAll(animationsWaitingToBeRemoved);
-            animationsWaitingToBeRemoved.clear();
+        if (!waitingToBeRemoved.isEmpty()) {
+            activeAnimations.removeAll(waitingToBeRemoved);
+            waitingToBeRemoved.clear();
         }
 
-        if (!animationsWaitingToBeAdded.isEmpty()) {
-            activeAnimations.addAll(animationsWaitingToBeAdded);
-            animationsWaitingToBeAdded.clear();
+        if (!waitingToBeAdded.isEmpty()) {
+            activeAnimations.addAll(waitingToBeAdded);
+            waitingToBeAdded.clear();
         }
     }
 
@@ -49,12 +49,12 @@ public class SpriteAnimationContainer {
 
     public void add(SpriteAnimation animation) {
         requireNonNull(animation);
-        animationsWaitingToBeAdded.add(animation);
+        waitingToBeAdded.add(animation);
     }
 
     public void remove(SpriteAnimation animation) {
         requireNonNull(animation);
-        animationsWaitingToBeRemoved.add(animation);
+        waitingToBeRemoved.add(animation);
     }
 
     public void clear() {
