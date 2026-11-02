@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
-import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 

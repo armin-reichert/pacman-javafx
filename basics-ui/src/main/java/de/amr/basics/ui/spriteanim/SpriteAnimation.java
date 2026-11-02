@@ -43,13 +43,13 @@ public class SpriteAnimation {
 
     public void start(SpriteAnimationSystem animationSystem) {
         if (!running) {
-            animationSystem.animationContainer().add(this);
+            animationSystem.pool().add(this);
             running = true;
         }
     }
 
     public void stop(SpriteAnimationSystem animationSystem) {
-        animationSystem.animationContainer().remove(this);
+        animationSystem.pool().remove(this);
         running = false;
     }
 

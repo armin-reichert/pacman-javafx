@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
  * Manages the set of sprite animations in the game. Only active sprites are animated by the
  * sprite animation timer.
  */
-public class SpriteAnimationContainer {
+public class SpriteAnimationPool {
 
     private final Set<SpriteAnimation> activeAnimations = new HashSet<>();
     private final Set<SpriteAnimation> waitingToBeAdded = new HashSet<>();
@@ -21,7 +21,7 @@ public class SpriteAnimationContainer {
 
     private boolean clearRequested;
 
-    public SpriteAnimationContainer() {}
+    public SpriteAnimationPool() {}
 
     public void update() {
         if (clearRequested) {

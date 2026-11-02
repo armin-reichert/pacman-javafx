@@ -17,14 +17,16 @@ public class SpriteAnimationSystem {
 
     private final Timeline timeline;
 
-    private final SpriteAnimationContainer animationContainer;
+    private final SpriteAnimationPool pool;
 
     public SpriteAnimationSystem(int fps) {
-        animationContainer = new SpriteAnimationContainer();
+        pool = new SpriteAnimationPool();
+
+        //TODO Use AnimationTimer class instead?
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         final var frame = new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
-            for (SpriteAnimation animation : animationContainer.activeAnimations()) {
+            for (SpriteAnimation animation : pool.activeAnimations()) {
                 animation.tick(this);
             }
         });
@@ -39,7 +41,7 @@ public class SpriteAnimationSystem {
         timeline.stop();
     }
 
-    public SpriteAnimationContainer animationContainer() {
-        return animationContainer;
+    public SpriteAnimationPool pool() {
+        return pool;
     }
 }
