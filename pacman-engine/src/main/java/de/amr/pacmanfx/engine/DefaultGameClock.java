@@ -76,7 +76,7 @@ public class DefaultGameClock implements GameClock {
 
     private long pausableActionCount;
 
-    private long ticksTotal;
+    private long currentTick;
 
     private long fps;
 
@@ -168,7 +168,7 @@ public class DefaultGameClock implements GameClock {
     }
 
     @Override
-    public long currentTick() { return ticksTotal; }
+    public long currentTick() { return currentTick; }
 
     @Override
     public long pausableActionCount() {
@@ -186,6 +186,7 @@ public class DefaultGameClock implements GameClock {
 
     @Override
     public boolean makeStep(boolean pausableActionEnabled) {
+        ++currentTick;
         try {
             if (pausableActionEnabled) {
                 runAction(pausableAction, "Pausable action took {} milliseconds");
@@ -202,7 +203,6 @@ public class DefaultGameClock implements GameClock {
 
     private void computeFPS() {
         final long frameStartNanos = System.nanoTime();
-        ++ticksTotal;
         ++ticksInFrame;
         if (frameStartNanos - countStartNanos > 1e9) {
             fps = ticksInFrame;
