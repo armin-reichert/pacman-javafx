@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.gamestate.Frame;
+import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 
@@ -20,15 +20,15 @@ import static java.util.Objects.requireNonNull;
 
 public class ActorCollisionHandler {
 
-    private final Frame frame;
+    private final SimulationFrame frame;
     private boolean doubleChecked;
     private CollisionStrategy strategy = CollisionStrategy.SAME_TILE;
     
-    public ActorCollisionHandler(Frame frame) {
+    public ActorCollisionHandler(SimulationFrame frame) {
         this.frame = requireNonNull(frame);
     }
 
-    public Frame step() {
+    public SimulationFrame step() {
         return frame;
     }
 

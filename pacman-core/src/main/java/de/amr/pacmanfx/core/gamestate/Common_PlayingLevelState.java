@@ -38,7 +38,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final Frame thisFrame = session.thisFrame();
+        final SimulationFrame thisFrame = session.thisFrame();
 
         gamePlay.update(game, level);
         session.cheats().update(game);
@@ -56,7 +56,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
         }
     }
 
-    private static void logGamePlayStep(Frame frame) {
+    private static void logGamePlayStep(SimulationFrame frame) {
         final List<String> report = frame.asText();
         if (!report.isEmpty()) {
             Logger.info("--- Game play step:");

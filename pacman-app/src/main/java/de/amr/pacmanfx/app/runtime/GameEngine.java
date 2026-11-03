@@ -313,7 +313,10 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
         if (currentGame == null) {
             return; // should never happen
         }
-        currentGame.session().initFrame(clock.currentTick());
+        if (currentGame.session() == null) {
+            throw new IllegalStateException("Cannot execute simulation: No game session exists");
+        }
+        currentGame.session().newSimulationFrame(clock.currentTick());
         simulation.makeStep(currentGame);
         // Now the current game scene is up-to-date!
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));

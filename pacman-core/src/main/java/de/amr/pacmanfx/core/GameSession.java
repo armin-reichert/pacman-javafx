@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.basics.ValueMap;
-import de.amr.pacmanfx.core.gamestate.Frame;
+import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 
@@ -24,7 +24,7 @@ public class GameSession extends ValueMap {
 
     private int numLives;
 
-    private Frame thisFrame;
+    private SimulationFrame thisFrame;
 
     public GameSession(HUD hud, int numLives) {
         super(new HashMap<>());
@@ -39,14 +39,14 @@ public class GameSession extends ValueMap {
             }
         });
 
-        initFrame(0);
+        thisFrame = new SimulationFrame(0);
     }
 
-    public void initFrame(long tick) {
-        thisFrame = new Frame(tick);
+    public void newSimulationFrame(long tick) {
+        thisFrame = new SimulationFrame(tick);
     }
 
-    public Frame thisFrame() {
+    public SimulationFrame thisFrame() {
         return thisFrame;
     }
 
