@@ -148,7 +148,7 @@ public interface GameClock {
      *
      * @return the number of pausable updates
      */
-    long pausableActionCount();
+    long pausableActionExecutionCount();
 
     /**
      * Executes a fixed number of simulation steps synchronously.

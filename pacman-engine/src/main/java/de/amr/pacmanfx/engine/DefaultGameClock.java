@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.engine;
 
 import de.amr.pacmanfx.core.GameClock;
@@ -74,7 +75,7 @@ public class DefaultGameClock implements GameClock {
     /** Action executed on every tick, regardless of pause state. */
     private Runnable permanentAction = () -> {};
 
-    private long pausableActionCount;
+    private long pausableActionExecutionCount;
 
     private long currentTick;
 
@@ -171,8 +172,8 @@ public class DefaultGameClock implements GameClock {
     public long currentTick() { return currentTick; }
 
     @Override
-    public long pausableActionCount() {
-        return pausableActionCount;
+    public long pausableActionExecutionCount() {
+        return pausableActionExecutionCount;
     }
 
     @Override
@@ -190,7 +191,7 @@ public class DefaultGameClock implements GameClock {
         try {
             if (pausableActionEnabled) {
                 runAction(pausableAction, "Pausable action took {} milliseconds");
-                pausableActionCount++;
+                pausableActionExecutionCount++;
             }
             runAction(permanentAction, "Permanent action took {} milliseconds");
             computeFPS();
