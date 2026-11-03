@@ -323,6 +323,9 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
     }
 
     private void render() {
+        if (viewManager.currentView() == null) {
+            throw new IllegalStateException("Cannot render game: No view is selected");
+        }
         viewManager.currentView().render();
     }
 
