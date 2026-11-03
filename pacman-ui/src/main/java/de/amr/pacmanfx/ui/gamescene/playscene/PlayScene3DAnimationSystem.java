@@ -46,7 +46,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
-import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -128,7 +128,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
     // --- Creation
 
-    private final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;
+    private final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsViewModel.DEFAULT_PARTICLE_ANIMATION_CONFIG;
 
     // The particle pool is only created when the animations are created
     private Pool<EnergizerParticle3D> particlePool;

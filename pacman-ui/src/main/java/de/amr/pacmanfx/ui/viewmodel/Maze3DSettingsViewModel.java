@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
-public class Maze3DSettingsVM {
+public class Maze3DSettingsViewModel {
 
     private final ObjectProperty<Color> floorColor;
     private final ObjectProperty<Color> lightColor;
@@ -17,7 +17,7 @@ public class Maze3DSettingsVM {
     private final FloatProperty obstacleWallThickness;
     private final ObjectProperty<Color> darkWallFillColor;
 
-    public Maze3DSettingsVM() {
+    public Maze3DSettingsViewModel() {
         floorColor = new SimpleObjectProperty<>();
         lightColor = new SimpleObjectProperty<>();
         wallHeight = new SimpleDoubleProperty();

@@ -48,7 +48,7 @@ import de.amr.pacmanfx.ui.gamescene.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.rendering.GameLevelView;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsViewModel;
 import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.view2d.RenderingSurface;
 import javafx.scene.control.ContextMenu;
@@ -106,7 +106,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onEngineConnected() {
-        final Game2DSettingsVM settings = engine.ui().viewModel().common2DSettings();
+        final Game2DSettingsViewModel settings = engine.ui().viewModel().common2DSettings();
         rootPane.backgroundProperty().bind(settings.canvasBackgroundColorProperty().map(Background::fill));
     }
 

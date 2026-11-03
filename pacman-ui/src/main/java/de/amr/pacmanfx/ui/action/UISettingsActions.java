@@ -91,7 +91,7 @@ public class UISettingsActions {
         actionToggleMiniViewVisibility = new GameAction<>("toggle_mini_view_visibility") {
             @Override
             public void execute(EngineUIContext engine) {
-                final BooleanProperty miniViewActiveProperty = engine.ui().viewModel().miniViewSettings().activeProperty;
+                final BooleanProperty miniViewActiveProperty = engine.ui().viewModel().miniViewSettings().activeProperty();
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
                 if (!engine.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {

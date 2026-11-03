@@ -59,19 +59,19 @@ public class DS_3DSettings extends GameDashboardSection {
 
         addDynamicInfo("Scene Size", () -> sceneSizeInfo(engine.gameSceneManager().optCurrentGameScene().orElse(null)));
 
-        cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty);
+        cbMiniViewVisible = checkBox("Mini View", viewModel.miniViewSettings().activeProperty());
 
         sliderMiniViewHeight = slider(
             " - Height",
-            viewModel.miniViewSettings().minHeightProperty.get(),
-            viewModel.miniViewSettings().maxHeightProperty.get(),
-            viewModel.miniViewSettings().heightProperty.get(),
+            viewModel.miniViewSettings().minHeightProperty().get(),
+            viewModel.miniViewSettings().maxHeightProperty().get(),
+            viewModel.miniViewSettings().heightProperty().get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = slider(
             " - Opacity",
             0, 100,
-            viewModel.miniViewSettings().opacityPercentageProperty.get(),
+            viewModel.miniViewSettings().opacityPercentageProperty().get(),
             false, false);
 
         sliderWallHeight = slider(
@@ -96,8 +96,8 @@ public class DS_3DSettings extends GameDashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        editPropertyWithSlider(sliderMiniViewHeight,            viewModel.miniViewSettings().heightProperty);
-        editPropertyWithSlider(sliderMiniViewOpacityPercentage, viewModel.miniViewSettings().opacityPercentageProperty);
+        editPropertyWithSlider(sliderMiniViewHeight,            viewModel.miniViewSettings().heightProperty());
+        editPropertyWithSlider(sliderMiniViewOpacityPercentage, viewModel.miniViewSettings().opacityPercentageProperty());
         editPropertyWithSlider(sliderWallHeight,                viewModel.maze3DSettings().wallHeightProperty());
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3DSettings().wallOpacityProperty());
         editPropertyWithChoiceBox(comboPerspectives,            viewModel.common3DSettings().cameraPerspectiveIDProperty());
@@ -124,7 +124,7 @@ public class DS_3DSettings extends GameDashboardSection {
         // Mini view
         final GamePlayView playView = engine.viewManager().gamePlayView();
         final MiniPlaySceneView miniView = playView.layers().miniViewLayer();
-        cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty.getValue());
+        cbMiniViewVisible.setSelected(viewModel.miniViewSettings().activeProperty().getValue());
         sliderMiniViewHeight.setDisable(miniView.isSliding());
     }
 

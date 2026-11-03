@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
-import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Game2DSettingsViewModel;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.FramedGameSceneContainer;
@@ -76,7 +76,7 @@ public class GameScenePane extends StackPane {
 
         final DoubleExpression availableWidth = ui.mainScene().scene().widthProperty();
         final DoubleExpression availableHeight = ui.mainScene().scene().heightProperty();
-        final Game2DSettingsVM settingsViewModel = ui.viewModel().common2DSettings();
+        final Game2DSettingsViewModel settingsViewModel = ui.viewModel().common2DSettings();
         final GameSceneEmbedding embedding = uiConfig.gameSceneConfig().embedding(gameScene);
         switch (embedding) {
             case PLAIN_2D, DECORATED_2D -> embedGameScene2D(availableWidth, availableHeight, gameScene, settingsViewModel, embedding);
@@ -89,7 +89,7 @@ public class GameScenePane extends StackPane {
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
     }
 
-    private void embedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsVM settingsViewModel, GameSceneEmbedding embedding) {
+    private void embedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsViewModel settingsViewModel, GameSceneEmbedding embedding) {
         if (embedding == GameSceneEmbedding.DECORATED_2D) {
             embedDecoratedGameScene2D(availableWidth, availableHeight, gameScene, settingsViewModel);
         }
@@ -101,7 +101,7 @@ public class GameScenePane extends StackPane {
         }
     }
 
-    private void embedDecoratedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsVM settingsViewModel) {
+    private void embedDecoratedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsViewModel settingsViewModel) {
         final GameSceneView2D view2D = gameScene.assertComponent(GameSceneView2D.class);
         final Color bgColor = settingsViewModel.canvasBackgroundColorProperty().get();
         final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);

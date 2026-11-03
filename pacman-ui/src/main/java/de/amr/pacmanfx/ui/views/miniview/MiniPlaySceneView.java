@@ -74,10 +74,10 @@ public class MiniPlaySceneView {
     public void setViewModel(GameViewModel viewModel) {
         this.viewModel = requireNonNull(viewModel);
 
-        renderingSurface.canvas().heightProperty().bind(viewModel.miniViewSettings().heightProperty);
+        renderingSurface.canvas().heightProperty().bind(viewModel.miniViewSettings().heightProperty());
 
         root.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
-        root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
+        root.opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty().divide(100.0));
         root.maxWidthProperty() .bind(renderingSurface.canvas().widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
         root.maxHeightProperty().bind(renderingSurface.canvas().heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
 
@@ -90,7 +90,7 @@ public class MiniPlaySceneView {
     }
 
     public void update(boolean playScene3DActive) {
-        final boolean miniViewActive = viewModel.miniViewSettings().activeProperty.get();
+        final boolean miniViewActive = viewModel.miniViewSettings().activeProperty().get();
         if (playScene3DActive && miniViewActive) {
             if (!isInsideView()) {
                 slideIn();
@@ -134,7 +134,7 @@ public class MiniPlaySceneView {
 
     private void slideIn() {
         if (isSliding()) return;
-        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideInSecondsProperty.get());
+        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideInSecondsProperty().get());
         slidingInAnimation = new TranslateTransition(duration, root);
         slidingInAnimation.setToY(0);
         slidingInAnimation.setInterpolator(Interpolator.EASE_OUT);
@@ -145,7 +145,7 @@ public class MiniPlaySceneView {
 
     private void slideOut() {
         if (isSliding()) return;
-        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideOutSecondsProperty.get());
+        final Duration duration = Duration.seconds(viewModel.miniViewSettings().slideOutSecondsProperty().get());
         slidingOutAnimation = new TranslateTransition(duration, root);
         slidingOutAnimation.setToY(outOfViewY());
         slidingOutAnimation.setInterpolator(Interpolator.EASE_IN);

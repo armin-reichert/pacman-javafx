@@ -16,10 +16,10 @@ public class GameViewModel {
     private final BooleanProperty mute;
     private final IntegerProperty numSimulationSteps;
 
-    private final MiniViewSettingsVM miniViewSettings;
-    private final Game2DSettingsVM common2DSettings;
-    private final Game3DSettingsVM common3DSettings;
-    private final Maze3DSettingsVM maze3DSettings;
+    private final MiniViewSettingsViewModel miniViewSettings;
+    private final Game2DSettingsViewModel common2DSettings;
+    private final Game3DSettingsViewModel common3DSettings;
+    private final Maze3DSettingsViewModel maze3DSettings;
 
     public GameViewModel() {
         flashMessageDuration = new SimpleObjectProperty<>();
@@ -28,10 +28,10 @@ public class GameViewModel {
         mute = new SimpleBooleanProperty();
         numSimulationSteps = new SimpleIntegerProperty(1);
 
-        miniViewSettings = new MiniViewSettingsVM();
-        common2DSettings = new Game2DSettingsVM();
-        common3DSettings = new Game3DSettingsVM();
-        maze3DSettings = new Maze3DSettingsVM();
+        miniViewSettings = new MiniViewSettingsViewModel();
+        common2DSettings = new Game2DSettingsViewModel();
+        common3DSettings = new Game3DSettingsViewModel();
+        maze3DSettings = new Maze3DSettingsViewModel();
     }
 
     public void init(GameUISettings settings) {
@@ -67,19 +67,19 @@ public class GameViewModel {
         return numSimulationSteps;
     }
 
-    public MiniViewSettingsVM miniViewSettings() {
+    public MiniViewSettingsViewModel miniViewSettings() {
         return miniViewSettings;
     }
 
-    public Game2DSettingsVM common2DSettings() {
+    public Game2DSettingsViewModel common2DSettings() {
         return common2DSettings;
     }
 
-    public Game3DSettingsVM common3DSettings() {
+    public Game3DSettingsViewModel common3DSettings() {
         return common3DSettings;
     }
 
-    public Maze3DSettingsVM maze3DSettings() {
+    public Maze3DSettingsViewModel maze3DSettings() {
         return maze3DSettings;
     }
 }

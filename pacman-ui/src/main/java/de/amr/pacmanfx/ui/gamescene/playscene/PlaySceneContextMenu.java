@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
@@ -45,7 +45,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
     private final ObjectProperty<PerspectiveID> perspectiveIDProperty;
 
     public PlaySceneContextMenu(PlayScene3D playScene3D) {
-        final Game3DSettingsVM settings3D = playScene3D.engine().ui().viewModel().common3DSettings();
+        final Game3DSettingsViewModel settings3D = playScene3D.engine().ui().viewModel().common3DSettings();
         final GameContext game = playScene3D.engine().optCurrentGame().orElseThrow();
         final GameCheats cheats = game.session().cheats();
         final TranslationManager translator = playScene3D.engine().translationManager();
@@ -55,7 +55,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedTitleItem(getItems(), translator, "context_menu.scene_display");
         addLocalizedActionItem(playScene3D.engine(), getItems(), translator,
             CommonGameActions.instance().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
-        addLocalizedCheckBox(getItems(), translator, playScene3D.engine().ui().viewModel().miniViewSettings().activeProperty, "context_menu.pip");
+        addLocalizedCheckBox(getItems(), translator, playScene3D.engine().ui().viewModel().miniViewSettings().activeProperty(), "context_menu.pip");
         addLocalizedTitleItem(getItems(), translator, "context_menu.select_perspective");
 
         for (PerspectiveID id : PerspectiveID.values()) {

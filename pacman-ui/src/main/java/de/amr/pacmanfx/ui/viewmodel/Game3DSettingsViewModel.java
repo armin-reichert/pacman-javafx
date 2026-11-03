@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.DrawMode;
 
-public class Game3DSettingsVM {
+public class Game3DSettingsViewModel {
 
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
@@ -43,7 +43,7 @@ public class Game3DSettingsVM {
     /* Whether 3D rendering is enabled at all. */
     private final BooleanProperty view3DEnabled;
 
-    public Game3DSettingsVM() {
+    public Game3DSettingsViewModel() {
         axesVisible = new SimpleBooleanProperty();
         cameraPerspectiveID = new SimpleObjectProperty<>();
         drawMode = new SimpleObjectProperty<>();

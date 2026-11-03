@@ -11,12 +11,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
-public class Game2DSettingsVM {
+public class Game2DSettingsViewModel {
 
     private final ObjectProperty<Color> canvasBackgroundColor = new SimpleObjectProperty<>(Color.BLACK);
+
     private final BooleanProperty fontSmoothingOn = new SimpleBooleanProperty(false);
 
-    public Game2DSettingsVM() {}
+    public Game2DSettingsViewModel() {}
 
     public void init(Game2DSettings settings) {
         canvasBackgroundColor.set(settings.canvasBackgroundColor());

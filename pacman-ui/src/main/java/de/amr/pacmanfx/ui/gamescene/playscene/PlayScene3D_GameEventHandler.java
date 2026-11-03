@@ -44,9 +44,9 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -359,8 +359,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void playLevelEndAnimation(
-        Game3DSettingsVM settings3D,
-        Maze3DSettingsVM maze3DSettings,
+        Game3DSettingsViewModel settings3D,
+        Maze3DSettingsViewModel maze3DSettings,
         WorldMapView3D maze3D,
         boolean cutSceneFollows)
     {
@@ -416,7 +416,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         playScene3D.optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
+    private void handleTestState(Game3DSettingsViewModel globals3D, GameLevel level) {
         final MessageView messageView = level.entitySet().theOne(MessageView.class);
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(assertGame(), level);
