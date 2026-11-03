@@ -102,6 +102,7 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
 
         clock.setPausableAction(this::simulate);
         clock.setPermanentAction(this::render);
+        clock.setErrorHandler(this::fatalError);
 
         viewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
 
@@ -313,22 +314,13 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
             return; // should never happen
         }
         currentGame.session().initFrame(clock.currentTick());
-        try {
-            simulation.makeStep(currentGame);
-            // Now the current game scene is up-to-date!
-            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
-        }
-        catch (Exception x) {
-            fatalError(x);
-        }
+        simulation.makeStep(currentGame);
+        // Now the current game scene is up-to-date!
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
     }
 
     private void render() {
-        try {
-            viewManager.currentView().render();
-        } catch (Exception x) {
-            fatalError(x);
-        }
+        viewManager.currentView().render();
     }
 
     private void fatalError(Throwable reason) {
