@@ -39,6 +39,6 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void stop() {
-        engine.terminate();
+        engine.lifeCycle().terminate();
     }
 }

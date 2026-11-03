@@ -11,12 +11,9 @@ import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.GameSimulation;
-import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.GameVariantManager;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.sound.SoundManager;
@@ -41,7 +38,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games "engine".
  */
-public final class GameEngine implements EngineLifecycle, EngineUIContext, TranslationManager {
+public final class GameEngine implements EngineUIContext, TranslationManager {
 
     private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.app.localized_texts");
 
@@ -55,7 +52,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private final GameVariantManager gameVariantManager;
 
-    private final GameViewManager gameViewManager;
+    private final GameViewManager viewManager;
 
     private final GameSceneManager gameSceneManager;
 
@@ -66,6 +63,8 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     private final SpriteAnimationSystem spriteAnimationSystem;
 
     private final GameSimulation simulation;
+
+    private final EngineLifeCycleManager lifeCycleManager;
 
     private final GameUI ui;
 
@@ -78,7 +77,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         GameUI ui,
         GameVariantManager gameVariantManager,
         GameSceneManager gameSceneManager,
-        GameViewManager gameViewManager,
+        GameViewManager viewManager,
         RenderManager renderManager,
         SoundManager soundManager,
         SpriteAnimationSystem spriteAnimationSystem)
@@ -89,7 +88,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         this.ui = requireNonNull(ui);
         this.gameVariantManager = requireNonNull(gameVariantManager);
         this.gameSceneManager = requireNonNull(gameSceneManager);
-        this.gameViewManager = requireNonNull(gameViewManager);
+        this.viewManager = requireNonNull(viewManager);
         this.renderManager = requireNonNull(renderManager);
         this.soundManager = requireNonNull(soundManager);
         this.spriteAnimationSystem = requireNonNull(spriteAnimationSystem);
@@ -104,13 +103,15 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         clock.setPausableAction(this::simulate);
         clock.setPermanentAction(this::render);
 
-        gameViewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
+        viewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
 
         gameVariantManager.currentVariantIDProperty().addListener(
             (_, oldVariantName, newVariantName) -> onGameVariantNameChanged(oldVariantName, newVariantName));
 
         ui.setEngine(this);
-        gameViewManager.init(this);
+        viewManager.init(this);
+
+        lifeCycleManager = new EngineLifeCycleManager(this);
     }
 
     public void show(GameVariantID variantID) {
@@ -119,7 +120,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameVariantManager.selectVariant(this, variantID.name());
 
         //TODO Use variant ID listener?
-        gameViewManager.onVariantSelected(this, variantID.name());
+        viewManager.onVariantSelected(this, variantID.name());
 
         ui.show(uiConfig(currentGame.runtime()));
 
@@ -158,7 +159,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public EngineLifecycle lifeCycle() {
-        return this;
+        return lifeCycleManager;
     }
 
     @Override
@@ -203,60 +204,12 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     @Override
     public GameViewManager viewManager() {
-        return gameViewManager;
+        return viewManager;
     }
 
     @Override
     public DirectoryWatchdog watchdog() {
         return watchdog;
-    }
-
-    // EngineLifecycle
-
-    @Override
-    public void createNewSession() {
-        final HUD hud = new HUD(gameVariantManager.currentVariantID());
-        final int numLives = gameVariantManager.currentRuntime().gameRules().initialLifeCount();
-        final var session = new GameSession(hud, numLives);
-        currentGame.setSession(session);
-    }
-
-    @Override
-    public void startSession() {
-        ui.onSessionStart(currentGame.session());
-        currentGame.runtime().gamePlay().startSession(currentGame);
-        gameViewManager.selectGamePlayView();
-        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-        clock.start();
-    }
-
-    @Override
-    public void endSession() {
-        ui.onSessionEnd();
-        soundManager.stopAll();
-        gameSceneManager.optCurrentGameScene().ifPresent(GameScene::deactivate);
-        gameSceneManager.removeCurrentGameScene();
-        clock.stop();
-    }
-
-    @Override
-    public void restartSession() {
-        final AbstractGameState gameState = currentGame.state();
-        if (gameState.id() instanceof TestStateID) {
-            gameState.onExit(currentGame);
-        }
-        endSession();
-        createNewSession();
-        startSession();
-    }
-
-    @Override
-    public void terminate() {
-        endSession();
-        ui.stopShortMessageSystem();
-        spriteAnimationSystem.stop();
-        watchdog.dispose();
-        Logger.info("Application terminated. There is no way back!");
     }
 
     @Override
@@ -288,7 +241,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
     }
 
     private void handleGameEvent(GameEvent gameEvent) {
-        gameViewManager.currentView().handleGameEvent(gameEvent);
+        viewManager.currentView().handleGameEvent(gameEvent);
 
         //TODO check this
         final GameVariantRuntime runtime = gameVariantManager.currentRuntime();
@@ -321,7 +274,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
         ui.applyConfig(uiConfig);
 
-        createNewSession();
+        lifeCycleManager.createNewSession();
         spriteAnimationSystem.start();
     }
 
@@ -372,7 +325,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private void render() {
         try {
-            gameViewManager.currentView().render();
+            viewManager.currentView().render();
         } catch (Exception x) {
             fatalError(x);
         }
@@ -380,7 +333,7 @@ public final class GameEngine implements EngineLifecycle, EngineUIContext, Trans
 
     private void fatalError(Throwable reason) {
         Logger.error(reason, "*** KA-TAS-TRO-PHE! SOMETHING VERY BAD HAPPENED!");
-        endSession();
+        lifeCycleManager.endSession();
         ui.showMessage(Duration.seconds(60), translate("error.oh_no_my_program") + "\n" + reason.getMessage());
     }
 }
