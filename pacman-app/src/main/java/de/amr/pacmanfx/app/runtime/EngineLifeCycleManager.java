@@ -25,6 +25,10 @@ public class EngineLifeCycleManager implements EngineLifecycle {
 
     @Override
     public void createNewSession() {
+        if (engine.optCurrentGame().isEmpty()) {
+            Logger.error("Cannot create game session, no game is selected!");
+            throw new IllegalStateException();
+        }
         engine.optCurrentGame().ifPresent(game -> {
             final HUD hud = new HUD(engine.gameVariantManager().currentVariantID());
             final int numLives = engine.gameVariantManager().currentRuntime().gameRules().initialLifeCount();
@@ -34,6 +38,10 @@ public class EngineLifeCycleManager implements EngineLifecycle {
 
     @Override
     public void startSession() {
+        if (engine.optCurrentGame().isEmpty()) {
+            Logger.error("Cannot start game session, no game is selected!");
+            throw new IllegalStateException();
+        }
         engine.optCurrentGame().ifPresent(game -> {
             game.runtime().gamePlay().startSession(game);
             engine.viewManager().selectGamePlayView();
@@ -45,17 +53,19 @@ public class EngineLifeCycleManager implements EngineLifecycle {
 
     @Override
     public void endSession() {
-        engine.optCurrentGame().ifPresent(_ -> {
-            engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::deactivate);
-            engine.gameSceneManager().removeCurrentGameScene();
-            engine.clock().stop();
-            engine.soundManager().stopAll();
-            engine.ui().onSessionEnd();
-        });
+        engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::deactivate);
+        engine.gameSceneManager().removeCurrentGameScene();
+        engine.clock().stop();
+        engine.soundManager().stopAll();
+        engine.ui().onSessionEnd();
     }
 
     @Override
     public void restartSession() {
+        if (engine.optCurrentGame().isEmpty()) {
+            Logger.error("Cannot restart game session, no game is selected!");
+            throw new IllegalStateException();
+        }
         engine.optCurrentGame().ifPresent(game -> {
             final AbstractGameState gameState = game.state();
             if (gameState.id() instanceof TestStateID) {
@@ -69,12 +79,10 @@ public class EngineLifeCycleManager implements EngineLifecycle {
 
     @Override
     public void terminate() {
-        engine.optCurrentGame().ifPresent(_ -> {
-            endSession();
-            engine.ui().stopShortMessageSystem();
-            engine.spriteAnimationSystem().stop();
-            engine.watchdog().dispose();
-            Logger.info("Application terminated. There is no way back!");
-        });
+        endSession();
+        engine.ui().stopShortMessageSystem();
+        engine.spriteAnimationSystem().stop();
+        engine.watchdog().dispose();
+        Logger.info("Application terminated. There is no way back!");
     }
 }
