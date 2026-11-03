@@ -11,15 +11,16 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.EngineLifecycle;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 public class EngineLifeCycleManager implements EngineLifecycle {
 
-    private final GameEngine engine;
+    private final EngineUIContext engine;
 
-    public EngineLifeCycleManager(GameEngine engine) {
+    public EngineLifeCycleManager(EngineUIContext engine) {
         this.engine = requireNonNull(engine);
     }
 
