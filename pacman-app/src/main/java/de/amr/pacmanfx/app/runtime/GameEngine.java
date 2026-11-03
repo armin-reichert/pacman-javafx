@@ -291,6 +291,9 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
         if (oldView != null) {
             oldView.onExit();
         }
+        if (newView == null) {
+            throw new IllegalStateException("New game view is null!");
+        }
         newView.onEnter();
 
         ui.clearShortMessage();
