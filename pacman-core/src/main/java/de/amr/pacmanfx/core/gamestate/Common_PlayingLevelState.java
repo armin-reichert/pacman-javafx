@@ -15,15 +15,13 @@ import java.util.List;
 
 public final class Common_PlayingLevelState extends AbstractGameState {
 
-    private GameLevel level;
-
     public Common_PlayingLevelState() {
         super(CommonGameStateID.GAME_LEVEL_PLAYING);
     }
 
     @Override
     public void onEnterState(GameContext game) {
-        level = game.session().optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         level.entitySet().theOne(MessageView.class).hide();
 
@@ -38,6 +36,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+        final GameLevel level = game.session().optLevel().orElseThrow();
         final SimulationFrame thisFrame = game.session().thisFrame();
 
         game.play().updateLevel(game, level);
