@@ -8,7 +8,6 @@ import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
@@ -56,11 +55,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     public final void onUpdate(GameContext game) {
         final SimulationFrame thisFrame = game.session().thisFrame();
         onUpdateState(game, thisFrame.tick(), timer().tickCount());
-    }
-
-    protected void showPacAndGhosts(GameLevelEntitySet entities) {
-        entities.pac().show();
-        entities.ghosts().forEach(Ghost::show);
     }
 
     protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {

@@ -48,4 +48,9 @@ public class GameLevelEntitySet extends QuerySet<GameEntity> {
     public Pac pac() {
         return theOne(Pac.class);
     }
+
+    public void showPacAndGhosts() {
+        pac().show();
+        ghosts().forEach(Ghost::show);
+    }
 }

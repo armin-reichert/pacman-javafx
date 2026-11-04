@@ -53,7 +53,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             game.play().prepareLevelForPlaying(game, level);
         }
         else if (stateTick == 2) {
-            showPacAndGhosts(level.entitySet());
+            level.entitySet().showPacAndGhosts();
         }
         else if (stateTick == game.runtime().gameRules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);

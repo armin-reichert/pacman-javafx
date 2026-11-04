@@ -51,7 +51,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
             game.play().startLevel(game, level);
         }
         else if (stateTick == TICK_SHOW_GUYS) {
-            showPacAndGhosts(level.entitySet());
+            level.entitySet().showPacAndGhosts();
         }
         else if (stateTick == TICK_START_PLAYING) {
             final Pac pac = level.entitySet().pac();
