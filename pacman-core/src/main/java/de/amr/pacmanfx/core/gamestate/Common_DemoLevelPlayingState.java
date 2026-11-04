@@ -70,7 +70,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             level.huntingTimer().startFirstPhase(game, level.number());
         }
         else if (stateTick >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
-            game.play().update(game, level);
+            game.play().updateLevel(game, level);
         }
 
         computeNextState(game, level).ifPresent(nextState -> {

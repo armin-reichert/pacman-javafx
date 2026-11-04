@@ -62,7 +62,7 @@ public class Test_MediumTestState extends AbstractGameState {
         else {
             final SimulationFrame thisFrame = game.session().thisFrame();
 
-            game.play().update(game, level);
+            game.play().updateLevel(game, level);
             if (game.rules().isLevelCompleted(level)) {
                 game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
