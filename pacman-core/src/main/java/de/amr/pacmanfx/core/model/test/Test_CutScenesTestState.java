@@ -32,7 +32,7 @@ public class Test_CutScenesTestState extends AbstractGameState {
                 //TODO find another solution and get rid of this event type
                 game.runtime().eventManager().publishEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
-                flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
+                game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
         }
     }

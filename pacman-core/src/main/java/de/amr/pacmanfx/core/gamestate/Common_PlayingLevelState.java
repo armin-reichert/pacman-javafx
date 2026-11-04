@@ -46,13 +46,13 @@ public final class Common_PlayingLevelState extends AbstractGameState {
         logGamePlayStep(thisFrame);
 
         if (game.rules().isLevelCompleted(level)) {
-            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (thisFrame.pacKilled()) {
-            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
         else if (thisFrame.hasGhostBeenKilled()) {
-            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 

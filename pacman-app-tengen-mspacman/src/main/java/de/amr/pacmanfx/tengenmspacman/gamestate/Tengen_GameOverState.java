@@ -83,11 +83,11 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         if (timer().hasExpired()) {
             if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
-                flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                game.flow().enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
             final boolean continueGame = TengenMsPacMan_GamePlay.checkGameContinuesOnGameOver(session);
-            flow.enterGameState(game, continueGame ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO);
+            game.flow().enterGameState(game, continueGame ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO);
             return;
         }
 

@@ -25,7 +25,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     private final TickTimer timer;
 
     // State context variables
-    protected GameFlow flow;
     protected GamePlay gamePlay;
     protected GameSystems systems;
     protected GameSession session;
@@ -60,7 +59,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        flow = game.runtime().gameFlow();
         gamePlay = game.runtime().gamePlay();
         systems = game.runtime().systems();
         session = game.session();

@@ -26,7 +26,7 @@ public final class Common_BootState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
     }
 }

@@ -27,7 +27,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
             hud.levelCounter().show();
             hud.livesCounter().show();
         }
-        flow.enterGameState(game, computeNextState(game));
+        game.flow().enterGameState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {

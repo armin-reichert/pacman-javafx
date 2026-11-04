@@ -50,7 +50,7 @@ public class Test_MediumTestState extends AbstractGameState {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());
-                flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
+                game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
@@ -64,13 +64,13 @@ public class Test_MediumTestState extends AbstractGameState {
 
             gamePlay.update(game, level);
             if (game.rules().isLevelCompleted(level)) {
-                flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
+                game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
             else if (thisFrame.pacKilled()) {
                 triggerTimeout();
             }
             else if (thisFrame.hasGhostBeenKilled()) {
-                flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+                game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }

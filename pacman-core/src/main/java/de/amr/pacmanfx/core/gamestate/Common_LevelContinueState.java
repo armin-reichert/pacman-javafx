@@ -40,7 +40,7 @@ public class Common_LevelContinueState extends AbstractGameState {
         }
         else if (stateTick == continuationRules.resumeHuntingTicks()) {
             lockPacAndGhosts(level.entitySet(), false);
-            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

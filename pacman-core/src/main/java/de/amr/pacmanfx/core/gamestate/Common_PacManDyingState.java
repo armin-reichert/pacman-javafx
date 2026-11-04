@@ -86,7 +86,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
             int newNumLives = session.numLives() - 1;
             session.setNumLives(newNumLives);
-            flow.enterGameState(game, newNumLives == 0
+            game.flow().enterGameState(game, newNumLives == 0
                 ? CommonGameStateID.GAME_OVER
                 : CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }

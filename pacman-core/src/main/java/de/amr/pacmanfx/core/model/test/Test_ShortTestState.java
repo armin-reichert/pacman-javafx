@@ -94,7 +94,7 @@ public class Test_ShortTestState extends AbstractGameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                flow.restartGameState(game, CommonGameStateID.BOOT);
+                game.flow().restartGameState(game, CommonGameStateID.BOOT);
             } else {
                 timer().resetToIndefiniteDuration();
                 gamePlay.startNextLevel(game);

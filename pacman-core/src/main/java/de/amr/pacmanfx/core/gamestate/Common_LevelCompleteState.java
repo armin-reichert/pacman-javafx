@@ -60,7 +60,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
             lockPacAndGhosts(level.entitySet(), true);
         }
         if (timer().hasExpired()) {
-            flow.enterGameState(game, computeNextStateID(game));
+            game.flow().enterGameState(game, computeNextStateID(game));
         }
     }
 

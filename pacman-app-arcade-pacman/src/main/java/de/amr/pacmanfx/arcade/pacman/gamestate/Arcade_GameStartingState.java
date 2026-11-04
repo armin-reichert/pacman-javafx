@@ -60,7 +60,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
             game.coinMechanism().consumeCoin();
             session.store(SessionKey.GAME_RUNNING, true);
-            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

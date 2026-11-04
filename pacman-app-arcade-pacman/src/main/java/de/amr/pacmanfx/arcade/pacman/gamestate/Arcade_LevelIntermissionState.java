@@ -30,7 +30,7 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            flow.enterGameState(game, session.booleanValue(SessionKey.GAME_RUNNING)
+            game.flow().enterGameState(game, session.booleanValue(SessionKey.GAME_RUNNING)
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
