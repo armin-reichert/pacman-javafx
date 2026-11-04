@@ -280,7 +280,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                     scene.dark = false;
                     scene.flow.enterState(scene, SHOWING_MARQUEE);
                 }
-                final long stateTick = timer().tickCount();
+                final long stateTick = stateTimer().tickCount();
                 final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
 
                 scene.tengenPresentsTextView.assertComponent(ShadesOfBlue.class).setBlueValue(shadeOfBlue(stateTick));
@@ -459,7 +459,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         final TickTimer timer = new TickTimer("Timer-" + name());
 
         @Override
-        public TickTimer timer() {
+        public TickTimer stateTimer() {
             return timer;
         }
     }

@@ -109,7 +109,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private String stateTimerInfo(State<?> gameState) {
-        final TickTimer timer = gameState.timer();
+        final TickTimer timer = gameState.stateTimer();
         final boolean indefinite = timer.durationTicks() == TickTimer.INDEFINITE;
         if (timer.isStopped()) {
             return "Stopped at tick %s of %s".formatted(timer.tickCount(), indefinite ? "∞" : timer.durationTicks());

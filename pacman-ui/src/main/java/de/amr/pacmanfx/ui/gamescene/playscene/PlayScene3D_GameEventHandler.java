@@ -297,7 +297,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     private void onPacManDying() {
         final GameLevel level = assertLevel3D().level();
 
-        assertGame().state().timer().resetToIndefiniteDuration();
+        assertGame().state().stateTimer().resetToIndefiniteDuration();
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopAll);
 
@@ -375,7 +375,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             return;
         }
 
-        assertGame().state().timer().resetToIndefiniteDuration();
+        assertGame().state().stateTimer().resetToIndefiniteDuration();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIDProperty().get();
 

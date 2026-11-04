@@ -118,7 +118,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = game.state().timer().tickCount();
+        final long tick = game.state().stateTimer().tickCount();
 
         if (tick == TICK_CLAP) {
             clapperboard.show();

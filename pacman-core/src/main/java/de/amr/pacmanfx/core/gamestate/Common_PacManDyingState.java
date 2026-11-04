@@ -54,7 +54,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         }
 
         // End of dying animation triggers state timeout
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
 
         //TODO: needed? Scene controllers stop sounds already?
         game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());
@@ -82,7 +82,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             game.runtime().eventManager().publishEvent(new PacDeadEvent(game, pac));
         }
 
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
             int newNumLives = game.session().numLives() - 1;
             game.session().setNumLives(newNumLives);

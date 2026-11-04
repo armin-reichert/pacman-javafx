@@ -101,7 +101,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
         final TickTimer timer = new TickTimer("Timer-" + name());
 
         @Override
-        public TickTimer timer() {
+        public TickTimer stateTimer() {
             return timer;
         }
     }

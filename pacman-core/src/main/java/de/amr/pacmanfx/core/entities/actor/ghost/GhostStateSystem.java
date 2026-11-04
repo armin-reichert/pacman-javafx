@@ -26,7 +26,7 @@ public class GhostStateSystem {
         requireNonNull(game);
         requireNonNull(ghost);
 
-        ghost.state().setStateTick(game.state().timer().tickCount());
+        ghost.state().setStateTick(game.state().stateTimer().tickCount());
 
         final boolean pacHasPower = ghost.state().hasPacPower();
         final boolean alreadyKilled = ghost.state().killChainIndex() != -1;

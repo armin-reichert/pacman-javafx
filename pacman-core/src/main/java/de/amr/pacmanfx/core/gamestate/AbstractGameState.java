@@ -42,7 +42,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     }
 
     @Override
-    public TickTimer timer() {
+    public TickTimer stateTimer() {
         return timer;
     }
 
@@ -53,8 +53,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onUpdate(GameContext game) {
-        final SimulationFrame thisFrame = game.session().thisFrame();
-        onUpdateState(game, thisFrame.tick(), timer().tickCount());
+        onUpdateState(game, game.session().thisFrame().tick(), stateTimer().tickCount());
     }
 
     protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {

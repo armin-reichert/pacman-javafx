@@ -26,12 +26,12 @@ public final class Common_IntroState extends AbstractGameState {
         game.session().store(SessionKey.HUD_VISIBLE, true);
         game.session().removeLevel();
 
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }

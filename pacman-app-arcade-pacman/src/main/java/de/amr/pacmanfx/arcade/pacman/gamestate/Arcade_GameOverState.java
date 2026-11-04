@@ -34,12 +34,12 @@ public class Arcade_GameOverState extends AbstractGameState {
         } catch (IOException e) {
             game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
-        timer().restartTicks(game.session().value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
+        stateTimer().restartTicks(game.session().value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             final GameLevel level = game.session().optLevel().orElseThrow();
             level.entitySet().theOne(MessageView.class).hide();
             game.session().cheats().clear();

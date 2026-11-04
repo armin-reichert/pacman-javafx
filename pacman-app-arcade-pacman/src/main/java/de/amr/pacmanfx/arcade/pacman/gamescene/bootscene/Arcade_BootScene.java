@@ -72,7 +72,7 @@ public class Arcade_BootScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final TickTimer timer = game.state().timer();
+        final TickTimer timer = game.state().stateTimer();
 
         if (timer.hasExpired()) {
             return;

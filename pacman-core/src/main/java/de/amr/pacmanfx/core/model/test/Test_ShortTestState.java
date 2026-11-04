@@ -41,7 +41,7 @@ public class Test_ShortTestState extends AbstractGameState {
         level.entitySet().pac().show();
         level.entitySet().ghosts().forEach(GameEntity::show);
 
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
 
         game.play().startLevel(game, level);
     }
@@ -51,7 +51,7 @@ public class Test_ShortTestState extends AbstractGameState {
         final GameLevel level = game.session().optLevel().orElseThrow();
         final float START = 1.0f;
 
-        if (timer().atSecond(START)) {
+        if (stateTimer().atSecond(START)) {
             game.session().hud().creditDisplay().hide();
             game.session().hud().livesCounter().show();
 
@@ -65,38 +65,38 @@ public class Test_ShortTestState extends AbstractGameState {
 
             game.runtime().eventManager().publishEvent(new TestStartedEvent(level));
         }
-        else if (timer().atSecond(START + 1)) {
+        else if (stateTimer().atSecond(START + 1)) {
             level.entitySet().theOne(MessageView.class).hide();
         }
-        else if (timer().atSecond(START + 3)) {
+        else if (stateTimer().atSecond(START + 3)) {
             game.play().activateNextBonus(game, level);
         }
-        else if (timer().atSecond(START + 5)) {
+        else if (stateTimer().atSecond(START + 5)) {
             final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
         }
-        else if (timer().atSecond(START + 6)) {
+        else if (stateTimer().atSecond(START + 6)) {
             game.play().activateNextBonus(game, level);
         }
-        else if (timer().atSecond(START + 8)) {
+        else if (stateTimer().atSecond(START + 8)) {
             final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
         }
-        else if (timer().atSecond(START + 9)) {
+        else if (stateTimer().atSecond(START + 9)) {
             level.entitySet().pac().hide();
             level.entitySet().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
             finishLevel(level, game.systems());
         }
-        else if (timer().atSecond(START + 10)) {
+        else if (stateTimer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().restartGameState(game, CommonGameStateID.BOOT);
             } else {
-                timer().resetToIndefiniteDuration();
+                stateTimer().resetToIndefiniteDuration();
                 game.play().startNextLevel(game);
             }
         }
@@ -150,6 +150,6 @@ public class Test_ShortTestState extends AbstractGameState {
         }
         level.clearBonusIndex();
 
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
     }
 }

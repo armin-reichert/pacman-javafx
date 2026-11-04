@@ -46,7 +46,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
             level.entitySet().remove(bonus);
         }
 
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         if (stateTick == 1) {
             lockPacAndGhosts(game, level.entitySet(), true);
         }
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, computeNextStateID(game));
         }
     }

@@ -24,12 +24,12 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
         game.session().hud().levelCounter().show();
         game.session().store(SessionKey.HUD_VISIBLE, true);
 
-        timer().resetToIndefiniteDuration();
+        stateTimer().resetToIndefiniteDuration();
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, game.session().booleanValue(SessionKey.GAME_RUNNING)
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }

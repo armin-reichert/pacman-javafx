@@ -14,13 +14,13 @@ public final class Common_LevelTransitionState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        timer().restartSeconds(2);
+        stateTimer().restartSeconds(2);
         game.play().startNextLevel(game);
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }

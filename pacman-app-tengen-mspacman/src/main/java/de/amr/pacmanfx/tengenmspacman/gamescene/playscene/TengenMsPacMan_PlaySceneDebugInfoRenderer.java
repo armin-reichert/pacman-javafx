@@ -46,7 +46,7 @@ public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebu
             ctx.translate(scaled(TengenMsPacMan_PlayScene2D.OFFSET_X), 0);
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * TS));
+            ctx.fillText("%s %d".formatted(gameState.name(), gameState.stateTimer().tickCount()), 0, scaled(3 * TS));
             session.optLevel().ifPresent(level -> {
                 drawMovingActorInfo(animController, level.entitySet().pac());
                 level.entitySet().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));

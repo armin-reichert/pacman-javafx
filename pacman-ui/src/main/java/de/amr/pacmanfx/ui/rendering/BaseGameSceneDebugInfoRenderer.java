@@ -95,8 +95,8 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         final AbstractGameState gameState = game.state();
         String text = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),
-            gameState.timer().tickCount(),
-            gameState.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.timer().tickCount())
+            gameState.stateTimer().tickCount(),
+            gameState.stateTimer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.stateTimer().tickCount())
         );
         if (game.session().optLevel().isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState)) {
             final GameLevel level = game.session().optLevel().get();

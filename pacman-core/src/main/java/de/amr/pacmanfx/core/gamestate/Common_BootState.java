@@ -19,13 +19,13 @@ public final class Common_BootState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        timer().restartIndefinitely();
+        stateTimer().restartIndefinitely();
         game.session().store(SessionKey.HUD_VISIBLE, false);
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (timer().hasExpired()) {
+        if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
     }

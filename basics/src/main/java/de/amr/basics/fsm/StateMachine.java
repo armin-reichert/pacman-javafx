@@ -129,7 +129,7 @@ public class StateMachine<C> {
      */
     public void resetTimers() {
         for (State<C> state : states) {
-            state.timer().resetToIndefiniteDuration();
+            state.stateTimer().resetToIndefiniteDuration();
         }
     }
 
@@ -168,14 +168,14 @@ public class StateMachine<C> {
         }
         if (state != null) {
             state.onExit(context);
-            Logger.debug("Exit  state {} timer={}", state, state.timer());
+            Logger.debug("Exit  state {} timer={}", state, state.stateTimer());
         }
         previousState = state;
         state = newState;
-        state.timer().resetToIndefiniteDuration();
-        Logger.debug("Enter state {} timer={}", state, state.timer());
+        state.stateTimer().resetToIndefiniteDuration();
+        Logger.debug("Enter state {} timer={}", state, state.stateTimer());
         state.onEnter(context);
-        Logger.debug("After Enter state {} timer={}", state, state.timer());
+        Logger.debug("After Enter state {} timer={}", state, state.stateTimer());
         stateChangeListeners.forEach(listener -> listener.onStateChange(previousState, state));
     }
 
@@ -195,7 +195,7 @@ public class StateMachine<C> {
         if (state == null) {
             throw new IllegalStateException("State machine cannot resume previous state: current state is not defined");
         }
-        Logger.debug("Resume state {}, timer= {}", previousState, previousState.timer());
+        Logger.debug("Resume state {}, timer= {}", previousState, previousState.stateTimer());
         state.onExit(context);
         state = previousState;
     }
@@ -210,10 +210,10 @@ public class StateMachine<C> {
             throw new IllegalStateException("State machine cannot be updated: current state is not defined");
         }
         state.onUpdate(context);
-        if (state.timer().state() == TickTimer.State.READY) {
-            state.timer().start();
+        if (state.stateTimer().state() == TickTimer.State.READY) {
+            state.stateTimer().start();
         } else {
-            state.timer().doTick();
+            state.stateTimer().doTick();
         }
     }
 }

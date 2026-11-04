@@ -25,7 +25,7 @@ public class Common_LevelContinueState extends AbstractGameState {
         game.play().prepareLevelForPlaying(game, level);
         level.showMessage(MessageType.READY);
         level.entitySet().pac().state().setEnumValue(PacState.SLEEPING);
-        timer().restartIndefinitely();
+        stateTimer().restartIndefinitely();
     }
 
     @Override

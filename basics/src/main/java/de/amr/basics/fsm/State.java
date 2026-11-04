@@ -41,12 +41,12 @@ public interface State<C> extends Named {
     /**
      * @return the timer of this state
      */
-    TickTimer timer();
+    TickTimer stateTimer();
 
     /**
      * Lets the timer of this state expire immediately.
      */
     default void triggerTimeout() {
-        timer().expire();
+        stateTimer().expire();
     }
 }

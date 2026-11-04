@@ -79,7 +79,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     public void onTick(GameContext game) {
         final GameSystems systems = game.runtime().systems();
 
-        final int stateTick = (int) game.state().timer().tickCount();
+        final int stateTick = (int) game.state().stateTimer().tickCount();
 
         switch (stateTick) {
             case   1 -> fillCanvasGray(false);
