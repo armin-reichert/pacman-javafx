@@ -26,7 +26,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     public abstract void onEnterState(GameContext game);
 
-    public abstract void onUpdateState(GameContext game, long globalTick, long stateTick);
+    public abstract void onUpdate(GameContext game, long globalTick, long stateTick);
 
     public Named id() {
         return id;
@@ -53,7 +53,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onUpdate(GameContext game) {
-        onUpdateState(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
+        onUpdate(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
     }
 
     protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {

@@ -61,7 +61,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         if (stateTick == game.rules().pacDyingTiming().hideGhostsTick()) {
             level.entitySet().ghosts().forEach(GameEntity::hide);
             game.systems().pacAnimation().lockAnimation(pac, false);

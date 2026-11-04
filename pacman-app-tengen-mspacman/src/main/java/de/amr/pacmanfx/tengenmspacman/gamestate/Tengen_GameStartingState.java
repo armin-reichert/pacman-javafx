@@ -57,7 +57,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         final Pac pac = level.entitySet().pac();
 
         if (stateTick == 0) {

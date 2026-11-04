@@ -46,7 +46,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         if (stateTick == TICK_START_LEVEL) {
             game.play().startLevel(game, level);
         }

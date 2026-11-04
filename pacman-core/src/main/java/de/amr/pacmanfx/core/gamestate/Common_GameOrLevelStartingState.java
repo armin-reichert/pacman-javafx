@@ -21,7 +21,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         if (game.session().optLevel().isPresent()) {
             // When state is entered, level is not yet created and no level/lives counter should be shown
             game.session().hud().levelCounter().show();

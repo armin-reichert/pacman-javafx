@@ -47,7 +47,7 @@ public class Test_ShortTestState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         final GameLevel level = game.session().optLevel().orElseThrow();
         final float START = 1.0f;
 

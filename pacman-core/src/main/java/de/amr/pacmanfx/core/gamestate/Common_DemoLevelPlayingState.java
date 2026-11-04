@@ -46,7 +46,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTick, long stateTick) {
         final GameLevel level = game.session().optLevel().orElseThrow();
 
         if (stateTick == 1) {
