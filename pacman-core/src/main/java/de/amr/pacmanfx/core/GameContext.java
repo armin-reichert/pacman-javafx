@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -48,6 +49,10 @@ public class GameContext {
 
     public GameFlow flow() {
         return runtime.gameFlow();
+    }
+
+    public GamePlay play() {
+        return runtime.gamePlay();
     }
 
     public GameRules rules() {

@@ -35,7 +35,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         final GameSession session = game.session();
         final int startLevelNumber = gameOptionValues(session).startLevelNumber();
-        level = gamePlay.buildNormalLevel(game, startLevelNumber);
+        level = game.play().buildNormalLevel(game, startLevelNumber);
 
         final boolean boosterInitiallyEnabled = gameOptionValues(session).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
         gameOptionValues(session).setBoosterEnabled(boosterInitiallyEnabled);
@@ -68,7 +68,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         }
 
         if (stateTick == TICK_START_LEVEL) {
-            gamePlay.startLevel(game, level);
+            game.play().startLevel(game, level);
         }
         else if (stateTick == TICK_SHOW_GUYS) {
             showPacAndGhosts(level.entitySet());

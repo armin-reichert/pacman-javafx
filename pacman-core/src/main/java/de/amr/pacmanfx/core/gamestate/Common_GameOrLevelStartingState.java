@@ -34,7 +34,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
         if (session.booleanValue(SessionKey.GAME_RUNNING)) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
-        if (gamePlay.canStart(game)) {
+        if (game.play().canStart(game)) {
             return CommonGameStateID.GAME_STARTING;
         }
         return  CommonGameStateID.DEMO_LEVEL_PLAYING;

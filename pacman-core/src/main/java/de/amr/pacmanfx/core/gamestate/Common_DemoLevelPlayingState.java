@@ -31,7 +31,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         hud.creditDisplay().show();
         session.store(SessionKey.HUD_VISIBLE, true);
 
-        final GameLevel level = gamePlay.buildDemoLevel(game);
+        final GameLevel level = game.play().buildDemoLevel(game);
         session.setLevel(level);
         session.setNumLives(1);
 
@@ -50,7 +50,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         final GameLevel level = session.optLevel().orElseThrow();
 
         if (stateTick == 1) {
-            gamePlay.prepareLevelForPlaying(game, level);
+            game.play().prepareLevelForPlaying(game, level);
         }
         else if (stateTick == 2) {
             showPacAndGhosts(level.entitySet());
@@ -70,7 +70,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             level.huntingTimer().startFirstPhase(game, level.number());
         }
         else if (stateTick >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
-            gamePlay.update(game, level);
+            game.play().update(game, level);
         }
 
         computeNextState(game, level).ifPresent(nextState -> {

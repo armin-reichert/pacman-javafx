@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 import java.util.Arrays;
@@ -25,7 +24,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     private final TickTimer timer;
 
     // State context variables
-    protected GamePlay gamePlay;
     protected GameSystems systems;
     protected GameSession session;
     protected HUD hud;
@@ -59,7 +57,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        gamePlay = game.runtime().gamePlay();
         systems = game.runtime().systems();
         session = game.session();
         hud = session.hud();

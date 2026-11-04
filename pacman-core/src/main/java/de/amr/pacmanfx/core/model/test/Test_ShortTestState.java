@@ -35,7 +35,7 @@ public class Test_ShortTestState extends AbstractGameState {
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25 : game.rules().lastLevelNumber();
 
-        final GameLevel level = gamePlay.buildNormalLevel(game, 1);
+        final GameLevel level = game.play().buildNormalLevel(game, 1);
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         level.entitySet().pac().show();
@@ -43,7 +43,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
         timer().resetToIndefiniteDuration();
 
-        gamePlay.startLevel(game, level);
+        game.play().startLevel(game, level);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Test_ShortTestState extends AbstractGameState {
             level.entitySet().pac().show();
             level.entitySet().ghosts().forEach(GameEntity::show);
 
-            gamePlay.prepareLevelForPlaying(game, level);
+            game.play().prepareLevelForPlaying(game, level);
 
             level.showMessage(MessageType.READY);
 
@@ -69,7 +69,7 @@ public class Test_ShortTestState extends AbstractGameState {
             level.entitySet().theOne(MessageView.class).hide();
         }
         else if (timer().atSecond(START + 3)) {
-            gamePlay.activateNextBonus(game, level);
+            game.play().activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
             final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
@@ -78,7 +78,7 @@ public class Test_ShortTestState extends AbstractGameState {
             }
         }
         else if (timer().atSecond(START + 6)) {
-            gamePlay.activateNextBonus(game, level);
+            game.play().activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
             final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
@@ -97,7 +97,7 @@ public class Test_ShortTestState extends AbstractGameState {
                 game.flow().restartGameState(game, CommonGameStateID.BOOT);
             } else {
                 timer().resetToIndefiniteDuration();
-                gamePlay.startNextLevel(game);
+                game.play().startNextLevel(game);
             }
         }
     }
@@ -105,7 +105,7 @@ public class Test_ShortTestState extends AbstractGameState {
     private void eatBonus(GameContext game, GameLevel level, Bonus bonus) {
         // Bonus value depends on game variant and bonus type
         final int bonusValue = game.rules().scoringRules().pointsForBonus(bonus.data().symbolCode());
-        gamePlay.scorePoints(game, bonusValue, level.number());
+        game.play().scorePoints(game, bonusValue, level.number());
         Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
 
         level.entitySet().remove(bonus);

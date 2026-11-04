@@ -28,7 +28,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = gamePlay.buildNormalLevel(game, 1);
+        level = game.play().buildNormalLevel(game, 1);
 
         hud.creditDisplay().hide();
         hud.livesCounter().show();
@@ -48,7 +48,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (stateTick == TICK_START_LEVEL) {
-            gamePlay.startLevel(game, level);
+            game.play().startLevel(game, level);
         }
         else if (stateTick == TICK_SHOW_GUYS) {
             showPacAndGhosts(level.entitySet());

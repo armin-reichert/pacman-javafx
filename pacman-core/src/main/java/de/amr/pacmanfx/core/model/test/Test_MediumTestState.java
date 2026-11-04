@@ -35,11 +35,11 @@ public class Test_MediumTestState extends AbstractGameState {
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
-        final GameLevel level = gamePlay.buildNormalLevel(game, 1);
+        final GameLevel level = game.play().buildNormalLevel(game, 1);
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         configureLevelForTest(game);
-        gamePlay.startLevel(game, session.optLevel().orElseThrow());
+        game.play().startLevel(game, session.optLevel().orElseThrow());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Test_MediumTestState extends AbstractGameState {
             }
             else {
                 // Test next level
-                gamePlay.startNextLevel(game);
+                game.play().startNextLevel(game);
                 configureLevelForTest(game);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
@@ -62,7 +62,7 @@ public class Test_MediumTestState extends AbstractGameState {
         else {
             final SimulationFrame thisFrame = session.thisFrame();
 
-            gamePlay.update(game, level);
+            game.play().update(game, level);
             if (game.rules().isLevelCompleted(level)) {
                 game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
