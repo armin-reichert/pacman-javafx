@@ -29,7 +29,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         timer().restartTicks(TickTimer.secToTicks(game.rules().eatenGhostDisplaySeconds()));
 
-        level = session.optLevel().orElseThrow();
+        level = game.session().optLevel().orElseThrow();
         pac = level.entitySet().pac();
 
         pac.state().setEnumValue(PacState.SLEEPING);

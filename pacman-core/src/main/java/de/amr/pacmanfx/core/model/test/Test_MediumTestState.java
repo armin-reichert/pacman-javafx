@@ -39,12 +39,12 @@ public class Test_MediumTestState extends AbstractGameState {
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         configureLevelForTest(game);
-        game.play().startLevel(game, session.optLevel().orElseThrow());
+        game.play().startLevel(game, game.session().optLevel().orElseThrow());
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
@@ -60,7 +60,7 @@ public class Test_MediumTestState extends AbstractGameState {
             }
         }
         else {
-            final SimulationFrame thisFrame = session.thisFrame();
+            final SimulationFrame thisFrame = game.session().thisFrame();
 
             game.play().update(game, level);
             if (game.rules().isLevelCompleted(level)) {
@@ -77,14 +77,14 @@ public class Test_MediumTestState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        game.systems().levelCounterSystem().clear(hud.levelCounter());
+        game.systems().levelCounterSystem().clear(game.session().hud().levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
         final Pac pac = level.entitySet().pac();
 
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
         pac.show();
         game.systems().actorSpriteAnimController().playSelected(pac);

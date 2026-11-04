@@ -30,14 +30,14 @@ public class Arcade_GameStartingState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         level = game.play().buildNormalLevel(game, 1);
 
-        hud.creditDisplay().hide();
-        hud.livesCounter().show();
-        hud.levelCounter().show();
-        hud.gameScore().show();
-        hud.highScore().show();
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().hud().creditDisplay().hide();
+        game.session().hud().livesCounter().show();
+        game.session().hud().levelCounter().show();
+        game.session().hud().gameScore().show();
+        game.session().hud().highScore().show();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
-        hud.highScore().data().setEnabled(true);
+        game.session().hud().highScore().data().setEnabled(true);
 
         lockPacAndGhosts(game, level.entitySet(), true);
 
@@ -59,7 +59,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
             pac.state().setEnumValue(PacState.ACTIVE);
 
             game.coinMechanism().consumeCoin();
-            session.store(SessionKey.GAME_RUNNING, true);
+            game.session().store(SessionKey.GAME_RUNNING, true);
             game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

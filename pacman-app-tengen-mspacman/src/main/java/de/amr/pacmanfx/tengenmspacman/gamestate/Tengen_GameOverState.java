@@ -46,29 +46,29 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = session.optLevel().orElseThrow();
+        level = game.session().optLevel().orElseThrow();
 
         countdownAfter = 0;
 
-        session.store(SessionKey.GAME_RUNNING, false);
-        session.cheats().clear();
+        game.session().store(SessionKey.GAME_RUNNING, false);
+        game.session().cheats().clear();
 
         try {
-            game.systems().scoreSystem().saveHighScoreIfNeeded(hud.highScore());
+            game.systems().scoreSystem().saveHighScoreIfNeeded(game.session().hud().highScore());
         } catch (IOException e) {
             game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
 
         level.showMessage(MessageType.GAME_OVER);
 
-        final MapCategory mapCategory = gameOptionValues(session).mapCategory();
-        if (!session.booleanValue(SessionKey.DEMO_LEVEL_MODE) && mapCategory != MapCategory.ARCADE) {
+        final MapCategory mapCategory = gameOptionValues(game.session()).mapCategory();
+        if (!game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE) && mapCategory != MapCategory.ARCADE) {
             final MessageView messageView = level.entitySet().theOne(MessageView.class);
             createAndStartMessageAnimation(messageView, game);
             timer().restartIndefinitely(); // animation completion triggers state exit
         }
         else {
-            timer().restartTicks(session.value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
+            timer().restartTicks(game.session().value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
         }
     }
 
@@ -82,11 +82,11 @@ public class Tengen_GameOverState extends AbstractGameState {
         }
 
         if (timer().hasExpired()) {
-            if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
+            if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
                 game.flow().enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
-            final boolean continueGame = TengenMsPacMan_GamePlay.checkGameContinuesOnGameOver(session);
+            final boolean continueGame = TengenMsPacMan_GamePlay.checkGameContinuesOnGameOver(game.session());
             game.flow().enterGameState(game, continueGame ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO);
             return;
         }
@@ -105,7 +105,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        session.optLevel().orElseThrow().clearMessage();
+        game.session().optLevel().orElseThrow().clearMessage();
         final MessageView messageView = level.entitySet().theOne(MessageView.class);
         messageView.removeComponent(MessageAnimationComp.class);
     }

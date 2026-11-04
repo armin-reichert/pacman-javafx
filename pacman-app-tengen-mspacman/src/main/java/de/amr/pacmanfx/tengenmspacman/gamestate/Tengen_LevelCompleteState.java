@@ -19,12 +19,12 @@ public class Tengen_LevelCompleteState extends Common_LevelCompleteState {
 
     @Override
     protected Named computeNextStateID(GameContext game) {
-        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
+        if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME;
         }
 
         final boolean cutScene = game.rules().cutSceneAfterLevel(level.number()).isPresent();
-        if (cutScene && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
+        if (cutScene && game.session().booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }
 

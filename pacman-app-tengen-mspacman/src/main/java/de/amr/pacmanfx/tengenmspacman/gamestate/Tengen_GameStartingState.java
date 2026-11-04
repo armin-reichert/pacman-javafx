@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
@@ -33,26 +32,25 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameSession session = game.session();
-        final int startLevelNumber = gameOptionValues(session).startLevelNumber();
+        final int startLevelNumber = gameOptionValues(game.session()).startLevelNumber();
         level = game.play().buildNormalLevel(game, startLevelNumber);
 
-        final boolean boosterInitiallyEnabled = gameOptionValues(session).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
-        gameOptionValues(session).setBoosterEnabled(boosterInitiallyEnabled);
+        final boolean boosterInitiallyEnabled = gameOptionValues(game.session()).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
+        gameOptionValues(game.session()).setBoosterEnabled(boosterInitiallyEnabled);
 
         //TODO Hack. Should be done by entity update system
         final Pac pac = level.entitySet().pac();
         pac.state().setEnumValue(PacState.SLEEPING);
         pac.assertComponent(PacBoosterComp.class).setBoosterEnabled(boosterInitiallyEnabled);
 
-        hud.creditDisplay().hide();
-        hud.livesCounter().show();
-        hud.levelCounter().show();
-        hud.gameScore().show();
-        hud.highScore().show();
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().hud().creditDisplay().hide();
+        game.session().hud().livesCounter().show();
+        game.session().hud().levelCounter().show();
+        game.session().hud().gameScore().show();
+        game.session().hud().highScore().show();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
-        hud.highScore().data().setEnabled(true);
+        game.session().hud().highScore().data().setEnabled(true);
 
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
         game.runtime().eventManager().publishEvent(new GameStartedEvent(game));
@@ -76,7 +74,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         else if (stateTick == TICK_START_PLAYING) {
             lockPacAndGhosts(game, level.entitySet(), false);
             game.coinMechanism().consumeCoin();
-            session.store(SessionKey.GAME_RUNNING, true);
+            game.session().store(SessionKey.GAME_RUNNING, true);
             game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

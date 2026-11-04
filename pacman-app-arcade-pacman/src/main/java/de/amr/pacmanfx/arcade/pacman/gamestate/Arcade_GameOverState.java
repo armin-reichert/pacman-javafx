@@ -23,27 +23,27 @@ public class Arcade_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         level.showMessage(MessageType.GAME_OVER);
-        session.hud().creditDisplay().show();
-        session.store(SessionKey.GAME_RUNNING, false);
-        session.cheats().clear();
+        game.session().hud().creditDisplay().show();
+        game.session().store(SessionKey.GAME_RUNNING, false);
+        game.session().cheats().clear();
         try {
-            game.systems().scoreSystem().saveHighScoreIfNeeded(hud.highScore());
+            game.systems().scoreSystem().saveHighScoreIfNeeded(game.session().hud().highScore());
         } catch (IOException e) {
             game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
-        timer().restartTicks(session.value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
+        timer().restartTicks(game.session().value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            final GameLevel level = session.optLevel().orElseThrow();
+            final GameLevel level = game.session().optLevel().orElseThrow();
             level.entitySet().theOne(MessageView.class).hide();
-            session.cheats().clear();
-            session.removeLevel();
+            game.session().cheats().clear();
+            game.session().removeLevel();
             game.flow().enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);

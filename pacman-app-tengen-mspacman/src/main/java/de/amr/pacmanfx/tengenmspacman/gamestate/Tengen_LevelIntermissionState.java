@@ -25,19 +25,19 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
         final OptionalInt cutSceneNumber = game.rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == game.rules().lastCutSceneNumber();
 
         if (isLastCutScene) {
-            session.store(SessionKey.HUD_VISIBLE, false);
+            game.session().store(SessionKey.HUD_VISIBLE, false);
         } else {
-            hud.gameScore().hide();
-            hud.levelCounter().show();
-            hud.livesCounter().hide();
-            hud.additionalEntities().elementsOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
-            session.store(SessionKey.HUD_VISIBLE, true);
+            game.session().hud().gameScore().hide();
+            game.session().hud().levelCounter().show();
+            game.session().hud().livesCounter().hide();
+            game.session().hud().additionalEntities().elementsOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            game.session().store(SessionKey.HUD_VISIBLE, true);
         }
         timer().resetToIndefiniteDuration();
     }
@@ -45,21 +45,21 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            game.flow().enterGameState(game, session.booleanValue(SessionKey.GAME_RUNNING)
+            game.flow().enterGameState(game, game.session().booleanValue(SessionKey.GAME_RUNNING)
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 
     @Override
     public void onExit(GameContext game) {
-        if (gameOptionValues(session).mapCategory() == MapCategory.ARCADE) {
-            session.store(SessionKey.HUD_VISIBLE, false);
+        if (gameOptionValues(game.session()).mapCategory() == MapCategory.ARCADE) {
+            game.session().store(SessionKey.HUD_VISIBLE, false);
         } else {
-            hud.additionalEntities().elementsOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
-            hud.gameScore().show();
-            hud.levelCounter().show();
-            hud.livesCounter().hide();
-            session.store(SessionKey.HUD_VISIBLE, true);
+            game.session().hud().additionalEntities().elementsOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            game.session().hud().gameScore().show();
+            game.session().hud().levelCounter().show();
+            game.session().hud().livesCounter().hide();
+            game.session().store(SessionKey.HUD_VISIBLE, true);
         }
     }
 }

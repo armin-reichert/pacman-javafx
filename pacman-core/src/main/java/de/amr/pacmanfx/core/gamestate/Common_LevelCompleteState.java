@@ -25,7 +25,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = session.optLevel().orElseThrow();
+        level = game.session().optLevel().orElseThrow();
         pac = level.entitySet().pac();
 
         level.heartbeat().setStartState(Pulse.State.OFF);
@@ -66,12 +66,12 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     protected Named computeNextStateID(GameContext game) {
         // Just in case: if demo level was completed, go back to intro scene
-        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
+        if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return CommonGameStateID.GAME_INTRO;
         }
 
         final boolean cutSceneFollows = game.rules().cutSceneAfterLevel(level.number()).isPresent();
-        if (cutSceneFollows && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
+        if (cutSceneFollows && game.session().booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }
 

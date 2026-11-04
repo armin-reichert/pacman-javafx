@@ -24,16 +24,16 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        hud.gameScore().data().setEnabled(false);
-        hud.highScore().data().setEnabled(false);
-        hud.livesCounter().hide();
-        hud.levelCounter().show();
-        hud.creditDisplay().show();
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().hud().gameScore().data().setEnabled(false);
+        game.session().hud().highScore().data().setEnabled(false);
+        game.session().hud().livesCounter().hide();
+        game.session().hud().levelCounter().show();
+        game.session().hud().creditDisplay().show();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
         final GameLevel level = game.play().buildDemoLevel(game);
-        session.setLevel(level);
-        session.setNumLives(1);
+        game.session().setLevel(level);
+        game.session().setNumLives(1);
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.worldNavigation().setPaused(true);
@@ -47,7 +47,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
 
         if (stateTick == 1) {
             game.play().prepareLevelForPlaying(game, level);
@@ -94,7 +94,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        final SimulationFrame thisFrame = session.thisFrame();
+        final SimulationFrame thisFrame = game.session().thisFrame();
         if (game.runtime().gameRules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }

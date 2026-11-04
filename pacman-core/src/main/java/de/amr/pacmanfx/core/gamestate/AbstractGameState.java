@@ -8,8 +8,6 @@ import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
@@ -21,10 +19,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     private final Named id;
     private final TickTimer timer;
-
-    // State context variables
-    protected GameSession session;
-    protected HUD hud;
 
     public AbstractGameState(Named id) {
         this.id = Objects.requireNonNull(id);
@@ -55,8 +49,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        session = game.session();
-        hud = session.hud();
         onEnterState(game);
     }
 

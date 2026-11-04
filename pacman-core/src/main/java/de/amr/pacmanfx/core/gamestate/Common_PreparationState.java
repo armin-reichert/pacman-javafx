@@ -17,18 +17,18 @@ public final class Common_PreparationState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         // We might enter this state from the demo level playing state
-        session.optLevel().ifPresent(level -> {
+        game.session().optLevel().ifPresent(level -> {
             level.entitySet().theOne(MessageView.class).hide();
-            session.removeLevel();
+            game.session().removeLevel();
         });
 
-        session.setNumLives(game.runtime().gameRules().initialLifeCount());
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().setNumLives(game.runtime().gameRules().initialLifeCount());
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
-        hud.creditDisplay().show();
-        hud.gameScore().show();
-        hud.levelCounter().show();
-        hud.livesCounter().hide();
+        game.session().hud().creditDisplay().show();
+        game.session().hud().gameScore().show();
+        game.session().hud().levelCounter().show();
+        game.session().hud().livesCounter().hide();
     }
 
     @Override

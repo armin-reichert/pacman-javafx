@@ -15,23 +15,23 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        hud.gameScore().show();
-        hud.highScore().show();
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().hud().gameScore().show();
+        game.session().hud().highScore().show();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (game.session().optLevel().isPresent()) {
             // When state is entered, level is not yet created and no level/lives counter should be shown
-            hud.levelCounter().show();
-            hud.livesCounter().show();
+            game.session().hud().levelCounter().show();
+            game.session().hud().livesCounter().show();
         }
         game.flow().enterGameState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {
-        if (session.booleanValue(SessionKey.GAME_RUNNING)) {
+        if (game.session().booleanValue(SessionKey.GAME_RUNNING)) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (game.play().canStart(game)) {

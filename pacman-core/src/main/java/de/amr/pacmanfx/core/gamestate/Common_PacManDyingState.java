@@ -26,7 +26,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = session.optLevel().orElseThrow();
+        level = game.session().optLevel().orElseThrow();
         pac = level.entitySet().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);
@@ -84,8 +84,8 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
         if (timer().hasExpired()) {
             level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
-            int newNumLives = session.numLives() - 1;
-            session.setNumLives(newNumLives);
+            int newNumLives = game.session().numLives() - 1;
+            game.session().setNumLives(newNumLives);
             game.flow().enterGameState(game, newNumLives == 0
                 ? CommonGameStateID.GAME_OVER
                 : CommonGameStateID.GAME_OR_LEVEL_STARTING);

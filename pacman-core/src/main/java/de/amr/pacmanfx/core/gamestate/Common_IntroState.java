@@ -15,16 +15,16 @@ public final class Common_IntroState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        hud.levelCounter().show();
-        hud.livesCounter().hide();
-        hud.gameScore().data().setEnabled(true);
-        hud.gameScore().show();
-        hud.highScore().data().setEnabled(true);
-        hud.highScore().show();
-        hud.creditDisplay().show();
+        game.session().hud().levelCounter().show();
+        game.session().hud().livesCounter().hide();
+        game.session().hud().gameScore().data().setEnabled(true);
+        game.session().hud().gameScore().show();
+        game.session().hud().highScore().data().setEnabled(true);
+        game.session().hud().highScore().show();
+        game.session().hud().creditDisplay().show();
 
-        session.store(SessionKey.HUD_VISIBLE, true);
-        session.removeLevel();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
+        game.session().removeLevel();
 
         timer().resetToIndefiniteDuration();
     }

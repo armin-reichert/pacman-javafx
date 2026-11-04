@@ -17,12 +17,12 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        hud.creditDisplay().hide();
-        hud.gameScore().hide();
-        hud.highScore().hide();
-        hud.livesCounter().hide();
-        hud.levelCounter().show();
-        session.store(SessionKey.HUD_VISIBLE, true);
+        game.session().hud().creditDisplay().hide();
+        game.session().hud().gameScore().hide();
+        game.session().hud().highScore().hide();
+        game.session().hud().livesCounter().hide();
+        game.session().hud().levelCounter().show();
+        game.session().store(SessionKey.HUD_VISIBLE, true);
 
         timer().resetToIndefiniteDuration();
     }
@@ -30,15 +30,15 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            game.flow().enterGameState(game, session.booleanValue(SessionKey.GAME_RUNNING)
+            game.flow().enterGameState(game, game.session().booleanValue(SessionKey.GAME_RUNNING)
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 
     @Override
     public void onExit(GameContext game) {
-        hud.gameScore().show();
-        hud.highScore().show();
-        hud.livesCounter().show();
+        game.session().hud().gameScore().show();
+        game.session().hud().highScore().show();
+        game.session().hud().livesCounter().show();
     }
 }

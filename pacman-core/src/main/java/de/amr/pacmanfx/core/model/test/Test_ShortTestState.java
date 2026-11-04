@@ -48,12 +48,12 @@ public class Test_ShortTestState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameLevel level = session.optLevel().orElseThrow();
+        final GameLevel level = game.session().optLevel().orElseThrow();
         final float START = 1.0f;
 
         if (timer().atSecond(START)) {
-            hud.creditDisplay().hide();
-            hud.livesCounter().show();
+            game.session().hud().creditDisplay().hide();
+            game.session().hud().livesCounter().show();
 
             level.heartbeat().restart();
             level.entitySet().pac().show();
@@ -122,7 +122,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        game.systems().levelCounterSystem().clear(hud.levelCounter());
+        game.systems().levelCounterSystem().clear(game.session().hud().levelCounter());
     }
 
     private void finishLevel(GameLevel level, GameSystems systems) {
