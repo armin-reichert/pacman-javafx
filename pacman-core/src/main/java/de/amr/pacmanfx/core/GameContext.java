@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,5 +43,9 @@ public class GameContext {
 
     public AbstractGameState state() {
         return runtime.gameFlow().state();
+    }
+
+    public GameRules rules() {
+        return runtime().gameRules();
     }
 }

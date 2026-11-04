@@ -30,7 +30,8 @@ public class Test_MediumTestState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        lastTestedLevelNumber = rules.lastLevelNumber() == Integer.MAX_VALUE ? 25 : rules.lastLevelNumber();
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
+            ? 25 : game.rules().lastLevelNumber();
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
@@ -62,7 +63,7 @@ public class Test_MediumTestState extends AbstractGameState {
             final SimulationFrame thisFrame = session.thisFrame();
 
             gamePlay.update(game, level);
-            if (rules.isLevelCompleted(level)) {
+            if (game.rules().isLevelCompleted(level)) {
                 flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
             else if (thisFrame.pacKilled()) {

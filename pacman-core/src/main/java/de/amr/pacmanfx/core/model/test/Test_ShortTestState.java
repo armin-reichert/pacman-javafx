@@ -32,7 +32,8 @@ public class Test_ShortTestState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        lastTestedLevelNumber = rules.lastLevelNumber() == Integer.MAX_VALUE ? 25 : rules.lastLevelNumber();
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
+            ? 25 : game.rules().lastLevelNumber();
 
         final GameLevel level = gamePlay.buildNormalLevel(game, 1);
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
@@ -103,7 +104,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
     private void eatBonus(GameContext game, GameLevel level, Bonus bonus) {
         // Bonus value depends on game variant and bonus type
-        final int bonusValue = rules.scoringRules().pointsForBonus(bonus.data().symbolCode());
+        final int bonusValue = game.rules().scoringRules().pointsForBonus(bonus.data().symbolCode());
         gamePlay.scorePoints(game, bonusValue, level.number());
         Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
 
@@ -112,7 +113,7 @@ public class Test_ShortTestState extends AbstractGameState {
         // Eaten bonus is displayed as points for short time
         final var points = new BonusPoints(bonusValue);
         points.position().set(bonus.position().asVector2f());
-        points.setLifetimeInSeconds(rules.eatenBonusDisplaySeconds());
+        points.setLifetimeInSeconds(game.rules().eatenBonusDisplaySeconds());
         points.show();
         level.entitySet().add(points);
 

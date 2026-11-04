@@ -45,7 +45,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
 
         logGamePlayStep(thisFrame);
 
-        if (rules.isLevelCompleted(level)) {
+        if (game.rules().isLevelCompleted(level)) {
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (thisFrame.pacKilled()) {

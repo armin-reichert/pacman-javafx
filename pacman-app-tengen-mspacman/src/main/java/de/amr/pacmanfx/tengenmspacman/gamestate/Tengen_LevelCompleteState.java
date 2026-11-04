@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.basics.Named;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.Common_LevelCompleteState;
@@ -17,12 +18,12 @@ public class Tengen_LevelCompleteState extends Common_LevelCompleteState {
     public Tengen_LevelCompleteState() {}
 
     @Override
-    protected Named computeNextStateID() {
+    protected Named computeNextStateID(GameContext game) {
         if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME;
         }
 
-        final boolean cutScene = rules.cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutScene = game.rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutScene && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

@@ -30,7 +30,7 @@ public class Common_LevelContinueState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final LevelContinuationRules continuationRules = rules.levelContinuation();
+        final LevelContinuationRules continuationRules = game.rules().levelContinuation();
         if (stateTick == 1) {
             showPacAndGhosts(level.entitySet());
             lockPacAndGhosts(level.entitySet(), true);

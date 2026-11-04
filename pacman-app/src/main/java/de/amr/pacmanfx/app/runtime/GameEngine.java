@@ -100,8 +100,8 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
         }
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        clock.setPausableAction(this::simulate);
-        clock.setPermanentAction(this::render);
+        clock.setPausableAction(() -> simulate(currentGame));
+        clock.setPermanentAction(() -> render(viewManager.currentView()));
         clock.setErrorHandler(this::fatalError);
 
         viewManager.currentViewProperty().addListener((_, oldView, newView) -> onViewChanged(oldView, newView));
@@ -312,24 +312,24 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
 
     // --- Game loop
 
-    private void simulate() {
-        if (currentGame == null) {
+    private void simulate(GameContext game) {
+        if (game == null) {
             return; // should never happen
         }
-        if (currentGame.session() == null) {
+        if (game.session() == null) {
             throw new IllegalStateException("Cannot execute simulation: No game session exists");
         }
-        currentGame.session().newSimulationFrame(clock.currentTick());
-        simulation.makeStep(currentGame);
+        game.session().newSimulationFrame(clock.currentTick());
+        simulation.makeStep(game);
         // Now the current game scene is up-to-date!
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(currentGame));
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
-    private void render() {
-        if (viewManager.currentView() == null) {
+    private void render(GameView gameView) {
+        if (gameView == null) {
             throw new IllegalStateException("Cannot render game: No view is selected");
         }
-        viewManager.currentView().render();
+        gameView.render();
     }
 
     private void fatalError(Throwable reason) {

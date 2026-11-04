@@ -26,7 +26,7 @@ public class Test_CutScenesTestState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            if (testedCutSceneNumber < rules.lastCutSceneNumber()) {
+            if (testedCutSceneNumber < game.rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 timer().resetToIndefiniteDuration();
                 //TODO find another solution and get rid of this event type

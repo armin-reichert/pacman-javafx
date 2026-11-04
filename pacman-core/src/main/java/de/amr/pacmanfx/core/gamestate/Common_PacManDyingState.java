@@ -62,19 +62,19 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (stateTick == rules.pacDyingTiming().hideGhostsTick()) {
+        if (stateTick == game.rules().pacDyingTiming().hideGhostsTick()) {
             level.entitySet().ghosts().forEach(GameEntity::hide);
             systems.pacAnimation().lockAnimation(pac, false);
             systems.pacAnimation().selectDyingAnimation(pac);
         }
-        else if (stateTick == rules.pacDyingTiming().animationStartTick()) {
+        else if (stateTick == game.rules().pacDyingTiming().animationStartTick()) {
             systems.pacAnimation().startDyingAnimation(pac);
             game.runtime().eventManager().publishEvent(new PacDyingEvent(pac));
         }
-        else if (stateTick == rules.pacDyingTiming().hidePacTick()) {
+        else if (stateTick == game.rules().pacDyingTiming().hidePacTick()) {
             pac.hide();
         }
-        else if (stateTick == rules.pacDyingTiming().pacDeadTick()) {
+        else if (stateTick == game.rules().pacDyingTiming().pacDeadTick()) {
             final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 level.entitySet().remove(bonus);

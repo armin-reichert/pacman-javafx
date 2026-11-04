@@ -60,17 +60,17 @@ public class Common_LevelCompleteState extends AbstractGameState {
             lockPacAndGhosts(level.entitySet(), true);
         }
         if (timer().hasExpired()) {
-            flow.enterGameState(game, computeNextStateID());
+            flow.enterGameState(game, computeNextStateID(game));
         }
     }
 
-    protected Named computeNextStateID() {
+    protected Named computeNextStateID(GameContext game) {
         // Just in case: if demo level was completed, go back to intro scene
         if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             return CommonGameStateID.GAME_INTRO;
         }
 
-        final boolean cutSceneFollows = rules.cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && session.booleanValue(SessionKey.CUT_SCENES_ENABLED)) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }
