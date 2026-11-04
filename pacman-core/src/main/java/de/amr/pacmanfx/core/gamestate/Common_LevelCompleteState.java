@@ -55,8 +55,8 @@ public class Common_LevelCompleteState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
-        if (stateTick == 1) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+        if (stateTickCount == 1) {
             lockPacAndGhosts(game, level.entitySet(), true);
         }
         if (stateTimer().hasExpired()) {

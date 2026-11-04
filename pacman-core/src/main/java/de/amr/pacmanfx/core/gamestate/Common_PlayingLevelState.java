@@ -35,7 +35,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final GameLevel level = game.session().optLevel().orElseThrow();
         final SimulationFrame thisFrame = game.session().thisFrame();
 

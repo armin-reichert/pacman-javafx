@@ -38,7 +38,7 @@ public class Arcade_GameOverState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTimer().hasExpired()) {
             final GameLevel level = game.session().optLevel().orElseThrow();
             level.entitySet().theOne(MessageView.class).hide();

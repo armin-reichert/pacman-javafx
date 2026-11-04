@@ -26,7 +26,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     public abstract void onEnterState(GameContext game);
 
-    public abstract void onUpdate(GameContext game, long globalTick, long stateTick);
+    public abstract void onUpdate(GameContext game, long globalTickCount, long stateTickCount);
 
     public Named id() {
         return id;

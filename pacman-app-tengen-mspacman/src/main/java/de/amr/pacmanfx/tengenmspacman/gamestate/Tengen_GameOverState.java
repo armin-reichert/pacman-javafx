@@ -73,7 +73,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (countdownAfter > 0) {
             --countdownAfter;
             if (countdownAfter == 0) {

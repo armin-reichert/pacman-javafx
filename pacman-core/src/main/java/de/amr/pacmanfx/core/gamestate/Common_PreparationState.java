@@ -32,7 +32,7 @@ public final class Common_PreparationState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         // Wait for user interaction (e.g. key press) to start playing
     }
 }

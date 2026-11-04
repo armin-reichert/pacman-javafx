@@ -29,16 +29,16 @@ public class Common_LevelContinueState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final LevelContinuationRules continuationRules = game.rules().levelContinuation();
-        if (stateTick == 1) {
+        if (stateTickCount == 1) {
             level.entitySet().showPacAndGhosts();
             lockPacAndGhosts(game, level.entitySet(), true);
         }
-        else if (stateTick == continuationRules.continuePlayingTicks()) {
+        else if (stateTickCount == continuationRules.continuePlayingTicks()) {
             game.runtime().eventManager().publishEvent(new GameContinuedEvent(game));
         }
-        else if (stateTick == continuationRules.resumeHuntingTicks()) {
+        else if (stateTickCount == continuationRules.resumeHuntingTicks()) {
             lockPacAndGhosts(game, level.entitySet(), false);
             game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }

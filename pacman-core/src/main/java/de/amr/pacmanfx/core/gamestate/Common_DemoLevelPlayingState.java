@@ -46,16 +46,16 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTick, long stateTick) {
+    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final GameLevel level = game.session().optLevel().orElseThrow();
 
-        if (stateTick == 1) {
+        if (stateTickCount == 1) {
             game.play().prepareLevelForPlaying(game, level);
         }
-        else if (stateTick == 2) {
+        else if (stateTickCount == 2) {
             level.entitySet().showPacAndGhosts();
         }
-        else if (stateTick == game.runtime().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTickCount == game.runtime().gameRules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entitySet().pac();
@@ -69,7 +69,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (stateTick >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTickCount >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
             game.play().updateLevel(game, level);
         }
 
