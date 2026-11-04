@@ -28,7 +28,7 @@ public class SimulationFrame {
         this.tick = tick;
     }
 
-    public long tick() {
+    public long tickCount() {
         return tick;
     }
 

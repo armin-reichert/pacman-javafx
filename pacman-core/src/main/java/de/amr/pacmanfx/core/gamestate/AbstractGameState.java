@@ -53,7 +53,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onUpdate(GameContext game) {
-        onUpdateState(game, game.session().thisFrame().tick(), stateTimer().tickCount());
+        onUpdateState(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
     }
 
     protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {

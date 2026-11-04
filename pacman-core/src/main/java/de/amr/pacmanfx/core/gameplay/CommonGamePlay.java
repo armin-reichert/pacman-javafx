@@ -237,7 +237,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 activateNextBonus(game, level);
             }
             game.runtime().eventManager().publishEvent(
-                new PacEatsFoodEvent(pac, thisFrame.energizerFound(), false, thisFrame.tick()));
+                new PacEatsFoodEvent(pac, thisFrame.energizerFound(), false, thisFrame.tickCount()));
         }
         else {
             digestionSystem.starve(pac);

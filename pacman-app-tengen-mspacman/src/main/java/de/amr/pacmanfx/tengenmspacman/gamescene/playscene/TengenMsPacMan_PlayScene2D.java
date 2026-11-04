@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final Vector2f offset = new Vector2f(OFFSET_X, 0);
         return session.optLevel()
             .map(level -> Ufx.<Renderable>streamOf(
-                createGameLevelView(level, offset, thisFrame.tick()),
+                createGameLevelView(level, offset, thisFrame.tickCount()),
                 createEntityViews(level,offset))
             )
             .orElse(Stream.empty());
