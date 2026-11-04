@@ -27,7 +27,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         level = game.play().buildNormalLevel(game, 1);
 
         game.session().hud().creditDisplay().hide();
@@ -46,7 +46,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTickCount == TICK_START_LEVEL) {
             game.play().startLevel(game, level);
         }

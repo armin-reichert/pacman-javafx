@@ -29,7 +29,7 @@ public class Test_MediumTestState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25 : game.rules().lastLevelNumber();
 
@@ -43,7 +43,7 @@ public class Test_MediumTestState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final GameLevel level = game.session().optLevel().orElseThrow();
 
         if (stateTimer().hasExpired()) {

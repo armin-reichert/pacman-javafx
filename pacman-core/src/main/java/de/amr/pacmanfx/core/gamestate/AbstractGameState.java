@@ -24,9 +24,9 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }
 
-    public abstract void onEnterState(GameContext game);
+    public abstract void doEnterState(GameContext game);
 
-    public abstract void onUpdate(GameContext game, long globalTickCount, long stateTickCount);
+    public abstract void doUpdate(GameContext game, long globalTickCount, long stateTickCount);
 
     public Named id() {
         return id;
@@ -48,12 +48,12 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        onEnterState(game);
+        doEnterState(game);
     }
 
     @Override
     public final void onUpdate(GameContext game) {
-        onUpdate(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
+        doUpdate(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
     }
 
     protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {

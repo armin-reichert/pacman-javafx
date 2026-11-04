@@ -25,7 +25,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         level = game.session().optLevel().orElseThrow();
         pac = level.entitySet().pac();
 
@@ -61,7 +61,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTickCount == game.rules().pacDyingTiming().hideGhostsTick()) {
             level.entitySet().ghosts().forEach(GameEntity::hide);
             game.systems().pacAnimation().lockAnimation(pac, false);

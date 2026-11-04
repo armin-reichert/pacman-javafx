@@ -23,7 +23,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         game.session().hud().gameScore().data().setEnabled(false);
         game.session().hud().highScore().data().setEnabled(false);
         game.session().hud().livesCounter().hide();
@@ -46,7 +46,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final GameLevel level = game.session().optLevel().orElseThrow();
 
         if (stateTickCount == 1) {

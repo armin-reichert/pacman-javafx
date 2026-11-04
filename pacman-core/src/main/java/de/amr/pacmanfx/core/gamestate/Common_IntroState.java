@@ -14,7 +14,7 @@ public final class Common_IntroState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         game.session().hud().levelCounter().show();
         game.session().hud().livesCounter().hide();
         game.session().hud().gameScore().data().setEnabled(true);
@@ -30,7 +30,7 @@ public final class Common_IntroState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }

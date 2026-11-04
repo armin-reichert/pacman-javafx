@@ -19,12 +19,12 @@ public class Tengen_ShowingHallOfFameState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         stateTimer().resetToIndefiniteDuration();
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
         }

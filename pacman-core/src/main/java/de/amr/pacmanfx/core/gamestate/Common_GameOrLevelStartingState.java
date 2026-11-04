@@ -14,14 +14,14 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         game.session().hud().gameScore().show();
         game.session().hud().highScore().show();
         game.session().store(SessionKey.HUD_VISIBLE, true);
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (game.session().optLevel().isPresent()) {
             // When state is entered, level is not yet created and no level/lives counter should be shown
             game.session().hud().levelCounter().show();

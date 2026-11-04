@@ -20,7 +20,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         final GameLevel level = game.session().optLevel().orElseThrow();
 
         level.entitySet().theOne(MessageView.class).hide();
@@ -35,7 +35,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final GameLevel level = game.session().optLevel().orElseThrow();
         final SimulationFrame thisFrame = game.session().thisFrame();
 

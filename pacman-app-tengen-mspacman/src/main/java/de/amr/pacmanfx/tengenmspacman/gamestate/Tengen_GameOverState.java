@@ -45,7 +45,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         level = game.session().optLevel().orElseThrow();
 
         countdownAfter = 0;
@@ -73,7 +73,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (countdownAfter > 0) {
             --countdownAfter;
             if (countdownAfter == 0) {

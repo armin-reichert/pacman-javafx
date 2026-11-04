@@ -20,7 +20,7 @@ public class Common_LevelContinueState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         level = game.session().optLevel().orElseThrow();
         game.play().prepareLevelForPlaying(game, level);
         level.showMessage(MessageType.READY);
@@ -29,7 +29,7 @@ public class Common_LevelContinueState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final LevelContinuationRules continuationRules = game.rules().levelContinuation();
         if (stateTickCount == 1) {
             level.entitySet().showPacAndGhosts();

@@ -15,7 +15,7 @@ public final class Common_PreparationState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         // We might enter this state from the demo level playing state
         game.session().optLevel().ifPresent(level -> {
             level.entitySet().theOne(MessageView.class).hide();
@@ -32,7 +32,7 @@ public final class Common_PreparationState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         // Wait for user interaction (e.g. key press) to start playing
     }
 }

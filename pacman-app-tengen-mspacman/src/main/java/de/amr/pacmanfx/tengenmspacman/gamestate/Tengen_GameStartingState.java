@@ -31,7 +31,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         final int startLevelNumber = gameOptionValues(game.session()).startLevelNumber();
         level = game.play().buildNormalLevel(game, startLevelNumber);
 
@@ -57,7 +57,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         final Pac pac = level.entitySet().pac();
 
         if (stateTickCount == 0) {

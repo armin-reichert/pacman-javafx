@@ -26,7 +26,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
     }
 
     @Override
-    public void onEnterState(GameContext game) {
+    public void doEnterState(GameContext game) {
         stateTimer().restartTicks(TickTimer.secToTicks(game.rules().eatenGhostDisplaySeconds()));
 
         level = game.session().optLevel().orElseThrow();
@@ -39,7 +39,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game, long globalTickCount, long stateTickCount) {
+    public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         game.play().updateLevel(game, level);
         if (stateTimer().hasExpired()) {
             game.flow().resumePreviousState(game);
