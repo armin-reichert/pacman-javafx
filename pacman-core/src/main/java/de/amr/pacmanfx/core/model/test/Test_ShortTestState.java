@@ -90,7 +90,7 @@ public class Test_ShortTestState extends AbstractGameState {
             level.entitySet().pac().hide();
             level.entitySet().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
-            finishLevel(level, systems);
+            finishLevel(level, game.systems());
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
@@ -122,7 +122,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        systems.levelCounterSystem().clear(hud.levelCounter());
+        game.systems().levelCounterSystem().clear(hud.levelCounter());
     }
 
     private void finishLevel(GameLevel level, GameSystems systems) {

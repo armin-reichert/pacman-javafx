@@ -32,8 +32,8 @@ public final class Common_PacManDyingState extends AbstractGameState {
         level.gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimer().stop();
 
-        systems.pacPower().stopAndReset(pac);
-        systems.pacAnimation().lockAnimation(pac, true);
+        game.systems().pacPower().stopAndReset(pac);
+        game.systems().pacAnimation().lockAnimation(pac, true);
 
         // Note: This does not immediately change the sprite but stops world movement
         pac.state().setEnumValue(PacState.DEAD);
@@ -44,13 +44,13 @@ public final class Common_PacManDyingState extends AbstractGameState {
                 ghost.worldNavigation().setPaused(true);
             }
             // Note: this works also if the bonus has no Elroy component!
-            systems.ghostState().setElroyEnabled(ghost, false);
+            game.systems().ghostState().setElroyEnabled(ghost, false);
         });
 
         // Stop bonus movement. Note: this works also if the bonus has no movement component!
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            systems.bonusMoveAndJump().setBonusInactive(bonus);
+            game.systems().bonusMoveAndJump().setBonusInactive(bonus);
         }
 
         // End of dying animation triggers state timeout
@@ -64,11 +64,11 @@ public final class Common_PacManDyingState extends AbstractGameState {
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (stateTick == game.rules().pacDyingTiming().hideGhostsTick()) {
             level.entitySet().ghosts().forEach(GameEntity::hide);
-            systems.pacAnimation().lockAnimation(pac, false);
-            systems.pacAnimation().selectDyingAnimation(pac);
+            game.systems().pacAnimation().lockAnimation(pac, false);
+            game.systems().pacAnimation().selectDyingAnimation(pac);
         }
         else if (stateTick == game.rules().pacDyingTiming().animationStartTick()) {
-            systems.pacAnimation().startDyingAnimation(pac);
+            game.systems().pacAnimation().startDyingAnimation(pac);
             game.runtime().eventManager().publishEvent(new PacDyingEvent(pac));
         }
         else if (stateTick == game.rules().pacDyingTiming().hidePacTick()) {

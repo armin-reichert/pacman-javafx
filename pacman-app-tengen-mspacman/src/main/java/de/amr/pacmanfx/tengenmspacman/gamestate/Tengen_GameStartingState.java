@@ -64,7 +64,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
         if (stateTick == 0) {
             game.runtime().systems().pacAnimation().update(pac, game.runtime().gameRules());
-            lockGhosts(level.entitySet(), true);
+            lockGhosts(game, level.entitySet(), true);
         }
 
         if (stateTick == TICK_START_LEVEL) {
@@ -74,7 +74,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
             showPacAndGhosts(level.entitySet());
         }
         else if (stateTick == TICK_START_PLAYING) {
-            lockPacAndGhosts(level.entitySet(), false);
+            lockPacAndGhosts(game, level.entitySet(), false);
             game.coinMechanism().consumeCoin();
             session.store(SessionKey.GAME_RUNNING, true);
             game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);

@@ -77,7 +77,7 @@ public class Test_MediumTestState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        systems.levelCounterSystem().clear(hud.levelCounter());
+        game.systems().levelCounterSystem().clear(hud.levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {
@@ -87,14 +87,14 @@ public class Test_MediumTestState extends AbstractGameState {
         session.store(SessionKey.HUD_VISIBLE, true);
 
         pac.show();
-        systems.actorSpriteAnimController().playSelected(pac);
+        game.systems().actorSpriteAnimController().playSelected(pac);
 
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.show();
-            systems.actorSpriteAnimController().playSelected(ghost);
+            game.systems().actorSpriteAnimController().playSelected(ghost);
         });
 
         game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());

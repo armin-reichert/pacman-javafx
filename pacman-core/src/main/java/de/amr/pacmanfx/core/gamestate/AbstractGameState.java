@@ -9,7 +9,6 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -24,7 +23,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     private final TickTimer timer;
 
     // State context variables
-    protected GameSystems systems;
     protected GameSession session;
     protected HUD hud;
 
@@ -57,7 +55,6 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        systems = game.runtime().systems();
         session = game.session();
         hud = session.hud();
         onEnterState(game);
@@ -74,18 +71,18 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         entities.ghosts().forEach(Ghost::show);
     }
 
-    protected void lockGhosts(GameLevelEntitySet entities, boolean locked) {
+    protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
         entities.ghosts().forEach(ghost -> {
             ghost.worldNavigation().setPaused(locked);
-            systems.ghostAnimation().lockAnimation(ghost, locked);
+            game.systems().ghostAnimation().lockAnimation(ghost, locked);
         });
     }
 
-    protected void lockPacAndGhosts(GameLevelEntitySet entities, boolean locked) {
+    protected void lockPacAndGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
         final Pac pac = entities.pac();
         pac.worldNavigation().setPaused(locked);
-        systems.pacAnimation().lockAnimation(pac, locked);
+        game.systems().pacAnimation().lockAnimation(pac, locked);
 
-        lockGhosts(entities, locked);
+        lockGhosts(game, entities, locked);
     }
 }

@@ -36,13 +36,13 @@ public class Common_LevelCompleteState extends AbstractGameState {
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.food().eatAll();
 
-        systems.pacPower().stopAndReset(pac);
+        game.systems().pacPower().stopAndReset(pac);
         pac.state().setEnumValue(PacState.SLEEPING);
 
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            systems.bonusState().setInactive(bonus);
-            bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
+            game.systems().bonusState().setInactive(bonus);
+            bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> game.systems().bonusMoveAndJump().setBonusInactive(bonus));
             level.entitySet().remove(bonus);
         }
 
@@ -57,7 +57,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (stateTick == 1) {
-            lockPacAndGhosts(level.entitySet(), true);
+            lockPacAndGhosts(game, level.entitySet(), true);
         }
         if (timer().hasExpired()) {
             game.flow().enterGameState(game, computeNextStateID(game));

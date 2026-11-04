@@ -56,6 +56,10 @@ public class GameContext {
     }
 
     public GameRules rules() {
-        return runtime().gameRules();
+        return runtime.gameRules();
+    }
+
+    public GameSystems systems() {
+        return runtime.systems();
     }
 }
