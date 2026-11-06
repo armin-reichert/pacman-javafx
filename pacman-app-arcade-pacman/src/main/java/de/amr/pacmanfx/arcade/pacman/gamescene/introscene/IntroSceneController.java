@@ -199,7 +199,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.view.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                    game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

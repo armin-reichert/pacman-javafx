@@ -128,7 +128,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         initScores(game);
 
-        game.runtime().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.flow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start

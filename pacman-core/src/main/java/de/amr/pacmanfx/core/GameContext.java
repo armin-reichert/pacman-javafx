@@ -44,7 +44,7 @@ public class GameContext {
     }
 
     public AbstractGameState state() {
-        return runtime.gameFlow().state();
+        return flow().state();
     }
 
     public GameFlow flow() {

@@ -199,7 +199,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public void onQuit() {
         engine().optCurrentGame().ifPresent(game -> {
             onDeactivate();
-            runtime().gameFlow().enterGameState(game, CommonGameStateID.GAME_OVER);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
 

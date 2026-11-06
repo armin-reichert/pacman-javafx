@@ -77,7 +77,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             if (nextState == CommonGameStateID.GAME_INTRO) {
                 clear(game);
             }
-            game.runtime().gameFlow().enterGameState(game, nextState);
+            game.flow().enterGameState(game, nextState);
         });
     }
 

@@ -83,14 +83,13 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.engine().optCurrentGame().ifPresent(game -> {
-                    final GameFlow gameFlow = scene.runtime().gameFlow();
                     final boolean canPlay = !game.coinMechanism().isEmpty();
                     if (timer.atSecond(2.0) && !canPlay) {
-                        gameFlow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                        game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                     }
                     //TODO can this happen at all?
                     else if (timer.atSecond(5)) {
-                        gameFlow.enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                        game.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                     }
                 });
             }

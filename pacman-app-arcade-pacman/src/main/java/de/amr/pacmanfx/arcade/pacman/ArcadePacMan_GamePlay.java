@@ -114,7 +114,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, null, session.hud());
         initScores(game);
 
-        game.runtime().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.flow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start

@@ -57,16 +57,16 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction<>("enter_start_screen") {
             @Override
             public void execute(EngineUIContext engine) {
-                engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
-                    .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
+                engine.optCurrentGame().ifPresent(game ->
+                    game.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
         };
 
         actionQuitDemoLevel = new GameAction<>("quit_demo_level") {
             @Override
             public void execute(EngineUIContext engine) {
-                engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
-                    .enterGameState(game, CommonGameStateID.GAME_PREPARATION));
+                engine.optCurrentGame().ifPresent(game ->
+                    game.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION));
             }
 
             @Override
@@ -79,8 +79,8 @@ public final class TengenMsPacMan_Actions {
         actionStartPlaying = new GameAction<>("start_playing") {
             @Override
             public void execute(EngineUIContext engine) {
-                engine.optCurrentGame().ifPresent(game -> game.runtime().gameFlow()
-                    .enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING));
+                engine.optCurrentGame().ifPresent(game ->
+                    game.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING));
             }
         };
 

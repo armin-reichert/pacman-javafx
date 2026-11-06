@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -419,7 +418,6 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.engine().optCurrentGame().ifPresent(game -> {
-                    final GameFlow flow = game.runtime().gameFlow();
                     final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
                     final MovementSystem motor = game.systems().motor();
                     final WorldNavigationSystem nav = game.systems().navigator();
@@ -443,9 +441,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                         // start demo level or show options
                         if (gameOptionValues(game.session()).areInitial()) {
                             gameOptionValues(game.session()).setCanStartNewGame(false); // TODO check this
-                            flow.restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
+                            game.flow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                         } else {
-                            flow.enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                            game.flow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
                         }
                     }
                 });
