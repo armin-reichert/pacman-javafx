@@ -268,7 +268,7 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
 
     private void enterGameVariant(GameVariantRuntime runtime) {
         currentGame = new GameContext(runtime, coinMechanism);
-        currentGame.runtime().eventManager().addSubscriber(this::handleGameEvent);
+        currentGame.eventManager().addSubscriber(this::handleGameEvent);
 
         final GameVariantUIConfig uiConfig = uiConfig(runtime);
         uiConfig.load(this);
@@ -282,7 +282,7 @@ public final class GameEngine implements EngineUIContext, TranslationManager {
     private void exitGameVariant(GameVariantRuntime runtime) {
         spriteAnimationSystem.stop();
         soundManager.dispose();
-        currentGame.runtime().eventManager().removeAllSubscribers();
+        currentGame.eventManager().removeAllSubscribers();
         currentGame = null;
         uiConfig(runtime).unload(this);
     }

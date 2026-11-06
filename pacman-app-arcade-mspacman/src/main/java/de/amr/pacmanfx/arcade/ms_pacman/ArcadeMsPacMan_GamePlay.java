@@ -150,7 +150,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         game.systems().bonusStateSystem().setEdible(bonus);
 
-        game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));
+        game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
 
     private Bonus createStaticBonus(GameLevel level, int symbolCode, float lifetimeSec) {

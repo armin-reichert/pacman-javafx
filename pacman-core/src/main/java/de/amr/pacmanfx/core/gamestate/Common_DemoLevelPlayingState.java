@@ -42,7 +42,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
         level.showMessage(MessageType.GAME_OVER);
 
-        game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
+        game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
     }
 
     @Override

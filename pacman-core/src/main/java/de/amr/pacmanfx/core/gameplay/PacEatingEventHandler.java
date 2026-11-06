@@ -84,7 +84,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
         final long powerDurationTicks = TickTimer.secToTicks(game.rules().pacPowerSeconds(level.number()));
         if (powerDurationTicks > 0) {
-            game.runtime().eventManager().publishEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
+            game.eventManager().publishEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
         }
     }
 

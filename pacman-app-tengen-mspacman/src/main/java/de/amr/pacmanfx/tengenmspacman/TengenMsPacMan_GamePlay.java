@@ -184,7 +184,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final MapCategory mapCategory = gameOptionValues(session).mapCategory();
 
-        final var rules = (TengenMsPacMan_GameRules) game.runtime().gameRules();
+        final var rules = (TengenMsPacMan_GameRules) game.rules();
         final var entities = new GameLevelEntitySet();
 
         final WorldMap worldMap = game.runtime().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
@@ -313,7 +313,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entitySet().ghosts().forEach(GameEntity::show);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        game.runtime().eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
+        game.eventManager().publishEvent(new LevelStartedEvent(game, level.number()));
     }
 
     // Playing level
@@ -346,7 +346,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final float speed = game.runtime().gameRules().actorSpeedRules().bonusSpeed(game, level);
+        final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
 
         final Bonus oldBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (oldBonus != null) {
@@ -366,7 +366,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         );
         game.systems().bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
-        game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));
+        game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
 
     private MessageView createMessageView(House house, GameSession session, NES_WorldMapColorScheme colorScheme) {

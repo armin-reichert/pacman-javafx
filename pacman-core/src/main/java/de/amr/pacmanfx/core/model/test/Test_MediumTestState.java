@@ -36,7 +36,7 @@ public class Test_MediumTestState extends AbstractGameState {
         stateTimer().restartSeconds(TEST_DURATION_SEC);
 
         final GameLevel level = game.play().buildNormalLevel(game, 1);
-        game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
+        game.eventManager().publishEvent(new LevelCreatedEvent(game, level));
 
         configureLevelForTest(game);
         game.play().startLevel(game, game.session().optLevel().orElseThrow());
@@ -49,7 +49,7 @@ public class Test_MediumTestState extends AbstractGameState {
         if (stateTimer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
-                game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());
+                game.eventManager().publishEvent(new StopAllSoundsEvent());
                 game.flow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
             else {
@@ -97,6 +97,6 @@ public class Test_MediumTestState extends AbstractGameState {
             game.systems().actorSpriteAnimController().playSelected(ghost);
         });
 
-        game.runtime().eventManager().publishEvent(new StopAllSoundsEvent());
+        game.eventManager().publishEvent(new StopAllSoundsEvent());
     }
 }

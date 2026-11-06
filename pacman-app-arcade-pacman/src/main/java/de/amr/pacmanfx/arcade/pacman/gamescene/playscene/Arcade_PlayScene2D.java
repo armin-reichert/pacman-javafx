@@ -118,8 +118,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
             pacEatingEventHandler = new PacEatingEventHandler(game);
             pacPowerEventHandler = new  PacPowerEventHandler(game);
-            game.runtime().eventManager().addSubscriber(pacEatingEventHandler);
-            game.runtime().eventManager().addSubscriber(pacPowerEventHandler);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
+            game.eventManager().addSubscriber(pacPowerEventHandler);
         });
     }
 
@@ -128,11 +128,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         engine().optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
             if (pacEatingEventHandler != null) {
-                game.runtime().eventManager().removeSubscriber(pacEatingEventHandler);
+                game.eventManager().removeSubscriber(pacEatingEventHandler);
                 pacEatingEventHandler = null;
             }
             if (pacPowerEventHandler != null) {
-                game.runtime().eventManager().removeSubscriber(pacPowerEventHandler);
+                game.eventManager().removeSubscriber(pacPowerEventHandler);
                 pacPowerEventHandler = null;
             }
         });

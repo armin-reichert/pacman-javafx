@@ -56,7 +56,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         try {
             game.systems().scoreSystem().saveHighScoreIfNeeded(game.session().hud().highScore());
         } catch (IOException e) {
-            game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
+            game.eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
 
         level.showMessage(MessageType.GAME_OVER);

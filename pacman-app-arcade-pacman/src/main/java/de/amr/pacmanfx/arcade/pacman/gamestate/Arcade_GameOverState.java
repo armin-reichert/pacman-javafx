@@ -32,7 +32,7 @@ public class Arcade_GameOverState extends AbstractGameState {
         try {
             game.systems().scoreSystem().saveHighScoreIfNeeded(game.session().hud().highScore());
         } catch (IOException e) {
-            game.runtime().eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
+            game.eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
         stateTimer().restartTicks(game.session().value(SessionKey.GAME_OVER_STATE_TICKS, Long.class));
     }

@@ -186,8 +186,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         engine().optCurrentGame().ifPresent(game -> {
             pacEatingEventHandler = new PacEatingEventHandler(game);
             pacPowerEventHandler = new  PacPowerEventHandler(game);
-            game.runtime().eventManager().addSubscriber(pacEatingEventHandler);
-            game.runtime().eventManager().addSubscriber(pacPowerEventHandler);
+            game.eventManager().addSubscriber(pacEatingEventHandler);
+            game.eventManager().addSubscriber(pacPowerEventHandler);
         });
     }
 
@@ -207,11 +207,11 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             });
 
             if (pacEatingEventHandler != null) {
-                game.runtime().eventManager().removeSubscriber(pacEatingEventHandler);
+                game.eventManager().removeSubscriber(pacEatingEventHandler);
                 pacEatingEventHandler = null;
             }
             if (pacPowerEventHandler != null) {
-                game.runtime().eventManager().removeSubscriber(pacPowerEventHandler);
+                game.eventManager().removeSubscriber(pacPowerEventHandler);
                 pacPowerEventHandler = null;
             }
         });
