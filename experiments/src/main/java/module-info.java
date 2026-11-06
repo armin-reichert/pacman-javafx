@@ -1,17 +1,11 @@
 module experiments {
+    requires de.amr.basics;
+    requires de.amr.meshbuilder;
+    requires de.amr.objparser;
+    requires de.amr.pacmanfx.core;
     requires javafx.controls;
     requires javafx.graphics;
-
     requires org.tinylog.api;
-
-    requires de.amr.pacmanfx.core;
-    requires de.amr.pacmanfx.uilib;
-    requires de.amr.pacmanfx.mapeditor;
-    requires de.amr.pacmanfx.ui;
-    requires de.amr.basics;
-
-    requires de.amr.objparser;
-    requires de.amr.meshbuilder;
 
     exports experiments.custommaps;
     exports experiments.scooter;

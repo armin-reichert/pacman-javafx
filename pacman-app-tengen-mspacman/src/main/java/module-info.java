@@ -5,42 +5,42 @@ See file LICENSE in repository root directory for details.
 
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.tengenmspacman {
+    requires com.google.gson;
+    requires de.amr.basics;
+    requires de.amr.basics.ui;
+    requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.engine;
+    requires de.amr.pacmanfx.ui;
+    requires de.amr.pacmanfx.uilib;
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
-    requires com.google.gson;
     requires org.tinylog.api;
-    requires de.amr.basics;
-    requires de.amr.basics.ui;
-    requires de.amr.pacmanfx.core;
-    requires de.amr.pacmanfx.uilib;
-    requires de.amr.pacmanfx.ui;
-    requires java.xml; requires de.amr.pacmanfx.engine;
     requires pacman.javafx.pacman.app;
 
     exports de.amr.pacmanfx.tengenmspacman;
     exports de.amr.pacmanfx.tengenmspacman.app;
-    exports de.amr.pacmanfx.tengenmspacman.model;
-    exports de.amr.pacmanfx.tengenmspacman.rendering;
-    exports de.amr.pacmanfx.tengenmspacman.gamescene;
-    exports de.amr.pacmanfx.tengenmspacman.gamestate;
     exports de.amr.pacmanfx.tengenmspacman.config;
     exports de.amr.pacmanfx.tengenmspacman.dashboard;
-    exports de.amr.pacmanfx.tengenmspacman.sprites;
-    exports de.amr.pacmanfx.tengenmspacman.rules;
     exports de.amr.pacmanfx.tengenmspacman.entities;
     exports de.amr.pacmanfx.tengenmspacman.entities.bag;
     exports de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
     exports de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay;
     exports de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay;
+    exports de.amr.pacmanfx.tengenmspacman.entities.messageview;
     exports de.amr.pacmanfx.tengenmspacman.entities.stork;
     exports de.amr.pacmanfx.tengenmspacman.entities.textview;
-    exports de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
-    exports de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
-    exports de.amr.pacmanfx.tengenmspacman.entities.messageview;
+    exports de.amr.pacmanfx.tengenmspacman.gamestate;
+    exports de.amr.pacmanfx.tengenmspacman.model;
+    exports de.amr.pacmanfx.tengenmspacman.rendering;
+    exports de.amr.pacmanfx.tengenmspacman.rules;
+    exports de.amr.pacmanfx.tengenmspacman.sprites;
 }

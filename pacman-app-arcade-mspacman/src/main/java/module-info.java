@@ -5,34 +5,28 @@ See file LICENSE in repository root directory for details.
 
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.arcade.ms_pacman {
-    requires javafx.controls;
-    requires javafx.graphics;
-    requires javafx.media;
-
-    requires org.tinylog.api;
-
     requires de.amr.basics;
     requires de.amr.basics.ui;
+    requires de.amr.pacmanfx.arcade.pacman;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.engine;
-    requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
-    requires de.amr.pacmanfx.arcade.pacman;
-
-    requires java.xml;
-    requires jdk.xml.dom;
+    requires de.amr.pacmanfx.uilib;
+    requires javafx.graphics;
+    requires javafx.media;
+    requires org.tinylog.api;
     requires pacman.javafx.pacman.app;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;
     exports de.amr.pacmanfx.arcade.ms_pacman.app;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
     exports de.amr.pacmanfx.arcade.ms_pacman.model;
-    exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
-    exports de.amr.pacmanfx.arcade.ms_pacman.rules;
+    exports de.amr.pacmanfx.arcade.ms_pacman.props;
     exports de.amr.pacmanfx.arcade.ms_pacman.props.bag;
     exports de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard;
     exports de.amr.pacmanfx.arcade.ms_pacman.props.stork;
-    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
-    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
-    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
-    exports de.amr.pacmanfx.arcade.ms_pacman.props;
+    exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
+    exports de.amr.pacmanfx.arcade.ms_pacman.rules;
 }

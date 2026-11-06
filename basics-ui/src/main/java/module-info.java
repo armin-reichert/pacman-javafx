@@ -1,12 +1,9 @@
 module de.amr.basics.ui {
-
     requires de.amr.basics;
-    requires org.tinylog.api;
-
     requires javafx.base;
     requires javafx.graphics;
-    requires javafx.controls;
     requires javafx.media;
+    requires org.tinylog.api;
 
     exports de.amr.basics.ui;
     exports de.amr.basics.ui.animation;

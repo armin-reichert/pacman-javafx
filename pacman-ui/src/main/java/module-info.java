@@ -5,54 +5,48 @@ See file LICENSE in repository root directory for details.
 
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.ui {
-    requires transitive java.prefs;
-    requires javafx.base;
-    requires java.desktop;
-    requires javafx.graphics;
-    requires javafx.controls;
-    requires javafx.media;
-
-    requires org.tinylog.api;
-    requires com.google.gson;
-
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
-    requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.engine;
     requires de.amr.pacmanfx.mapeditor;
-    requires java.security.jgss;
+    requires de.amr.pacmanfx.uilib;
+    requires javafx.base;
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.media;
+    requires org.tinylog.api;
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
-    exports de.amr.pacmanfx.ui.views.dashboard;
+    exports de.amr.pacmanfx.ui.assets;
+    exports de.amr.pacmanfx.ui.entities3D.comp;
+    exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
+    exports de.amr.pacmanfx.ui.entities3D.levelcounter.system;
+    exports de.amr.pacmanfx.ui.entities3D.livescounter.comp;
+    exports de.amr.pacmanfx.ui.entities3D.livescounter.system;
+    exports de.amr.pacmanfx.ui.entities3D.pac.comp;
+    exports de.amr.pacmanfx.ui.entities3D.pac.system;
+    exports de.amr.pacmanfx.ui.entities3D.world;
+    exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.animation;
+    exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.gamescene.d3;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
     exports de.amr.pacmanfx.ui.gamescene.d3.camera;
-    exports de.amr.pacmanfx.ui.entities3D.levelcounter.system;
-    exports de.amr.pacmanfx.ui.entities3D.livescounter.comp;
-    exports de.amr.pacmanfx.ui.entities3D.livescounter.system;
-    exports de.amr.pacmanfx.ui.views;
-    exports de.amr.pacmanfx.ui.sound;
-    exports de.amr.pacmanfx.ui.views.playview;
-    exports de.amr.pacmanfx.ui.views.startpages;
-    exports de.amr.pacmanfx.ui.views.editor;
-    exports de.amr.pacmanfx.ui.views.help;
-    exports de.amr.pacmanfx.ui.window;
-    exports de.amr.pacmanfx.ui.gamescene.common;
+    exports de.amr.pacmanfx.ui.gamescene.playscene;
+    exports de.amr.pacmanfx.ui.rendering;
     exports de.amr.pacmanfx.ui.settings.ui;
     exports de.amr.pacmanfx.ui.settings.world;
+    exports de.amr.pacmanfx.ui.sound;
     exports de.amr.pacmanfx.ui.viewmodel;
+    exports de.amr.pacmanfx.ui.views;
+    exports de.amr.pacmanfx.ui.views.dashboard;
+    exports de.amr.pacmanfx.ui.views.editor;
+    exports de.amr.pacmanfx.ui.views.help;
     exports de.amr.pacmanfx.ui.views.miniview;
-    exports de.amr.pacmanfx.ui.rendering;
-    exports de.amr.pacmanfx.ui.assets;
-    exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
-    exports de.amr.pacmanfx.ui.entities3D.comp;
-    exports de.amr.pacmanfx.ui.entities3D.pac.comp;
-    exports de.amr.pacmanfx.ui.entities3D.world;
-    exports de.amr.pacmanfx.ui.entities3D.world.system;
-    exports de.amr.pacmanfx.ui.gamescene.playscene;
-    exports de.amr.pacmanfx.ui.entities3D.pac.system;
+    exports de.amr.pacmanfx.ui.views.playview;
+    exports de.amr.pacmanfx.ui.views.startpages;
+    exports de.amr.pacmanfx.ui.window;
 }
