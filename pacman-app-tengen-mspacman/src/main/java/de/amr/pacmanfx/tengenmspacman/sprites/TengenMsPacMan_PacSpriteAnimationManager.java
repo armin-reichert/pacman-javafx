@@ -5,7 +5,10 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.spriteanim.*;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.LazySpriteAnimationManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 
 import java.util.Arrays;
 

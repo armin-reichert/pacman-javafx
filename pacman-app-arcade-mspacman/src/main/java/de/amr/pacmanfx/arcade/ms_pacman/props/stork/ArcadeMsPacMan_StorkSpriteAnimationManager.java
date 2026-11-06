@@ -4,7 +4,10 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.props.stork;
 
-import de.amr.basics.ui.spriteanim.*;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.LazySpriteAnimationManager;
+import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.ui.spriteanim.SpriteAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 

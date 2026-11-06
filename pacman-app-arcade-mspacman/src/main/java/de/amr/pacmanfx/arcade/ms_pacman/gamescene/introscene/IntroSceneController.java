@@ -9,7 +9,6 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.List;

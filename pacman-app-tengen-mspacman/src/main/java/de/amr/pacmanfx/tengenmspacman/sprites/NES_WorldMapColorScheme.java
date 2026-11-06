@@ -3,7 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.math.RandomNumbers;import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
+import de.amr.basics.math.RandomNumbers;
+import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 
 /**
