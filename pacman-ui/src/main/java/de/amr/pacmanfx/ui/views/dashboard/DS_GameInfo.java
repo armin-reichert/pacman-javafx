@@ -93,16 +93,16 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Maze flashes",   fnLevelInfo(engine, level -> fmtNumFlashes(rules(engine), level)));
     }
 
-    private GameRules rules(EngineUIContext context) {
-        return context.optCurrentGame().get().runtime().gameRules();
+    private GameRules rules(EngineUIContext engine) {
+        return engine.optCurrentGame().orElseThrow().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
-        EngineUIContext context,
+        EngineUIContext engine,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
-            final GameContext game = context.optCurrentGame().get();
-            final ActorSpeedRules speedRules = game.runtime().gameRules().actorSpeedRules();
+            final GameContext game = engine.optCurrentGame().orElseThrow();
+            final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

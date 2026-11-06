@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     public Named resolveCutSceneID(GameContext game) {
         final GameLevel level = game.session().optLevel().orElseThrow();
-        final OptionalInt cutSceneNumber = game.runtime().gameRules().cutSceneAfterLevel(level.number());
+        final OptionalInt cutSceneNumber = game.rules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }

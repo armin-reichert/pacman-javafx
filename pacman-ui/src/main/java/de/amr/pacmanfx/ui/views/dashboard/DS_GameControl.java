@@ -60,18 +60,18 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.instance().sceneTestActions().actionTestCutScenes());
         setGameAction(engine, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  CommonGameActions.instance().gameFlowActions().actionRestartSession());
 
-        cbCollisionCheckedTwice.setOnAction(_ -> engine.optCurrentGame().get().runtime().gameRules()
+        cbCollisionCheckedTwice.setOnAction(_ -> engine.optCurrentGame().orElseThrow().rules()
             .actorCollisionRules().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> engine.optCurrentGame().get().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> engine.optCurrentGame().orElseThrow().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
     public void update(EngineUIContext engine) {
         super.update(engine);
 
-        final GameContext game = engine.optCurrentGame().get();
+        final GameContext game = engine.optCurrentGame().orElseThrow();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
@@ -87,13 +87,13 @@ public class DS_GameControl extends GameDashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof Test_CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(game.runtime().gameRules().actorCollisionRules().isCollisionDoubleChecked());
+        cbCollisionCheckedTwice.setSelected(game.rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
     private boolean canStartLevel(EngineUIContext engine, AbstractGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(engine.gameVariantManager().currentVariantID());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !engine.optCurrentGame().get().coinMechanism().isEmpty()
+        return !engine.optCurrentGame().orElseThrow().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

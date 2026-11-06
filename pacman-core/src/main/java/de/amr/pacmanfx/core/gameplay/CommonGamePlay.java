@@ -63,7 +63,7 @@ public abstract class CommonGamePlay implements GamePlay {
         game.systems().motor().setVelocity(pac, 0, 0);
         game.systems().navigator().setMoveDir(pac, Direction.LEFT);
         game.systems().navigator().setWishDir(pac, Direction.LEFT);
-        game.systems().pacAnimation().update(pac, game.runtime().gameRules());
+        game.systems().pacAnimation().update(pac, game.rules());
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
@@ -139,7 +139,7 @@ public abstract class CommonGamePlay implements GamePlay {
         collisionHandler.detectCollisions(level);
 
         checkIfPacFoundEdibleItem(game, level, thisFrame);
-        checkIfPacGetsKilled(game.session(), game.runtime().gameRules(), thisFrame);
+        checkIfPacGetsKilled(game.session(), game.rules(), thisFrame);
         if (thisFrame.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
@@ -188,7 +188,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Score gameScore = session.hud().gameScore();
         final Score highScore = session.hud().highScore();
 
-        scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.runtime().gameRules().scoringRules());
+        scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.rules().scoringRules());
 
         if (gameScore.data().extraLifeReached()) {
             // Do not forget to clear the flag!
@@ -240,7 +240,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, SimulationFrame thisFrame) {
         final Pac pac = level.entitySet().pac();
         final PacDigestionSystem digestionSystem = game.systems().pacDigestion();
-        final ScoringRules scoringRules = game.runtime().gameRules().scoringRules();
+        final ScoringRules scoringRules = game.rules().scoringRules();
 
         if (thisFrame.foodFound()) {
             digestionSystem.endStarving(pac);

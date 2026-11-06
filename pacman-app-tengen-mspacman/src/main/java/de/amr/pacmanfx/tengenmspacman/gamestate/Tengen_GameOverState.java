@@ -126,7 +126,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
 
-        final var tSystems = (TengenMsPacMan_GameSystems) game.runtime().systems();
+        final var tSystems = (TengenMsPacMan_GameSystems) game.systems();
         tSystems.messageAnimationSystem().start(
             messageView,
             computeMessageStartPosition(),

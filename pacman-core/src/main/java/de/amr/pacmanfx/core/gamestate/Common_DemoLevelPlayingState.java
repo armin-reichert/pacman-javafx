@@ -55,7 +55,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         else if (stateTickCount == 2) {
             level.entitySet().showPacAndGhosts();
         }
-        else if (stateTickCount == game.runtime().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTickCount == game.rules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entitySet().pac();
@@ -69,7 +69,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (stateTickCount >= game.runtime().gameRules().demoLevelHuntingStartTick()) {
+        else if (stateTickCount >= game.rules().demoLevelHuntingStartTick()) {
             game.play().updateLevel(game, level);
         }
 
@@ -95,7 +95,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
         final SimulationFrame thisFrame = game.session().thisFrame();
-        if (game.runtime().gameRules().isLevelCompleted(level)) {
+        if (game.rules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
         else if (thisFrame.pacKilled()) {

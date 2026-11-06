@@ -26,7 +26,6 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import org.tinylog.Logger;
@@ -170,13 +169,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         }
 
         final GameSystems systems = game.systems();
-        final GameRules rules = game.runtime().gameRules();
 
         final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
         systems.bonusStateSystem().setEdible(movingBonus);
 
         final BonusRouteInfo routeInfo = computeBonusRoute(level.worldMap().terrainLayer(), house);
-        final float speed = rules.actorSpeedRules().bonusSpeed(game, level);
+        final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
         systems.bonusMoveAndJump().startWandering(movingBonus, routeInfo, speed);
 
         return movingBonus;

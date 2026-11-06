@@ -90,7 +90,7 @@ class GameEventHandler implements DefaultGameEventListener {
             final GameSession session = game.session();
             if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
                 final GameLevel level = session.optLevel().orElseThrow();
-                final int numFlashes = game.runtime().gameRules().numLevelFlashes(level.number());
+                final int numFlashes = game.rules().numLevelFlashes(level.number());
                 gameScene.optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
                 gameScene.playLevelCompleteAnimation(game, level, numFlashes);
             }

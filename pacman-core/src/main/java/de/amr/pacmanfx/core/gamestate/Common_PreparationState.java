@@ -22,7 +22,7 @@ public final class Common_PreparationState extends AbstractGameState {
             game.session().removeLevel();
         });
 
-        game.session().setNumLives(game.runtime().gameRules().initialLifeCount());
+        game.session().setNumLives(game.rules().initialLifeCount());
         game.session().store(SessionKey.HUD_VISIBLE, true);
 
         game.session().hud().creditDisplay().show();

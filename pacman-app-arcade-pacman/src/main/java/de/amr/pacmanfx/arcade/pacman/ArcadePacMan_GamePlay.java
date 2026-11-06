@@ -37,7 +37,6 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -125,13 +124,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final GameRules rules = game.runtime().gameRules();
         final WorldMap worldMap = game.runtime().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntitySet();
 
         createAndAddEntities(entities, worldMap);
 
-        final var huntingTimer = new DefaultHuntingTimer("Arcade Hunting Timer", rules.numHuntingPhases());
+        final var huntingTimer = new DefaultHuntingTimer("Arcade Hunting Timer", game.rules().numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 entities.ghostsInAnyOfStates(TURNBACK_STATES)
@@ -150,7 +148,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setGateKeeper(gateKeeper);
         level.setHuntingTimer(huntingTimer);
         level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
-        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
+        level.setBonusSymbolCodes(game.rules().bonusSymbols(levelNumber));
 
         configurePacAndGhosts(entities, game.systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
@@ -249,8 +247,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameRules rules = game.runtime().gameRules();
-
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
@@ -261,7 +257,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.position().set(halfTileRightOf(tile));
-        bonus.setLifetimeInSeconds(rules.edibleBonusDisplaySeconds());
+        bonus.setLifetimeInSeconds(game.rules().edibleBonusDisplaySeconds());
         game.systems().bonusStateSystem().setEdible(bonus);
         bonus.show();
 

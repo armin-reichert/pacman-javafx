@@ -59,7 +59,7 @@ public class DefaultHuntingTimer extends TickTimer implements HuntingTimer {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        startPhase(game.runtime().gameRules(), levelNumber, 0);
+        startPhase(game.rules(), levelNumber, 0);
 
         game.runtime().eventManager().publishEvent(new HuntingPhaseStartedEvent(
             game,

@@ -61,6 +61,6 @@ public class PacUpdateSystem {
 
         pacDigestionSystem.update(pac);
         pacPowerSystem.update(pac, game.rules().pacPowerFadingSeconds(level.number()));
-        pacAnimationSystem.update(pac, game.runtime().gameRules());
+        pacAnimationSystem.update(pac, game.rules());
     }
 }

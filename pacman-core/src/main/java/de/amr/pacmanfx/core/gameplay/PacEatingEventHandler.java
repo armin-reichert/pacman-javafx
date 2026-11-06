@@ -47,7 +47,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         final Pac pac = e.pac();
 
         // Eating a pellet earns 10 points in Arcade Pac-Man
-        game.runtime().gamePlay().scorePoints(game, game.rules().scoringRules().pointsForPellet(), level.number());
+        game.play().scorePoints(game, game.rules().scoringRules().pointsForPellet(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);
@@ -65,7 +65,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         final Pac pac = e.pac();
 
         // Eating an energizer earns 50 points in Arcade Pac-Man
-        game.runtime().gamePlay().scorePoints(game, game.rules().scoringRules().pointsForEnergizer(), level.number());
+        game.play().scorePoints(game, game.rules().scoringRules().pointsForEnergizer(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);

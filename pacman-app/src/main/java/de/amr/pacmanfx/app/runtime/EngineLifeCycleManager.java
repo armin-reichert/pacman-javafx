@@ -44,7 +44,7 @@ public class EngineLifeCycleManager implements EngineLifecycle {
             throw new IllegalStateException();
         }
         engine.optCurrentGame().ifPresent(game -> {
-            game.runtime().gamePlay().startSession(game);
+            game.play().startSession(game);
             engine.viewManager().selectGamePlayView();
             engine.clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
             engine.clock().start();

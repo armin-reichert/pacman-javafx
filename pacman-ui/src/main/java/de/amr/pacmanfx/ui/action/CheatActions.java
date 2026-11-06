@@ -102,7 +102,7 @@ public final class CheatActions {
 
                     if (!killableGhosts.isEmpty()) {
                         level.setGhostKillCount(0); // start again with lowest number for killing ghost
-                        killableGhosts.forEach(ghost -> game.runtime().gamePlay().pacEatsGhost(game, level, ghost));
+                        killableGhosts.forEach(ghost -> game.play().pacEatsGhost(game, level, ghost));
                         game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                     }
                 });
@@ -135,7 +135,7 @@ public final class CheatActions {
                 if (normalLevel == null) return false;
 
                 return CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(game.state())
-                    && normalLevel.number() < game.runtime().gameRules().lastLevelNumber();
+                    && normalLevel.number() < game.rules().lastLevelNumber();
             }
         };
 
