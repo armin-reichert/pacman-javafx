@@ -101,7 +101,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameSession session = game.session();
         final GameLevel currentLevel = session.optLevel().orElseThrow();
-        final int lastLevelNumber = game.runtime().gameRules().lastLevelNumber();
+        final int lastLevelNumber = game.rules().lastLevelNumber();
 
         if (currentLevel.number() < lastLevelNumber) {
             final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
@@ -117,16 +117,15 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameRules rules = game.runtime().gameRules();
         final GameSession session = game.session();
         final SimulationFrame thisFrame = session.thisFrame();
         final Pac pac = level.entitySet().pac();
 
         final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(thisFrame);
-        collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
-        collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
+        collisionHandler.setStrategy(game.rules().actorCollisionRules().getCollisionStrategy());
+        collisionHandler.setDoubleChecked(game.rules().actorCollisionRules().isCollisionDoubleChecked());
 
-        level.huntingTimer().update(rules, level.number());
+        level.huntingTimer().update(game.rules(), level.number());
 
         level.gateKeeper().unlockGhostIfPossible(game, level);
 
@@ -155,12 +154,10 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(ghost);
 
-        final GameRules rules = game.runtime().gameRules();
-
         level.setGhostKillCount(level.ghostKillCount() + 1);
 
         // Eating ghost wins 200, 400, 800, 1600 points
-        final int ghostValue = rules.scoringRules().pointsForGhost(level.ghostKillCount());
+        final int ghostValue = game.rules().scoringRules().pointsForGhost(level.ghostKillCount());
 
         scorePoints(game, ghostValue, level.number());
 
@@ -172,7 +169,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GhostPoints points = new GhostPoints(ghostValue);
         points.show();
         points.position().set(ghost.position().asVector2f());
-        points.setLifetimeInSeconds(rules.eatenGhostDisplaySeconds());
+        points.setLifetimeInSeconds(game.rules().eatenGhostDisplaySeconds());
         level.entitySet().add(points);
 
         game.runtime().eventManager().publishEvent(new GhostEatenEvent(ghost));

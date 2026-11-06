@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -45,11 +44,10 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private void onPacEatsPellet(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.optLevel().orElseThrow();
-        final GameRules rules = game.runtime().gameRules();
         final Pac pac = e.pac();
 
         // Eating a pellet earns 10 points in Arcade Pac-Man
-        game.runtime().gamePlay().scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
+        game.runtime().gamePlay().scorePoints(game, game.rules().scoringRules().pointsForPellet(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);
@@ -58,17 +56,16 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         game.systems().ghostStateSystem().updateElroyState(game);
 
         // Pac-Man "digests" and takes a 1 tick nap
-        game.systems().pacDigestion().digestPellet(pac, rules);
+        game.systems().pacDigestion().digestPellet(pac, game.rules());
     }
 
     private void onPacEatsEnergizer(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.optLevel().orElseThrow();
-        final GameRules rules = game.runtime().gameRules();
         final Pac pac = e.pac();
 
         // Eating an energizer earns 50 points in Arcade Pac-Man
-        game.runtime().gamePlay().scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
+        game.runtime().gamePlay().scorePoints(game, game.rules().scoringRules().pointsForEnergizer(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);
@@ -83,9 +80,9 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.entitySet().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(game.systems().navigator()::requestTurnBack);
 
         // Pac-Man "digests" and takes a 3 tick nap
-        game.systems().pacDigestion().digestEnergizer(pac, rules);
+        game.systems().pacDigestion().digestEnergizer(pac, game.rules());
 
-        final long powerDurationTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
+        final long powerDurationTicks = TickTimer.secToTicks(game.rules().pacPowerSeconds(level.number()));
         if (powerDurationTicks > 0) {
             game.runtime().eventManager().publishEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
         }
@@ -93,16 +90,13 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        final GameRules rules = game.runtime().gameRules();
-        final GamePlay gamePlay = game.runtime().gamePlay();
-
         final GameSession session = game.session();
         final GameLevel level = session.optLevel().orElseThrow();
         final Bonus bonus = e.bonus();
 
         // Bonus value depends on game variant and bonus type
-        final int bonusValue = rules.scoringRules().pointsForBonus(bonus.data().symbolCode());
-        gamePlay.scorePoints(game, bonusValue, level.number());
+        final int bonusValue = game.rules().scoringRules().pointsForBonus(bonus.data().symbolCode());
+        game.play().scorePoints(game, bonusValue, level.number());
         Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
 
         level.entitySet().remove(bonus);
@@ -110,7 +104,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         // Eaten bonus is displayed as points for short time
         final var bonusPoints = new BonusPoints(bonusValue);
         bonusPoints.position().set(bonus.position().asVector2f());
-        bonusPoints.setLifetimeInSeconds(rules.eatenBonusDisplaySeconds());
+        bonusPoints.setLifetimeInSeconds(game.rules().eatenBonusDisplaySeconds());
         bonusPoints.show();
         level.entitySet().add(bonusPoints);
     }

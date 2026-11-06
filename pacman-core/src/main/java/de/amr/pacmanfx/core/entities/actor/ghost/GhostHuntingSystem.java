@@ -21,7 +21,7 @@ public class GhostHuntingSystem {
     }
 
     public void update(GameContext game, GameLevel level, Ghost ghost, GhostHuntingStrategy huntingStrategy) {
-        final ActorSpeedRules speedRules = game.runtime().gameRules().actorSpeedRules();
+        final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
         switch (ghost.state().enumValue()) {
             case HUNTING_PAC -> {
                 final float speed = speedRules.ghostSpeed(game, ghost);

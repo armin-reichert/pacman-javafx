@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
-import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.List;
 
@@ -37,8 +36,7 @@ public class GhostUpdateSystem {
             ? level.entitySet().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
             : level.entitySet().ghosts().toList();
 
-        final GameRules rules = game.runtime().gameRules();
-        final ActorSpeedRules speedRules = rules.actorSpeedRules();
+        final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
 
         ghostsToUpdate.forEach(ghost -> {
             final float speed = speedRules.ghostSpeed(game, ghost);

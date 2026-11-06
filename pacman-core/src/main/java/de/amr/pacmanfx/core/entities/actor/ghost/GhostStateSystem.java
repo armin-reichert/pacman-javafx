@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.entities.actor.ghost;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -88,11 +87,10 @@ public class GhostStateSystem {
     public void updateElroyState(GameContext game) {
         final GameLevel level = game.session().optLevel().orElseThrow();
         final Ghost ghost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
-        final GameRules rules = game.runtime().gameRules();
         ghost.optComponent(ElroyComp.class).ifPresent(elroy -> {
-            if (rules.ghostBecomesElroy1(level, ghost)) {
+            if (game.rules().ghostBecomesElroy1(level, ghost)) {
                 elroy.setBoost(ElroyComp.Boost.MEDIUM);
-            } else if (rules.ghostBecomesElroy2(level, ghost)) {
+            } else if (game.rules().ghostBecomesElroy2(level, ghost)) {
                 elroy.setBoost(ElroyComp.Boost.LARGE);
             }
         });

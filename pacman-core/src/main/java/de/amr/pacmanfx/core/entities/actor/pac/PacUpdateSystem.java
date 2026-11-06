@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
-import de.amr.pacmanfx.core.rules.GameRules;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,11 +48,9 @@ public class PacUpdateSystem {
             case ACTIVE -> pac.worldNavigation().setPaused(false);
         }
 
-        final GameRules rules = game.runtime().gameRules();
-
         if (!pac.worldNavigation().isPaused()) {
             final GameSession session = game.session();
-            final ActorSpeedRules speedRules = rules.actorSpeedRules();
+            final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
             final float speed = pac.power().isActive()
                 ? speedRules.pacSpeedWhenHasPower(game, level)
                 : speedRules.pacSpeed(game, level);
@@ -63,7 +60,7 @@ public class PacUpdateSystem {
         }
 
         pacDigestionSystem.update(pac);
-        pacPowerSystem.update(pac, rules.pacPowerFadingSeconds(level.number()));
+        pacPowerSystem.update(pac, game.rules().pacPowerFadingSeconds(level.number()));
         pacAnimationSystem.update(pac, game.runtime().gameRules());
     }
 }
