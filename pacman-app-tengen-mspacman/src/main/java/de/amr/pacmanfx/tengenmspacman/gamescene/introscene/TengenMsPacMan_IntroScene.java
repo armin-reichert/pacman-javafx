@@ -110,14 +110,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         if (dark) return Stream.empty();
 
-        return switch (flow.state()) {
-            case SceneState.PRESENTING_GAME -> streamOfPropViews(tengenPresentsContent);
+        final SceneState sceneState = (SceneState) flow.state();
+        return switch (sceneState) {
+            case PRESENTING_GAME -> streamOfPropViews(tengenPresentsContent);
 
-            case SceneState.SHOWING_MARQUEE,
-                 SceneState.GHOSTS_MARCHING_IN,
-                 SceneState.MS_PACMAN_MARCHING_IN -> streamOfPropViews(marqueeSubSceneContent);
-
-            default -> Stream.empty();
+            case SHOWING_MARQUEE,
+                 GHOSTS_MARCHING_IN,
+                 MS_PACMAN_MARCHING_IN -> streamOfPropViews(marqueeSubSceneContent);
         };
     }
 
