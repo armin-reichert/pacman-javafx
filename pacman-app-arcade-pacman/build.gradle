@@ -38,6 +38,6 @@ jlink {
         name = "Arcade Pac-Man"
     }
     jpackage {
-        installerType = installerPkg
+        installerType = rootProject.ext.installerPkg
     }
 }

@@ -14,17 +14,17 @@ allprojects {
 subprojects {
 
     apply(plugin: "java")
-    pluginManager.apply(libs.plugins.javafx.get().pluginId)
-    pluginManager.apply(libs.plugins.osdetector.get().pluginId)
+    pluginManager.apply(rootProject.libs.plugins.javafx.get().pluginId)
+    pluginManager.apply(rootProject.libs.plugins.osdetector.get().pluginId)
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+            languageVersion = JavaLanguageVersion.of(rootProject.libs.versions.java.get())
         }
     }
 
     javafx {
-        version = libs.versions.javafx.get()
+        version = rootProject.libs.versions.javafx.get()
     }
 
     tasks.withType(JavaCompile).configureEach {

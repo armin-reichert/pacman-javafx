@@ -2,12 +2,12 @@
 
 # Usage: libs.versions.xyz.get()
 [versions]
-gson    = "2.11.0"
+gson    = "2.15.0"
 java    = "25"
 javafx  = "25.0.5"
-junit5  = "5.11.0"
+junit5  = "5.14.4"
 obj     = "0.0.1"
-tinylog = "2.7.0"
+tinylog = "2.8.1"
 
 # Usage: alias(libs.plugins.xyz)
 [plugins]
