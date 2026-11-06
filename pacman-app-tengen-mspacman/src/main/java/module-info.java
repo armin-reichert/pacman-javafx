@@ -1,8 +1,6 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
-
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
+ */
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.tengenmspacman {
     requires com.google.gson;
@@ -17,7 +15,7 @@ open module de.amr.pacmanfx.tengenmspacman {
     requires javafx.graphics;
     requires javafx.media;
     requires org.tinylog.api;
-    requires pacman.javafx.pacman.app;
+    requires de.amr.pacmanfx.app;
 
     exports de.amr.pacmanfx.tengenmspacman;
     exports de.amr.pacmanfx.tengenmspacman.app;

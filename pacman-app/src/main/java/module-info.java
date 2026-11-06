@@ -1,4 +1,7 @@
-module pacman.javafx.pacman.app {
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
+ */
+module de.amr.pacmanfx.app {
     requires de.amr.basics;
     requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
