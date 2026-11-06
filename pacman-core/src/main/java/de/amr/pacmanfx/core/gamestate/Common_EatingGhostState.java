@@ -52,7 +52,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
         pac.show();
         level.entitySet().ghostsInState(GhostState.EATEN).forEach(ghost -> {
             ghost.show();
-            game.systems().ghostState().setState(ghost, GhostState.RETURNING_HOME);
+            game.systems().ghostStateSystem().setState(ghost, GhostState.RETURNING_HOME);
         });
     }
 }

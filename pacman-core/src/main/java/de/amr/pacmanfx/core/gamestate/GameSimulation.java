@@ -7,8 +7,6 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -20,24 +18,23 @@ public final class GameSimulation {
 
     public void makeStep(GameContext game) {
         requireNonNull(game);
-        final GameVariantRuntime runtime = game.runtime();
-        game.session().optLevel().ifPresent(level -> updateLevel(runtime.systems(), game, level));
-        runtime.gameFlow().update(game);
-        runtime.systems().hudUpdateSystem().updateHUD(game, game.session().hud());
+        game.session().optLevel().ifPresent(level -> updateLevel(game, level));
+        game.flow().update(game);
+        game.systems().hudUpdateSystem().updateHUD(game, game.session().hud());
     }
 
-    private void updateLevel(GameSystems systems, GameContext game, GameLevel level) {
+    private void updateLevel(GameContext game, GameLevel level) {
         level.heartbeat().triggerPulse();
         updateEnergizers(level);
-        updateActors(systems, game, level);
+        updateActors(game, level);
     }
 
-    private void updateActors(GameSystems systems, GameContext game, GameLevel level) {
+    private void updateActors(GameContext game, GameLevel level) {
         final GameLevelEntitySet entities = level.entitySet();
-        systems.pacUpdateSystem().update(game, level, entities.pac());
-        systems.ghostUpdateSystem().update(game, level);
-        entities.anyOfType(Bonus.class).ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
-        systems.lifetimeSystem().update(entities);
+        game.systems().pacUpdateSystem().update(game, level, entities.pac());
+        game.systems().ghostUpdateSystem().update(game, level);
+        entities.anyOfType(Bonus.class).ifPresent(bonus -> game.systems().bonusUpdateSystem().update(game, level, bonus));
+        game.systems().lifetimeSystem().update(entities);
     }
 
     private void updateEnergizers(GameLevel level) {

@@ -67,16 +67,14 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
             return;
         }
 
-        final GameSystems systems = game.runtime().systems();
-
         switch (sceneTick) {
-            case TICK_ANIMATION_START      -> startAnimation(systems);
-            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(systems);
+            case TICK_ANIMATION_START      -> startAnimation(game.systems());
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(game.systems());
             case TICK_ANIMATION_ENDS       -> game.state().triggerTimeout();
         }
 
-        systems.motor().move(pacMan);
-        systems.motor().move(blinky);
+        game.systems().motor().move(pacMan);
+        game.systems().motor().move(blinky);
     }
 
     private void startAnimation(GameSystems systems) {

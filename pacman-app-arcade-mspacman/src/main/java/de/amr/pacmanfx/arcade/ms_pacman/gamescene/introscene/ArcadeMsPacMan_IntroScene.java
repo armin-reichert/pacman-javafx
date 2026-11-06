@@ -13,7 +13,6 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
@@ -130,10 +129,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letGhostWalkIn(GameContext game, Ghost ghost) {
-        final GameSystems systems = game.runtime().systems();
-        final WorldNavigationSystem nav = systems.navigator();
-        final MovementSystem motor = systems.motor();
-        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = game.systems().navigator();
+        final MovementSystem motor = game.systems().motor();
+        final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
 
         if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
             if (ghost.position().x() <= GHOST_RAISE_POS_X) {
@@ -164,10 +162,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     boolean letMsPacManWalkIn(GameContext game, Pac msPacMan) {
-        final GameSystems systems = game.runtime().systems();
-        final WorldNavigationSystem nav = systems.navigator();
-        final MovementSystem motor = systems.motor();
-        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = game.systems().navigator();
+        final MovementSystem motor = game.systems().motor();
+        final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
 
         motor.move(msPacMan);
         if (msPacMan.position().x() <= MS_PACMAN_END_POS_X) {

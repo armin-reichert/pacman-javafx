@@ -144,7 +144,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            systems.bonusState().setInactive(bonus);
+            systems.bonusStateSystem().setInactive(bonus);
             bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entitySet().remove(bonus);
         }

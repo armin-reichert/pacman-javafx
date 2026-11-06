@@ -44,7 +44,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
                 ghost.worldNavigation().setPaused(true);
             }
             // Note: this works also if the bonus has no Elroy component!
-            game.systems().ghostState().setElroyEnabled(ghost, false);
+            game.systems().ghostStateSystem().setElroyEnabled(ghost, false);
         });
 
         // Stop bonus movement. Note: this works also if the bonus has no movement component!

@@ -165,7 +165,7 @@ public class IntroSceneView {
             nav.setMoveDir(ghost, Direction.LEFT);
             nav.setWishDir(ghost, Direction.LEFT);
             nav.setSpeed(ghost, ACTOR_SPEED);
-            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostStateSystem().setState(ghost, GhostState.HUNTING_PAC);
             ghost.show();
         }
     }

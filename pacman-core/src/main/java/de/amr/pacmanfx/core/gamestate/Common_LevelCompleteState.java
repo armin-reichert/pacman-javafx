@@ -41,7 +41,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            game.systems().bonusState().setInactive(bonus);
+            game.systems().bonusStateSystem().setInactive(bonus);
             bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(_-> game.systems().bonusMoveAndJump().setBonusInactive(bonus));
             level.entitySet().remove(bonus);
         }

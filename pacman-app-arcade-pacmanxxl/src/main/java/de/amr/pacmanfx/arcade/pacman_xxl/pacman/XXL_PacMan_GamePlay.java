@@ -46,7 +46,6 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.runtime().systems();
 
         final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.runtime().worldMapManager();
         mapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
@@ -57,7 +56,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final Pac pac = level.entitySet().pac();
         // Demo level map could be a custom map, so use auto-steering that also can cope with dead-ends:
-        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
+        pac.autoSteering().setSteering(new RuleGuidedPacSteering(
+            game.systems().navigator(), game.systems().pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 

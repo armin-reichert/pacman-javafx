@@ -11,7 +11,6 @@ import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -150,10 +149,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     }
     
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.runtime().systems();
-        final MovementSystem motor = systems.motor();
-        final WorldNavigationSystem navigator = systems.navigator();
-        final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
+        final MovementSystem motor = game.systems().motor();
+        final WorldNavigationSystem navigator = game.systems().navigator();
+        final ActorSpriteAnimController animSystem = game.systems().actorSpriteAnimController();
 
         letActorsMove(motor);
         

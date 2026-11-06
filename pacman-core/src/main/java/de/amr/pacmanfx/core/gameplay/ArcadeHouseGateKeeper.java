@@ -206,8 +206,7 @@ public final class ArcadeHouseGateKeeper {
     public void unlockGhostIfPossible(GameContext game, GameLevel level) {
         requireNonNull(game);
 
-        final GameSystems systems = game.runtime().systems();
-        final PacDigestionSystem pacDigestionSystem = systems.pacDigestion();
+        final PacDigestionSystem pacDigestionSystem = game.systems().pacDigestion();
 
         final House house = level.entitySet().theOne(House.class);
         final Ghost blinky = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
@@ -215,24 +214,24 @@ public final class ArcadeHouseGateKeeper {
         if (blinky.state().enumValue() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                systems.navigator().setMoveDir(blinky, Direction.UP);
-                systems.navigator().setWishDir(blinky, Direction.UP);
+                game.systems().navigator().setMoveDir(blinky, Direction.UP);
+                game.systems().navigator().setWishDir(blinky, Direction.UP);
             }
             else {
                 // Start hunting towards west direction
-                systems.navigator().setMoveDir(blinky, Direction.LEFT);
-                systems.navigator().setWishDir(blinky, Direction.LEFT);
+                game.systems().navigator().setMoveDir(blinky, Direction.LEFT);
+                game.systems().navigator().setWishDir(blinky, Direction.LEFT);
             }
-            systems.ghostHouseAccess().requestUnlock(blinky);
+            game.systems().ghostHouseAccess().requestUnlock(blinky);
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(level.entitySet()::ghost)
             .filter(ghost -> ghost.state().enumValue() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner, pacDigestionSystem).ifPresent(_ -> {
-                systems.navigator().setMoveDir(prisoner, Direction.UP);
-                systems.navigator().setWishDir(prisoner, Direction.UP);
-                systems.ghostHouseAccess().requestUnlock(prisoner);
+                game.systems().navigator().setMoveDir(prisoner, Direction.UP);
+                game.systems().navigator().setWishDir(prisoner, Direction.UP);
+                game.systems().ghostHouseAccess().requestUnlock(prisoner);
                 //TODO check if this should be done here
                 ghostReleasedCallback.accept(level, prisoner);
             }));

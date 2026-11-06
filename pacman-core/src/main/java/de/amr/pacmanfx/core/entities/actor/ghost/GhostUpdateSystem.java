@@ -44,7 +44,7 @@ public class GhostUpdateSystem {
             final float speed = speedRules.ghostSpeed(game, ghost);
             houseAccessSystem.update(ghost, level, speed);
             //TODO this is ugly
-            huntingSystem.update(game, level, ghost, game.runtime().systems().ghostHuntingStrategy(ghost.personality()));
+            huntingSystem.update(game, level, ghost, game.systems().ghostHuntingStrategy(ghost.personality()));
             stateSystem.update(game, ghost);
             animationSystem.update(ghost);
         });

@@ -89,8 +89,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void startChasingPacMan(GameContext game) {
-        final GameSystems systems = game.runtime().systems();
-        final WorldNavigationSystem nav = systems.navigator();
+        final WorldNavigationSystem nav = game.systems().navigator();
 
         view.pulse.start();
 
@@ -104,7 +103,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             nav.setMoveDir(ghost, Direction.LEFT);
             nav.setWishDir(ghost, Direction.LEFT);
             nav.setSpeed(ghost, CHASING_SPEED);
-            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+            game.systems().ghostStateSystem().setState(ghost, GhostState.HUNTING_PAC);
             ghost.show();
         }
     }
@@ -113,9 +112,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final GameContext game = engine().optCurrentGame().orElse(null);
         if (game == null) return;
 
-        final GameSystems systems = game.runtime().systems();
-        final MovementSystem motor = systems.motor();
-        final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
+        final MovementSystem motor = game.systems().motor();
+        final GhostAnimationSystem ghostSpriteAnimationSystem = game.systems().ghostAnimation();
 
         view.pulse.triggerPulse();
 
@@ -143,18 +141,17 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void turnCardsStopPacMan(GameContext game) {
-        final GameSystems systems = game.runtime().systems();
-        final WorldNavigationSystem nav = systems.navigator();
-        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = game.systems().navigator();
+        final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
 
         nav.setSpeed(view.pacMan, 0);
-        systems.actorSpriteAnimController().stopSelected(view.pacMan);
+        game.systems().actorSpriteAnimController().stopSelected(view.pacMan);
 
         for (Ghost ghost : view.ghosts) {
             nav.setMoveDir(ghost, Direction.RIGHT);
             nav.setWishDir(ghost, Direction.RIGHT);
             nav.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-            systems.ghostState().setState(ghost, GhostState.FRIGHTENED);
+            game.systems().ghostStateSystem().setState(ghost, GhostState.FRIGHTENED);
             animController.select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
             animController.playSelected(ghost);
         }
@@ -166,8 +163,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void chaseGhosts(GameContext game, long tick) {
-        final GameSystems systems = game.runtime().systems();
-        final MovementSystem motor = systems.motor();
+        final MovementSystem motor = game.systems().motor();
 
         view.pulse.triggerPulse();
 
@@ -178,7 +174,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         findNextEdibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
-            continueChasing(systems);
+            continueChasing(game.systems());
         }
     }
 
@@ -190,17 +186,15 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
-        final GameSystems systems = game.runtime().systems();
-
         victim.state().setEnumValue(GhostState.EATEN);
         victim.hide();
 
         view.pacMan.hide();
-        systems.navigator().setSpeed(view.pacMan, 0);
+        game.systems().navigator().setSpeed(view.pacMan, 0);
 
         for (Ghost ghost : view.ghosts) {
-            systems.navigator().setSpeed(ghost, 0);
-            systems.actorSpriteAnimController().stopSelected(ghost);
+            game.systems().navigator().setSpeed(ghost, 0);
+            game.systems().actorSpriteAnimController().stopSelected(ghost);
         }
 
         view.points = new GhostPoints(GHOST_POINTS[numGhostsEaten]);

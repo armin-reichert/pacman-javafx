@@ -126,7 +126,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
         final GameRules rules = game.runtime().gameRules();
-        final GameSystems systems = game.runtime().systems();
         final WorldMap worldMap = game.runtime().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntitySet();
 
@@ -136,7 +135,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 entities.ghostsInAnyOfStates(TURNBACK_STATES)
-                    .forEach(systems.navigator()::requestTurnBack);
+                    .forEach(game.systems().navigator()::requestTurnBack);
             }
         });
         huntingTimer.reset();
@@ -153,7 +152,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
-        configurePacAndGhosts(entities, systems, worldMap.terrainLayer());
+        configurePacAndGhosts(entities, game.systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
@@ -185,7 +184,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
             levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
-            game.runtime().systems().levelCounterSystem().clear(levelCounter);
+            game.systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -193,7 +192,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.runtime().systems();
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, 1);
@@ -204,8 +202,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering<>(
-            systems.navigator(),
-            systems.pacWorldMovementPolicy(),
+            game.systems().navigator(),
+            game.systems().pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));
 
@@ -229,7 +227,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.hud().gameScore().data().setEnabled(true);
 
-        final LevelCounterSystem levelCounterSystem = game.runtime().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -251,7 +249,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.runtime().systems();
         final GameRules rules = game.runtime().gameRules();
 
         level.selectNextBonus();
@@ -265,7 +262,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.position().set(halfTileRightOf(tile));
         bonus.setLifetimeInSeconds(rules.edibleBonusDisplaySeconds());
-        systems.bonusState().setEdible(bonus);
+        game.systems().bonusStateSystem().setEdible(bonus);
         bonus.show();
 
         game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));

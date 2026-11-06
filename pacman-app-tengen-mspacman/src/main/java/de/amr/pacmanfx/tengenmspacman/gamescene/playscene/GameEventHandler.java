@@ -9,7 +9,6 @@ import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -66,10 +65,9 @@ class GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent e) {
         final GameContext game = e.game();
-        final GameSystems systems = game.runtime().systems();
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
-            resetActorAnimations(systems.actorSpriteAnimController(), session, level);
+            resetActorAnimations(game.systems().actorSpriteAnimController(), session, level);
             level.showMessage(MessageType.READY);
         });
     }
@@ -117,7 +115,7 @@ class GameEventHandler implements DefaultGameEventListener {
     public void onLevelStarted(LevelStartedEvent e) {
         final GameContext game = e.game();
         final GameSession session = game.session();
-        final ActorSpriteAnimController animController = game.runtime().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
 
         session.optLevel().ifPresent(level -> resetActorAnimations(animController, session, level));
     }

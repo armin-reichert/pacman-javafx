@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
@@ -25,7 +24,6 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacPowerStarts(PacPowerStartsEvent e) {
-        final GameSystems systems = game.runtime().systems();
         final long durationTicks = e.powerDurationTicks();
         final GameLevel level = game.session().optLevel().orElseThrow();
 
@@ -37,7 +35,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
             ghost.state().setKillChainIndex(-1);
         });
 
-        systems.pacPower().start(e.pac(), durationTicks);
+        game.systems().pacPower().start(e.pac(), durationTicks);
 
         Logger.info("Pac power started. Power ticks: {}", durationTicks);
     }

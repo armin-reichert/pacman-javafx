@@ -14,7 +14,6 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.engine.action.GameAction;
@@ -135,7 +134,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.runtime().systems().motor();
+        final MovementSystem motor = game.systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -144,9 +143,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.runtime().systems();
-        final WorldNavigationSystem navigator = systems.navigator();
-        final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.systems().navigator();
+        final ActorSpriteAnimController animSystem = game.systems().actorSpriteAnimController();
 
         letActorsMove(game, tick);
 
@@ -253,9 +251,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.runtime().systems();
-        final MovementSystem motor = systems.motor();
-        final WorldNavigationSystem navigator = systems.navigator();
+        final MovementSystem motor = game.systems().motor();
+        final WorldNavigationSystem navigator = game.systems().navigator();
 
         Pac junior = juniors.get(index);
         long creationTime = juniorSpawnTicks.get(index);

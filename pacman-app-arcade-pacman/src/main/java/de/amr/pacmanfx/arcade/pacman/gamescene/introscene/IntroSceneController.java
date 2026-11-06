@@ -10,7 +10,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
@@ -133,8 +132,6 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
-                final GameSystems systems = game.runtime().systems();
-
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
                     scene.startChasingPacMan(game);
@@ -144,7 +141,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     scene.view.removeTargetEnergizer();
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
-                    scene.turnCardsRestartPacMan(systems);
+                    scene.turnCardsRestartPacMan(game.systems());
                 }
                 else if (tick == TICK_CHASING_PAC_MAN_END) {
                     controller.enterState(scene, CHASING_GHOSTS);
@@ -161,15 +158,13 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final GameContext game = scene.engine().optCurrentGame().orElse(null);
                 if (game == null) return;
 
-                final GameSystems systems = game.runtime().systems();
-
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.numGhostsEaten = 0;
 
-                systems.navigator().setMoveDir(scene.view.pacMan, Direction.RIGHT);
-                systems.navigator().setSpeed(scene.view.pacMan, CHASING_SPEED);
+                game.systems().navigator().setMoveDir(scene.view.pacMan, Direction.RIGHT);
+                game.systems().navigator().setSpeed(scene.view.pacMan, CHASING_SPEED);
             }
 
             @Override

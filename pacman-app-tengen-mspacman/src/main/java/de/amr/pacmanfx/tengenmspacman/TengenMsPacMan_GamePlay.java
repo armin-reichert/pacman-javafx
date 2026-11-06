@@ -172,7 +172,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
-            game.runtime().systems().levelCounterSystem().clear(levelCounter);
+            game.systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -185,7 +185,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final MapCategory mapCategory = gameOptionValues(session).mapCategory();
 
         final var rules = (TengenMsPacMan_GameRules) game.runtime().gameRules();
-        final GameSystems systems = game.runtime().systems();
         final var entities = new GameLevelEntitySet();
 
         final WorldMap worldMap = game.runtime().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
@@ -197,7 +196,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 entities.ghostsInAnyOfStates(TURNBACK_STATES)
-                    .forEach(systems.navigator()::requestTurnBack);
+                    .forEach(game.systems().navigator()::requestTurnBack);
             }
         });
         huntingTimer.reset();
@@ -218,7 +217,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
-        configurePacAndGhosts(entities, game.runtime().systems(), worldMap.terrainLayer());
+        configurePacAndGhosts(entities, game.systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
@@ -271,15 +270,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.runtime().systems();
-
         final GameLevel demoLevel = createLevel(game, 1);
 
         session.store(SessionKey.GAME_OVER_STATE_TICKS, 120L);
 
         final Pac pac = demoLevel.entitySet().pac();
         // There are maps that cannot be handled with Arcade-steering logic
-        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
+        pac.autoSteering().setSteering(new RuleGuidedPacSteering(
+            game.systems().navigator(), game.systems().pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
@@ -304,7 +302,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
-        final LevelCounterSystem levelCounterSystem = game.runtime().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -325,7 +323,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.runtime().systems();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
@@ -357,7 +354,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         }
         final Bonus bonus = Bonus.createMovingBonus(symbolCode);
         level.entitySet().add(bonus);
-        systems.bonusState().setEdible(bonus);
+        game.systems().bonusStateSystem().setEdible(bonus);
         bonus.show();
 
         final boolean leftToRight = randomBoolean();
@@ -368,8 +365,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         );
-        systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
-
+        game.systems().bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
         game.runtime().eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
 

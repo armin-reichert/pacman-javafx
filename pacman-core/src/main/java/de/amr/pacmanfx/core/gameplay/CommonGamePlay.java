@@ -11,7 +11,6 @@ import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
@@ -53,8 +52,6 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext game, GameLevel level) {
-        final GameSystems systems = game.runtime().systems();
-
         final WorldMap worldMap = level.worldMap();
         final House house = level.entitySet().theOne(House.class);
         final Pac pac = level.entitySet().pac();
@@ -62,19 +59,19 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.reset(); // initially invisible!
         pac.position().set(worldMap.terrainLayer().pacStartPosition());
         pac.state().setEnumValue(PacState.SLEEPING);
-        systems.pacPower().stopAndReset(pac);
-        systems.motor().setVelocity(pac, 0, 0);
-        systems.navigator().setMoveDir(pac, Direction.LEFT);
-        systems.navigator().setWishDir(pac, Direction.LEFT);
-        systems.pacAnimation().update(pac, game.runtime().gameRules());
+        game.systems().pacPower().stopAndReset(pac);
+        game.systems().motor().setVelocity(pac, 0, 0);
+        game.systems().navigator().setMoveDir(pac, Direction.LEFT);
+        game.systems().navigator().setWishDir(pac, Direction.LEFT);
+        game.systems().pacAnimation().update(pac, game.runtime().gameRules());
 
         level.entitySet().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
             ghost.position().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
-            systems.navigator().setMoveDir(ghost, direction);
-            systems.navigator().setWishDir(ghost, direction);
-            systems.actorSpriteAnimController().resetSelected(ghost);
+            game.systems().navigator().setMoveDir(ghost, direction);
+            game.systems().navigator().setWishDir(ghost, direction);
+            game.systems().actorSpriteAnimController().resetSelected(ghost);
         });
 
         // Blinking energizers are visible when state is ON
@@ -167,7 +164,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         scorePoints(game, ghostValue, level.number());
 
-        game.runtime().systems().ghostState().setState(ghost, GhostState.EATEN);
+        game.systems().ghostStateSystem().setState(ghost, GhostState.EATEN);
         //TODO use system
         ghost.state().setKillChainIndex(level.ghostKillCount() - 1);
 
@@ -190,7 +187,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameSession session = game.session();
 
-        final ScoreSystem scoreSystem = game.runtime().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.systems().scoreSystem();
         final Score gameScore = session.hud().gameScore();
         final Score highScore = session.hud().highScore();
 
@@ -227,7 +224,7 @@ public abstract class CommonGamePlay implements GamePlay {
     // private
 
     protected void initScores(GameContext game) {
-        final ScoreSystem scoreSystem = game.runtime().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.systems().scoreSystem();
         final Score gameScore = game.session().hud().gameScore();
         final Score highScore = game.session().hud().highScore();
 
@@ -245,8 +242,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, SimulationFrame thisFrame) {
         final Pac pac = level.entitySet().pac();
-        final GameSystems systems = game.runtime().systems();
-        final PacDigestionSystem digestionSystem = systems.pacDigestion();
+        final PacDigestionSystem digestionSystem = game.systems().pacDigestion();
         final ScoringRules scoringRules = game.runtime().gameRules().scoringRules();
 
         if (thisFrame.foodFound()) {

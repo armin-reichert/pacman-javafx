@@ -8,7 +8,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -29,10 +28,6 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     public static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     private final GameContext game;
-
-    private GameSystems systems() {
-        return game.runtime().systems();
-    }
 
     public PacEatingEventHandler(GameContext game) {
         this.game = requireNonNull(game);
@@ -60,10 +55,10 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.gateKeeper().registerFoodEaten(level);
 
         // Update Elroy state of red ghost (Arcade Pac-Man only)
-        systems().ghostState().updateElroyState(game);
+        game.systems().ghostStateSystem().updateElroyState(game);
 
         // Pac-Man "digests" and takes a 1 tick nap
-        systems().pacDigestion().digestPellet(pac, rules);
+        game.systems().pacDigestion().digestPellet(pac, rules);
     }
 
     private void onPacEatsEnergizer(PacEatsFoodEvent e) {
@@ -79,16 +74,16 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.gateKeeper().registerFoodEaten(level);
 
         // Update Elroy state of red ghost (Arcade Pac-Man only)
-        systems().ghostState().updateElroyState(game);
+        game.systems().ghostStateSystem().updateElroyState(game);
 
         // The "kill chain" starts: 200, 400, 800, 1600 points for ghosts eaten with same energizer power
         level.setGhostKillCount(0);
 
         // Ghosts turn back even if the Pac power time is zero and no event is published!
-        level.entitySet().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().navigator()::requestTurnBack);
+        level.entitySet().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(game.systems().navigator()::requestTurnBack);
 
         // Pac-Man "digests" and takes a 3 tick nap
-        systems().pacDigestion().digestEnergizer(pac, rules);
+        game.systems().pacDigestion().digestEnergizer(pac, rules);
 
         final long powerDurationTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
         if (powerDurationTicks > 0) {

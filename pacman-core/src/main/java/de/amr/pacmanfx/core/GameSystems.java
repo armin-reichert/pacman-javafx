@@ -178,7 +178,7 @@ public class GameSystems {
         return ghostUpdateSystem;
     }
 
-    public GhostStateSystem ghostState() {
+    public GhostStateSystem ghostStateSystem() {
         return ghostStateSystem;
     }
 
@@ -243,7 +243,7 @@ public class GameSystems {
         return bonusUpdateSystem;
     }
 
-    public BonusStateSystem bonusState() {
+    public BonusStateSystem bonusStateSystem() {
         return bonusStateSystem;
     }
 

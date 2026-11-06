@@ -333,7 +333,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     private void saveHighScore(GameContext game) {
-        final ScoreSystem scoreSystem = game.runtime().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.systems().scoreSystem();
         final Score highScore = game.session().hud().highScore();
         try {
             scoreSystem.save(highScore);

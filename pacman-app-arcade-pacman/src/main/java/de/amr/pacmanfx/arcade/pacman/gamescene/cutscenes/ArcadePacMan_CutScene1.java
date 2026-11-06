@@ -63,8 +63,6 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.runtime().systems();
-
         final CutSceneTimingComp timing = timing();
         timing.setTick(timing().tick() + 1);
 
@@ -74,20 +72,20 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
 
         if (timing.tick() == timing.animationStartTick()) {
             engine().soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
-            startBlinkyChasingPacMan(systems);
+            startBlinkyChasingPacMan(game.systems());
         }
         else if (timing.tick() == timing.animationStartTick() + 260) {
-            startBlinkyEscapingPacMan(systems);
+            startBlinkyEscapingPacMan(game.systems());
         }
         else if (timing.tick() == timing.animationStartTick() + 400) {
-            startBigPacManChasingBlinky(systems);
+            startBigPacManChasingBlinky(game.systems());
         }
         else if (timing.tick() == timing.animationStartTick() + 632) {
             game.state().triggerTimeout();
         }
         if (timing.tick() >= timing.animationStartTick()) {
-            systems.motor().move(pacMan);
-            systems.motor().move(blinky);
+            game.systems().motor().move(pacMan);
+            game.systems().motor().move(blinky);
         }
     }
 

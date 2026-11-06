@@ -17,7 +17,6 @@ import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
@@ -295,9 +294,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.runtime().systems();
-                final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
-                final WorldNavigationSystem nav = systems.navigator();
+                final ActorSpriteAnimController animController = scene.runtime().systems().actorSpriteAnimController();
+                final WorldNavigationSystem nav = scene.runtime().systems().navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
@@ -321,7 +319,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                     nav.setSpeed(ghost, SPEED);
 
                     animController.playSelected(ghost);
-                    systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+                    scene.runtime().systems().ghostStateSystem().setState(ghost, GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }
@@ -377,9 +375,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             }
 
             boolean letGhostMarchIn(GameContext game, TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = game.runtime().systems();
-                final MovementSystem motor = systems.motor();
-                final WorldNavigationSystem nav = systems.navigator();
+                final MovementSystem motor = game.systems().motor();
+                final WorldNavigationSystem nav = game.systems().navigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -423,10 +420,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.engine().optCurrentGame().ifPresent(game -> {
                     final GameFlow flow = game.runtime().gameFlow();
-                    final GameSystems systems = game.runtime().systems();
-                    final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
-                    final MovementSystem motor = systems.motor();
-                    final WorldNavigationSystem nav = systems.navigator();
+                    final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
+                    final MovementSystem motor = game.systems().motor();
+                    final WorldNavigationSystem nav = game.systems().navigator();
 
                     scene.marqueeTextView1.position().set(ANCHOR_X + 12, ANCHOR_Y + 22);
                     scene.marqueeTextView1.data().setText(STARRING);

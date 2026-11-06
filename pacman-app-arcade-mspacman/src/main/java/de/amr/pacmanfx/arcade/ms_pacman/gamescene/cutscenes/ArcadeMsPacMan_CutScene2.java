@@ -55,11 +55,9 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.runtime().systems();
-
         switch (state) {
-            case SceneState.CLAPPERBOARD -> updateStateClapperboard(systems);
-            case SceneState.CHASING -> updateStateChasing(systems);
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard(game.systems());
+            case SceneState.CHASING -> updateStateChasing(game.systems());
             default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
         sceneTimer.doTick();

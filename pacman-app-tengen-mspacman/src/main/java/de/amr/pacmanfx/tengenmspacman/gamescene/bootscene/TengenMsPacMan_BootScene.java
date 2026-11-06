@@ -64,7 +64,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     public void onActivate() {
         engine().optCurrentGame().ifPresent(game -> {
             ghost = uiConfig().renderConfig().createAnimatedGhost(
-                runtime().systems().actorSpriteAnimController(),
+                game.systems().actorSpriteAnimController(),
                 engine.spriteAnimationSystem(),
                 GhostPersonality.RED_GHOST_SHADOW);
 
@@ -77,8 +77,6 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.runtime().systems();
-
         final int stateTick = (int) game.state().stateTimer().tickCount();
 
         switch (stateTick) {
@@ -88,17 +86,17 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case  21 -> {
                 tengenPresentsTextView.position().set(NES_SCREEN_WIDTH / 2.0, view2D().unscaledHeight()); // lower border of screen
                 tengenPresentsTextView.show();
-                systems.motor().setVelocity(tengenPresentsTextView, 0, -HTS);
+                game.systems().motor().setVelocity(tengenPresentsTextView, 0, -HTS);
             }
-            case  55 -> systems.motor().setVelocity(tengenPresentsTextView, 0, 0);
+            case  55 -> game.systems().motor().setVelocity(tengenPresentsTextView, 0, 0);
             case 113 -> {
                 ghost.position().set(view2D().unscaledWidth() - TS, GHOST_Y);
                 ghost.show();
-                systems.navigator().setMoveDir(ghost, Direction.LEFT);
-                systems.navigator().setWishDir(ghost, Direction.LEFT);
-                systems.navigator().setSpeed(ghost, TS);
+                game.systems().navigator().setMoveDir(ghost, Direction.LEFT);
+                game.systems().navigator().setWishDir(ghost, Direction.LEFT);
+                game.systems().navigator().setSpeed(ghost, TS);
             }
-            case 181 -> systems.motor().setVelocity(tengenPresentsTextView, 0, TS);
+            case 181 -> game.systems().motor().setVelocity(tengenPresentsTextView, 0, TS);
             case 203 -> {
                 tengenPresentsTextView.hide();
                 ghost.hide();
@@ -112,9 +110,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         }
 
         tengenPresentsTextView.assertComponent(ShadesOfBlue.class).setBlueValue(shadeOfBlue(stateTick));
-        systems.motor().move(tengenPresentsTextView);
+        game.systems().motor().move(tengenPresentsTextView);
 
-        systems.motor().move(ghost);
+        game.systems().motor().move(ghost);
     }
 
     private void fillCanvasGray(boolean gray) {

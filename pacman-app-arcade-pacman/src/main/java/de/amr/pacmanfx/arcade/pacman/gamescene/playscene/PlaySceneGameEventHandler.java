@@ -64,7 +64,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
     public void onGameContinued(GameContinuedEvent e) {
         gameScene.engine().optCurrentGame().ifPresent(game -> {
             //TODO Does not belong here
-            final ActorSpriteAnimController animController = game.runtime().systems().actorSpriteAnimController();
+            final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
             game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
         });
     }
