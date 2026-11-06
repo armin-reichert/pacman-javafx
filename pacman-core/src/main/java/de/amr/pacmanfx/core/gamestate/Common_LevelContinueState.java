@@ -33,13 +33,13 @@ public class Common_LevelContinueState extends AbstractGameState {
         final LevelContinuationRules continuationRules = game.rules().levelContinuation();
         if (stateTickCount == 1) {
             level.entitySet().showPacAndGhosts();
-            lockPacAndGhosts(game, level.entitySet(), true);
+            game.play().lockPacAndGhosts(game, level.entitySet(), true);
         }
         else if (stateTickCount == continuationRules.continuePlayingTicks()) {
             game.runtime().eventManager().publishEvent(new GameContinuedEvent(game));
         }
         else if (stateTickCount == continuationRules.resumeHuntingTicks()) {
-            lockPacAndGhosts(game, level.entitySet(), false);
+            game.play().lockPacAndGhosts(game, level.entitySet(), false);
             game.flow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

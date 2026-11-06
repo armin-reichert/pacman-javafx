@@ -39,7 +39,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
         game.session().hud().highScore().data().setEnabled(true);
 
-        lockPacAndGhosts(game, level.entitySet(), true);
+        game.play().lockPacAndGhosts(game, level.entitySet(), true);
 
         game.runtime().eventManager().publishEvent(new LevelCreatedEvent(game, level));
         game.runtime().eventManager().publishEvent(new GameStartedEvent(game));
@@ -55,7 +55,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
         }
         else if (stateTickCount == TICK_START_PLAYING) {
             final Pac pac = level.entitySet().pac();
-            lockPacAndGhosts(game, level.entitySet(), false);
+            game.play().lockPacAndGhosts(game, level.entitySet(), false);
             pac.state().setEnumValue(PacState.ACTIVE);
 
             game.coinMechanism().consumeCoin();

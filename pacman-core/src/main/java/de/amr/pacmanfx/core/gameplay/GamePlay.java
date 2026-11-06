@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 public interface GamePlay {
 
@@ -36,6 +37,10 @@ public interface GamePlay {
     void pacEatsGhost(GameContext game, GameLevel level, Ghost eatenGhost);
 
     void activateNextBonus(GameContext game, GameLevel level);
+
+    void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked);
+
+    void lockPacAndGhosts(GameContext game, GameLevelEntitySet entities, boolean locked);
 
     // Scoring
 

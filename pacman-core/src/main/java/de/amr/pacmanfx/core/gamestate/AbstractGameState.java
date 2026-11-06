@@ -8,8 +8,6 @@ import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -54,20 +52,5 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
     @Override
     public final void onUpdate(GameContext game) {
         doUpdate(game, game.session().thisFrame().tickCount(), stateTimer().tickCount());
-    }
-
-    protected void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
-        entities.ghosts().forEach(ghost -> {
-            ghost.worldNavigation().setPaused(locked);
-            game.systems().ghostAnimation().lockAnimation(ghost, locked);
-        });
-    }
-
-    protected void lockPacAndGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
-        final Pac pac = entities.pac();
-        pac.worldNavigation().setPaused(locked);
-        game.systems().pacAnimation().lockAnimation(pac, locked);
-
-        lockGhosts(game, entities, locked);
     }
 }

@@ -30,6 +30,7 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.ScoringRules;
@@ -202,6 +203,25 @@ public abstract class CommonGamePlay implements GamePlay {
             session.setNumLives(newNumLives);
             game.runtime().eventManager().publishEvent(new SpecialScoreEvent(gameScore.data().points()));
         }
+    }
+
+    // Others
+
+    @Override
+    public void lockGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
+        entities.ghosts().forEach(ghost -> {
+            ghost.worldNavigation().setPaused(locked);
+            game.systems().ghostAnimation().lockAnimation(ghost, locked);
+        });
+    }
+
+    @Override
+    public void lockPacAndGhosts(GameContext game, GameLevelEntitySet entities, boolean locked) {
+        final Pac pac = entities.pac();
+        pac.worldNavigation().setPaused(locked);
+        game.systems().pacAnimation().lockAnimation(pac, locked);
+
+        lockGhosts(game, entities, locked);
     }
 
     // private

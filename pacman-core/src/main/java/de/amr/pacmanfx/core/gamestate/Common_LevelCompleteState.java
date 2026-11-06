@@ -57,7 +57,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
     @Override
     public void doUpdate(GameContext game, long globalTickCount, long stateTickCount) {
         if (stateTickCount == 1) {
-            lockPacAndGhosts(game, level.entitySet(), true);
+            game.play().lockPacAndGhosts(game, level.entitySet(), true);
         }
         if (stateTimer().hasExpired()) {
             game.flow().enterGameState(game, computeNextStateID(game));
