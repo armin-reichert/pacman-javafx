@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.comp;
+package de.amr.pacmanfx.ui.entities3D.score;
 
 import de.amr.basics.ui.entities.hud.score.Score;
 import javafx.scene.layout.GridPane;

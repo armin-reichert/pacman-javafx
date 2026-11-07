@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.entities3D.comp;
+package de.amr.pacmanfx.ui.entities3D.score;
 
 import javafx.scene.text.Text;
 

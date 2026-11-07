@@ -49,4 +49,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.views.playview;
     exports de.amr.pacmanfx.ui.views.startpages;
     exports de.amr.pacmanfx.ui.window;
+    exports de.amr.pacmanfx.ui.entities3D.score;
 }
