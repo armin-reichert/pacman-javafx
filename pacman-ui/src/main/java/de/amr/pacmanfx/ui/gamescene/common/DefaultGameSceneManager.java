@@ -16,7 +16,6 @@ import de.amr.pacmanfx.engine.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.gamescene.GameSceneSwitchType;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
@@ -172,7 +171,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.assertSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {

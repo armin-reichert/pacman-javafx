@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
+import de.amr.pacmanfx.arcade.ms_pacman.systems.ArcadeMsPacMan_GameSystems;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;

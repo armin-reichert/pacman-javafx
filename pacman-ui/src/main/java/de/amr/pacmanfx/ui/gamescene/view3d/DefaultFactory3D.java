@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.gamescene.view3d;
 
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
@@ -14,6 +14,8 @@ import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
+import de.amr.pacmanfx.ui.systems.GhostSystems3D;
+import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
@@ -53,17 +55,17 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public void createPac3D(Pac pac, PacSettings settings) {
-        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
+    public void createPac3D(GameSystems systems, Pac pac, PacSettings settings) {
+        final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
         final PacView3D view3D = pacSystems3D.view3DSystem().createPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }
 
     @Override
-    public void createGhost3D(Ghost ghost, GhostSettings settings) {
+    public void createGhost3D(GameSystems systems, Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model = PacManMeshes3D.instance();
         if (!ghost.hasComponent(GhostView3D.class)) {
-            final GameSystems3D.GhostSystems3D ghostSystems3D = GameSystems3D.assertSystem(GameSystems3D.GhostSystems3D.class);
+            final GhostSystems3D ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
             final GhostView3D view3D = ghostSystems3D.viewSystem().build(
                 settings,
                 model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());

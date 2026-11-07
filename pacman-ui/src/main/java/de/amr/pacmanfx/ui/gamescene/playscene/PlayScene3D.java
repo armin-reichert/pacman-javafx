@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.EngineUIContext;
-import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -39,6 +38,7 @@ import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
+import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.beans.property.DoubleProperty;
@@ -163,7 +163,7 @@ public class PlayScene3D extends AbstractGameScene {
     @Override
     public void onBeforeEmbedded() {
         engine().optCurrentGame().ifPresent(game ->
-            GameSystems3D.assertSystem(Score3DSystem.class).replaceScoresView(
+            game.systems().assertSystem(Score3DSystem.class).replaceScoresView(
                 this,
                 game.session().hud().gameScore(),
                 game.session().hud().highScore(),
@@ -251,7 +251,7 @@ public class PlayScene3D extends AbstractGameScene {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animations3D().registry()));
 
         //TODO move out of this class?
-        final World3DUpdateSystem updateSystem = GameSystems3D.assertSystem(World3DUpdateSystem.class);
+        final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
         updateSystem.updateEntities(game, animations3D().registry());
 
         updateHUD3D(game);
@@ -322,15 +322,15 @@ public class PlayScene3D extends AbstractGameScene {
     public void updateHUD3D(GameContext game) {
         requireNonNull(game);
         final ScoresView scoresView = assertComponent(ScoresView.class);
-        GameSystems3D.assertSystem(Score3DSystem.class)
+        game.systems().assertSystem(Score3DSystem.class)
             .updateScoresView(scoresView, game, engine.translationManager(), uiConfig().assets());
     }
 
-    public void initPac3DProperties(GameLevel level, Pac pac) {
+    public void initPac3DProperties(GameContext game, GameLevel level, Pac pac) {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
+        final PacSystems3D systems3D = game.systems().assertSystem(PacSystems3D.class);
         systems3D.transformSystem().init(pac, level.worldMap());
         systems3D.animationSystem().stopAnimations(pac);
         systems3D.animationSystem().setPowerMode(pac, false);
@@ -361,7 +361,7 @@ public class PlayScene3D extends AbstractGameScene {
         // Create a new 3D game level representation
         level3D = new GameLevelView3D(game, viewModel, uiConfig());
         addAdditional3DLevelElements(level3D);
-        level3D.replaceLevelCounter3D(session.hud().levelCounter());
+        level3D.replaceLevelCounter3D(game, session.hud().levelCounter());
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
@@ -369,11 +369,11 @@ public class PlayScene3D extends AbstractGameScene {
 
         //TODO check this
         final Pac pac = level.entitySet().pac();
-        initPac3DProperties(level, pac);
+        initPac3DProperties(game, level, pac);
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.assertSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
     }
 

@@ -1,11 +1,9 @@
-package de.amr.pacmanfx.arcade.ms_pacman.model;
+package de.amr.pacmanfx.arcade.ms_pacman.systems;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost.ArcadeMsPacMan_ShadowHuntingStrategy;
-import de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost.ArcadeMsPacMan_SpeedyHuntingStrategy;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.arcade.pacman.systems.ArcadePacMan_GameSystems;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 
-public class ArcadeMsPacMan_GameSystems extends GameSystems {
+public class ArcadeMsPacMan_GameSystems extends ArcadePacMan_GameSystems {
 
     public ArcadeMsPacMan_GameSystems() {
     }

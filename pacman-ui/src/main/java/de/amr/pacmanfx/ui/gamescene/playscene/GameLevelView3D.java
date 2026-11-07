@@ -13,6 +13,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -22,7 +23,6 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
@@ -104,10 +104,10 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         createMaze3DView(worldMap, house, colorScheme);
         createFood3DViews();
         new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
-        createPac3DView(pac, uiConfig.worldSettings().pac());
-        createGhost3DViews(ghosts, uiConfig.worldSettings().ghosts());
-        createLevelCounter3DView(levelCounter);
-        createLivesCounter3DView(livesCounter);
+        createPac3DView(game.systems(), pac, uiConfig.worldSettings().pac());
+        createGhost3DViews(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
+        createLevelCounter3DView(game, levelCounter);
+        createLivesCounter3DView(game, livesCounter);
 
 
         composeLevel3D(pac, ghosts, livesCounter, house);
@@ -263,22 +263,22 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         return view3D;
     }
 
-    private void createPac3DView(Pac pac, PacSettings settings) {
-        uiConfig.factory3D().createPac3D(pac, settings);
+    private void createPac3DView(GameSystems systems, Pac pac, PacSettings settings) {
+        uiConfig.factory3D().createPac3D(systems, pac, settings);
         pac.assertComponent(PacView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
-    private void createGhost3DViews(List<Ghost> ghosts, List<GhostSettings> settings) {
+    private void createGhost3DViews(GameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
-            uiConfig.factory3D().createGhost3D(ghost, ghostSettings);
+            uiConfig.factory3D().createGhost3D(systems, ghost, ghostSettings);
             ghost.assertComponent(GhostView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
         });
     }
 
-    private void createLivesCounter3DView(LivesCounter livesCounter) {
+    private void createLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
         if (!livesCounter.hasComponent(LivesCounterView3D.class)) {
-            final LivesCounterView3D view3D = GameSystems3D.assertSystem(LivesCounterView3DSystem.class)
+            final LivesCounterView3D view3D = game.systems().assertSystem(LivesCounterView3DSystem.class)
                 .createView(uiConfig.factory3D(), uiConfig.worldSettings());
             livesCounter.setComponent(LivesCounterView3D.class, view3D);
             view3D.root().setTranslateX(2 * TS);
@@ -286,7 +286,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         }
     }
 
-    private void createLevelCounter3DView(LevelCounter levelCounter) {
+    private void createLevelCounter3DView(GameContext game, LevelCounter levelCounter) {
         if (!levelCounter.hasComponent(LevelCounterView3D.class)) {
             final LevelCounterView3D view3D = new LevelCounterView3D();
             levelCounter.setComponent(LevelCounterView3D.class, view3D);
@@ -294,11 +294,11 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         else {
             Logger.info("Level counter already had a 3D view!");
         }
-        replaceLevelCounter3D(levelCounter);
+        replaceLevelCounter3D(game, levelCounter);
     }
 
-    public void replaceLevelCounter3D(LevelCounter levelCounter) {
-        final LevelCounter3DViewSystem viewSystem = GameSystems3D.assertSystem(LevelCounter3DViewSystem.class);
+    public void replaceLevelCounter3D(GameContext game, LevelCounter levelCounter) {
+        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
         final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
 
         final Group oldRoot = view3D.root();

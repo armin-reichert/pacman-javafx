@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.view3d;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
@@ -26,7 +27,7 @@ public interface Factory3D extends Disposable {
      * @param pac               the Pac actor whose animations and state drive the model
      * @param pacConfig         the actor 3D configuration object
      */
-    void createPac3D(Pac pac, PacSettings pacConfig);
+    void createPac3D(GameSystems systems, Pac pac, PacSettings pacConfig);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -35,7 +36,7 @@ public interface Factory3D extends Disposable {
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param ghostConfig      the actor 3D configuration object
      */
-    void createGhost3D(Ghost ghost, GhostSettings ghostConfig);
+    void createGhost3D(GameSystems systems, Ghost ghost, GhostSettings ghostConfig);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

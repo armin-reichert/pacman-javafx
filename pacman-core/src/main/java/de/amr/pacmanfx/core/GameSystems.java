@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.QuerySet;
 import de.amr.basics.ecs.system.LifetimeSystem;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -20,6 +21,8 @@ import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
+
+    private final QuerySet<Object> systems = new QuerySet<>();
 
     protected final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
@@ -64,6 +67,14 @@ public class GameSystems {
         createGhostSystems();
         createBonusSystems();
         createHUDSystems();
+    }
+
+    public void addSystem(Object system) {
+        systems.add(system);
+    }
+
+    public <T> T assertSystem(Class<T> type) {
+        return systems.theOne(type);
     }
 
     protected void createPacSystems() {

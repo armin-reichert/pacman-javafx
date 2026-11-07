@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
+package de.amr.pacmanfx.arcade.ms_pacman.systems;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
