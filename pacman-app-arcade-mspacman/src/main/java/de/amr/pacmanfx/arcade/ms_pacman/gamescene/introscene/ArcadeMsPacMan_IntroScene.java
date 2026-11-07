@@ -56,6 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
+        addView2D();
         flow = new IntroSceneController();
     }
 

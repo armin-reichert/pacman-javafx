@@ -62,6 +62,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {
+        addView2D();
         view2D().setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
         view2D().setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }

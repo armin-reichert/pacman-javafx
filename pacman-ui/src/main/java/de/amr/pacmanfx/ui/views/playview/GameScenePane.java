@@ -102,7 +102,7 @@ public class GameScenePane extends StackPane {
     }
 
     private void embedDecoratedGameScene2D(DoubleExpression availableWidth, DoubleExpression availableHeight, AbstractGameScene gameScene, Game2DSettingsViewModel settingsViewModel) {
-        final GameSceneView2D view2D = gameScene.assertComponent(GameSceneView2D.class);
+        final GameSceneView2D view2D = gameScene.view2D();
         final Color bgColor = settingsViewModel.canvasBackgroundColorProperty().get();
         final ObservableValue<Background> containerBackground = settingsViewModel.canvasBackgroundColorProperty().map(Ufx::paintBackground);
 

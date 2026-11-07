@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.gamescene.playscene;
 
-import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
@@ -63,7 +62,7 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
+public class PlayScene3D extends AbstractGameScene {
 
     private final DoubleProperty opacity = new SimpleDoubleProperty(0);
 

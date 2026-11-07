@@ -78,6 +78,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     public float fadeProgress = 0;
 
     public TengenMsPacMan_CreditsScene() {
+        addView2D();
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 

@@ -88,7 +88,7 @@ public class GamePlayViewRenderer {
         final GameVariantRenderConfig renderConfig = engine.uiConfig(runtime).renderConfig();
         final ActorSpriteAnimController animController = runtime.systems().actorSpriteAnimController();
 
-        if (gameScene.view2D() != null) {
+        if (gameScene.hasComponent(GameSceneView2D.class)) {
             final RenderingSurface renderingSurface = gameScene.view2D().renderingSurface();
             if (renderingSurface != null) {
                 renderManager.setVariantRenderer(createVariantRenderer(

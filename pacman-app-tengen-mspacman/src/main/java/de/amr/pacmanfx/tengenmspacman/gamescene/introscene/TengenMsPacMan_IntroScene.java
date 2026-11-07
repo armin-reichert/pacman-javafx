@@ -96,6 +96,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public final StateMachine<TengenMsPacMan_IntroScene> flow;
 
     public TengenMsPacMan_IntroScene() {
+        addView2D();
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 

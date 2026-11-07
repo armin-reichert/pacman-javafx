@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Composition;
-import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -27,24 +27,31 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene extends Composition<Object> implements GameScene, QuitHandler, Disposable {
+public abstract class AbstractGameScene extends Composition<Object>
+    implements GameScene, QuitHandler, DisposableGraphicsObject {
 
     protected EngineUIContext engine;
 
     public AbstractGameScene() {
-        final var view2D = new GameSceneView2D();
-        view2D.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
-        setComponent(GameSceneView2D.class, view2D);
-
         final ActionBindingsRegistry<EngineUIContext> actionBindings = new DefaultActionBindingsRegistry<>(
             "Action Bindings for '%s'".formatted(this));
         setComponent(ActionBindingsRegistry.class, actionBindings);
     }
 
+    protected void addView2D() {
+        final var view2D = new GameSceneView2D();
+        view2D.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        setComponent(GameSceneView2D.class, view2D);
+    }
+
     // Typed game scene component access
 
     public GameSceneView2D view2D() {
+        if (!hasComponent(GameSceneView2D.class)) {
+            throw new IllegalStateException("Game scene of type '%s' has no 2D view component"
+                .formatted(getClass().getSimpleName()));
+        }
         return assertComponent(GameSceneView2D.class);
     }
 

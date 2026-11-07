@@ -72,6 +72,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     private SceneState sceneState;
 
     public ArcadeMsPacMan_CutScene3() {
+        addView2D();
         setComponent(CutSceneTimingComp.class, new Timing(0));
     }
 

@@ -45,6 +45,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     long lastGhostEatenTick;
 
     public ArcadePacMan_IntroScene() {
+        addView2D();
         flow = new IntroSceneController();
         view = new IntroSceneView();
     }

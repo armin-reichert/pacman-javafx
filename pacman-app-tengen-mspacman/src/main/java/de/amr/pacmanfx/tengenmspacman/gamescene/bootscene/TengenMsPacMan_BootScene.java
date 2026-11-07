@@ -45,6 +45,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     private Ghost ghost;
 
     public TengenMsPacMan_BootScene() {
+        addView2D();
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 

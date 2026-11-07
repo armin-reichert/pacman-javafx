@@ -101,6 +101,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     private PacPowerEventHandler pacPowerEventHandler;
 
     public TengenMsPacMan_PlayScene2D() {
+        addView2D();
         view2D().setRenderingSurface(new RenderingSurface());
     }
 

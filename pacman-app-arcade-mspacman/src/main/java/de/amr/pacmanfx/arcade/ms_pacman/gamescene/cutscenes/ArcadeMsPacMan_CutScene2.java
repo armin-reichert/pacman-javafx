@@ -45,7 +45,9 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
 
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
-    public ArcadeMsPacMan_CutScene2() {}
+    public ArcadeMsPacMan_CutScene2() {
+        addView2D();
+    }
 
     @Override
     public void onActivate() {

@@ -52,6 +52,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     private Renderable currentSceneContent;
 
     public Arcade_BootScene() {
+        addView2D();
         view2D().setAutoClearCanvas(false);
     }
 

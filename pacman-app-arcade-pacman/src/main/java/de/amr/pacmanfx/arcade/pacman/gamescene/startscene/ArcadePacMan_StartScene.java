@@ -28,7 +28,9 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
         TextView.create("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   GlobalFonts.ARCADE.font(8),  4, 29)
     );
 
-    public ArcadePacMan_StartScene() {}
+    public ArcadePacMan_StartScene() {
+        addView2D();
+    }
 
     @Override
     public Stream<Renderable> renderables() {

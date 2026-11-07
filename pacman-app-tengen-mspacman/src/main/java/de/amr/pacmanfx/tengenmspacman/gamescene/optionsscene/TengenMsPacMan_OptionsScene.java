@@ -102,6 +102,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final GameEntityView numContinuesView;
 
     public TengenMsPacMan_OptionsScene() {
+        addView2D();
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 

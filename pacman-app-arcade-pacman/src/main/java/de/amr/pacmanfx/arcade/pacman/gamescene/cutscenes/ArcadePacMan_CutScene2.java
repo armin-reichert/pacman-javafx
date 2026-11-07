@@ -39,6 +39,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     private NailDressRapturing nailDressRapturing;
 
     public ArcadePacMan_CutScene2() {
+        addView2D();
         setComponent(CutSceneTimingComp.class, new CutScene2TimingComp(120));
     }
 

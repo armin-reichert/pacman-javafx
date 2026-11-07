@@ -39,7 +39,9 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     private ImageView copyrightImageView;
     private final List<TextView> copyrightTexts = new ArrayList<>();
 
-    public ArcadeMsPacMan_StartScene() {}
+    public ArcadeMsPacMan_StartScene() {
+        addView2D();
+    }
 
     @Override
     public Stream<Renderable> renderables() {

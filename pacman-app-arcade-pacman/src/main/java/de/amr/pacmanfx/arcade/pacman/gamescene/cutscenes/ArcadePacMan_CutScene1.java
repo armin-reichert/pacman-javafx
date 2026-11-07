@@ -31,12 +31,13 @@ import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
  */
 public class ArcadePacMan_CutScene1 extends AbstractGameScene {
 
-    public ArcadePacMan_CutScene1() {
-        setComponent(CutSceneTimingComp.class, new CutSceneTimingComp(120));
-    }
-
     private Pac pacMan;
     private Ghost blinky;
+
+    public ArcadePacMan_CutScene1() {
+        addView2D();
+        setComponent(CutSceneTimingComp.class, new CutSceneTimingComp(120));
+    }
 
     private CutSceneTimingComp timing() {
         return assertComponent(CutSceneTimingComp.class);

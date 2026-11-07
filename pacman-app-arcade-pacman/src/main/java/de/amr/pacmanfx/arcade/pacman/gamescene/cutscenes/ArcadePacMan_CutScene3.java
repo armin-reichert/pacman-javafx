@@ -39,7 +39,9 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
     private Pac pacMan;
     private Ghost blinky;
 
-    public ArcadePacMan_CutScene3() {}
+    public ArcadePacMan_CutScene3() {
+        addView2D();
+    }
 
     @Override
     public Stream<Renderable> renderables() {
