@@ -4,13 +4,16 @@
 
 package de.amr.pacmanfx.ui.entities3D.score;
 
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
 import static de.amr.basics.TileDimension.TS;
+import static java.util.Objects.requireNonNull;
 
 public class Score3DSystem {
 
@@ -51,5 +54,31 @@ public class Score3DSystem {
         scoresView.root().translateZProperty().bind(playScene3D.view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
 
         playScene3D.setComponent(ScoresView.class, scoresView);
+    }
+
+    public void updateScoresView(
+        ScoresView scoresView,
+        GameContext game,
+        TranslationManager translationManager,
+        AssetMap assets
+    ) {
+        requireNonNull(game);
+        requireNonNull(translationManager);
+        requireNonNull(assets);
+
+        final Score score = game.session().hud().gameScore();
+        final Score highScore = game.session().hud().highScore();
+
+        // If score is disabled, show "GAME OVER" text instead
+        if (score.data().isEnabled()) {
+            scoresView.showScore(score.data().points(), score.data().levelNumber());
+        } else {
+            scoresView.showTextForScore(
+                translationManager.translate("score.game_over"),
+                assets.color("color.game_over_message"));
+        }
+
+        // High score is always visible
+        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 }

@@ -317,26 +317,9 @@ public class PlayScene3D extends AbstractGameScene {
 
     public void updateHUD3D(GameContext game) {
         requireNonNull(game);
-
-        if (!hasComponent(ScoresView.class)) {
-            throw new IllegalStateException("Cannot update 3D HUD: no score view exists");
-        }
-
         final ScoresView scoresView = assertComponent(ScoresView.class);
-        final Score score = game.session().hud().gameScore();
-        final Score highScore = game.session().hud().highScore();
-
-        // If score is disabled, show "GAME OVER" text instead
-        if (score.data().isEnabled()) {
-            scoresView.showScore(score.data().points(), score.data().levelNumber());
-        } else {
-            scoresView.showTextForScore(
-                engine().translationManager().translate("score.game_over"),
-                uiConfig().assets().color("color.game_over_message"));
-        }
-
-        // High score is always visible
-        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
+        GameSystems3D.assertSystem(Score3DSystem.class)
+            .updateScoresView(scoresView, game, engine.translationManager(), uiConfig().assets());
     }
 
     public void initPac3DProperties(GameLevel level, Pac pac) {

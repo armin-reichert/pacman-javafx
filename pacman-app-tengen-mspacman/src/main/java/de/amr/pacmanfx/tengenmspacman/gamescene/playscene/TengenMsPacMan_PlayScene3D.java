@@ -142,6 +142,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         Logger.info(actionBindingsRegistry());
     }
 
+    //TODO use Tengen-specific scores3D system implementation instead of method overriding
+
     @Override
     public void updateHUD3D(GameContext game) {
         requireNonNull(game);
