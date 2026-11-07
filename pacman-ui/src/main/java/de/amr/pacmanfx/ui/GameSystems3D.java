@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSyste
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.system.Pac3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 
 //TODO Create game variant specific systems and access the via game variant runtime
@@ -60,5 +61,6 @@ public class GameSystems3D {
         systems.add(new House3DSystem());
         systems.add(new PacSystems3D());
         systems.add(new World3DUpdateSystem());
+        systems.add(new Score3DSystem());
     }
 }

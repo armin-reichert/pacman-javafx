@@ -25,13 +25,12 @@ import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
-import de.amr.pacmanfx.ui.entities3D.score.ScoreView;
-import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
+import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneAnimations3DComp;
@@ -58,7 +57,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
 import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction;
 import static java.util.Objects.requireNonNull;
 
@@ -165,12 +163,8 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onBeforeEmbedded() {
-        engine().optCurrentGame().ifPresent(game -> {
-            // TODO: reconsider whether scores need recreation here (variant/font change?)
-            final String scoreTitle = engine().translationManager().translate("score.score");
-            final String highScoreTitle = engine().translationManager().translate("score.high_score");
-            replaceScoresView(game.session(), scoreTitle, highScoreTitle);
-        });
+        engine().optCurrentGame().ifPresent(game ->
+            GameSystems3D.assertSystem(Score3DSystem.class).replaceScoresView(this, game.session(), engine.translationManager()));
     }
 
     @Override
@@ -406,44 +400,6 @@ public class PlayScene3D extends AbstractGameScene {
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
     }
 
-    private void replaceScoresView(GameSession session, String leftTitle, String rightTitle) {
-        optComponent(ScoresView.class).ifPresent(scoresView ->  {
-            view3D().root().getChildren().remove(scoresView.root());
-            removeComponent(ScoresView.class);
-        });
-
-        final Score gameScore = session.hud().gameScore();
-        if (!gameScore.hasComponent(ScoreView.class)) {
-            gameScore.setComponent(ScoreView.class, new ScoreView());
-        }
-        final ScoreView gameScoreView = gameScore.assertComponent(ScoreView.class);
-        gameScoreView.titleDisplay().setText(leftTitle);
-
-        final Score highScore = session.hud().highScore();
-        if (!highScore.hasComponent(ScoreView.class)) {
-            highScore.setComponent(ScoreView.class, new ScoreView());
-        }
-        final ScoreView highScoreView = highScore.assertComponent(ScoreView.class);
-        highScoreView.titleDisplay().setText(rightTitle);
-
-        final var scoresView = new ScoresView(gameScoreView, highScoreView);
-        scoresView.setFont(GlobalFonts.ARCADE.font(8));
-
-        view3D().root().getChildren().add(scoresView.root());
-
-        //scoresView.textOpacity.bind(scoreOpacity);
-
-        // Scores must always face towards viewer, independent of current perspective:
-        scoresView.root().rotationAxisProperty().bind(view3D().camera().rotationAxisProperty());
-        scoresView.root().rotateProperty().bind(view3D().camera().rotateProperty());
-
-        // Scores are shown slightly "behind" and over game level from viewer's perspective
-        scoresView.root().translateXProperty().bind(view3D().level3DHolder().translateXProperty().add(TS));
-        scoresView.root().translateYProperty().bind(view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
-        scoresView.root().translateZProperty().bind(view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
-
-        setComponent(ScoresView.class, scoresView);
-    }
 
     private void disposeContextMenu() {
         if (contextMenu != null) {
