@@ -254,7 +254,7 @@ public class PlayScene3D extends AbstractGameScene {
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
         updateSystem.updateEntities(game, animations3D().registry());
 
-        updateHUD3D(game);
+        updateScoresView(game);
 
         ensureAnimationsRunning(game);
 
@@ -319,7 +319,7 @@ public class PlayScene3D extends AbstractGameScene {
         // No-op — override in subclasses if variant needs different bindings
     }
 
-    public void updateHUD3D(GameContext game) {
+    public void updateScoresView(GameContext game) {
         requireNonNull(game);
         final ScoresView scoresView = assertComponent(ScoresView.class);
         game.systems().assertSystem(Score3DSystem.class).updateScoresView(

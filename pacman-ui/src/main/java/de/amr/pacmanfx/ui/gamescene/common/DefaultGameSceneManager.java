@@ -167,7 +167,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         playScene3D.replaceGameLevel3D(game, level);
         playScene3D.replaceActionBindings(session, level);
         playScene3D.initFood3D(level, true);
-        playScene3D.updateHUD3D(game);
+        playScene3D.updateScoresView(game);
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
