@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-public class GameSystems {
+public class CommonGameSystems {
 
     private final QuerySet<Object> systems = new QuerySet<>();
 
@@ -62,7 +62,7 @@ public class GameSystems {
     protected ScoreSystem scoreSystem;
     protected LevelCounterSystem levelCounterSystem;
 
-    public GameSystems() {
+    public CommonGameSystems() {
         createPacSystems();
         createGhostSystems();
         createBonusSystems();

@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    protected void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
+    protected void configurePacAndGhosts(GameLevelEntitySet entities, CommonGameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.systems();
+        final CommonGameSystems systems = game.systems();
 
         final GameLevel level = createLevel(game, 1);
 
@@ -168,7 +168,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
         }
 
-        final GameSystems systems = game.systems();
+        final CommonGameSystems systems = game.systems();
 
         final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
         systems.bonusStateSystem().setEdible(movingBonus);

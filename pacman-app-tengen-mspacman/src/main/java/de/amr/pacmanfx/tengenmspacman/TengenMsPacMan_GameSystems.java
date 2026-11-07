@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.*;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationSystem;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.systems.GhostSystems3D;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 
-public class TengenMsPacMan_GameSystems extends GameSystems {
+public class TengenMsPacMan_GameSystems extends CommonGameSystems {
 
     private MessageAnimationSystem messageAnimationSystem;
 

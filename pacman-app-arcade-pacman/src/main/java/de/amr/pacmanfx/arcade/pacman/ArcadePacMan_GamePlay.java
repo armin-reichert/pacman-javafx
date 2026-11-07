@@ -322,7 +322,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return ArcadePacMan_ActorFactory.instance();
     }
 
-    protected void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
+    protected void configurePacAndGhosts(GameLevelEntitySet entities, CommonGameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

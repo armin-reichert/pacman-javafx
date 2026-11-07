@@ -9,7 +9,7 @@ import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -125,7 +125,7 @@ public class Test_ShortTestState extends AbstractGameState {
         game.systems().levelCounterSystem().clear(game.session().hud().levelCounter());
     }
 
-    private void finishLevel(GameLevel level, GameSystems systems) {
+    private void finishLevel(GameLevel level, CommonGameSystems systems) {
         level.huntingTimer().stop();
 
         level.heartbeat().setStartState(Pulse.State.OFF);

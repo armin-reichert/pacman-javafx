@@ -64,7 +64,7 @@ public class GameContext {
         return runtime.gameRules();
     }
 
-    public GameSystems systems() {
+    public CommonGameSystems systems() {
         return runtime.systems();
     }
 }

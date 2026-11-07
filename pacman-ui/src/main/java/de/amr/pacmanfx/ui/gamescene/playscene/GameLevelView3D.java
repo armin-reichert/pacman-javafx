@@ -13,7 +13,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -263,12 +263,12 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         return view3D;
     }
 
-    private void createPac3DView(GameSystems systems, Pac pac, PacSettings settings) {
+    private void createPac3DView(CommonGameSystems systems, Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(systems, pac, settings);
         pac.assertComponent(PacView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
-    private void createGhost3DViews(GameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
+    private void createGhost3DViews(CommonGameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(systems, ghost, ghostSettings);

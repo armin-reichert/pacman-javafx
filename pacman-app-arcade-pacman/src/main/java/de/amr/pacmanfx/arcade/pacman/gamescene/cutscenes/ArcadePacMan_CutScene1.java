@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacSpriteAnimationManager;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -91,7 +91,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         }
     }
 
-    private void startBigPacManChasingBlinky(GameSystems systems) {
+    private void startBigPacManChasingBlinky(CommonGameSystems systems) {
         systems.navigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
         systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
@@ -99,7 +99,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         systems.actorSpriteAnimController().playSelected(pacMan);
     }
 
-    private void startBlinkyEscapingPacMan(GameSystems systems) {
+    private void startBlinkyEscapingPacMan(CommonGameSystems systems) {
         systems.navigator().placeAtTile(blinky, -2, 20, 4, 0);
         systems.navigator().setMoveDir(blinky, Direction.RIGHT);
         systems.navigator().setWishDir(blinky, Direction.RIGHT);
@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         systems.actorSpriteAnimController().playSelected(blinky);
     }
 
-    private void startBlinkyChasingPacMan(GameSystems systems) {
+    private void startBlinkyChasingPacMan(CommonGameSystems systems) {
         pacMan.show();
 
         systems.navigator().placeAtTile(pacMan, 29, 20);

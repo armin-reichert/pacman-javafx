@@ -12,7 +12,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -80,12 +80,12 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
         game.systems().motor().move(blinky);
     }
 
-    private void startAnimation(GameSystems systems) {
+    private void startAnimation(CommonGameSystems systems) {
         engine().soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
         startBlinkyChasingPacMan(systems);
     }
 
-    private void startBlinkyRunningNaked(GameSystems systems) {
+    private void startBlinkyRunningNaked(CommonGameSystems systems) {
         systems.navigator().placeAtTile(blinky, -1, 20);
         systems.navigator().setMoveDir(blinky, Direction.RIGHT);
         systems.navigator().setWishDir(blinky, Direction.RIGHT);
@@ -94,7 +94,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
         systems.actorSpriteAnimController().playSelected(blinky);
     }
 
-    private void startBlinkyChasingPacMan(GameSystems systems) {
+    private void startBlinkyChasingPacMan(CommonGameSystems systems) {
         pacMan.show();
 
         systems.navigator().placeAtTile(pacMan, 29, 20);

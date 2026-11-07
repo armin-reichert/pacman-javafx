@@ -253,7 +253,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         msPacMan.worldNavigation().setWorldMap(worldMap);
     }
 
-    private void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
+    private void configurePacAndGhosts(GameLevelEntitySet entities, CommonGameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

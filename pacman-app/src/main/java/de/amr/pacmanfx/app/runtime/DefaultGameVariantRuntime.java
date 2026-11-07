@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.app.runtime;
 
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -21,7 +21,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
 
     private final DefaultGameEventManager gameEventManager;
 
-    private final GameSystems systems;
+    private final CommonGameSystems systems;
 
     private final GamePlay gamePlay;
 
@@ -59,7 +59,7 @@ public final class DefaultGameVariantRuntime implements GameVariantRuntime {
     }
 
     @Override
-    public GameSystems systems() {
+    public CommonGameSystems systems() {
         return systems;
     }
 

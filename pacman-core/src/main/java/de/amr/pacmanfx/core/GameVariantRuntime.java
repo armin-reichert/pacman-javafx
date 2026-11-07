@@ -14,7 +14,7 @@ public interface GameVariantRuntime {
 
     GameEventManager eventManager();
 
-    GameSystems systems();
+    CommonGameSystems systems();
 
     GamePlay gamePlay();
 

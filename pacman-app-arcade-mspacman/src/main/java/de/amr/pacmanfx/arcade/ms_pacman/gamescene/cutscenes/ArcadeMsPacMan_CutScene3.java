@@ -18,7 +18,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.props.stork.ArcadeMsPacMan_StorkSpriteAn
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.CutSceneTimingComp;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(GameSystems systems) {
+    private void enterDeliverJuniorState(CommonGameSystems systems) {
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem nav = systems.navigator();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();

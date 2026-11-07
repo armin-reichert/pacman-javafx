@@ -4,7 +4,7 @@ import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -29,7 +29,7 @@ public class World3DUpdateSystem {
         updateBonus3D(game.systems(), entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
-    private void updatePac3D(GameSystems systems, Pac pac) {
+    private void updatePac3D(CommonGameSystems systems, Pac pac) {
         if (pac.hasComponent(PacView3D.class)) {
             final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
             pacSystems3D.transformSystem().update(pac);
@@ -37,13 +37,13 @@ public class World3DUpdateSystem {
         }
     }
 
-    private void updateLivesCounter3D(GameSystems systems, LivesCounter livesCounter) {
+    private void updateLivesCounter3D(CommonGameSystems systems, LivesCounter livesCounter) {
         // Lives counter shapes follow Pac location
         final LivesCounterView3DSystem livesCounterView3DSystem = systems.assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.update(livesCounter);
     }
 
-    private void updateGhosts3D(GameSystems systems, GameLevelEntitySet entitySet) {
+    private void updateGhosts3D(CommonGameSystems systems, GameLevelEntitySet entitySet) {
         final var ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
         entitySet.ghosts().forEach(ghost -> {
             ghostSystems3D.movementSystem().update(ghost);
@@ -51,12 +51,12 @@ public class World3DUpdateSystem {
         });
     }
 
-    private void updateHouse3D(GameSystems systems, House house, GameLevelEntitySet entitySet) {
+    private void updateHouse3D(CommonGameSystems systems, House house, GameLevelEntitySet entitySet) {
         final var houseSystem3D = systems.assertSystem(House3DSystem.class);
         houseSystem3D.update(house, entitySet);
     }
 
-    private void updateBonus3D(GameSystems systems, Bonus bonus, AnimationRegistry animationRegistry) {
+    private void updateBonus3D(CommonGameSystems systems, Bonus bonus, AnimationRegistry animationRegistry) {
         if (bonus != null) {
             systems.assertSystem(Bonus3DUpdateSystem.class).update(bonus, animationRegistry);
         }

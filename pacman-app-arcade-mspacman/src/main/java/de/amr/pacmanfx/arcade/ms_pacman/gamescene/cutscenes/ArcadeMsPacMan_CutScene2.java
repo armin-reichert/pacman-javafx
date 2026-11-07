@@ -14,7 +14,7 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(GameSystems systems) {
+    private void updateStateClapperboard(CommonGameSystems systems) {
         clapperboardSystem.update(clapperboard);
         if (sceneTimer.hasExpired()) {
             engine().soundManager().play(PacManGameSoundID.INTERMISSION_2);
@@ -106,7 +106,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
         }
     }
 
-    private void enterStateChasing(GameSystems systems) {
+    private void enterStateChasing(CommonGameSystems systems) {
         final WorldNavigationSystem nav = systems.navigator();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
@@ -123,7 +123,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }
 
-    private void updateStateChasing(GameSystems systems) {
+    private void updateStateChasing(CommonGameSystems systems) {
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem nav = systems.navigator();
         

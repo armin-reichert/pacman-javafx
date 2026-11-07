@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.view3d;
 
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
@@ -55,14 +55,14 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public void createPac3D(GameSystems systems, Pac pac, PacSettings settings) {
+    public void createPac3D(CommonGameSystems systems, Pac pac, PacSettings settings) {
         final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
         final PacView3D view3D = pacSystems3D.view3DSystem().createPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }
 
     @Override
-    public void createGhost3D(GameSystems systems, Ghost ghost, GhostSettings settings) {
+    public void createGhost3D(CommonGameSystems systems, Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model = PacManMeshes3D.instance();
         if (!ghost.hasComponent(GhostView3D.class)) {
             final GhostSystems3D ghostSystems3D = systems.assertSystem(GhostSystems3D.class);

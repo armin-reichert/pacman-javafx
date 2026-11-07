@@ -6,7 +6,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_UIConfig;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.engine.config.Cartridge;
 

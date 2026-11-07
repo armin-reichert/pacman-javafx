@@ -12,7 +12,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -126,24 +126,24 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         game.state().triggerTimeout();
     }
 
-    private void dressRaptures(GameSystems systems) {
+    private void dressRaptures(CommonGameSystems systems) {
         blinky.position().sub(4, 0);
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         nailDressRapturing.setState(NailDressRapturingState.RAPTURED);
     }
 
-    private void blinkyStopsMoving(GameSystems systems) {
+    private void blinkyStopsMoving(CommonGameSystems systems) {
         systems.navigator().setSpeed(blinky, 0);
         systems.actorSpriteAnimController().stopSelected(blinky);
     }
 
-    private void blinkyGetsCaughtOnNail(GameSystems systems) {
+    private void blinkyGetsCaughtOnNail(CommonGameSystems systems) {
         systems.navigator().setSpeed(blinky, 0.09f);
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
-    private void blinkyStartsRunning(GameSystems systems) {
+    private void blinkyStartsRunning(CommonGameSystems systems) {
         blinky.show();
 
         systems.navigator().placeAtTile(blinky, 28, 20, -3, 0);
@@ -155,7 +155,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         systems.actorSpriteAnimController().playSelected(blinky);
     }
 
-    private void pacManStartsRunning(GameSystems systems) {
+    private void pacManStartsRunning(CommonGameSystems systems) {
         pacMan.show();
 
         systems.navigator().placeAtTile(pacMan, 28, 20);

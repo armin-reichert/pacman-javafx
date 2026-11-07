@@ -13,7 +13,7 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
@@ -159,7 +159,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         }
     }
 
-    void turnCardsRestartPacMan(GameSystems systems) {
+    void turnCardsRestartPacMan(CommonGameSystems systems) {
         systems.navigator().setSpeed(view.pacMan, CHASING_SPEED);
         systems.actorSpriteAnimController().playSelected(view.pacMan);
     }
@@ -207,7 +207,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         lastGhostEatenTick = tick;
     }
 
-    private void continueChasing(GameSystems systems) {
+    private void continueChasing(CommonGameSystems systems) {
         view.pacMan.show();
         systems.navigator().setSpeed(view.pacMan, CHASING_SPEED);
 

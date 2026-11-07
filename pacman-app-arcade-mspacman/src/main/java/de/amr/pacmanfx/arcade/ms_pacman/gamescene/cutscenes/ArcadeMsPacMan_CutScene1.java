@@ -17,7 +17,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.systems();
+        final CommonGameSystems systems = game.systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard(systems);
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(GameSystems systems) {
+    private void updateStateClapperboard(CommonGameSystems systems) {
         clapperboardSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
             engine().soundManager().play(PacManGameSoundID.INTERMISSION_1);
@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         }
     }
 
-    private void enterStateChasedByGhosts(GameSystems systems) {
+    private void enterStateChasedByGhosts(CommonGameSystems systems) {
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
 
@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         animController.playSelected(pinky);
     }
 
-    private void updateStateChasedByGhosts(GameSystems systems) {
+    private void updateStateChasedByGhosts(CommonGameSystems systems) {
         if (inky.position().x() > TS * 30) {
             enterStateComingTogether(systems);
         }
@@ -195,7 +195,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         }
     }
 
-    private void enterStateComingTogether(GameSystems systems) {
+    private void enterStateComingTogether(CommonGameSystems systems) {
 
         setState(SceneState.COMING_TOGETHER, TickTimer.INDEFINITE);
 
@@ -217,7 +217,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     }
 
-    private void updateStateComingTogether(GameSystems systems) {
+    private void updateStateComingTogether(CommonGameSystems systems) {
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem nav = systems.navigator();
 
@@ -266,7 +266,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         }
     }
 
-    private void enterStateInHeaven(GameSystems systems) {
+    private void enterStateInHeaven(CommonGameSystems systems) {
 
         setState(SceneState.IN_HEAVEN, 3L * GameConstants.SIMULATION_FPS);
 
