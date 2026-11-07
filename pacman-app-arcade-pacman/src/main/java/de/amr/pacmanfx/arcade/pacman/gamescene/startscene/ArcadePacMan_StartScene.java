@@ -7,6 +7,7 @@ import de.amr.basics.ui.assets.ArcadeColor;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -29,7 +30,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
     );
 
     public ArcadePacMan_StartScene() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
     }
 
     @Override

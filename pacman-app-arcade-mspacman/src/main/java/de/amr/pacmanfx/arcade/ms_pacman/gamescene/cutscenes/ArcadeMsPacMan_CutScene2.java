@@ -12,6 +12,7 @@ import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -46,7 +47,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
     public ArcadeMsPacMan_CutScene2() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
     }
 
     @Override

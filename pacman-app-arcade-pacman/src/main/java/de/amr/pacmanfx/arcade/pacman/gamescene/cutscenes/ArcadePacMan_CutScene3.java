@@ -10,6 +10,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -40,7 +41,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
     private Ghost blinky;
 
     public ArcadePacMan_CutScene3() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
     }
 
     @Override

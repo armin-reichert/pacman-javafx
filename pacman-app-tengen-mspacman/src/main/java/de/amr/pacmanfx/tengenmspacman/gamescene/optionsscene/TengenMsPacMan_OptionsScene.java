@@ -102,9 +102,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final GameEntityView numContinuesView;
 
     public TengenMsPacMan_OptionsScene() {
-        addView2D();
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        addView2D(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
         titleTextView = new GameEntityView(
             TextView.create("MS PAC-MAN OPTIONS", NES_Palette.color(0x28), GlobalFonts.ARCADE.font(TS), 7, 6),

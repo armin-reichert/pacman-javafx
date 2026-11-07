@@ -12,6 +12,7 @@ import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -56,7 +57,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
         flow = new IntroSceneController();
     }
 

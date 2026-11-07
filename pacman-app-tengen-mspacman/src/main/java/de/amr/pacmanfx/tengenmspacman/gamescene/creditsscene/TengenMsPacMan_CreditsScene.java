@@ -78,9 +78,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     public float fadeProgress = 0;
 
     public TengenMsPacMan_CreditsScene() {
-        addView2D();
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        addView2D(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
         topBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
         botBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));

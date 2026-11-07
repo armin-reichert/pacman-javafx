@@ -11,6 +11,7 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -45,7 +46,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     long lastGhostEatenTick;
 
     public ArcadePacMan_IntroScene() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
         flow = new IntroSceneController();
         view = new IntroSceneView();
     }

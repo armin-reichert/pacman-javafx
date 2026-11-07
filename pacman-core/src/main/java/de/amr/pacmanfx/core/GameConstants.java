@@ -4,7 +4,11 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.math.Vector2i;
+
 import java.io.File;
+
+import static de.amr.basics.TileDimension.TS;
 
 public class GameConstants {
 
@@ -20,6 +24,11 @@ public class GameConstants {
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
     public static final File CUSTOM_MAP_DIR = new File(USER_HOME_DIR, "maps");
+
+    /**
+     * Size (width, height) of Arcade screen in pixel. 28 tiles horizontal and 36 tiles vertical.
+     */
+    public static Vector2i ARCADE_SCREEN_SIZE_PX = new Vector2i(28*TS, 36*TS);
 
     // Simulation speed
 

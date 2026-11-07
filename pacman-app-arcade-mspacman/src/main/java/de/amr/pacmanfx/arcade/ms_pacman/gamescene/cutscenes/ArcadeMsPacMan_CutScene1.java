@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
     public ArcadeMsPacMan_CutScene1() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
     }
 
     @Override

@@ -38,10 +38,14 @@ public abstract class AbstractGameScene extends Composition<Object>
         setComponent(ActionBindingsRegistry.class, actionBindings);
     }
 
-    protected void addView2D() {
+    protected void addView2D(Vector2i unscaledSize) {
+        addView2D(unscaledSize.x(), unscaledSize.y());
+    }
+
+    protected void addView2D(int unscaledWidth, int unscaledHeight) {
         final var view2D = new GameSceneView2D();
-        view2D.setUnscaledWidth(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        view2D.setUnscaledHeight(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        view2D.setUnscaledWidth(unscaledWidth);
+        view2D.setUnscaledHeight(unscaledHeight);
         setComponent(GameSceneView2D.class, view2D);
     }
 

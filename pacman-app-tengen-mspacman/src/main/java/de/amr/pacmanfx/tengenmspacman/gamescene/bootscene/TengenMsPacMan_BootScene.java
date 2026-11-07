@@ -9,10 +9,7 @@ import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.CanvasFill;
 import de.amr.basics.ui.entities.props.textview.TextView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.SessionKey;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.entities.textview.ShadesOfBlue;
@@ -45,9 +42,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     private Ghost ghost;
 
     public TengenMsPacMan_BootScene() {
-        addView2D();
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        addView2D(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
         grayCanvasFill = new CanvasFill(NES_Palette.color(0x10));
 

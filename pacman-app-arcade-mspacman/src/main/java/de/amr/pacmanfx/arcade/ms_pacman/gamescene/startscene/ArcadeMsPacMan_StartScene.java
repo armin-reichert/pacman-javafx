@@ -13,6 +13,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -40,7 +41,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     private final List<TextView> copyrightTexts = new ArrayList<>();
 
     public ArcadeMsPacMan_StartScene() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
     }
 
     @Override

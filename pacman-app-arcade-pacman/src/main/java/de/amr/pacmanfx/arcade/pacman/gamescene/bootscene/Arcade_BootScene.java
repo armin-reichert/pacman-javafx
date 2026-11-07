@@ -9,6 +9,7 @@ import de.amr.basics.ui.entities.hud.HUDStyleComp;
 import de.amr.basics.ui.entities.props.CanvasClear;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.SessionKey;
@@ -52,7 +53,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     private Renderable currentSceneContent;
 
     public Arcade_BootScene() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
         view2D().setAutoClearCanvas(false);
     }
 

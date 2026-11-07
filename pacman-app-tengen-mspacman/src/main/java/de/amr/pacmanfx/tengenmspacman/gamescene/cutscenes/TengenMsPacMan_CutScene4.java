@@ -65,9 +65,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     private Clapperboard clapperboard;
 
     public TengenMsPacMan_CutScene4() {
-        addView2D();
-        view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        addView2D(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     }
 
     @Override

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.props.bag.ArcadeMsPacMan_BagSpriteAnimat
 import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
 import de.amr.pacmanfx.arcade.ms_pacman.props.stork.ArcadeMsPacMan_StorkSpriteAnimationManager;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.CutSceneTimingComp;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -72,7 +73,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     private SceneState sceneState;
 
     public ArcadeMsPacMan_CutScene3() {
-        addView2D();
+        addView2D(GameConstants.ARCADE_SCREEN_SIZE_PX);
         setComponent(CutSceneTimingComp.class, new Timing(0));
     }
 
