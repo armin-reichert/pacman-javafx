@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.entities3D.score;
 
-import de.amr.basics.ui.entities.hud.score.Score;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -12,21 +15,19 @@ public class ScoresView {
 
     private final GridPane gridPane = new GridPane();
 
-    private final Score leftScore;
+    private final ScoreView leftScoreView;
 
-    private final Score rightScore;
+    private final ScoreView rightScoreView;
 
-    public ScoresView(Score leftScore, Score rightScore) {
-        this.leftScore = requireNonNull(leftScore);
-        this.rightScore = requireNonNull(rightScore);
+    public ScoresView(ScoreView leftScoreView, ScoreView rightScoreView) {
+        this.leftScoreView = requireNonNull(leftScoreView);
+        this.rightScoreView = requireNonNull(rightScoreView);
 
         gridPane.setHgap(5 * TS);
 
-        final ScoreView leftScoreView = leftScore.assertComponent(ScoreView.class);
         gridPane.add(leftScoreView.titleDisplay(),  0, 0);
         gridPane.add(leftScoreView.textDisplay(),   0, 1);
 
-        final ScoreView rightScoreView = rightScore.assertComponent(ScoreView.class);
         gridPane.add(rightScoreView.titleDisplay(), 1, 0);
         gridPane.add(rightScoreView.textDisplay(),  1, 1);
 
@@ -37,11 +38,9 @@ public class ScoresView {
     }
 
     public void setFont(Font font) {
-        final ScoreView leftScoreView = leftScore.assertComponent(ScoreView.class);
         leftScoreView.titleDisplay().setFont(font);
         leftScoreView.textDisplay().setFont(font);
 
-        final ScoreView rightScoreView = rightScore.assertComponent(ScoreView.class);
         rightScoreView.titleDisplay().setFont(font);
         rightScoreView.textDisplay().setFont(font);
     }
@@ -51,19 +50,16 @@ public class ScoresView {
     }
 
     public void showScore(int score, int levelNumber) {
-        final ScoreView leftScoreView = leftScore.assertComponent(ScoreView.class);
         leftScoreView.textDisplay().setFill(Color.YELLOW);
         leftScoreView.textDisplay().setText(String.format("%7d L%d", score, levelNumber));
     }
 
     public void showHighScore(int highScore, int highScoreLevelNumber) {
-        final ScoreView rightScoreView = rightScore.assertComponent(ScoreView.class);
         rightScoreView.textDisplay().setFill(Color.YELLOW);
         rightScoreView.textDisplay().setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
     public void showTextForScore(String text, Color color) {
-        final ScoreView leftScoreView = leftScore.assertComponent(ScoreView.class);
         leftScoreView.textDisplay().setFill(color);
         leftScoreView.textDisplay().setText(text);
     }

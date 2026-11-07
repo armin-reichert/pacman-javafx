@@ -416,15 +416,17 @@ public class PlayScene3D extends AbstractGameScene {
         if (!gameScore.hasComponent(ScoreView.class)) {
             gameScore.setComponent(ScoreView.class, new ScoreView());
         }
-        gameScore.assertComponent(ScoreView.class).titleDisplay().setText(leftTitle);
+        final ScoreView gameScoreView = gameScore.assertComponent(ScoreView.class);
+        gameScoreView.titleDisplay().setText(leftTitle);
 
         final Score highScore = session.hud().highScore();
         if (!highScore.hasComponent(ScoreView.class)) {
             highScore.setComponent(ScoreView.class, new ScoreView());
         }
-        highScore.assertComponent(ScoreView.class).titleDisplay().setText(rightTitle);
+        final ScoreView highScoreView = highScore.assertComponent(ScoreView.class);
+        highScoreView.titleDisplay().setText(rightTitle);
 
-        final var scoresView = new ScoresView(gameScore, highScore);
+        final var scoresView = new ScoresView(gameScoreView, highScoreView);
         scoresView.setFont(GlobalFonts.ARCADE.font(8));
 
         view3D().root().getChildren().add(scoresView.root());
