@@ -122,6 +122,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // Add game options display on top of maze and level number boxes at left and right side below the maze
         final HUD hud = session.hud();
+        hud.additionalEntities().clear();
         hud.addAdditionalEntities(new GameOptionsDisplay(), new LevelNumberDisplay(), new LevelNumberDisplay());
 
         configureHUD(game, null, hud);
