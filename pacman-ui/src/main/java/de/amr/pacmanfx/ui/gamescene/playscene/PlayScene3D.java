@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -164,7 +163,12 @@ public class PlayScene3D extends AbstractGameScene {
     @Override
     public void onBeforeEmbedded() {
         engine().optCurrentGame().ifPresent(game ->
-            GameSystems3D.assertSystem(Score3DSystem.class).replaceScoresView(this, game.session(), engine.translationManager()));
+            GameSystems3D.assertSystem(Score3DSystem.class).replaceScoresView(
+                this,
+                game.session().hud().gameScore(),
+                game.session().hud().highScore(),
+                engine.translationManager()
+            ));
     }
 
     @Override

@@ -8,7 +8,6 @@ import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
@@ -17,20 +16,18 @@ import static java.util.Objects.requireNonNull;
 
 public class Score3DSystem {
 
-    public void replaceScoresView(PlayScene3D playScene3D, GameSession session, TranslationManager translationManager) {
+    public void replaceScoresView(PlayScene3D playScene3D, Score gameScore, Score highScore, TranslationManager translationManager) {
         playScene3D.optComponent(ScoresView.class).ifPresent(scoresView ->  {
             playScene3D.view3D().root().getChildren().remove(scoresView.root());
             playScene3D.removeComponent(ScoresView.class);
         });
 
-        final Score gameScore = session.hud().gameScore();
         if (!gameScore.hasComponent(ScoreView.class)) {
             gameScore.setComponent(ScoreView.class, new ScoreView());
         }
         final ScoreView gameScoreView = gameScore.assertComponent(ScoreView.class);
         gameScoreView.titleDisplay().setText(translationManager.translate("score.score"));
 
-        final Score highScore = session.hud().highScore();
         if (!highScore.hasComponent(ScoreView.class)) {
             highScore.setComponent(ScoreView.class, new ScoreView());
         }
