@@ -8,13 +8,13 @@ import javafx.scene.text.Text;
 /**
  * Displays score and high score in 3D play scene.
  */
-public class ScoreViewComp {
+public class ScoreView {
 
     private final Text titleDisplay = new Text();
 
     private final Text textDisplay = new Text();
 
-    public ScoreViewComp() {
+    public ScoreView() {
     }
 
     public Text titleDisplay() {

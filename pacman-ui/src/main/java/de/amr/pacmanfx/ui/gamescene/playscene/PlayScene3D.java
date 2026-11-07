@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
-import de.amr.pacmanfx.ui.entities3D.score.ScoreViewComp;
+import de.amr.pacmanfx.ui.entities3D.score.ScoreView;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
@@ -413,16 +413,16 @@ public class PlayScene3D extends AbstractGameScene {
         });
 
         final Score gameScore = session.hud().gameScore();
-        if (!gameScore.hasComponent(ScoreViewComp.class)) {
-            gameScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
+        if (!gameScore.hasComponent(ScoreView.class)) {
+            gameScore.setComponent(ScoreView.class, new ScoreView());
         }
-        gameScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(leftTitle);
+        gameScore.assertComponent(ScoreView.class).titleDisplay().setText(leftTitle);
 
         final Score highScore = session.hud().highScore();
-        if (!highScore.hasComponent(ScoreViewComp.class)) {
-            highScore.setComponent(ScoreViewComp.class, new ScoreViewComp());
+        if (!highScore.hasComponent(ScoreView.class)) {
+            highScore.setComponent(ScoreView.class, new ScoreView());
         }
-        highScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(rightTitle);
+        highScore.assertComponent(ScoreView.class).titleDisplay().setText(rightTitle);
 
         final var scoresView = new ScoresView(gameScore, highScore);
         scoresView.setFont(GlobalFonts.ARCADE.font(8));
