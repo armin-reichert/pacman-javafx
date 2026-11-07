@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.view3d;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;

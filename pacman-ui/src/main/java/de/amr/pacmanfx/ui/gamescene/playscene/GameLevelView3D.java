@@ -39,7 +39,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;

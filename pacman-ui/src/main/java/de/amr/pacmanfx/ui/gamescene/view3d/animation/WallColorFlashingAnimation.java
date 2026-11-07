@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.animation;
+package de.amr.pacmanfx.ui.gamescene.view3d.animation;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;

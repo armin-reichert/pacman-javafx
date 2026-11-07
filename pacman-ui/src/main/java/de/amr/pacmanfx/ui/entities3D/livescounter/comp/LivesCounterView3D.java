@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;

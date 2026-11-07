@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.animation;
+package de.amr.pacmanfx.ui.gamescene.view3d.animation;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
@@ -14,7 +14,7 @@ import javafx.animation.SequentialTransition;
 
 import static de.amr.basics.util.Ufx.pauseSec;
 import static de.amr.basics.util.Ufx.pauseSecThen;
-import static de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation.createMazeWallsSwingingAnimation;
+import static de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimation.createMazeWallsSwingingAnimation;
 
 /**
  * Shortened version of the level‑completion animation.

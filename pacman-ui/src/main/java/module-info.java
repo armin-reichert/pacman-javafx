@@ -31,10 +31,10 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.animation;
     exports de.amr.pacmanfx.ui.gamescene.common;
-    exports de.amr.pacmanfx.ui.gamescene.d3;
-    exports de.amr.pacmanfx.ui.gamescene.d3.animation;
-    exports de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
-    exports de.amr.pacmanfx.ui.gamescene.d3.camera;
+    exports de.amr.pacmanfx.ui.gamescene.view3d;
+    exports de.amr.pacmanfx.ui.gamescene.view3d.animation;
+    exports de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer;
+    exports de.amr.pacmanfx.ui.gamescene.view3d.camera;
     exports de.amr.pacmanfx.ui.gamescene.playscene;
     exports de.amr.pacmanfx.ui.rendering;
     exports de.amr.pacmanfx.ui.settings.ui;

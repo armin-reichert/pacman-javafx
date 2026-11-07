@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.ui.viewmodel;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.SwirlConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.AttractionConfig;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ExplosionConfig;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimationConfig;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.SwirlConfig;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.settings.ui.Game3DSettings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

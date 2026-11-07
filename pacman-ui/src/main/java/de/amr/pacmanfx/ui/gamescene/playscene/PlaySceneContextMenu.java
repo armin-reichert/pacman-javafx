@@ -8,7 +8,7 @@ import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;

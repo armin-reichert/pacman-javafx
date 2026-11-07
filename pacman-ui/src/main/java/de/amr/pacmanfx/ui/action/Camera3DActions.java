@@ -10,7 +10,7 @@ import de.amr.pacmanfx.engine.action.GameAction;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.DrawMode;
 

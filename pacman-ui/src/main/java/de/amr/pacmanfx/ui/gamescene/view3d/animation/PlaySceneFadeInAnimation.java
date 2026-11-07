@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.d3.animation;
+package de.amr.pacmanfx.ui.gamescene.view3d.animation;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.camera.Perspective;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.Perspective;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameSystems3D;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;

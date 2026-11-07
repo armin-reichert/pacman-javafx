@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.d3.camera;
+package de.amr.pacmanfx.ui.gamescene.view3d.camera;
 
 /**
  * Implemented by scene camera perspectives (camera controller).

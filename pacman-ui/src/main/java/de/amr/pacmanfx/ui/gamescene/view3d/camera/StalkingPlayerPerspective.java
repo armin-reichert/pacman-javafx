@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.d3.camera;
+package de.amr.pacmanfx.ui.gamescene.view3d.camera;
 
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -12,11 +12,11 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.math.MathAdds.lerp;
 import static java.util.Objects.requireNonNull;
 
-public class TrackingPlayerPerspective implements Perspective<GameLevel> {
+public class StalkingPlayerPerspective implements Perspective<GameLevel> {
 
     private final PerspectiveCamera camera;
 
-    public TrackingPlayerPerspective(PerspectiveCamera camera) {
+    public StalkingPlayerPerspective(PerspectiveCamera camera) {
         this.camera = requireNonNull(camera);
     }
 
@@ -26,19 +26,19 @@ public class TrackingPlayerPerspective implements Perspective<GameLevel> {
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
         camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(70);
-        camera.setTranslateZ(-60);
+        camera.setRotate(80);
     }
 
     @Override
     public void update(GameLevel level) {
         final Pac pac = level.entitySet().pac();
-        double speedX = 0.03;
-        double speedY = 0.06;
+        double speedX = 0.04;
+        double speedY = 0.04;
         double worldWidth = level.worldMap().numCols() * TS;
-        double targetX = Math.clamp(pac.position().x(), 80, worldWidth - 80);
-        double targetY = pac.position().y() + 150;
+        double targetX = Math.clamp(pac.position().x(), 40, worldWidth - 40);
+        double targetY = pac.position().y() + 100;
         camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
         camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
+        camera.setTranslateZ(-40);
     }
 }

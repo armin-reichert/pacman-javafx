@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.gamescene.view3d;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;

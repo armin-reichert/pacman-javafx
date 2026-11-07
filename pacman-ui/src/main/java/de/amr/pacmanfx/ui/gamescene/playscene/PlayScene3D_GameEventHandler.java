@@ -40,9 +40,9 @@ import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSy
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.settings.ui;
 
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import javafx.scene.shape.DrawMode;
 
 public record Game3DSettings(
