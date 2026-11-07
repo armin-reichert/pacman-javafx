@@ -78,8 +78,6 @@ public class PlayScene3D extends AbstractGameScene {
 
     private GameLevelView3D level3D;
 
-    private ScoresView scoresView;
-
     private PlaySceneContextMenu contextMenu;
 
     private RandomTextPicker textPicker;
@@ -96,6 +94,7 @@ public class PlayScene3D extends AbstractGameScene {
         animationSystem = new PlayScene3DAnimationSystem(animations3D());
 
         perspectiveManager = new PerspectiveManager(view3D().camera());
+
         scene3DGameEventHandler = new PlayScene3D_GameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
@@ -122,9 +121,9 @@ public class PlayScene3D extends AbstractGameScene {
 
         textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
-        final var comp3D = assertComponent(GameSceneView3D.class);
-        comp3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
-        comp3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
+        final var view3D = assertComponent(GameSceneView3D.class);
+        view3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
+        view3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
     }
 
     public Optional<GameEventListener> optGameEventHandler() {
@@ -254,7 +253,7 @@ public class PlayScene3D extends AbstractGameScene {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animations3D().registry()));
 
         //TODO move out of this class?
-        final World3DUpdateSystem updateSystem = GameSystems3D.reqSystem(World3DUpdateSystem.class);
+        final World3DUpdateSystem updateSystem = GameSystems3D.assertSystem(World3DUpdateSystem.class);
         updateSystem.updateEntities(game, animations3D().registry());
 
         updateHUD3D(game);
@@ -318,10 +317,6 @@ public class PlayScene3D extends AbstractGameScene {
         return Optional.ofNullable(level3D);
     }
 
-    public Optional<ScoresView> optScoresView() {
-        return Optional.ofNullable(scoresView);
-    }
-
     public void replaceActionBindings(GameSession session, GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
     }
@@ -329,10 +324,15 @@ public class PlayScene3D extends AbstractGameScene {
     public void updateHUD3D(GameContext game) {
         requireNonNull(game);
 
-        final GameSession session = game.session();
+        if (!hasComponent(ScoresView.class)) {
+            throw new IllegalStateException("Cannot update 3D HUD: no score view exists");
+        }
+
+        final ScoresView scoresView = assertComponent(ScoresView.class);
+        final Score score = game.session().hud().gameScore();
+        final Score highScore = game.session().hud().highScore();
 
         // If score is disabled, show "GAME OVER" text instead
-        final Score score = session.hud().gameScore();
         if (score.data().isEnabled()) {
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
@@ -342,7 +342,6 @@ public class PlayScene3D extends AbstractGameScene {
         }
 
         // High score is always visible
-        final Score highScore = session.hud().highScore();
         scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 
@@ -350,7 +349,7 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        final GameSystems3D.PacSystems3D systems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
         systems3D.transformSystem().init(pac, level.worldMap());
         systems3D.animationSystem().stopAnimations(pac);
         systems3D.animationSystem().setPowerMode(pac, false);
@@ -393,7 +392,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
     }
 
@@ -408,10 +407,10 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     private void replaceScoresView(GameSession session, String leftTitle, String rightTitle) {
-        final ScoresView oldScoresView = scoresView;
-        if (oldScoresView != null) {
-            view3D().root().getChildren().remove(oldScoresView.root());
-        }
+        optComponent(ScoresView.class).ifPresent(scoresView ->  {
+            view3D().root().getChildren().remove(scoresView.root());
+            removeComponent(ScoresView.class);
+        });
 
         final Score gameScore = session.hud().gameScore();
         if (!gameScore.hasComponent(ScoreViewComp.class)) {
@@ -425,7 +424,7 @@ public class PlayScene3D extends AbstractGameScene {
         }
         highScore.assertComponent(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
-        scoresView = new ScoresView(gameScore, highScore);
+        final var scoresView = new ScoresView(gameScore, highScore);
         scoresView.setFont(GlobalFonts.ARCADE.font(8));
 
         view3D().root().getChildren().add(scoresView.root());
@@ -440,6 +439,8 @@ public class PlayScene3D extends AbstractGameScene {
         scoresView.root().translateXProperty().bind(view3D().level3DHolder().translateXProperty().add(TS));
         scoresView.root().translateYProperty().bind(view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
         scoresView.root().translateZProperty().bind(view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
+
+        setComponent(ScoresView.class, scoresView);
     }
 
     private void disposeContextMenu() {

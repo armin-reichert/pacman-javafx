@@ -54,7 +54,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
-        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
         final PacView3D view3D = pacSystems3D.view3DSystem().createPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }
@@ -63,7 +63,7 @@ public class DefaultFactory3D implements Factory3D {
     public void createGhost3D(Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model = PacManMeshes3D.instance();
         if (!ghost.hasComponent(GhostView3D.class)) {
-            final GameSystems3D.GhostSystems3D ghostSystems3D = GameSystems3D.reqSystem(GameSystems3D.GhostSystems3D.class);
+            final GameSystems3D.GhostSystems3D ghostSystems3D = GameSystems3D.assertSystem(GameSystems3D.GhostSystems3D.class);
             final GhostView3D view3D = ghostSystems3D.viewSystem().build(
                 settings,
                 model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());

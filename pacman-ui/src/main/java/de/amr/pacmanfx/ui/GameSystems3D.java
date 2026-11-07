@@ -27,7 +27,7 @@ public class GameSystems3D {
         return SingletonHolder.SINGLETON;
     }
 
-    public static <T> T reqSystem(Class<T> systemClass) {
+    public static <T> T assertSystem(Class<T> systemClass) {
         return instance().systems.theOne(systemClass);
     }
 

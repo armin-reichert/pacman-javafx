@@ -17,6 +17,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.entities3D.comp.ScoresView;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
@@ -30,6 +31,7 @@ import static de.amr.basics.TileDimension.TS;
 import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfViews;
+import static java.util.Objects.requireNonNull;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -142,17 +144,22 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void updateHUD3D(GameContext game) {
-        optScoresView().ifPresent(scores3D -> {
-            final GameSession session = game.session();
-            final Score score = session.hud().gameScore(), highScore = session.hud().highScore();
-            if (score.data().isEnabled()) {
-                scores3D.showScore(score.data().points(), score.data().levelNumber());
-            } else {
-                scores3D.showTextForScore(engine().translationManager().translate("score.game_over"),
-                    Color.valueOf(NES_Palette.rgb(0x16)));
-            }
-            // Always show high score
-            scores3D.showHighScore(highScore.data().points(), highScore.data().levelNumber());
-        });
+        requireNonNull(game);
+
+        if (!hasComponent(ScoresView.class)) {
+            throw new IllegalStateException("Cannot update 3D HUD: no score view exists");
+        }
+        final ScoresView scoresView = assertComponent(ScoresView.class);
+        final Score score = game.session().hud().gameScore();
+        final Score highScore = game.session().hud().highScore();
+
+        if (score.data().isEnabled()) {
+            scoresView.showScore(score.data().points(), score.data().levelNumber());
+        } else {
+            scoresView.showTextForScore(engine().translationManager().translate("score.game_over"),
+                Color.valueOf(NES_Palette.rgb(0x16)));
+        }
+        // Always show high score
+        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 }

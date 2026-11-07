@@ -278,7 +278,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
 
     private void createLivesCounter3DView(LivesCounter livesCounter) {
         if (!livesCounter.hasComponent(LivesCounterView3D.class)) {
-            final LivesCounterView3D view3D = GameSystems3D.reqSystem(LivesCounterView3DSystem.class)
+            final LivesCounterView3D view3D = GameSystems3D.assertSystem(LivesCounterView3DSystem.class)
                 .createView(uiConfig.factory3D(), uiConfig.worldSettings());
             livesCounter.setComponent(LivesCounterView3D.class, view3D);
             view3D.root().setTranslateX(2 * TS);
@@ -298,7 +298,7 @@ public class GameLevelView3D implements DisposableGraphicsObject {
     }
 
     public void replaceLevelCounter3D(LevelCounter levelCounter) {
-        final LevelCounter3DViewSystem viewSystem = GameSystems3D.reqSystem(LevelCounter3DViewSystem.class);
+        final LevelCounter3DViewSystem viewSystem = GameSystems3D.assertSystem(LevelCounter3DViewSystem.class);
         final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
 
         final Group oldRoot = view3D.root();

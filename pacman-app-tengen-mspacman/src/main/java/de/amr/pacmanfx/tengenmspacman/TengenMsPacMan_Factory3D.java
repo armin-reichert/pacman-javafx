@@ -27,7 +27,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
-        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+        final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
         final PacView3D view3D = pacSystems3D.view3DSystem().createMsPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }

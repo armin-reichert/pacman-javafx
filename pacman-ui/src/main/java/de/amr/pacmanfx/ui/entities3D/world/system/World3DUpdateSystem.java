@@ -29,7 +29,7 @@ public class World3DUpdateSystem {
 
     private void updatePac3D(Pac pac) {
         if (pac.hasComponent(PacView3D.class)) {
-            final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.reqSystem(GameSystems3D.PacSystems3D.class);
+            final GameSystems3D.PacSystems3D pacSystems3D = GameSystems3D.assertSystem(GameSystems3D.PacSystems3D.class);
             pacSystems3D.transformSystem().update(pac);
             pacSystems3D.animationSystem().updateAnimations(pac);
         }
@@ -37,12 +37,12 @@ public class World3DUpdateSystem {
 
     private void updateLivesCounter3D(LivesCounter livesCounter) {
         // Lives counter shapes follow Pac location
-        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.update(livesCounter);
     }
 
     private void updateGhosts3D(GameLevelEntitySet entitySet) {
-        final var ghostSystems3D = GameSystems3D.reqSystem(GameSystems3D.GhostSystems3D.class);
+        final var ghostSystems3D = GameSystems3D.assertSystem(GameSystems3D.GhostSystems3D.class);
         entitySet.ghosts().forEach(ghost -> {
             ghostSystems3D.movementSystem().update(ghost);
             ghostSystems3D.viewSystem().update(ghost);
@@ -50,13 +50,13 @@ public class World3DUpdateSystem {
     }
 
     private void updateHouse3D(House house, GameLevelEntitySet entitySet) {
-        final var houseSystem3D = GameSystems3D.reqSystem(House3DSystem.class);
+        final var houseSystem3D = GameSystems3D.assertSystem(House3DSystem.class);
         houseSystem3D.update(house, entitySet);
     }
 
     private void updateBonus3D(Bonus bonus, AnimationRegistry animationRegistry) {
         if (bonus != null) {
-            GameSystems3D.reqSystem(Bonus3DUpdateSystem.class).update(bonus, animationRegistry);
+            GameSystems3D.assertSystem(Bonus3DUpdateSystem.class).update(bonus, animationRegistry);
         }
     }
 }

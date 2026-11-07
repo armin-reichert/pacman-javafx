@@ -172,7 +172,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.reqSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3DSystem livesCounterView3DSystem = GameSystems3D.assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
 
         if (pac.power().isActive()) {
