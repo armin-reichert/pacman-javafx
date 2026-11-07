@@ -41,4 +41,5 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.rendering;
     exports de.amr.pacmanfx.tengenmspacman.rules;
     exports de.amr.pacmanfx.tengenmspacman.sprites;
+    exports de.amr.pacmanfx.tengenmspacman.systems;
 }

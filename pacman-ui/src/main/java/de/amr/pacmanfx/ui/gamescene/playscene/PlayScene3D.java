@@ -322,8 +322,13 @@ public class PlayScene3D extends AbstractGameScene {
     public void updateHUD3D(GameContext game) {
         requireNonNull(game);
         final ScoresView scoresView = assertComponent(ScoresView.class);
-        game.systems().assertSystem(Score3DSystem.class)
-            .updateScoresView(scoresView, game, engine.translationManager(), uiConfig().assets());
+        game.systems().assertSystem(Score3DSystem.class).updateScoresView(
+            scoresView,
+            game.session().hud().gameScore(),
+            game.session().hud().highScore(),
+            engine.translationManager(),
+            uiConfig().assets()
+        );
     }
 
     public void initPac3DProperties(GameContext game, GameLevel level, Pac pac) {
@@ -360,7 +365,9 @@ public class PlayScene3D extends AbstractGameScene {
 
         // Create a new 3D game level representation
         level3D = new GameLevelView3D(game, viewModel, uiConfig());
+
         addAdditional3DLevelElements(level3D);
+
         level3D.replaceLevelCounter3D(game, session.hud().levelCounter());
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());

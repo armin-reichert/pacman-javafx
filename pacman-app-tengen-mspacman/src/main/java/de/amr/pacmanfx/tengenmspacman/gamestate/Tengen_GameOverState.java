@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameSystems;
+import de.amr.pacmanfx.tengenmspacman.systems.TengenMsPacMan_GameSystems;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationComp;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
