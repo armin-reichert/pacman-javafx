@@ -34,12 +34,10 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -51,8 +49,6 @@ import static de.amr.pacmanfx.engine.action.ActionExecutor.executeMatchingAction
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene {
-
-    private ChangeListener<DrawMode> drawModeChangeListener;
 
     private PlayScene3D_GameEventHandler gameEventHandler;
 
@@ -80,12 +76,6 @@ public class PlayScene3D extends AbstractGameScene {
         animationSystem = new PlayScene3DAnimationSystem(animations);
 
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
-
-        drawModeChangeListener = (_, _, drawMode) -> {
-            if (level3D != null) {
-                level3D.setDrawMode(drawMode);
-            }
-        };
     }
 
     public PlaySceneView3D view3D() {
@@ -122,21 +112,16 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void dispose() {
-        // Dispose the scene components
         super.dispose();
 
         disposeContextMenu();
 
         if (level3D != null) {
-            level3D.dispose();
-            level3D = null;
+            disposeLevel3D();
         }
 
-        drawModeChangeListener = null;
         gameEventHandler = null;
-
         animationSystem.dispose();
-
     }
 
     @Override
@@ -157,8 +142,6 @@ public class PlayScene3D extends AbstractGameScene {
         view3D().perspectiveManager().activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
         view3D().subScene().setFill(Color.BLACK);
 
-        settings3D.drawModeProperty().addListener(drawModeChangeListener);
-
         registerActionBindings();
 
         engine().optCurrentGame().ifPresent(game -> {
@@ -171,11 +154,7 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
-
         view3D().perspectiveManager().activeIDProperty().unbind();
-
-        settings3D.drawModeProperty().removeListener(drawModeChangeListener);
 
         disposeContextMenu();
 
@@ -320,8 +299,7 @@ public class PlayScene3D extends AbstractGameScene {
         final GameSession session     = game.session();
 
         if (level3D != null) {
-            Logger.info("Old 3D game level is disposed...");
-            level3D.dispose();
+            disposeLevel3D();
         }
 
         // Create a new 3D game level representation
@@ -334,6 +312,9 @@ public class PlayScene3D extends AbstractGameScene {
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
         animationSystem.createAnimations(engine, runtime(), game.session(), level3D);
+
+        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
+        settings3D.drawModeProperty().addListener(level3D);
 
         //TODO check this
         final Pac pac = level.entitySet().pac();
@@ -355,6 +336,12 @@ public class PlayScene3D extends AbstractGameScene {
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
     }
 
+    private void disposeLevel3D() {
+        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
+        settings3D.drawModeProperty().removeListener(level3D);
+        level3D.dispose();
+        level3D = null;
+    }
 
     private void disposeContextMenu() {
         if (contextMenu != null) {

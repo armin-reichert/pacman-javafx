@@ -44,6 +44,8 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.image.Image;
@@ -65,7 +67,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D visualization of a Pac-Man game level.
  */
-public class GameLevelView3D implements DisposableGraphicsObject {
+public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGraphicsObject {
 
     private final Group root = new Group();
 
@@ -115,6 +117,13 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         root.setMouseTransparent(true); // this increases performance they say...
     }
 
+    @Override
+    public void changed(ObservableValue<? extends DrawMode> observable, DrawMode oldValue, DrawMode newValue) {
+        Ufx.setDrawMode(level.entitySet().pac().assertComponent(PacView3D.class).root(), newValue);
+        level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.assertComponent(GhostView3D.class).root(), newValue));
+        Ufx.setDrawMode(mapView3D.root(), newValue);
+    }
+
     public Group root() {
         return root;
     }
@@ -162,13 +171,6 @@ public class GameLevelView3D implements DisposableGraphicsObject {
         // Hide 3D food explicitly (handles cheat-eat-all case)
         pelletViews3D.values().forEach(pellet3D -> pellet3D.root().setVisible(false));
         mapView3D.particlesGroup().getChildren().clear();
-    }
-
-    public void setDrawMode(DrawMode drawMode) {
-        requireNonNull(drawMode);
-        Ufx.setDrawMode(level.entitySet().pac().assertComponent(PacView3D.class).root(), drawMode);
-        level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.assertComponent(GhostView3D.class).root(), drawMode));
-        Ufx.setDrawMode(mapView3D.root(), drawMode);
     }
 
     public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus, AnimationRegistry animationRegistry) {
