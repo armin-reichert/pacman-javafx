@@ -168,8 +168,8 @@ public class DefaultGameSceneManager implements GameSceneManager {
         playScene3D.optView3D().ifPresent(view3D -> {
             playScene3D.replaceGameLevel3D(game, level);
             playScene3D.replaceActionBindings(session, level);
-            playScene3D.initFood3D(view3D.assertLevel3D(), level, true);
             playScene3D.updateScoresView(game);
+            view3D.initFood3D(level, true);
             view3D.animationRegistry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME).ifPresent(ManagedAnimation::replay);
         });
 

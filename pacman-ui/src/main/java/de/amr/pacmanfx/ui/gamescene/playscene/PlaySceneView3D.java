@@ -21,7 +21,6 @@ import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -92,6 +91,18 @@ public class PlaySceneView3D implements Disposable {
                 dronePerspective.handleScrollEvent(e);
             }
         });
+    }
+
+    public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
+        level3D.pellets3D().forEach(pellet3D ->
+            pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
+
+        level3D.energizers3D().forEach(energizer3D ->
+            energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
+
+        if (startEnergizerPumping) {
+            animationSystem.startEnergizerPumping(level3D);
+        }
     }
 
     // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0 if drone perspective is active

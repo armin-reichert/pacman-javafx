@@ -169,32 +169,37 @@ public class PlayScene3D extends AbstractGameScene {
         final SimulationFrame thisFrame = session.thisFrame();
         final long tick = thisFrame.tickCount();
 
-        if (session.optLevel().isEmpty()) {
+        final GameLevel level = session.optLevel().orElse(null);
+        if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
         }
 
-        final GameLevel level = session.optLevel().orElseThrow();
+        final PlaySceneView3D view3D = optView3D().orElse(null);
+        if (view3D == null) {
+            Logger.info("Tick {}: Play Scene 3D view not yet created, update ignored", tick);
+            return;
+        }
 
-        if (assertView3D().optGameLevel3D().isEmpty()) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
+        final GameLevelView3D levelView3D = view3D.optGameLevel3D().orElse(null);
+        if (levelView3D == null) {
+            Logger.info("Tick {}: Game level 3D view not yet created, update ignored", tick);
             return;
         }
 
         //TODO check this
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            assertView3D().optGameLevel3D().get().ensureBonus3DViewAddedToSceneGraph(
-                bonus, assertView3D().animationRegistry()));
+            levelView3D.ensureBonus3DViewAddedToSceneGraph(bonus, view3D.animationRegistry()));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, assertView3D().animationRegistry());
+        updateSystem.updateEntities(game, view3D.animationRegistry());
 
         updateScoresView(game);
 
         ensureAnimationsRunning(game.state());
 
-        assertView3D().perspectiveManager().updatePerspective(level);
+        view3D.perspectiveManager().updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
             soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
@@ -258,15 +263,6 @@ public class PlayScene3D extends AbstractGameScene {
         systems3D.animationSystem().setPowerMode(pac, false);
     }
 
-    public void initFood3D(GameLevelView3D level3D, GameLevel level, boolean startEnergizerPumping) {
-        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
-
-        if (startEnergizerPumping) {
-            assertView3D().animationSystem().startEnergizerPumping(level3D);
-        }
-        level3D.energizers3D()
-            .forEach(energizer3D -> energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
-    }
 
     public void replaceGameLevel3D(GameContext game, GameLevel level) {
         requireNonNull(game);
