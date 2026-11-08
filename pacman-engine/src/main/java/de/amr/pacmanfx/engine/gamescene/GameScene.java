@@ -9,6 +9,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.engine.QuitHandler;
+import de.amr.pacmanfx.engine.input.Input;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
@@ -56,5 +57,5 @@ public interface GameScene extends Disposable, QuitHandler {
     /**
      * Called when a key combination is pressed inside this scene.
      */
-    void onInput();
+    void onInput(Input input);
 }

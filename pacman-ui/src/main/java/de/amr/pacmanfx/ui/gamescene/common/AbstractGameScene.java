@@ -10,11 +10,11 @@ import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.engine.QuitHandler;
 import de.amr.pacmanfx.engine.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.engine.action.DefaultActionBindingsRegistry;
 import de.amr.pacmanfx.engine.gamescene.GameScene;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.rendering.GameSceneView2D;
@@ -131,7 +131,7 @@ public abstract class AbstractGameScene extends Composition<Object>
     // --- Interface GameScene
 
     @Override
-    public void onInput() {
+    public void onInput(Input input) {
         executeMatchingAction(actionBindingsRegistry(), engine);
     }
 

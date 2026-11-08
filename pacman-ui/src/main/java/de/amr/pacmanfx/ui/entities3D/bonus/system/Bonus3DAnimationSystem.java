@@ -22,12 +22,13 @@ public class Bonus3DAnimationSystem {
     }
 
     private void lookEdible(Bonus bonus) {
+        if (!bonus.hasComponent(BonusView3D.class)) {
+            return;
+        }
         final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
-        final Box shape3D = view3D.box3D();
-
-        shape3D.setVisible(true);
-        shape3D.setWidth(view3D.symbolWidth());
-        shape3D.setMaterial(view3D.symbolTexture());
+        view3D.box3D().setVisible(true);
+        view3D.box3D().setWidth(view3D.symbolWidth());
+        view3D.box3D().setMaterial(view3D.symbolTexture());
     }
 
     private void lookEaten(Bonus bonus, AnimationRegistry animationRegistry) {

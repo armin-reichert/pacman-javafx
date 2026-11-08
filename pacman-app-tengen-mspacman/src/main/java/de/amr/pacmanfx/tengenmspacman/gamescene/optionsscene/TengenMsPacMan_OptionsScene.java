@@ -23,7 +23,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.engine.input.Joypad;
 import de.amr.pacmanfx.engine.input.JoypadButton;
-import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -191,11 +190,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     @Override
-    public void onInput() {
+    public void onInput(Input input) {
         engine().optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
-            final Keyboard keyboard = engine().input().keyboard();
-            final Joypad joypad = engine().input().joypad();
+            final Joypad joypad = input.joypad();
 
             if (joypad.isButtonPressed(JoypadButton.DOWN)) {
                 selectedOption.set(selectedOption.get().succ());
@@ -204,7 +202,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 selectedOption.set(selectedOption.get().pred());
             }
             // Button "A" on the joypad is located right of "B": select next value
-            else if (joypad.isButtonPressed(JoypadButton.A) || keyboard.isKeyPressed(KeyCode.RIGHT)) {
+            else if (joypad.isButtonPressed(JoypadButton.A) || input.keyboard().isKeyPressed(KeyCode.RIGHT)) {
                 switch (selectedOption.get()) {
                     case PAC_BOOSTER    -> setNextPacBoosterValue(game);
                     case DIFFICULTY     -> setNextDifficultyValue(game);
@@ -213,7 +211,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 }
             }
             // Button "B" is left of "A": select previous value
-            else if (joypad.isButtonPressed(JoypadButton.B) || keyboard.isKeyPressed(KeyCode.LEFT)) {
+            else if (joypad.isButtonPressed(JoypadButton.B) || input.keyboard().isKeyPressed(KeyCode.LEFT)) {
                 switch (selectedOption.get()) {
                     case PAC_BOOSTER    -> setPrevPacBoosterValue(game);
                     case DIFFICULTY     -> setPrevDifficultyValue(game);
@@ -222,7 +220,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 }
             }
             else {
-                super.onInput();
+                super.onInput(input);
             }
         });
     }

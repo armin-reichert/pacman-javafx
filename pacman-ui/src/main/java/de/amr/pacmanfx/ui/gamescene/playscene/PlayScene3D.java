@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -161,10 +162,10 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     @Override
-    public void onInput() {
+    public void onInput(Input input) {
         executeMatchingAction(actionBindingsRegistry(), engine).ifPresentOrElse(
             _ -> {}, // action matching keyboard state has been executed
-            () -> view3D().handleKeyboardInput(engine().input().keyboard())
+            () -> view3D().handleKeyboardInput(input.keyboard())
         );
     }
 
