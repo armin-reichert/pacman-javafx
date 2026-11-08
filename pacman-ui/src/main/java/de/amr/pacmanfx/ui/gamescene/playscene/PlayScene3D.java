@@ -27,15 +27,13 @@ import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneAnimations3DComp;
-import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneView3D;
-import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3D;
+import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3DAnimations;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3DFadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
@@ -54,9 +52,6 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends AbstractGameScene {
 
-    private final DoubleProperty opacity = new SimpleDoubleProperty(0);
-
-
     private ChangeListener<DrawMode> drawModeChangeListener;
 
     private PlayScene3D_GameEventHandler gameEventHandler;
@@ -73,14 +68,17 @@ public class PlayScene3D extends AbstractGameScene {
 
     private final PlayScene3DAnimationSystem animationSystem;
 
-    /**
-     * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
-     */
     public PlayScene3D() {
-        setComponent(GameSceneView3D.class, new GameSceneView3D());
-        setComponent(GameSceneAnimations3DComp.class, new GameSceneAnimations3DComp());
+        setComponent(PlaySceneView3D.class, new PlaySceneView3D());
 
-        animationSystem = new PlayScene3DAnimationSystem(animations3D());
+        final var animations = new PlaySceneView3DAnimations();
+        setComponent(PlaySceneView3DAnimations.class, animations);
+
+        final var fadeInAnimation = new PlaySceneView3DFadeInAnimation(Duration.seconds(3), view3D());
+        animations.registry().register(fadeInAnimation.name(), fadeInAnimation);
+
+        animationSystem = new PlayScene3DAnimationSystem(animations);
+
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
@@ -88,17 +86,14 @@ public class PlayScene3D extends AbstractGameScene {
                 level3D.setDrawMode(drawMode);
             }
         };
-
-        final var fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
-        animations3D().registry().register(fadeInAnimation.name(), fadeInAnimation);
     }
 
-    public GameSceneView3D view3D() {
-        return assertComponent(GameSceneView3D.class);
+    public PlaySceneView3D view3D() {
+        return assertComponent(PlaySceneView3D.class);
     }
 
-    public GameSceneAnimations3DComp animations3D() {
-        return assertComponent(GameSceneAnimations3DComp.class);
+    public PlaySceneView3DAnimations animations3D() {
+        return assertComponent(PlaySceneView3DAnimations.class);
     }
 
     @Override
@@ -107,7 +102,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
 
-        final var view3D = assertComponent(GameSceneView3D.class);
+        final var view3D = assertComponent(PlaySceneView3D.class);
         view3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
         view3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
     }
@@ -254,7 +249,7 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public Optional<SubScene> optSubSceneFX() {
-        return Optional.of(assertComponent(GameSceneView3D.class).subScene());
+        return Optional.of(assertComponent(PlaySceneView3D.class).subScene());
     }
 
     @Override
@@ -276,13 +271,6 @@ public class PlayScene3D extends AbstractGameScene {
         return animationSystem;
     }
 
-    public SubScene subScene() {
-        return assertComponent(GameSceneView3D.class).subScene();
-    }
-
-    public DoubleProperty opacityProperty() {
-        return opacity;
-    }
 
     public Optional<GameLevelView3D> optGameLevel3D() {
         return Optional.ofNullable(level3D);

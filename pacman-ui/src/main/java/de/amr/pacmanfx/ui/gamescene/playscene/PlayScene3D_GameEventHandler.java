@@ -39,7 +39,7 @@ import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSy
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3DFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -195,7 +195,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.replaceActionBindings(assertGame().session(), level);
 
-        playScene3D.animations3D().registry().optAnimation(PlaySceneFadeInAnimation.NAME)
+        playScene3D.animations3D().registry().optAnimation(PlaySceneView3DFadeInAnimation.ANIMATION_NAME)
             .ifPresent(ManagedAnimation::replay);
     }
 
@@ -334,7 +334,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final boolean cutSceneFollows = !assertGame().session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
             && assertGame().rules().cutSceneAfterLevel(level.number()).isPresent();
 
-        playScene3D.opacityProperty().set(0);
+        playScene3D.view3D().opacityProperty().set(0);
 
         houseSystem3D.hideDoors(house);
 

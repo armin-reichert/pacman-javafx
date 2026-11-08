@@ -37,7 +37,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
-import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneAnimations3DComp;
+import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3DAnimations;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimationShort;
@@ -64,7 +64,7 @@ public class PlayScene3DAnimationSystem implements Disposable {
 
     private final AnimationRegistry registry;
     
-    public PlayScene3DAnimationSystem(GameSceneAnimations3DComp animations3D) {
+    public PlayScene3DAnimationSystem(PlaySceneView3DAnimations animations3D) {
         this.registry = animations3D.registry();
     }
 

@@ -3,11 +3,11 @@ package de.amr.pacmanfx.ui.gamescene.view3d;
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;
 
-public class GameSceneAnimations3DComp implements Disposable {
+public class PlaySceneView3DAnimations implements Disposable {
 
     private final AnimationRegistry registry = new AnimationRegistry();
 
-    public GameSceneAnimations3DComp() {}
+    public PlaySceneView3DAnimations() {}
 
     public AnimationRegistry registry() {
         return registry;

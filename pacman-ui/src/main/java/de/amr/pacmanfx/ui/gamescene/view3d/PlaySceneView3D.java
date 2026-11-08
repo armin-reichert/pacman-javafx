@@ -7,13 +7,14 @@ package de.amr.pacmanfx.ui.gamescene.view3d;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
-import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
 
-public class GameSceneView3D implements Disposable {
+public class PlaySceneView3D implements Disposable {
 
     private final Group root;
     private final Group level3DHolder;
@@ -21,10 +22,10 @@ public class GameSceneView3D implements Disposable {
     private final PerspectiveCamera camera;
     private final AmbientLight ambientLight;
     private final CoordinateSystem coordinateSystem;
-
+    private final DoubleProperty opacity = new SimpleDoubleProperty(0);
     private final PerspectiveManager perspectiveManager;
 
-    public GameSceneView3D() {
+    public PlaySceneView3D() {
         root = new Group();
         camera = new PerspectiveCamera(true);
         ambientLight = new AmbientLight();
@@ -78,6 +79,10 @@ public class GameSceneView3D implements Disposable {
 
     public CoordinateSystem coordinateSystem() {
         return coordinateSystem;
+    }
+
+    public DoubleProperty opacityProperty() {
+        return opacity;
     }
 
     public PerspectiveManager perspectiveManager() {

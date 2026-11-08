@@ -82,7 +82,7 @@ public class GameScenePane extends StackPane {
             case PLAIN_2D, DECORATED_2D -> embedGameScene2D(availableWidth, availableHeight, gameScene, settingsViewModel, embedding);
             case SUBSCENE -> {
                 if (gameScene instanceof PlayScene3D playScene3D) {
-                    embedGameSceneProvidingSubScene(availableWidth, availableHeight, playScene3D.subScene());
+                    embedGameSceneProvidingSubScene(availableWidth, availableHeight, playScene3D.view3D().subScene());
                 }
             }
         }
