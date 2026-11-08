@@ -18,10 +18,6 @@ import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.engine.action.GameAction;
-import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -34,9 +30,6 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneAnimations3DComp;
 import de.amr.pacmanfx.ui.gamescene.view3d.GameSceneView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneFadeInAnimation;
-import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
-import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
@@ -63,11 +56,10 @@ public class PlayScene3D extends AbstractGameScene {
 
     private final DoubleProperty opacity = new SimpleDoubleProperty(0);
 
-    private PerspectiveManager perspectiveManager;
 
     private ChangeListener<DrawMode> drawModeChangeListener;
 
-    private PlayScene3D_GameEventHandler scene3DGameEventHandler;
+    private PlayScene3D_GameEventHandler gameEventHandler;
 
     private PacEatingEventHandler pacEatingEventHandler;
 
@@ -89,10 +81,7 @@ public class PlayScene3D extends AbstractGameScene {
         setComponent(GameSceneAnimations3DComp.class, new GameSceneAnimations3DComp());
 
         animationSystem = new PlayScene3DAnimationSystem(animations3D());
-
-        perspectiveManager = new PerspectiveManager(view3D().camera());
-
-        scene3DGameEventHandler = new PlayScene3D_GameEventHandler(this);
+        gameEventHandler = new PlayScene3D_GameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
@@ -124,7 +113,7 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     public Optional<GameEventListener> optGameEventHandler() {
-        return Optional.of(scene3DGameEventHandler);
+        return Optional.of(gameEventHandler);
     }
 
     @Override
@@ -141,11 +130,6 @@ public class PlayScene3D extends AbstractGameScene {
         // Dispose the scene components
         super.dispose();
 
-        if (perspectiveManager != null) {
-            perspectiveManager.dispose();
-            perspectiveManager = null;
-        }
-
         disposeContextMenu();
 
         if (level3D != null) {
@@ -154,7 +138,7 @@ public class PlayScene3D extends AbstractGameScene {
         }
 
         drawModeChangeListener = null;
-        scene3DGameEventHandler = null;
+        gameEventHandler = null;
 
         animationSystem.dispose();
 
@@ -174,14 +158,17 @@ public class PlayScene3D extends AbstractGameScene {
     @Override
     public void onActivate() {
         final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
-        perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
+
+        view3D().perspectiveManager().activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
+        view3D().subScene().setFill(Color.BLACK);
+
         settings3D.drawModeProperty().addListener(drawModeChangeListener);
+
         registerActionBindings();
-        assertComponent(GameSceneView3D.class).subScene().setFill(Color.BLACK);
 
         engine().optCurrentGame().ifPresent(game -> {
             pacEatingEventHandler = new PacEatingEventHandler(game);
-            pacPowerEventHandler = new  PacPowerEventHandler(game);
+            pacPowerEventHandler  = new PacPowerEventHandler(game);
             game.eventManager().addSubscriber(pacEatingEventHandler);
             game.eventManager().addSubscriber(pacPowerEventHandler);
         });
@@ -189,17 +176,20 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-        perspectiveManager.activeIDProperty().unbind();
-        engine.ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
+        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
+
+        view3D().perspectiveManager().activeIDProperty().unbind();
+
+        settings3D.drawModeProperty().removeListener(drawModeChangeListener);
+
         disposeContextMenu();
 
         // Remove actor 3D view components
         engine().optCurrentGame().ifPresent(game -> {
             game.session().optLevel().ifPresent(level -> {
-                final GameLevelEntitySet entitySet = level.entitySet();
-                entitySet.pac().removeComponent(PacView3D.class);
-                entitySet.ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
-                entitySet.anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
+                level.entitySet().pac().removeComponent(PacView3D.class);
+                level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
+                level.entitySet().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
             });
 
             if (pacEatingEventHandler != null) {
@@ -215,19 +205,10 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onInput() {
-        final Optional<GameAction<EngineUIContext>> executedAction =
-            executeMatchingAction(actionBindingsRegistry(), engine());
-
-        //TODO Rethink this
-        if (executedAction.isEmpty()) {
-            // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
-            perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
-                if (perspective instanceof DronePerspective dronePerspective) {
-                    final Keyboard keyboard = engine().input().keyboard();
-                    dronePerspective.handleKeyPressed(keyboard);
-                }
-            });
-        }
+        executeMatchingAction(actionBindingsRegistry(), engine).ifPresentOrElse(
+            _ -> {}, // action matching keyboard state has been executed
+            () -> view3D().handleKeyboardInput(engine().input().keyboard())
+        );
     }
 
     @Override
@@ -258,7 +239,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         ensureAnimationsRunning(game);
 
-        perspectiveManager.updatePerspective(level);
+        view3D().perspectiveManager().updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
             soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
@@ -268,11 +249,7 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
-        perspectiveManager.currentPerspective().ifPresent(perspective -> {
-            if (perspective instanceof DronePerspective dronePerspective) {
-                dronePerspective.handleScrollEvent(scrollEvent);
-            }
-        });
+        view3D().handleScrollEvent(scrollEvent);
     }
 
     @Override
@@ -305,10 +282,6 @@ public class PlayScene3D extends AbstractGameScene {
 
     public DoubleProperty opacityProperty() {
         return opacity;
-    }
-
-    public PerspectiveManager perspectiveManager() {
-        return perspectiveManager;
     }
 
     public Optional<GameLevelView3D> optGameLevel3D() {
