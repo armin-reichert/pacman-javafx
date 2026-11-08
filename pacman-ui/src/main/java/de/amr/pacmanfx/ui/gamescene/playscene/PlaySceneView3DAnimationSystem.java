@@ -60,11 +60,11 @@ import static de.amr.basics.math.RandomNumbers.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DAnimationSystem implements Disposable {
+public class PlaySceneView3DAnimationSystem implements Disposable {
 
     private final AnimationRegistry registry;
     
-    public PlayScene3DAnimationSystem(AnimationRegistry registry) {
+    public PlaySceneView3DAnimationSystem(AnimationRegistry registry) {
         this.registry = requireNonNull(registry);
     }
 

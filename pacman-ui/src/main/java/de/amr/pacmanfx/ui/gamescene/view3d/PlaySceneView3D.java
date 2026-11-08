@@ -5,7 +5,10 @@
 package de.amr.pacmanfx.ui.gamescene.view3d;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlaySceneView3DAnimationSystem;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
@@ -13,6 +16,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
+import javafx.util.Duration;
 
 public class PlaySceneView3D implements Disposable {
 
@@ -23,7 +27,12 @@ public class PlaySceneView3D implements Disposable {
     private final AmbientLight ambientLight;
     private final CoordinateSystem coordinateSystem;
     private final DoubleProperty opacity = new SimpleDoubleProperty(0);
-    private final PerspectiveManager perspectiveManager;
+
+    private PerspectiveManager perspectiveManager;
+
+    private AnimationRegistry animationRegistry;
+    private PlaySceneView3DAnimationSystem animationSystem;
+    private PlaySceneView3D_FadeInAnimation fadeInAnimation;
 
     public PlaySceneView3D() {
         root = new Group();
@@ -38,6 +47,12 @@ public class PlaySceneView3D implements Disposable {
         subScene.setCamera(camera);
 
         perspectiveManager = new PerspectiveManager(camera);
+
+        animationRegistry = new AnimationRegistry();
+        animationSystem = new PlaySceneView3DAnimationSystem(animationRegistry);
+
+        fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), this);
+        animationRegistry.register(fadeInAnimation.name(), fadeInAnimation);
     }
 
     public void handleScrollEvent(ScrollEvent e) {
@@ -89,8 +104,31 @@ public class PlaySceneView3D implements Disposable {
         return perspectiveManager;
     }
 
+    public AnimationRegistry animationRegistry() {
+        return animationRegistry;
+    }
+
+    public PlaySceneView3DAnimationSystem animationSystem() {
+        return animationSystem;
+    }
+
     @Override
     public void dispose() {
-        perspectiveManager.dispose();
+        if (perspectiveManager != null) {
+            perspectiveManager.dispose();
+            perspectiveManager = null;
+        }
+        if (fadeInAnimation != null) {
+            fadeInAnimation.dispose();
+            fadeInAnimation = null;
+        }
+        if (animationRegistry != null) {
+            animationRegistry.dispose();
+            animationRegistry = null;
+        }
+        if (animationSystem != null) {
+            animationSystem.dispose();
+            animationSystem = null;
+        }
     }
 }

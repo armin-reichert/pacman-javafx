@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.playscene;
 
-import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.basics.fsm.State;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.rendering.Renderable;
@@ -29,7 +29,6 @@ import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3D;
-import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
@@ -38,7 +37,6 @@ import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -62,28 +60,40 @@ public class PlayScene3D extends AbstractGameScene {
 
     private RandomTextPicker textPicker;
 
-    private AnimationRegistry animationRegistry = new AnimationRegistry();
-
-    private final PlayScene3DAnimationSystem animationSystem;
-
     public PlayScene3D() {
         setComponent(PlaySceneView3D.class, new PlaySceneView3D());
-
-        final var fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), view3D());
-        animationRegistry.register(fadeInAnimation.name(), fadeInAnimation);
-
-        animationSystem = new PlayScene3DAnimationSystem(animationRegistry);
-
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        disposeContextMenu();
+        if (level3D != null) {
+            disposeLevel3D();
+        }
+        gameEventHandler = null;
+    }
+
+    // Accessors
 
     public PlaySceneView3D view3D() {
         return assertComponent(PlaySceneView3D.class);
     }
 
-    public AnimationRegistry animationRegistry() {
-        return animationRegistry;
+    public Optional<GameEventListener> optGameEventHandler() {
+        return Optional.of(gameEventHandler);
     }
+
+    public RandomTextPicker textPicker() {
+        return textPicker;
+    }
+
+    public Optional<GameLevelView3D> optGameLevel3D() {
+        return Optional.ofNullable(level3D);
+    }
+
+    // Hook methods
 
     @Override
     protected void onEngineConnected() {
@@ -96,48 +106,7 @@ public class PlayScene3D extends AbstractGameScene {
         view3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
     }
 
-    public Optional<GameEventListener> optGameEventHandler() {
-        return Optional.of(gameEventHandler);
-    }
-
-    @Override
-    public Stream<Renderable> renderables() {
-        return Stream.empty();
-    }
-
-    public RandomTextPicker textPicker() {
-        return textPicker;
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-
-        if (animationRegistry != null) {
-            animationRegistry.dispose();
-            animationRegistry = null;
-        }
-
-        disposeContextMenu();
-
-        if (level3D != null) {
-            disposeLevel3D();
-        }
-
-        gameEventHandler = null;
-        animationSystem.dispose();
-    }
-
-    @Override
-    public void onBeforeEmbedded() {
-        engine().optCurrentGame().ifPresent(game ->
-            game.systems().assertSystem(Score3DSystem.class).replaceScoresView(
-                this,
-                game.session().hud().gameScore(),
-                game.session().hud().highScore(),
-                engine.translationManager()
-            ));
-    }
+    // GameScene interface
 
     @Override
     public void onActivate() {
@@ -182,6 +151,16 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     @Override
+    public void onBeforeEmbedded(GameContext game) {
+        game.systems().assertSystem(Score3DSystem.class).replaceScoresView(
+            this,
+            game.session().hud().gameScore(),
+            game.session().hud().highScore(),
+            engine.translationManager()
+        );
+    }
+
+    @Override
     public void onInput() {
         executeMatchingAction(actionBindingsRegistry(), engine).ifPresentOrElse(
             _ -> {}, // action matching keyboard state has been executed
@@ -206,16 +185,17 @@ public class PlayScene3D extends AbstractGameScene {
             return;
         }
 
+        //TODO check this
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animationRegistry));
+            level3D.ensureBonus3DViewAddedToSceneGraph(bonus, view3D().animationRegistry()));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, animationRegistry);
+        updateSystem.updateEntities(game, view3D().animationRegistry());
 
         updateScoresView(game);
 
-        ensureAnimationsRunning(game);
+        ensureAnimationsRunning(game.state());
 
         view3D().perspectiveManager().updatePerspective(level);
 
@@ -236,28 +216,24 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     @Override
-    public List<MenuItem> contextMenuItems() {
-        contextMenu = new PlaySceneContextMenu(this);
-        return contextMenu.getItems();
-    }
-
-    @Override
     public void onQuit() {
         onDeactivate();
         engine().soundManager().setEnabled(false);
         engine().optCurrentGame().ifPresent(game -> game.flow().enterGameState(game, CommonGameStateID.GAME_OVER));
     }
 
+    @Override
+    public List<MenuItem> contextMenuItems() {
+        contextMenu = new PlaySceneContextMenu(this);
+        return contextMenu.getItems();
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
+    }
+
     // Other stuff
-
-    public PlayScene3DAnimationSystem animationSystem() {
-        return animationSystem;
-    }
-
-
-    public Optional<GameLevelView3D> optGameLevel3D() {
-        return Optional.ofNullable(level3D);
-    }
 
     public void replaceActionBindings(GameSession session, GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
@@ -289,7 +265,7 @@ public class PlayScene3D extends AbstractGameScene {
         level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
 
         if (startEnergizerPumping) {
-            animationSystem.startEnergizerPumping(level3D);
+            view3D().animationSystem().startEnergizerPumping(level3D);
         }
         level3D.energizers3D()
             .forEach(energizer3D -> energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
@@ -315,7 +291,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         view3D().level3DHolder().getChildren().setAll(level3D.root());
 
-        animationSystem.createAnimations(engine, runtime(), game.session(), level3D);
+        view3D().animationSystem().createAnimations(engine, runtime(), game.session(), level3D);
 
         final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
         settings3D.drawModeProperty().addListener(level3D);
@@ -341,22 +317,26 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     private void disposeLevel3D() {
-        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
-        settings3D.drawModeProperty().removeListener(level3D);
-        level3D.dispose();
-        level3D = null;
+        if (level3D != null) {
+            final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
+            settings3D.drawModeProperty().removeListener(level3D);
+            level3D.dispose();
+            level3D = null;
+        }
     }
 
     private void disposeContextMenu() {
         if (contextMenu != null) {
             contextMenu.dispose();
+            contextMenu = null;
         }
     }
 
-    private void ensureAnimationsRunning(GameContext game) {
-        if (game.state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
-            game.state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
-            animationSystem.startEnergizerPumping(level3D);
+    private void ensureAnimationsRunning(State<GameContext> gameState) {
+        if (gameState.hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+            gameState.hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING))
+        {
+            view3D().animationSystem().startEnergizerPumping(level3D);
         }
     }
 }

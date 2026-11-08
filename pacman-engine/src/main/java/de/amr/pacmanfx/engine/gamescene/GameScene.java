@@ -42,7 +42,7 @@ public interface GameScene extends Disposable, QuitHandler {
      */
     default void onEnteredFrom3DScene() {}
 
-    default void onBeforeEmbedded() {}
+    default void onBeforeEmbedded(GameContext game) {}
 
     default void onScroll(ScrollEvent scrollEvent) {}
 

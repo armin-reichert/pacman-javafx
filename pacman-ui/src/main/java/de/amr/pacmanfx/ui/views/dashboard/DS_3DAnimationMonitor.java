@@ -109,7 +109,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
         super.update(context);
 
         if (context.gameSceneManager().currentGameScene() instanceof PlayScene3D playScene3D) {
-            final AnimationRegistry animationRegistry = playScene3D.animationRegistry();
+            final AnimationRegistry animationRegistry = playScene3D.view3D().animationRegistry();
             currentAnimationRegistry.set(animationRegistry);
         }
     }

@@ -149,7 +149,7 @@ public class GamePlayView implements GameView {
             currentGameScene.deactivate();
         }
 
-        nextGameScene.onBeforeEmbedded();
+        nextGameScene.onBeforeEmbedded(engine.optCurrentGame().orElseThrow());
 
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
         layers.gameSceneLayer().embedGameScene(engine.ui(), engine.uiConfig(runtime), (AbstractGameScene) nextGameScene);
