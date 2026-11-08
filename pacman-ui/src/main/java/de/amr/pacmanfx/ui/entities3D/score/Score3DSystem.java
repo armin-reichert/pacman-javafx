@@ -17,7 +17,7 @@ public class Score3DSystem {
 
     public void replaceScoresView(PlayScene3D playScene3D, Score gameScore, Score highScore, TranslationManager translationManager) {
         playScene3D.optComponent(ScoresView.class).ifPresent(scoresView ->  {
-            playScene3D.view3D().root().getChildren().remove(scoresView.root());
+            playScene3D.assertView3D().root().getChildren().remove(scoresView.root());
             playScene3D.removeComponent(ScoresView.class);
         });
 
@@ -36,18 +36,18 @@ public class Score3DSystem {
         final var scoresView = new ScoresView(gameScoreView, highScoreView);
         scoresView.setFont(GlobalFonts.ARCADE.font(8));
 
-        playScene3D.view3D().root().getChildren().add(scoresView.root());
+        playScene3D.assertView3D().root().getChildren().add(scoresView.root());
 
         //scoresView.textOpacity.bind(scoreOpacity);
 
         // Scores must always face towards viewer, independent of current perspective:
-        scoresView.root().rotationAxisProperty().bind(playScene3D.view3D().camera().rotationAxisProperty());
-        scoresView.root().rotateProperty().bind(playScene3D.view3D().camera().rotateProperty());
+        scoresView.root().rotationAxisProperty().bind(playScene3D.assertView3D().camera().rotationAxisProperty());
+        scoresView.root().rotateProperty().bind(playScene3D.assertView3D().camera().rotateProperty());
 
         // Scores are shown slightly "behind" and over game level from viewer's perspective
-        scoresView.root().translateXProperty().bind(playScene3D.view3D().level3DHolder().translateXProperty().add(TS));
-        scoresView.root().translateYProperty().bind(playScene3D.view3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
-        scoresView.root().translateZProperty().bind(playScene3D.view3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
+        scoresView.root().translateXProperty().bind(playScene3D.assertView3D().level3DHolder().translateXProperty().add(TS));
+        scoresView.root().translateYProperty().bind(playScene3D.assertView3D().level3DHolder().translateYProperty().subtract(4.5 * TS));
+        scoresView.root().translateZProperty().bind(playScene3D.assertView3D().level3DHolder().translateZProperty().subtract(4.5 * TS));
 
         playScene3D.setComponent(ScoresView.class, scoresView);
     }

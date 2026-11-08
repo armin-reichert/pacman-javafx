@@ -165,10 +165,13 @@ public class DefaultGameSceneManager implements GameSceneManager {
         final GameLevel level = session.optLevel().orElseThrow();
         final Pac pac = level.entitySet().pac();
 
-        playScene3D.replaceGameLevel3D(game, level);
-        playScene3D.replaceActionBindings(session, level);
-        playScene3D.initFood3D(level, true);
-        playScene3D.updateScoresView(game);
+        playScene3D.optView3D().ifPresent(view3D -> {
+            playScene3D.replaceGameLevel3D(game, level);
+            playScene3D.replaceActionBindings(session, level);
+            playScene3D.initFood3D(view3D.assertLevel3D(), level, true);
+            playScene3D.updateScoresView(game);
+            view3D.animationRegistry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME).ifPresent(ManagedAnimation::replay);
+        });
 
         // Lives counter shapes follow Pac location
         final LivesCounter livesCounter = session.hud().livesCounter();
@@ -178,9 +181,6 @@ public class DefaultGameSceneManager implements GameSceneManager {
         if (pac.power().isActive()) {
             uiConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
-
-        playScene3D.view3D().animationRegistry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME)
-            .ifPresent(ManagedAnimation::replay);
 
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }

@@ -54,14 +54,11 @@ public class PlayScene3D extends AbstractGameScene {
 
     private PacPowerEventHandler pacPowerEventHandler;
 
-    private GameLevelView3D level3D;
-
     private PlaySceneContextMenu contextMenu;
 
     private RandomTextPicker textPicker;
 
     public PlayScene3D() {
-        setComponent(PlaySceneView3D.class, new PlaySceneView3D());
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
 
@@ -69,15 +66,16 @@ public class PlayScene3D extends AbstractGameScene {
     public void dispose() {
         super.dispose();
         disposeContextMenu();
-        if (level3D != null) {
-            disposeLevel3D();
-        }
         gameEventHandler = null;
     }
 
     // Accessors
 
-    public PlaySceneView3D view3D() {
+    public Optional<PlaySceneView3D> optView3D() {
+        return optComponent(PlaySceneView3D.class);
+    }
+
+    public PlaySceneView3D assertView3D() {
         return assertComponent(PlaySceneView3D.class);
     }
 
@@ -89,21 +87,18 @@ public class PlayScene3D extends AbstractGameScene {
         return textPicker;
     }
 
-    public Optional<GameLevelView3D> optGameLevel3D() {
-        return Optional.ofNullable(level3D);
-    }
-
     // Hook methods
 
     @Override
     protected void onEngineConnected() {
         final GameViewModel viewModel = engine.ui().viewModel();
 
-        textPicker = new RandomTextPicker(engine().translationManager().textBundle(), "game.over");
-
-        final var view3D = assertComponent(PlaySceneView3D.class);
+        final PlaySceneView3D view3D = new PlaySceneView3D(viewModel.common3DSettings());
         view3D.coordinateSystem().visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
         view3D.ambientLight().colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
+        setComponent(PlaySceneView3D.class, view3D);
+
+        textPicker = new RandomTextPicker(engine.translationManager().textBundle(), "game.over");
     }
 
     // GameScene interface
@@ -112,8 +107,8 @@ public class PlayScene3D extends AbstractGameScene {
     public void onActivate() {
         final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
 
-        view3D().perspectiveManager().activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
-        view3D().subScene().setFill(Color.BLACK);
+        assertView3D().perspectiveManager().activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
+        assertView3D().subScene().setFill(Color.BLACK);
 
         registerActionBindings();
 
@@ -127,7 +122,7 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-        view3D().perspectiveManager().activeIDProperty().unbind();
+        assertView3D().perspectiveManager().activeIDProperty().unbind();
 
         disposeContextMenu();
 
@@ -164,7 +159,7 @@ public class PlayScene3D extends AbstractGameScene {
     public void onInput(Input input) {
         executeMatchingAction(actionBindingsRegistry(), engine).ifPresentOrElse(
             _ -> {}, // action matching keyboard state has been executed
-            () -> view3D().handleKeyboardInput(input.keyboard())
+            () -> assertView3D().handleKeyboardInput(input.keyboard())
         );
     }
 
@@ -180,24 +175,26 @@ public class PlayScene3D extends AbstractGameScene {
         }
 
         final GameLevel level = session.optLevel().orElseThrow();
-        if (level3D == null) {
+
+        if (assertView3D().optGameLevel3D().isEmpty()) {
             Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
             return;
         }
 
         //TODO check this
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            level3D.ensureBonus3DViewAddedToSceneGraph(bonus, view3D().animationRegistry()));
+            assertView3D().optGameLevel3D().get().ensureBonus3DViewAddedToSceneGraph(
+                bonus, assertView3D().animationRegistry()));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, view3D().animationRegistry());
+        updateSystem.updateEntities(game, assertView3D().animationRegistry());
 
         updateScoresView(game);
 
         ensureAnimationsRunning(game.state());
 
-        view3D().perspectiveManager().updatePerspective(level);
+        assertView3D().perspectiveManager().updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
             soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
@@ -207,12 +204,12 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
-        view3D().handleScrollEvent(scrollEvent);
+        assertView3D().handleScrollEvent(scrollEvent);
     }
 
     @Override
     public Optional<SubScene> optSubSceneFX() {
-        return Optional.of(assertComponent(PlaySceneView3D.class).subScene());
+        return Optional.of(assertView3D().subScene());
     }
 
     @Override
@@ -261,11 +258,11 @@ public class PlayScene3D extends AbstractGameScene {
         systems3D.animationSystem().setPowerMode(pac, false);
     }
 
-    public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
+    public void initFood3D(GameLevelView3D level3D, GameLevel level, boolean startEnergizerPumping) {
         level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
 
         if (startEnergizerPumping) {
-            view3D().animationSystem().startEnergizerPumping(level3D);
+            assertView3D().animationSystem().startEnergizerPumping(level3D);
         }
         level3D.energizers3D()
             .forEach(energizer3D -> energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
@@ -275,33 +272,18 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameViewModel viewModel = engine.ui().viewModel();
-        final GameSession session     = game.session();
+        assertView3D().removeLevel3D();
+        assertView3D().createLevel3D(engine, game, level);
 
-        if (level3D != null) {
-            disposeLevel3D();
-        }
+        //TODO Replace by Tengen-specific view3D implementation
+        assertView3D().optGameLevel3D().ifPresent(this::addAdditional3DLevelElements);
 
-        // Create a new 3D game level representation
-        level3D = new GameLevelView3D(game, viewModel, uiConfig());
-
-        addAdditional3DLevelElements(level3D);
-
-        level3D.replaceLevelCounter3D(game, session.hud().levelCounter());
-
-        view3D().level3DHolder().getChildren().setAll(level3D.root());
-
-        view3D().animationSystem().createAnimations(engine, runtime(), game.session(), level3D);
-
-        final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
-        settings3D.drawModeProperty().addListener(level3D);
-
-        //TODO check this
+        //TODO Rethink this
         final Pac pac = level.entitySet().pac();
         initPac3DProperties(game, level, pac);
 
-        // Lives counter shapes follow Pac location
-        final LivesCounter livesCounter = session.hud().livesCounter();
+        // Let lives counter shapes track Pac-Man location
+        final LivesCounter livesCounter = game.session().hud().livesCounter();
         final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
         livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
     }
@@ -316,15 +298,6 @@ public class PlayScene3D extends AbstractGameScene {
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().camera3DActions().bindings());
     }
 
-    private void disposeLevel3D() {
-        if (level3D != null) {
-            final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
-            settings3D.drawModeProperty().removeListener(level3D);
-            level3D.dispose();
-            level3D = null;
-        }
-    }
-
     private void disposeContextMenu() {
         if (contextMenu != null) {
             contextMenu.dispose();
@@ -333,10 +306,11 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     private void ensureAnimationsRunning(State<GameContext> gameState) {
-        if (gameState.hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
-            gameState.hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING))
-        {
-            view3D().animationSystem().startEnergizerPumping(level3D);
-        }
+        assertView3D().optGameLevel3D().ifPresent(level3D -> {
+            if (gameState.hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+                gameState.hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
+                assertView3D().animationSystem().startEnergizerPumping(level3D);
+            }
+        });
     }
 }

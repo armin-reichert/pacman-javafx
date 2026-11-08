@@ -6,16 +6,25 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
+import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
+
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 public class PlaySceneView3D implements Disposable {
 
@@ -33,7 +42,13 @@ public class PlaySceneView3D implements Disposable {
     private PlaySceneView3DAnimationSystem animationSystem;
     private PlaySceneView3D_FadeInAnimation fadeInAnimation;
 
-    public PlaySceneView3D() {
+    private GameLevelView3D level3D;
+
+    private final Game3DSettingsViewModel settingsViewModel;
+
+    public PlaySceneView3D(Game3DSettingsViewModel settingsViewModel) {
+        this.settingsViewModel = requireNonNull(settingsViewModel);
+
         root = new Group();
         camera = new PerspectiveCamera(true);
         ambientLight = new AmbientLight();
@@ -52,6 +67,23 @@ public class PlaySceneView3D implements Disposable {
 
         fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), this);
         animationRegistry.register(fadeInAnimation.name(), fadeInAnimation);
+    }
+
+    public void removeLevel3D() {
+        if (level3D != null) {
+            settingsViewModel.drawModeProperty().removeListener(level3D);
+            level3D.dispose();
+            level3D = null;
+        }
+    }
+
+    public void createLevel3D(EngineUIContext engine, GameContext game, GameLevel level) {
+        // Create a new 3D game level representation
+        level3D = new GameLevelView3D(game, level, engine.ui().viewModel(), engine.uiConfig(game.runtime()));
+        level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
+        level3DHolder.getChildren().setAll(level3D.root());
+        animationSystem.createAnimations(engine, game.runtime(), game.session(), level3D);
+        settingsViewModel.drawModeProperty().addListener(level3D);
     }
 
     public void handleScrollEvent(ScrollEvent e) {
@@ -111,8 +143,17 @@ public class PlaySceneView3D implements Disposable {
         return animationSystem;
     }
 
+    public Optional<GameLevelView3D> optGameLevel3D() {
+        return Optional.ofNullable(level3D);
+    }
+
+    public GameLevelView3D assertLevel3D() {
+        return optGameLevel3D().orElseThrow();
+    }
+
     @Override
     public void dispose() {
+        removeLevel3D();
         if (perspectiveManager != null) {
             perspectiveManager.dispose();
             perspectiveManager = null;

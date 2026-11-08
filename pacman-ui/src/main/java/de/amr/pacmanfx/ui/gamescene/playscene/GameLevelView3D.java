@@ -11,9 +11,8 @@ import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.CommonGameSystems;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -85,32 +84,26 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
 
     private final GameViewModel viewModel;
 
-    public GameLevelView3D(GameContext game, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
+    public GameLevelView3D(GameContext game, GameLevel level, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
         requireNonNull(game);
+        this.level = requireNonNull(level);
         this.viewModel = requireNonNull(viewModel);
         this.uiConfig = requireNonNull(uiConfig);
 
-        final GameSession session = game.session();
-        this.level = session.optLevel().orElseThrow();
-
-        final WorldMap worldMap = level.worldMap();
         final House house = level.entitySet().theOne(House.class);
         final Pac pac = level.entitySet().pac();
         final List<Ghost> ghosts = level.entitySet().ghosts().toList();
-
-        final LevelCounter levelCounter = session.hud().levelCounter();
-        final LivesCounter livesCounter = session.hud().livesCounter();
-
+        final LevelCounter levelCounter = game.session().hud().levelCounter();
+        final LivesCounter livesCounter = game.session().hud().livesCounter();
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 
-        createMaze3DView(worldMap, house, colorScheme);
+        createMaze3DView(level.worldMap(), house, colorScheme);
         createFood3DViews();
         new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
         createPac3DView(game.systems(), pac, uiConfig.worldSettings().pac());
         createGhost3DViews(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
         createLevelCounter3DView(game, levelCounter);
         createLivesCounter3DView(game, livesCounter);
-
 
         composeLevel3D(pac, ghosts, livesCounter, house);
 
