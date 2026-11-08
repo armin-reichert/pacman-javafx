@@ -16,24 +16,19 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Inner class managing the fade-in animation of the play scene 3D view.
- * Darkens the background initially and gradually fades to transparent.
- */
-public class PlaySceneView3DFadeInAnimation extends ManagedAnimation {
+public class PlaySceneView3D_FadeInAnimation extends ManagedAnimation {
 
     public static final String ANIMATION_NAME = "PlayScene Fade-In Animation";
 
-    public PlaySceneView3DFadeInAnimation(Duration fadeInDuration, PlaySceneView3D view3D) {
+    public PlaySceneView3D_FadeInAnimation(Duration fadeInDuration, PlaySceneView3D view3D) {
         super(ANIMATION_NAME);
 
         requireNonNull(fadeInDuration);
         requireNonNull(view3D);
 
         setAnimationFactory(() -> new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> {
-                view3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling);
-            }),
+            new KeyFrame(Duration.ZERO,
+                _ -> view3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling)),
 
             new KeyFrame(Duration.ZERO,
                 new KeyValue(view3D.subScene().fillProperty(), Color.BLACK),

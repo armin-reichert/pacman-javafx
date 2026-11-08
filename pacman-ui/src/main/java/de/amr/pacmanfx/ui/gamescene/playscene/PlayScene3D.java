@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3DAnimations;
-import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3DFadeInAnimation;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
@@ -74,7 +74,7 @@ public class PlayScene3D extends AbstractGameScene {
         final var animations = new PlaySceneView3DAnimations();
         setComponent(PlaySceneView3DAnimations.class, animations);
 
-        final var fadeInAnimation = new PlaySceneView3DFadeInAnimation(Duration.seconds(3), view3D());
+        final var fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), view3D());
         animations.registry().register(fadeInAnimation.name(), fadeInAnimation);
 
         animationSystem = new PlayScene3DAnimationSystem(animations);
