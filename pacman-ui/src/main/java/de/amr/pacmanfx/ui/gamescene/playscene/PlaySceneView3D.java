@@ -2,12 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.view3d;
+package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.gamescene.playscene.PlaySceneView3DAnimationSystem;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
