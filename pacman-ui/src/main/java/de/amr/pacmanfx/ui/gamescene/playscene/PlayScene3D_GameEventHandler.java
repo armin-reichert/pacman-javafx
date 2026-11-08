@@ -171,7 +171,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D.replaceGameLevel3D(assertGame(), event.level());
+        playScene3D.replaceLevel3D(assertGame(), event.level());
     }
 
     @Override
@@ -184,7 +184,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
-            playScene3D.replaceGameLevel3D(assertGame(), level);
+            playScene3D.replaceLevel3D(assertGame(), level);
             playScene3D.assertView3D().animationSystem().startEnergizerPumping(level3D);
             final MessageView messageView = level.entitySet().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
@@ -287,7 +287,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onHuntingStart(GameLevelView3D level3D) {
         final GameLevel level = level3D.level();
-        playScene3D.initPac3DProperties(assertGame(), level, level.entitySet().pac());
+        playScene3D.initPac3DProperties(assertGame().systems(), level, level.entitySet().pac());
 
         playScene3D.assertView3D().animationSystem().startEnergizerPumping(level3D);
         playScene3D.assertView3D().animationSystem().startParticlesAnimation();
@@ -418,7 +418,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void handleTestState(Game3DSettingsViewModel globals3D, GameLevel level) {
         playScene3D.optView3D().flatMap(PlaySceneView3D::optGameLevel3D).ifPresent(level3D -> {
-            playScene3D.replaceGameLevel3D(assertGame(), level);
+            playScene3D.replaceLevel3D(assertGame(), level);
             final MessageView messageView = level.entitySet().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIDProperty().set(PerspectiveID.TOTAL);

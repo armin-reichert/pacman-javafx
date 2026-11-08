@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.SessionKey;
@@ -253,35 +254,36 @@ public class PlayScene3D extends AbstractGameScene {
         );
     }
 
-    public void initPac3DProperties(GameContext game, GameLevel level, Pac pac) {
+    public void initPac3DProperties(CommonGameSystems systems, GameLevel level, Pac pac) {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final PacSystems3D systems3D = game.systems().assertSystem(PacSystems3D.class);
-        systems3D.transformSystem().init(pac, level.worldMap());
-        systems3D.animationSystem().stopAnimations(pac);
-        systems3D.animationSystem().setPowerMode(pac, false);
+        final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
+        pacSystems3D.transformSystem().init(pac, level.worldMap());
+        pacSystems3D.animationSystem().stopAnimations(pac);
+        pacSystems3D.animationSystem().setPowerMode(pac, false);
     }
 
-
-    public void replaceGameLevel3D(GameContext game, GameLevel level) {
+    public void replaceLevel3D(GameContext game, GameLevel level) {
         requireNonNull(game);
         requireNonNull(level);
 
-        assertView3D().removeLevel3D();
-        assertView3D().createLevel3D(engine, game, level);
+        optView3D().ifPresent(view3D -> {
+            view3D.removeLevel3D();
+            view3D.createLevel3D(engine, game, level);
 
-        //TODO Replace by Tengen-specific view3D implementation
-        assertView3D().optGameLevel3D().ifPresent(this::addAdditional3DLevelElements);
+            //TODO Replace by Tengen-specific view3D implementation
+            addAdditional3DLevelElements(assertView3D().assertLevel3D());
 
-        //TODO Rethink this
-        final Pac pac = level.entitySet().pac();
-        initPac3DProperties(game, level, pac);
+            //TODO Rethink this
+            final Pac pac = level.entitySet().pac();
+            initPac3DProperties(game.systems(), level, pac);
 
-        // Let lives counter shapes track Pac-Man location
-        final LivesCounter livesCounter = game.session().hud().livesCounter();
-        final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
-        livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
+            // Let lives counter shapes track Pac-Man location
+            final LivesCounter livesCounter = game.session().hud().livesCounter();
+            final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
+            livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
+        });
     }
 
     /**

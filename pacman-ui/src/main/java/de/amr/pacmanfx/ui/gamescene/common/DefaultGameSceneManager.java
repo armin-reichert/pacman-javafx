@@ -166,7 +166,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
         final Pac pac = level.entitySet().pac();
 
         playScene3D.optView3D().ifPresent(view3D -> {
-            playScene3D.replaceGameLevel3D(game, level);
+            playScene3D.replaceLevel3D(game, level);
             playScene3D.replaceActionBindings(session, level);
             playScene3D.updateScoresView(game);
             view3D.initFood3D(level, true);
