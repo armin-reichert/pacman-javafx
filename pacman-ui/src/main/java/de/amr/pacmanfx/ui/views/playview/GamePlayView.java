@@ -141,7 +141,7 @@ public class GamePlayView implements GameView {
         layers.helpLayer().popupHelpInfo(new HelpInfo(engine), 2, variantName);
     }
 
-    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
+    public void replaceGameScene(AbstractGameScene currentGameScene, GameScene nextGameScene) {
         // current game scene may be NULL!
         requireNonNull(nextGameScene);
 

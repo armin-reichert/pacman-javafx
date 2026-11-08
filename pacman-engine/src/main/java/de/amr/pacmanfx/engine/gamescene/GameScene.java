@@ -47,21 +47,6 @@ public interface GameScene extends Disposable, QuitHandler {
     default void onScroll(ScrollEvent scrollEvent) {}
 
     /**
-     * Activates the scene and assigns keyboard bindings.
-     */
-    void activate();
-
-    /**
-     * Called when the scene is deactivated.
-     * Subclasses must:<br/>
-     * - unbind all properties<br/>
-     * - remove all listeners<br/>
-     * - stop all timers<br/>
-     * - release all UI references (canvas, subscene, etc.)
-     */
-    void deactivate();
-
-    /**
      * Called on each simulation frame.
      *
      * @param game the current game context

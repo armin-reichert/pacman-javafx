@@ -18,10 +18,9 @@ import de.amr.pacmanfx.engine.gamescene.GameSceneSwitchType;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
+import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -53,34 +52,36 @@ public class DefaultGameSceneManager implements GameSceneManager {
     }
 
     public void updateGameSceneWithReload(EngineUIContext engine, GameVariantUIConfig uiConfig, boolean forceReload) {
-        final GameContext currentGame = engine.optCurrentGame().orElseThrow();
-        final GameSession session = currentGame.session();
-        final boolean select3D = engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(currentGame, select3D).orElse(null);
+        if (currentGameScene() != null && !(currentGameScene() instanceof AbstractGameScene)) {
+            throw new IllegalStateException("Current game scene is no abstract game scene subclass");
+        }
+        final AbstractGameScene currentScene = (AbstractGameScene) currentGameScene();
 
-        if (nextGameScene == null) {
+        final GameContext game = engine.optCurrentGame().orElseThrow();
+        final boolean select3D = engine.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
+
+        final GameScene next = uiConfig.gameSceneConfig().selectGameScene(game, select3D).orElse(null);
+        if (next == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
-        if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
+        if (!(next instanceof AbstractGameScene nextScene)) {
             throw new IllegalStateException("Next game scene is no abstract game scene subclass");
         }
 
         nextScene.setEngine(engine);
 
-        if (nextGameScene == currentGameScene()) {
+        if (nextScene == currentScene) {
             if (!forceReload) {
                 return;
             }
             Logger.info("No game scene change but reload requested");
         }
-        nextGameScene.activate();
+        nextScene.activate();
 
-        final GamePlayView playView = engine.viewManager().gamePlayView();
-        playView.replaceGameScene(currentGameScene(), nextGameScene);
+        engine.viewManager().gamePlayView().replaceGameScene(currentScene, nextScene);
+        game.session().optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentScene, nextScene));
 
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, currentGame, currentGameScene(), nextScene));
-
-        currentGameSceneProperty().set(nextGameScene);
+        currentGameSceneProperty().set(next);
     }
 
     // --- GameSceneManager interface

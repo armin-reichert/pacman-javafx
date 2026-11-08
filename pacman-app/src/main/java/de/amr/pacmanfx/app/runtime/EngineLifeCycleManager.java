@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.engine.EngineLifecycle;
-import de.amr.pacmanfx.engine.gamescene.GameScene;
 import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -54,7 +54,11 @@ public class EngineLifeCycleManager implements EngineLifecycle {
 
     @Override
     public void endSession() {
-        engine.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::deactivate);
+        engine.gameSceneManager().optCurrentGameScene().ifPresent(current -> {
+            if (current instanceof AbstractGameScene gameScene) {
+                gameScene.deactivate();
+            }
+        });
         engine.gameSceneManager().removeCurrentGameScene();
         engine.clock().stop();
         engine.soundManager().stopAll();

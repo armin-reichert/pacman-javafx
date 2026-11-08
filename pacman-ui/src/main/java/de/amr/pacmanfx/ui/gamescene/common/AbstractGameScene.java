@@ -64,6 +64,15 @@ public abstract class AbstractGameScene extends Composition<Object>
         return assertComponent(ActionBindingsRegistry.class);
     }
 
+    public final void activate() {
+        onActivate();
+    }
+
+    public final void deactivate() {
+        onDeactivate();
+        optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
+    }
+
     // Hooks
 
     /**
@@ -120,17 +129,6 @@ public abstract class AbstractGameScene extends Composition<Object>
     }
 
     // --- Interface GameScene
-
-    @Override
-    public final void activate() {
-        onActivate();
-    }
-
-    @Override
-    public final void deactivate() {
-        onDeactivate();
-        optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
-    }
 
     @Override
     public void onInput() {
