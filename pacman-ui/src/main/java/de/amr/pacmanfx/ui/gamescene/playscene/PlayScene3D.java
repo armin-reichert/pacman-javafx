@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.playscene;
 
+import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.rendering.Renderable;
@@ -28,7 +29,6 @@ import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3D;
-import de.amr.pacmanfx.ui.gamescene.view3d.PlaySceneView3DAnimations;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.systems.PacSystems3D;
@@ -62,18 +62,17 @@ public class PlayScene3D extends AbstractGameScene {
 
     private RandomTextPicker textPicker;
 
+    private AnimationRegistry animationRegistry = new AnimationRegistry();
+
     private final PlayScene3DAnimationSystem animationSystem;
 
     public PlayScene3D() {
         setComponent(PlaySceneView3D.class, new PlaySceneView3D());
 
-        final var animations = new PlaySceneView3DAnimations();
-        setComponent(PlaySceneView3DAnimations.class, animations);
-
         final var fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), view3D());
-        animations.registry().register(fadeInAnimation.name(), fadeInAnimation);
+        animationRegistry.register(fadeInAnimation.name(), fadeInAnimation);
 
-        animationSystem = new PlayScene3DAnimationSystem(animations);
+        animationSystem = new PlayScene3DAnimationSystem(animationRegistry);
 
         gameEventHandler = new PlayScene3D_GameEventHandler(this);
     }
@@ -82,8 +81,8 @@ public class PlayScene3D extends AbstractGameScene {
         return assertComponent(PlaySceneView3D.class);
     }
 
-    public PlaySceneView3DAnimations animations3D() {
-        return assertComponent(PlaySceneView3DAnimations.class);
+    public AnimationRegistry animationRegistry() {
+        return animationRegistry;
     }
 
     @Override
@@ -113,6 +112,11 @@ public class PlayScene3D extends AbstractGameScene {
     @Override
     public void dispose() {
         super.dispose();
+
+        if (animationRegistry != null) {
+            animationRegistry.dispose();
+            animationRegistry = null;
+        }
 
         disposeContextMenu();
 
@@ -203,11 +207,11 @@ public class PlayScene3D extends AbstractGameScene {
         }
 
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animations3D().registry()));
+            level3D.ensureBonus3DViewAddedToSceneGraph(bonus, animationRegistry));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, animations3D().registry());
+        updateSystem.updateEntities(game, animationRegistry);
 
         updateScoresView(game);
 

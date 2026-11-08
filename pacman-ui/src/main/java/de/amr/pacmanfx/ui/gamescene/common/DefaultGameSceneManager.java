@@ -178,7 +178,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
             uiConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
 
-        playScene3D.animations3D().registry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME)
+        playScene3D.animationRegistry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME)
             .ifPresent(ManagedAnimation::replay);
 
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
