@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.entities3D.ghost.anim;
 
-
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 
