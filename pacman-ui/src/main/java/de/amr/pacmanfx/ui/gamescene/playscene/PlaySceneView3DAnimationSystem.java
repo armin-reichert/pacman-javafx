@@ -223,7 +223,6 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         return ghost.assertComponent(Ghost3DAnimationComp.class);
     }
 
-
     private void createEnergizerAnimations(GameLevelView3D level3D, Energizer3DSettings settings) {
         final int pumpingFrequency = settings.pumpingFrequency();
         final double inflatedSize = settings.scalingInflated();
