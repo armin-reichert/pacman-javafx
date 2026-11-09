@@ -76,7 +76,7 @@ public class DefaultGameSceneManager implements GameSceneManager {
             }
             Logger.info("No game scene change but reload requested");
         }
-        nextScene.activate();
+        nextScene.activate(game);
 
         engine.viewManager().gamePlayView().replaceGameScene(currentScene, nextScene);
         game.session().optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentScene, nextScene));

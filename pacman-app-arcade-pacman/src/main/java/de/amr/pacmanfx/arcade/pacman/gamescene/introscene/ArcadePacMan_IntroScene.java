@@ -57,7 +57,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings()); // insert coin + start game actions
         actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings()); // actions for starting tests
 
@@ -65,7 +65,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     @Override
-    public void onDeactivate() {
+    public void onDeactivate(GameContext game) {
         view.pulse.stop();
         engine().soundManager().voice().stop();
     }

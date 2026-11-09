@@ -105,7 +105,7 @@ public class PlayScene3D extends AbstractGameScene {
     // GameScene interface
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         final Game3DSettingsViewModel settings3D = engine.ui().viewModel().common3DSettings();
 
         assertView3D().perspectiveManager().activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
@@ -113,37 +113,33 @@ public class PlayScene3D extends AbstractGameScene {
 
         registerActionBindings();
 
-        engine.optCurrentGame().ifPresent(game -> {
-            pacEatingEventHandler = new PacEatingEventHandler(game);
-            pacPowerEventHandler  = new PacPowerEventHandler(game);
-            game.eventManager().addSubscriber(pacEatingEventHandler);
-            game.eventManager().addSubscriber(pacPowerEventHandler);
-        });
+        pacEatingEventHandler = new PacEatingEventHandler(game);
+        pacPowerEventHandler  = new PacPowerEventHandler(game);
+        game.eventManager().addSubscriber(pacEatingEventHandler);
+        game.eventManager().addSubscriber(pacPowerEventHandler);
     }
 
     @Override
-    public void onDeactivate() {
+    public void onDeactivate(GameContext game) {
         assertView3D().perspectiveManager().activeIDProperty().unbind();
 
         disposeContextMenu();
 
         // Remove actor 3D view components
-        engine.optCurrentGame().ifPresent(game -> {
-            game.session().optLevel().ifPresent(level -> {
-                level.entitySet().pac().removeComponent(PacView3D.class);
-                level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
-                level.entitySet().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
-            });
-
-            if (pacEatingEventHandler != null) {
-                game.eventManager().removeSubscriber(pacEatingEventHandler);
-                pacEatingEventHandler = null;
-            }
-            if (pacPowerEventHandler != null) {
-                game.eventManager().removeSubscriber(pacPowerEventHandler);
-                pacPowerEventHandler = null;
-            }
+        game.session().optLevel().ifPresent(level -> {
+            level.entitySet().pac().removeComponent(PacView3D.class);
+            level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
+            level.entitySet().anyOfType(Bonus.class).ifPresent(bonus -> bonus.removeComponent(BonusView3D.class));
         });
+
+        if (pacEatingEventHandler != null) {
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            pacEatingEventHandler = null;
+        }
+        if (pacPowerEventHandler != null) {
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacPowerEventHandler = null;
+        }
     }
 
     @Override
@@ -223,9 +219,11 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onQuit() {
-        onDeactivate();
-        engine.soundManager().setEnabled(false);
-        engine.optCurrentGame().ifPresent(game -> game.flow().enterGameState(game, CommonGameStateID.GAME_OVER));
+        engine.optCurrentGame().ifPresent(game -> {
+            onDeactivate(game);
+            engine.soundManager().setEnabled(false);
+            game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);
+        });
     }
 
     @Override

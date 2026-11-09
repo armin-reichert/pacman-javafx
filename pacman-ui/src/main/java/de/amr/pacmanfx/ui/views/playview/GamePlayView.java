@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -145,11 +146,13 @@ public class GamePlayView implements GameView {
         // current game scene may be NULL!
         requireNonNull(nextGameScene);
 
+        final GameContext game = engine.optCurrentGame().orElseThrow();
+
         if (currentGameScene != null) {
-            currentGameScene.deactivate();
+            currentGameScene.deactivate(game);
         }
 
-        nextGameScene.onBeforeEmbedded(engine.optCurrentGame().orElseThrow());
+        nextGameScene.onBeforeEmbedded(game);
 
         final GameVariantRuntime runtime = engine.gameVariantManager().currentRuntime();
         layers.gameSceneLayer().embedGameScene(engine.ui(), engine.uiConfig(runtime), (AbstractGameScene) nextGameScene);

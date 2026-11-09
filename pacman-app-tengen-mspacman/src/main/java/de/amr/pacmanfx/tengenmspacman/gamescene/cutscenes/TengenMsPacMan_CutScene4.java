@@ -77,7 +77,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction<EngineUIContext> quitAction = CommonGameActions.instance().gameFlowActions().actionLetGameStateExpire();
 
@@ -87,7 +87,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     }
     
     @Override
-    public void onDeactivate() {
+    public void onDeactivate(GameContext game) {
         stopMusic();
     }
 

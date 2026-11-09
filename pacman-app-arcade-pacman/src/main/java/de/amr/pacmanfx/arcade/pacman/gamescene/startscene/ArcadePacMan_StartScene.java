@@ -39,12 +39,12 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         actionBindingsRegistry().registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
     }
 
     @Override
-    public void onDeactivate() {
+    public void onDeactivate(GameContext game) {
         engine().soundManager().voice().stop();
     }
 

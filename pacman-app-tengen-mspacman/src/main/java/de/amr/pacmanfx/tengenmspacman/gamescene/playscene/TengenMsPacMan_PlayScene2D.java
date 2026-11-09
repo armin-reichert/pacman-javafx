@@ -147,41 +147,37 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         view2D().setClipRect(CLIP_RECT);
-        engine.optCurrentGame().ifPresent(game -> {
-            final GameSession session = game.session();
-            final HUD hud = session.hud();
 
-            hud.gameScore().show();
-            hud.levelCounter().show();
-            hud.livesCounter().show();
-            session.store(SessionKey.HUD_VISIBLE, true);
+        final GameSession session = game.session();
+        final HUD hud = session.hud();
 
-            pacEatingEventHandler = new PacEatingEventHandler(game);
-            pacPowerEventHandler = new PacPowerEventHandler(game);
-            game.eventManager().addSubscriber(pacEatingEventHandler);
-            game.eventManager().addSubscriber(pacPowerEventHandler);
+        hud.gameScore().show();
+        hud.levelCounter().show();
+        hud.livesCounter().show();
+        session.store(SessionKey.HUD_VISIBLE, true);
 
-        });
+        pacEatingEventHandler = new PacEatingEventHandler(game);
+        pacPowerEventHandler = new PacPowerEventHandler(game);
+        game.eventManager().addSubscriber(pacEatingEventHandler);
+        game.eventManager().addSubscriber(pacPowerEventHandler);
     }
 
     @Override
-    public void onDeactivate() {
+    public void onDeactivate(GameContext game) {
         view2D().setClipRect(null);
-        engine.optCurrentGame().ifPresent(game -> {
-            levelCompletedAnimation = null;
-            if (pacEatingEventHandler != null) {
-                game.eventManager().removeSubscriber(pacEatingEventHandler);
-                pacEatingEventHandler = null;
-            }
-            if (pacPowerEventHandler != null) {
-                game.eventManager().removeSubscriber(pacPowerEventHandler);
-                pacPowerEventHandler = null;
-            }
-        });
+        levelCompletedAnimation = null;
+        if (pacEatingEventHandler != null) {
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            pacEatingEventHandler = null;
+        }
+        if (pacPowerEventHandler != null) {
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacPowerEventHandler = null;
+        }
     }
 
     @Override
@@ -199,7 +195,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     @Override
     public void onQuit() {
         engine.optCurrentGame().ifPresent(game -> {
-            onDeactivate();
+            onDeactivate(game);
             game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }

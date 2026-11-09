@@ -113,30 +113,26 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    protected void onActivate() {
-        engine.optCurrentGame().ifPresent(game -> {
-            levelCompletedAnimation = new LevelCompletedAnimation();
-            levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
-            pacEatingEventHandler = new PacEatingEventHandler(game);
-            pacPowerEventHandler = new  PacPowerEventHandler(game);
-            game.eventManager().addSubscriber(pacEatingEventHandler);
-            game.eventManager().addSubscriber(pacPowerEventHandler);
-        });
+    protected void onActivate(GameContext game) {
+        levelCompletedAnimation = new LevelCompletedAnimation();
+        levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
+        pacEatingEventHandler = new PacEatingEventHandler(game);
+        pacPowerEventHandler = new  PacPowerEventHandler(game);
+        game.eventManager().addSubscriber(pacEatingEventHandler);
+        game.eventManager().addSubscriber(pacPowerEventHandler);
     }
 
     @Override
-    protected void onDeactivate() {
-        engine.optCurrentGame().ifPresent(game -> {
-            levelCompletedAnimation = null;
-            if (pacEatingEventHandler != null) {
-                game.eventManager().removeSubscriber(pacEatingEventHandler);
-                pacEatingEventHandler = null;
-            }
-            if (pacPowerEventHandler != null) {
-                game.eventManager().removeSubscriber(pacPowerEventHandler);
-                pacPowerEventHandler = null;
-            }
-        });
+    protected void onDeactivate(GameContext game) {
+        levelCompletedAnimation = null;
+        if (pacEatingEventHandler != null) {
+            game.eventManager().removeSubscriber(pacEatingEventHandler);
+            pacEatingEventHandler = null;
+        }
+        if (pacPowerEventHandler != null) {
+            game.eventManager().removeSubscriber(pacPowerEventHandler);
+            pacPowerEventHandler = null;
+        }
     }
 
     @Override
@@ -148,7 +144,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
     @Override
     public void onQuit() {
         engine.optCurrentGame().ifPresent(game -> {
-            onDeactivate();
+            onDeactivate(game);
             // Avoid game over sound being played
             engine.soundManager().setEnabled(false);
             game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);

@@ -97,17 +97,15 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
-        engine().optCurrentGame().ifPresent(game -> {
-            final var actions = TengenMsPacMan_Actions.instance();
-            actionBindingsRegistry().selectAnyMatchingBinding(
-                actions.actionEnterStartScreen(), actions.localBindings(engine.input().joypad()));
+    public void onActivate(GameContext game) {
+        final var actions = TengenMsPacMan_Actions.instance();
+        actionBindingsRegistry().selectAnyMatchingBinding(
+            actions.actionEnterStartScreen(), actions.localBindings(engine.input().joypad()));
 
-            fadeProgress = 0;
-            displayMode = DisplayMode.ORIGINAL_AUTHORS;
+        fadeProgress = 0;
+        displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
-            game.session().store(SessionKey.HUD_VISIBLE, false);
-        });
+        game.session().store(SessionKey.HUD_VISIBLE, false);
     }
 
     @Override

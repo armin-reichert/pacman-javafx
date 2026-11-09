@@ -56,7 +56,7 @@ public class EngineLifeCycleManager implements EngineLifecycle {
     public void endSession() {
         engine.gameSceneManager().optCurrentGameScene().ifPresent(current -> {
             if (current instanceof AbstractGameScene gameScene) {
-                gameScene.deactivate();
+                engine.optCurrentGame().ifPresent(gameScene::deactivate);
             }
         });
         engine.gameSceneManager().removeCurrentGameScene();

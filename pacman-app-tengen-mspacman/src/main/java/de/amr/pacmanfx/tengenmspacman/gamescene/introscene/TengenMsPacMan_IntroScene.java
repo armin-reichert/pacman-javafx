@@ -120,30 +120,28 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
-        engine().optCurrentGame().ifPresent(game -> {
-            game.session().store(SessionKey.HUD_VISIBLE, false);
-            spriteSheet = TengenMsPacMan_SpriteSheet.instance();
+    public void onActivate(GameContext game) {
+        game.session().store(SessionKey.HUD_VISIBLE, false);
+        spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-            final Joypad joypad = engine.input().joypad();
-            final var tengenActions = TengenMsPacMan_Actions.instance();
-            actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionEnterStartScreen(), tengenActions.localBindings(joypad));
-            actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionToggleJoypadBindingsDisplayed(), tengenActions.localBindings(joypad));
+        final Joypad joypad = engine.input().joypad();
+        final var tengenActions = TengenMsPacMan_Actions.instance();
+        actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionEnterStartScreen(), tengenActions.localBindings(joypad));
+        actionBindingsRegistry().selectAnyMatchingBinding(tengenActions.actionToggleJoypadBindingsDisplayed(), tengenActions.localBindings(joypad));
 
-            final List<GhostSettings> ghostSettings = uiConfig().worldSettings().ghosts();
-            ghostColors = Stream.of(
-                    GhostPersonality.RED_GHOST_SHADOW,
-                    GhostPersonality.PINK_GHOST_SPEEDY,
-                    GhostPersonality.CYAN_GHOST_BASHFUL,
-                    GhostPersonality.ORANGE_GHOST_POKEY)
-                .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
-                .toArray(Color[]::new);
+        final List<GhostSettings> ghostSettings = uiConfig().worldSettings().ghosts();
+        ghostColors = Stream.of(
+                GhostPersonality.RED_GHOST_SHADOW,
+                GhostPersonality.PINK_GHOST_SPEEDY,
+                GhostPersonality.CYAN_GHOST_BASHFUL,
+                GhostPersonality.ORANGE_GHOST_POKEY)
+            .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
+            .toArray(Color[]::new);
 
-            createTengenPresentsSubSceneContent();
-            createMarqueeSubSceneContent();
+        createTengenPresentsSubSceneContent();
+        createMarqueeSubSceneContent();
 
-            flow.restartState(this, SceneState.PRESENTING_GAME);
-        });
+        flow.restartState(this, SceneState.PRESENTING_GAME);
     }
 
     @Override

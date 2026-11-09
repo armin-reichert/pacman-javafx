@@ -8,7 +8,6 @@ import de.amr.basics.Composition;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.QuitHandler;
@@ -65,12 +64,12 @@ public abstract class AbstractGameScene extends Composition<Object>
         return assertComponent(ActionBindingsRegistry.class);
     }
 
-    public final void activate() {
-        onActivate();
+    public final void activate(GameContext game) {
+        onActivate(game);
     }
 
-    public final void deactivate() {
-        onDeactivate();
+    public final void deactivate(GameContext game) {
+        onDeactivate(game);
         optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::stopAll);
     }
 
@@ -84,12 +83,12 @@ public abstract class AbstractGameScene extends Composition<Object>
     /**
      * Hook method called when the game scene becomes the current scene
      */
-    protected void onActivate() {}
+    protected void onActivate(GameContext game) {}
 
     /**
      * Hook method called when the game scene is no longer the current scene.
      */
-    protected void onDeactivate() {}
+    protected void onDeactivate(GameContext game) {}
 
     /**
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
@@ -140,6 +139,6 @@ public abstract class AbstractGameScene extends Composition<Object>
 
     @Override
     public void onQuit() {
-        deactivate();
+        engine.optCurrentGame().ifPresent(this::deactivate);
     }
 }

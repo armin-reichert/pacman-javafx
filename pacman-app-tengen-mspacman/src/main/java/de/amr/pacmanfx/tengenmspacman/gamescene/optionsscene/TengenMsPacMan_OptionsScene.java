@@ -155,24 +155,22 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
-        engine().optCurrentGame().ifPresent(game -> {
-            final GameSession session = game.session();
-            session.store(SessionKey.HUD_VISIBLE, false);
+    public void onActivate(GameContext game) {
+        final GameSession session = game.session();
+        session.store(SessionKey.HUD_VISIBLE, false);
 
-            final var actions = TengenMsPacMan_Actions.instance();
-            final Joypad joypad = engine.input().joypad();
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings(joypad));
-            actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings(joypad));
-            actionBindingsRegistry().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-            actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
+        final var actions = TengenMsPacMan_Actions.instance();
+        final Joypad joypad = engine.input().joypad();
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings(joypad));
+        actionBindingsRegistry().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings(joypad));
+        actionBindingsRegistry().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
+        actionBindingsRegistry().registerAllBindings(CommonGameActions.instance().sceneTestActions().bindings());
 
-            selectedOption.set(PlayOption.PAC_BOOSTER);
-            gameOptionValues(session).setCanStartNewGame(true);
+        selectedOption.set(PlayOption.PAC_BOOSTER);
+        gameOptionValues(session).setCanStartNewGame(true);
 
-            idleTicks = 0;
-            initialDelay = INITIAL_DELAY;
-        });
+        idleTicks = 0;
+        initialDelay = INITIAL_DELAY;
     }
 
     @Override

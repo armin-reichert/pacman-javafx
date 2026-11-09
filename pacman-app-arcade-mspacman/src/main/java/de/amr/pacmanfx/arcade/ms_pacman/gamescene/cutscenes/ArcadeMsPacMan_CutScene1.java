@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(GameContext game) {
         initScene();
         setState(SceneState.CLAPPERBOARD, 120);
     }
