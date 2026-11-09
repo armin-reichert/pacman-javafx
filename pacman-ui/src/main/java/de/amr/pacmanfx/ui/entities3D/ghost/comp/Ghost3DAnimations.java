@@ -5,17 +5,15 @@ import de.amr.basics.ecs.Resettable;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostBrakeAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostDressAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.GhostFlashingAnimation3D;
+import de.amr.pacmanfx.ui.entities3D.ghost.anim.*;
 
-public class Ghost3DAnimationComp implements Disposable, Resettable {
+public class Ghost3DAnimations implements Disposable, Resettable {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;
     private ManagedAnimation braking;
 
-    public Ghost3DAnimationComp() {}
+    public Ghost3DAnimations() {}
 
     @Override
     public void dispose() {
@@ -43,14 +41,14 @@ public class Ghost3DAnimationComp implements Disposable, Resettable {
         GhostSettings settings,
         int numFlashes)
     {
-        flashing = new GhostFlashingAnimation3D(ghost, settings, numFlashes);
-        animationRegistry.register("Ghost.%s.flashing".formatted(ghost.name()), flashing);
+        flashing = new Ghost3DFlashingAnimation(ghost, settings, numFlashes);
+        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.FLASHING, ghost.personality()), flashing);
 
-        dressMovement = new GhostDressAnimation3D(ghost);
-        animationRegistry.register("Ghost.%s.dressMovement".formatted(ghost.name()), dressMovement);
+        dressMovement = new Ghost3DDressAnimation(ghost);
+        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.DRESS, ghost.personality()), dressMovement);
 
-        braking = new GhostBrakeAnimation3D(ghost);
-        animationRegistry.register("Ghost.%s.braking".formatted(ghost.name()), braking);
+        braking = new Ghost3DBrakeAnimation(ghost);
+        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.BRAKING, ghost.personality()), braking);
     }
 
     @Override

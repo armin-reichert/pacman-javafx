@@ -69,7 +69,7 @@ public class GhostView3DSystem {
 
     private void setAppearance(Ghost ghost, GhostAppearance appearance) {
         final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
-        final Ghost3DAnimationComp animation3D = ghost.assertComponent(Ghost3DAnimationComp.class);
+        final Ghost3DAnimations animation3D = ghost.assertComponent(Ghost3DAnimations.class);
 
         view3D.setAppearance(appearance);
         switch (appearance) {

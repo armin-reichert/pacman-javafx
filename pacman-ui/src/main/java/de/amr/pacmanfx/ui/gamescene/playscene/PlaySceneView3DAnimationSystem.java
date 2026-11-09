@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
@@ -212,15 +212,15 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
-        final Ghost3DAnimationComp anim3D = ensureGhostAnim3DExists(ghost);
+        final Ghost3DAnimations anim3D = ensureGhostAnim3DExists(ghost);
         anim3D.build(registry, ghost, settings, numFlashes);
     }
 
-    private Ghost3DAnimationComp ensureGhostAnim3DExists(Ghost ghost) {
-        if (!ghost.hasComponent(Ghost3DAnimationComp.class)) {
-            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+    private Ghost3DAnimations ensureGhostAnim3DExists(Ghost ghost) {
+        if (!ghost.hasComponent(Ghost3DAnimations.class)) {
+            ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
         }
-        return ghost.assertComponent(Ghost3DAnimationComp.class);
+        return ghost.assertComponent(Ghost3DAnimations.class);
     }
 
     private void createEnergizerAnimations(GameLevelView3D level3D, Energizer3DSettings settings) {

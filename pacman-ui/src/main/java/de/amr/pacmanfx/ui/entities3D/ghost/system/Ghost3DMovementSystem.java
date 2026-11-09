@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.ghost.system;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 
 public class Ghost3DMovementSystem {
@@ -37,7 +37,7 @@ public class Ghost3DMovementSystem {
         view3D.facingRotate().setAngle(angle);
 
         if (ghost.worldNavigation().info().tunnelEntered) {
-            ghost.assertComponent(Ghost3DAnimationComp.class).braking().replay();
+            ghost.assertComponent(Ghost3DAnimations.class).braking().replay();
         }
     }
 }

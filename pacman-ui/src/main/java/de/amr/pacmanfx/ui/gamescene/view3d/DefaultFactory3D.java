@@ -70,7 +70,7 @@ public class DefaultFactory3D implements Factory3D {
                 settings,
                 model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
             ghost.setComponent(GhostView3D.class, view3D);
-            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+            ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
 
             final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
             view3D.setAppearanceMaterialSet(materialSet);

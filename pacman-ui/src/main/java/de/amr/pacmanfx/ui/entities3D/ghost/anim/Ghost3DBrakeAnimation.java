@@ -15,11 +15,11 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class GhostBrakeAnimation3D extends ManagedAnimation {
+public class Ghost3DBrakeAnimation extends ManagedAnimation {
 
     private final Ghost ghost;
 
-    public GhostBrakeAnimation3D(Ghost ghost) {
+    public Ghost3DBrakeAnimation(Ghost ghost) {
         super("Ghost Braking (%s)".formatted(ghost.name()));
         this.ghost = ghost;
         setAnimationFactory(this::createAnimationFX);

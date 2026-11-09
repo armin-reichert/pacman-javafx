@@ -15,13 +15,13 @@ import javafx.util.Duration;
 /**
  * Rotates the ghost dress back and forth.
  */
-public class GhostDressAnimation3D extends ManagedAnimation {
+public class Ghost3DDressAnimation extends ManagedAnimation {
 
     private static final float DRESS_MOVEMENT_ANGLE = 30;
 
     private static final float FULL_CYCLE_SEC = 0.8f;
 
-    public GhostDressAnimation3D(Ghost ghost) {
+    public Ghost3DDressAnimation(Ghost ghost) {
         super("Ghost Dress Animation (%s)".formatted(ghost.name()));
         setAnimationFactory(() -> {
             final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
