@@ -2,10 +2,11 @@ package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ecs.Resettable;
-import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.*;
+import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DBrakeAnimation;
+import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DDressAnimation;
+import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DFlashingAnimation;
 
 public class Ghost3DAnimations implements Disposable, Resettable {
 
@@ -35,20 +36,23 @@ public class Ghost3DAnimations implements Disposable, Resettable {
         return flashing;
     }
 
-    public void build(
-        AnimationRegistry animationRegistry,
+    public ManagedAnimation dressMovement() {
+        return dressMovement;
+    }
+
+    public ManagedAnimation braking() {
+        return braking;
+    }
+
+
+    public void createAnimations(
         Ghost ghost,
         GhostSettings settings,
         int numFlashes)
     {
         flashing = new Ghost3DFlashingAnimation(ghost, settings, numFlashes);
-        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.FLASHING, ghost.personality()), flashing);
-
         dressMovement = new Ghost3DDressAnimation(ghost);
-        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.DRESS, ghost.personality()), dressMovement);
-
         braking = new Ghost3DBrakeAnimation(ghost);
-        animationRegistry.register(new Ghost3DAnimationKey(Ghost3DAnimationID.BRAKING, ghost.personality()), braking);
     }
 
     @Override
@@ -59,10 +63,6 @@ public class Ghost3DAnimations implements Disposable, Resettable {
         if (dressMovement != null) {
             dressMovement.stop();
         }
-    }
-
-    public ManagedAnimation braking() {
-        return braking;
     }
 
     public void lookNormal() {

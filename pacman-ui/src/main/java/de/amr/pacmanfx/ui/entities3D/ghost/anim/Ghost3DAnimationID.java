@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import static java.util.Objects.requireNonNull;
 
 public enum Ghost3DAnimationID implements Named {
-    BRAKING, DRESS, FLASHING;
+    BRAKING, DRESS_MOVEMENT, FLASHING;
 
     public Ghost3DAnimationKey key(Ghost ghost) {
         requireNonNull(ghost);

@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -212,11 +213,14 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
-        final Ghost3DAnimations anim3D = ensureGhostAnim3DExists(ghost);
-        anim3D.build(registry, ghost, settings, numFlashes);
+        final Ghost3DAnimations animationComponent = ensureGhost3DAnimationComponentExists(ghost);
+        animationComponent.createAnimations(ghost, settings, numFlashes);
+        registry.register(Ghost3DAnimationID.FLASHING.key(ghost), animationComponent.flashing());
+        registry.register(Ghost3DAnimationID.DRESS_MOVEMENT.key(ghost), animationComponent.dressMovement());
+        registry.register(Ghost3DAnimationID.BRAKING.key(ghost), animationComponent.braking());
     }
 
-    private Ghost3DAnimations ensureGhostAnim3DExists(Ghost ghost) {
+    private Ghost3DAnimations ensureGhost3DAnimationComponentExists(Ghost ghost) {
         if (!ghost.hasComponent(Ghost3DAnimations.class)) {
             ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
         }
