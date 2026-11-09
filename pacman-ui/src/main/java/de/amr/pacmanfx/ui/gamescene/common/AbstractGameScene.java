@@ -78,7 +78,17 @@ public abstract class AbstractGameScene extends Composition<Object>
     /**
      * Hook method called when the game scene gets the engine reference.
      */
-    protected void onEngineConnected() {}
+    protected void onEngineConnected(EngineUIContext engine) {}
+
+    /**
+     * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
+     * but it gets called when the 3D->2D scene switch happens.
+     */
+    public void onGameLevelConnected(GameContext game, GameLevel level) {
+        final Vector2i terrainSizeInPixel = level.worldMap().terrainLayer().sizeInPixel();
+        view2D().unscaledWidthProperty().set(terrainSizeInPixel.x());
+        view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
+    }
 
     /**
      * Hook method called when the game scene becomes the current scene
@@ -89,16 +99,6 @@ public abstract class AbstractGameScene extends Composition<Object>
      * Hook method called when the game scene is no longer the current scene.
      */
     protected void onDeactivate(GameContext game) {}
-
-    /**
-     * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
-     * but it gets called when the 3D->2D scene switch happens.
-     */
-    public void acceptGameLevel(GameContext game, GameLevel level) {
-        final Vector2i terrainSizeInPixel = level.worldMap().terrainLayer().sizeInPixel();
-        view2D().unscaledWidthProperty().set(terrainSizeInPixel.x());
-        view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());
-    }
 
     // Accessors
 
@@ -113,7 +113,8 @@ public abstract class AbstractGameScene extends Composition<Object>
             return;
         }
         this.engine = engine;
-        onEngineConnected();
+
+        onEngineConnected(engine);
         Logger.info("Game scene {} connected with engine", getClass().getSimpleName());
 
         // Can only be done after engine has been connected!

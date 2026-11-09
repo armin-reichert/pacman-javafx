@@ -101,7 +101,7 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        gameScene.acceptGameLevel(e.game(), e.level());
+        gameScene.onGameLevelConnected(e.game(), e.level());
     }
 
     @Override

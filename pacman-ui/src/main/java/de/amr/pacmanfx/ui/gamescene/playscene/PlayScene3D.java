@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -91,7 +92,7 @@ public class PlayScene3D extends AbstractGameScene {
     // Hook methods
 
     @Override
-    protected void onEngineConnected() {
+    protected void onEngineConnected(EngineUIContext engine) {
         final GameViewModel viewModel = engine.ui().viewModel();
 
         final PlaySceneView3D view3D = new PlaySceneView3D(viewModel.common3DSettings());
@@ -202,7 +203,7 @@ public class PlayScene3D extends AbstractGameScene {
     }
 
     @Override
-    public void acceptGameLevel(GameContext game, GameLevel level) {
+    public void onGameLevelConnected(GameContext game, GameLevel level) {
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects
             -> soundEffects.setEnabled(!game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)));
     }

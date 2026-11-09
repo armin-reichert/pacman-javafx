@@ -188,11 +188,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        engine.optCurrentGame().ifPresent(game -> game.session().optLevel().ifPresent(level -> acceptGameLevel(game, level)));
+        engine.optCurrentGame().ifPresent(game -> game.session().optLevel().ifPresent(level -> onGameLevelConnected(game, level)));
     }
 
     @Override
-    public void acceptGameLevel(GameContext game, GameLevel level) {
+    public void onGameLevelConnected(GameContext game, GameLevel level) {
         // Custom maps can have arbitrary sizes, so adapt scene size here
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         view2D().unscaledWidthProperty().set(terrainSize.x());

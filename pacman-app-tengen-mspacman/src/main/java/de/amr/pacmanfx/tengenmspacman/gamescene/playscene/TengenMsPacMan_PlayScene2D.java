@@ -41,6 +41,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.ColorSchemedMapSprite;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.animation.FlashingState;
@@ -106,7 +107,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    protected void onEngineConnected() {
+    protected void onEngineConnected(EngineUIContext engine) {
         final Game2DSettingsViewModel settings = engine.ui().viewModel().common2DSettings();
         rootPane.backgroundProperty().bind(settings.canvasBackgroundColorProperty().map(Background::fill));
     }
@@ -142,7 +143,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             hud.livesCounter().show();
             session.store(SessionKey.HUD_VISIBLE, true);
 
-            session.optLevel().ifPresent(level -> acceptGameLevel(game, level));
+            session.optLevel().ifPresent(level -> onGameLevelConnected(game, level));
         });
     }
 
@@ -233,7 +234,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     @Override
-    public void acceptGameLevel(GameContext game, GameLevel level) {
+    public void onGameLevelConnected(GameContext game, GameLevel level) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();

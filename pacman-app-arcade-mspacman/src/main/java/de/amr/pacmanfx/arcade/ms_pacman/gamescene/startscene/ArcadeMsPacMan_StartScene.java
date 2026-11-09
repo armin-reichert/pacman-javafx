@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
@@ -55,7 +56,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     }
 
     @Override
-    protected void onEngineConnected() {
+    protected void onEngineConnected(EngineUIContext engine) {
         final AssetMap assets = uiConfig().assets();
 
         msPacManImageView = new ImageView();
