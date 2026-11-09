@@ -14,7 +14,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.SessionKey;
 import de.amr.pacmanfx.core.entities.world.Energizer;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
@@ -79,7 +78,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        final GameContext game = engine().optCurrentGame().orElse(null);
+        final GameContext game = engine.optCurrentGame().orElse(null);
         if (game == null) {
             return Stream.empty();
         }
@@ -115,7 +114,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onActivate() {
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = new LevelCompletedAnimation();
             levelCompletedAnimation.setOnFinished(() -> game.state().triggerTimeout());
             pacEatingEventHandler = new PacEatingEventHandler(game);
@@ -127,7 +126,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onDeactivate() {
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
             if (pacEatingEventHandler != null) {
                 game.eventManager().removeSubscriber(pacEatingEventHandler);
@@ -148,10 +147,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onQuit() {
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             onDeactivate();
             // Avoid game over sound being played
-            engine().soundManager().setEnabled(false);
+            engine.soundManager().setEnabled(false);
             game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
     }
@@ -162,9 +161,9 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         final var menuItems = new ArrayList<MenuItem>();
 
-        engine().optCurrentGame().ifPresent(game -> {
-            addLocalizedTitleItem(menuItems, engine().translationManager(), "context_menu.pacman");
-            addLocalizedCheckBox(menuItems, engine().translationManager(),
+        engine.optCurrentGame().ifPresent(game -> {
+            addLocalizedTitleItem(menuItems, engine.translationManager(), "context_menu.pacman");
+            addLocalizedCheckBox(menuItems, engine.translationManager(),
                 game.session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
@@ -173,7 +172,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                     runAction(cheatActions.actionDeactivateAutopilot(), engine());
                 }
             });
-            addLocalizedCheckBox(menuItems, engine().translationManager(),
+            addLocalizedCheckBox(menuItems, engine.translationManager(),
                 game.session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
                 final var checkBox = (CheckMenuItem) e.getSource();
                 if (checkBox.isSelected()) {
@@ -183,8 +182,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 }
             });
             addSeparator(menuItems);
-            addLocalizedCheckBox(menuItems, engine().translationManager(), engine.ui().viewModel().muteProperty(), "context_menu.muted");
-            addLocalizedActionItem(engine(), menuItems, engine().translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addLocalizedCheckBox(menuItems, engine.translationManager(), engine.ui().viewModel().muteProperty(), "context_menu.muted");
+            addLocalizedActionItem(engine, menuItems, engine.translationManager(), CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
 
         });
 
@@ -193,14 +192,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        engine().optCurrentGame().ifPresent(game -> {
-            final GameSession session = game.session();
-            session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
-        });
+        engine.optCurrentGame().ifPresent(game -> game.session().optLevel().ifPresent(level -> acceptGameLevel(game, level)));
     }
 
     @Override
-    public void onAcceptGameLevel(GameSession session, GameLevel level) {
+    public void acceptGameLevel(GameContext game, GameLevel level) {
         // Custom maps can have arbitrary sizes, so adapt scene size here
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         view2D().unscaledWidthProperty().set(terrainSize.x());
@@ -208,16 +204,16 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         // Action bindings (demo level, normal level)
         final var bindingsRegistry = actionBindingsRegistry();
-        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
+        if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             bindingsRegistry.registerAllBindings(Arcade_Actions.instance().gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
-            engine().soundManager().setEnabled(false);
+            engine.soundManager().setEnabled(false);
         }
         else {
             bindingsRegistry.registerAllBindings(CommonGameActions.instance().steeringActions().bindings());
             bindingsRegistry.registerAllBindings(CommonGameActions.instance().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
-            engine().soundManager().setEnabled(true);
+            engine.soundManager().setEnabled(true);
         }
         Logger.info(bindingsRegistry);
 

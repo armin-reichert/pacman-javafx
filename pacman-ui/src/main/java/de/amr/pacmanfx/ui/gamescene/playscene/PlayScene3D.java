@@ -113,7 +113,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         registerActionBindings();
 
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             pacEatingEventHandler = new PacEatingEventHandler(game);
             pacPowerEventHandler  = new PacPowerEventHandler(game);
             game.eventManager().addSubscriber(pacEatingEventHandler);
@@ -128,7 +128,7 @@ public class PlayScene3D extends AbstractGameScene {
         disposeContextMenu();
 
         // Remove actor 3D view components
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             game.session().optLevel().ifPresent(level -> {
                 level.entitySet().pac().removeComponent(PacView3D.class);
                 level.entitySet().ghosts().forEach(ghost -> ghost.removeComponent(GhostView3D.class));
@@ -202,10 +202,13 @@ public class PlayScene3D extends AbstractGameScene {
 
         view3D.perspectiveManager().updatePerspective(level);
 
-        optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> {
-            soundEffects.setEnabled(!session.booleanValue(SessionKey.DEMO_LEVEL_MODE));
-            soundEffects.playAmbientGameLevelSound(game, level);
-        });
+        optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> soundEffects.playAmbientGameLevelSound(game, level));
+    }
+
+    @Override
+    public void acceptGameLevel(GameContext game, GameLevel level) {
+        optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects
+            -> soundEffects.setEnabled(!game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)));
     }
 
     @Override
@@ -221,8 +224,8 @@ public class PlayScene3D extends AbstractGameScene {
     @Override
     public void onQuit() {
         onDeactivate();
-        engine().soundManager().setEnabled(false);
-        engine().optCurrentGame().ifPresent(game -> game.flow().enterGameState(game, CommonGameStateID.GAME_OVER));
+        engine.soundManager().setEnabled(false);
+        engine.optCurrentGame().ifPresent(game -> game.flow().enterGameState(game, CommonGameStateID.GAME_OVER));
     }
 
     @Override

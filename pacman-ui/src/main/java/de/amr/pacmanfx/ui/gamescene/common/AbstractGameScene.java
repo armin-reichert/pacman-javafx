@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Composition;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -94,7 +95,7 @@ public abstract class AbstractGameScene extends Composition<Object>
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
      * but it gets called when the 3D->2D scene switch happens.
      */
-    public void onAcceptGameLevel(GameSession session, GameLevel level) {
+    public void acceptGameLevel(GameContext game, GameLevel level) {
         final Vector2i terrainSizeInPixel = level.worldMap().terrainLayer().sizeInPixel();
         view2D().unscaledWidthProperty().set(terrainSizeInPixel.x());
         view2D().unscaledHeightProperty().set(terrainSizeInPixel.y());

@@ -62,22 +62,18 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameScene.engine().optCurrentGame().ifPresent(game -> {
-            //TODO Does not belong here
-            final ActorSpriteAnimController animController = game.systems().actorSpriteAnimController();
-            game.session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
-        });
+        //TODO Does not belong here
+        final ActorSpriteAnimController animController = e.game().systems().actorSpriteAnimController();
+        e.game().session().optLevel().ifPresent(level -> ActorAnimationSystem.resetActorAnimations(animController, level));
     }
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        gameScene.engine().optCurrentGame().ifPresent(game -> {
-            final GameSession session = game.session();
-            final boolean silent = session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || game.state().id() instanceof TestStateID;
-            if (!silent) {
-                optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
-            }
-        });
+        final GameSession session = e.game().session();
+        final boolean silent = session.booleanValue(SessionKey.DEMO_LEVEL_MODE) || e.game().state().id() instanceof TestStateID;
+        if (!silent) {
+            optSoundEffects().ifPresent(PacManGameSoundEffects::playGameReadySound);
+        }
     }
 
     @Override
@@ -105,13 +101,13 @@ class PlaySceneGameEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        gameScene.engine().optCurrentGame().ifPresent(game -> gameScene.onAcceptGameLevel(game.session(), e.level()));
+        gameScene.acceptGameLevel(e.game(), e.level());
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameScene.engine().optCurrentGame().ifPresent(game -> game.state().triggerTimeout());
+        e.game().state().triggerTimeout();
     }
 
     @Override

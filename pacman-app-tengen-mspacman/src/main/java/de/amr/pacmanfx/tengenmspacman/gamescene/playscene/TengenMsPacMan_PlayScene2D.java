@@ -134,7 +134,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onEnteredFrom3DScene() {
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
 
             final HUD hud = session.hud();
@@ -142,7 +142,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             hud.livesCounter().show();
             session.store(SessionKey.HUD_VISIBLE, true);
 
-            session.optLevel().ifPresent(level -> onAcceptGameLevel(session, level));
+            session.optLevel().ifPresent(level -> acceptGameLevel(game, level));
         });
     }
 
@@ -151,7 +151,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         view2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         view2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         view2D().setClipRect(CLIP_RECT);
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             final GameSession session = game.session();
             final HUD hud = session.hud();
 
@@ -171,7 +171,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         view2D().setClipRect(null);
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             levelCompletedAnimation = null;
             if (pacEatingEventHandler != null) {
                 game.eventManager().removeSubscriber(pacEatingEventHandler);
@@ -198,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     @Override
     public void onQuit() {
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             onDeactivate();
             game.flow().enterGameState(game, CommonGameStateID.GAME_OVER);
         });
@@ -207,12 +207,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     @Override
     public List<MenuItem> contextMenuItems() {
         final TengenMsPacMan_UISettings uiSettings = TengenMsPacMan_UISettings.instance();
-        final TranslationManager translations = engine().translationManager();
+        final TranslationManager translations = engine.translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
         final var menu = new ContextMenu();
 
-        engine().optCurrentGame().ifPresent(game -> {
+        engine.optCurrentGame().ifPresent(game -> {
             final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu.getItems(), translations, "context_menu.scaled_to_fit");
             miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
             miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
@@ -230,14 +230,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             addLocalizedCheckBox(menu.getItems(), translations, game.session().cheats().pacImmuneProperty(), "context_menu.immunity");
             addSeparator(menu.getItems());
             addLocalizedCheckBox(menu.getItems(), translations, engine.ui().viewModel().muteProperty(), "context_menu.muted");
-            addLocalizedActionItem(engine(), menu.getItems(), translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
+            addLocalizedActionItem(engine, menu.getItems(), translations, CommonGameActions.instance().gameFlowActions().actionQuit(), "context_menu.quit");
         });
 
         return menu.getItems();
     }
 
     @Override
-    public void onAcceptGameLevel(GameSession session, GameLevel level) {
+    public void acceptGameLevel(GameContext game, GameLevel level) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
@@ -258,7 +258,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             Logger.info("Door color set to {}", doorData.color());
         }
 
-        if (session.booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
+        if (game.session().booleanValue(SessionKey.DEMO_LEVEL_MODE)) {
             acceptDemoLevel();
         } else {
             acceptNormalLevel();
@@ -271,7 +271,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     // private area, do NOT enter!
 
     private void acceptNormalLevel() {
-        engine().soundManager().setEnabled(true); //TODO needed?
+        engine.soundManager().setEnabled(true); //TODO needed?
 
         final TengenMsPacMan_Actions actions = TengenMsPacMan_Actions.instance();
         final Joypad joypad = engine.input().joypad();
@@ -284,7 +284,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void acceptDemoLevel() {
-        engine().soundManager().setEnabled(false); //TODO needed?
+        engine.soundManager().setEnabled(false); //TODO needed?
 
         final TengenMsPacMan_Actions actions = TengenMsPacMan_Actions.instance();
         final Joypad joypad = engine.input().joypad();
