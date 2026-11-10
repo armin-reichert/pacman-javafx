@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
@@ -91,7 +90,6 @@ public class PlaySceneView3D implements Disposable {
         level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
 
         final MessageView messageView = level.entitySet().theOne(MessageView.class);
-        messageView.removeComponent(MessageView3DComp.class);
         messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());
 
         createLevel3DAnimations(level3D, game, level, uiConfig);

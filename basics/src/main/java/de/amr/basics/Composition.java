@@ -56,7 +56,7 @@ public class Composition<C> implements Disposable {
         requireNonNull(type);
         requireNonNull(component);
         if (componentsByType.containsKey(type)) {
-            Logger.warn("Component for class: " + type.getSimpleName() + " was already registered!");
+            Logger.warn("Component for class: " + type.getSimpleName() + " was already registered, will be replaced!");
         }
         componentsByType.put(type, component);
     }

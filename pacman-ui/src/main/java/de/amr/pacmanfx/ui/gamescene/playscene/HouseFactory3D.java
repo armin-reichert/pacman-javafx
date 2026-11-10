@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 public class HouseFactory3D {
 
     public void createHouse3D(House house, House3DSettings settings, WorldMapColorScheme colorScheme) {
-        house.removeComponent(House3DViewComp.class);
         house.setComponent(House3DViewComp.class, new House3DViewComp(
             house.floorplan(),
             settings.baseHeight(),

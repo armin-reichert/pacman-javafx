@@ -186,7 +186,6 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     public void createMessageViewAnimation(MessageView messageView) {
-        messageView.removeComponent(MessageView3DAnimationComp.class);
         messageView.setComponent(MessageView3DAnimationComp.class,
             new MessageView3DAnimationComp(registry, messageView.assertComponent(MessageView3DComp.class)));
     }

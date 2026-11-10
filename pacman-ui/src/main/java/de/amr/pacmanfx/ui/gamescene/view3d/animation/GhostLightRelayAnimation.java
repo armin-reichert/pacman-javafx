@@ -59,7 +59,12 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
                         currentGhostPersonality = GhostPersonality.RED_GHOST_SHADOW;
                     }
                     case PAUSED -> {}
-                    case RUNNING -> illuminateGhost(currentGhostPersonality);
+                    case RUNNING -> {
+                        final Ghost ghost = ghosts.get(currentGhostPersonality.ordinal());
+                        if (ghost.hasComponent(GhostView3D.class)) {
+                            illuminateGhost3D(ghost.assertComponent(GhostView3D.class), currentGhostPersonality);
+                        }
+                    }
                 }
             });
             return timeline;
@@ -67,39 +72,36 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         light.setMaxRange(LIGHT_MAX_RANGE);
     }
 
-    private void illuminateGhost(GhostPersonality personality) {
-        final int p = personality.ordinal();
-        final Ghost ghost = ghosts.get(p);
-        final GhostView3D ghost3DView = ghost.assertComponent(GhostView3D.class);
-
-        light.setColor(ghostSettings.get(p).colors().normal().dressColor());
-        light.translateXProperty().bind(ghost3DView.root().translateXProperty());
-        light.translateYProperty().bind(ghost3DView.root().translateYProperty());
+    private void illuminateGhost3D(GhostView3D ghost3D, GhostPersonality personality) {
+        light.setColor(ghostSettings.get(personality.ordinal()).colors().normal().dressColor());
+        light.translateXProperty().bind(ghost3D.root().translateXProperty());
+        light.translateYProperty().bind(ghost3D.root().translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);
         light.setLightOn(true);
 
         currentGhostPersonality = personality;
-        Logger.trace("Ghost light passed to ghost {}", currentGhostPersonality);
+        Logger.info("Ghost light passed to ghost with personality {}", currentGhostPersonality);
     }
 
     private void passGhostLightToNextHunter() {
-        findNextHunter().ifPresentOrElse(this::illuminateGhost, () -> light.setLightOn(false));
+        findNextHunterPersonality().ifPresentOrElse(hunterPersonality -> {
+                final Ghost ghost = ghosts.get(hunterPersonality.ordinal());
+                if (ghost.hasComponent(GhostView3D.class)) {
+                    illuminateGhost3D(ghost.assertComponent(GhostView3D.class), hunterPersonality);
+                }
+            },
+            () -> light.setLightOn(false));
     }
 
-    private Optional<GhostPersonality> findNextHunter() {
-        GhostPersonality next = nextGhostPersonality(currentGhostPersonality);
+    private Optional<GhostPersonality> findNextHunterPersonality() {
+        GhostPersonality next = currentGhostPersonality.succ();
         while (next != currentGhostPersonality) {
-            if (ghosts.get(next.ordinal()).state().enumValue() == GhostState.HUNTING_PAC) {
+            final Ghost ghost = ghosts.get(next.ordinal());
+            if (ghost.state().enumValue() == GhostState.HUNTING_PAC) {
                 return Optional.of(next);
             }
-            next = nextGhostPersonality(next);
+            next = next.succ();
         }
         return Optional.empty();
-    }
-
-    private GhostPersonality nextGhostPersonality(GhostPersonality personality) {
-        int next = personality.ordinal() + 1;
-        if (next == GhostPersonality.values().length) next = 0;
-        return GhostPersonality.values()[next];
     }
 }

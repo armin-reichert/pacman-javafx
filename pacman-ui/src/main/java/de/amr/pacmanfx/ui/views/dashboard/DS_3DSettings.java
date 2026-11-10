@@ -154,6 +154,9 @@ public class DS_3DSettings extends GameDashboardSection {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             return NO_INFO;
         }
+        if (!abstractGameScene.hasComponent(GameSceneView2D.class)) {
+            return NO_INFO;
+        }
         final GameSceneView2D view2D = abstractGameScene.view2D();
         final RenderingSurface renderingSurface = view2D.renderingSurface();
         if (renderingSurface == null) {
