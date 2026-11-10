@@ -280,7 +280,6 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             level3D.root(),
             center,
             GlobalFonts.ARCADE.font(),
-            playScene3D.assertView3D().animationRegistry(),
             type,
             args);
     }

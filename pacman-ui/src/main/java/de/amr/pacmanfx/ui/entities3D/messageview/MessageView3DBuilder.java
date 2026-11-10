@@ -4,10 +4,8 @@
 
 package de.amr.pacmanfx.ui.entities3D.messageview;
 
-import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,14 +28,6 @@ public class MessageView3DBuilder {
             messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());
         }
         return messageView.assertComponent(MessageView3DComp.class);
-    }
-
-    public static void createAnim3D(MessageView messageView, AnimationRegistry registry) {
-        messageView.removeComponent(MessageView3DComp.class);
-        messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());
-        messageView.removeComponent(MessageView3DAnimationComp.class);
-        messageView.setComponent(MessageView3DAnimationComp.class,
-            new MessageView3DAnimationComp(registry, messageView.assertComponent(MessageView3DComp.class)));
     }
 
     private Color borderColor = Color.BLUE;

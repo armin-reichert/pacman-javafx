@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.entities3D.messageview.system;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
@@ -31,7 +30,6 @@ public class MessageView3DDisplaySystem {
         Group parent,
         Vector2f center,
         Font font,
-        AnimationRegistry animationRegistry,
         LevelMessageType messageType,
         Object... args) {
 
@@ -39,10 +37,8 @@ public class MessageView3DDisplaySystem {
         requireNonNull(parent);
         requireNonNull(center);
         requireNonNull(font);
-        requireNonNull(animationRegistry);
         requireNonNull(messageType);
 
-        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
         final Node root = messageView.assertComponent(MessageView3DComp.class).root();
         if (!parent.getChildren().contains(root)) {
             parent.getChildren().add(root);

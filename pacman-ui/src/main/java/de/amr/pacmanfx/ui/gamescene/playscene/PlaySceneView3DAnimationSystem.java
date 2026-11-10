@@ -11,6 +11,7 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -25,6 +26,8 @@ import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
+import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
+import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
@@ -180,6 +183,12 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         if (!house.hasComponent(House3DAnimationComp.class)) {
             house.setComponent(House3DAnimationComp.class, animation);
         }
+    }
+
+    public void createMessageViewAnimation(MessageView messageView) {
+        messageView.removeComponent(MessageView3DAnimationComp.class);
+        messageView.setComponent(MessageView3DAnimationComp.class,
+            new MessageView3DAnimationComp(registry, messageView.assertComponent(MessageView3DComp.class)));
     }
 
     public void createLevelCounterAnimation(LevelCounter levelCounter) {
