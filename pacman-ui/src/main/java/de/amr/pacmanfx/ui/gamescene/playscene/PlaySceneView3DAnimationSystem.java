@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DAnimationID;
@@ -135,9 +134,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     private Pool<EnergizerParticle3D> particlePool;
 
 
-    public void createAnimations(EngineUIContext engine, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
-        final GameVariantUIConfig uiConfig = engine.uiConfig(runtime);
-
+    public void createAnimations(GameVariantUIConfig uiConfig, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
         final GameLevel level = level3D.level();
         final int numFlashes = runtime.gameRules().numLevelFlashes(level.number());
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
@@ -160,7 +157,10 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
         createEnergizerParticlesAnimation(level3D.maze3D(), level);
 
-        createGhostAnimations(level, uiConfig.worldSettings().ghosts(), numFlashes);
+        level.entitySet().ghosts().forEach(ghost -> {
+            final GhostSettings settings = uiConfig.worldSettings().ghosts().get(ghost.personality().ordinal());
+            createGhostAnimations(ghost, settings, numFlashes);
+        });
         createGhostLightAnimation(uiConfig, level, level3D.ghostHunterLight());
 
         final Pac pac = level.entitySet().pac();
@@ -205,26 +205,12 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         return pac.assertComponent(Pac3DAnimationComp.class);
     }
 
-    private void createGhostAnimations(GameLevel level, List<GhostSettings> settingsByPersonality, int numFlashes) {
-        level.entitySet().ghosts().forEach(ghost -> {
-            final GhostSettings settings = settingsByPersonality.get(ghost.personality().ordinal());
-            createGhostAnimations(ghost, settings, numFlashes);
-        });
-    }
-
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
-        final Ghost3DAnimations animationComponent = ensureGhost3DAnimationComponentExists(ghost);
-        animationComponent.createAnimations(ghost, settings, numFlashes);
-        registry.register(Ghost3DAnimationID.FLASHING.key(ghost), animationComponent.flashing());
-        registry.register(Ghost3DAnimationID.DRESS_MOVEMENT.key(ghost), animationComponent.dressMovement());
-        registry.register(Ghost3DAnimationID.BRAKING.key(ghost), animationComponent.braking());
-    }
-
-    private Ghost3DAnimations ensureGhost3DAnimationComponentExists(Ghost ghost) {
-        if (!ghost.hasComponent(Ghost3DAnimations.class)) {
-            ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
-        }
-        return ghost.assertComponent(Ghost3DAnimations.class);
+        final Ghost3DAnimations animations = ghost.assertComponent(Ghost3DAnimations.class);
+        animations.createAnimations(ghost, settings, numFlashes);
+        registry.register(Ghost3DAnimationID.FLASHING.key(ghost), animations.flashing());
+        registry.register(Ghost3DAnimationID.DRESS_MOVEMENT.key(ghost), animations.dressMovement());
+        registry.register(Ghost3DAnimationID.BRAKING.key(ghost), animations.braking());
     }
 
     private void createEnergizerAnimations(GameLevelView3D level3D, Energizer3DSettings settings) {

@@ -81,7 +81,7 @@ public class PlaySceneView3D implements Disposable {
         level3D = new GameLevelView3D(game, level, engine.ui().viewModel(), engine.uiConfig(game.runtime()));
         level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
         level3DHolder.getChildren().setAll(level3D.root());
-        animationSystem.createAnimations(engine, game.runtime(), game.session(), level3D);
+        animationSystem.createAnimations(engine.uiConfig(game.runtime()), game.runtime(), game.session(), level3D);
         settingsViewModel.drawModeProperty().addListener(level3D);
     }
 

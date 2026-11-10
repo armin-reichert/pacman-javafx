@@ -44,7 +44,6 @@ public class Ghost3DAnimations implements Disposable, Resettable {
         return braking;
     }
 
-
     public void createAnimations(
         Ghost ghost,
         GhostSettings settings,
