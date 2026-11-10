@@ -2,13 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.livescounter.system;
+package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounterView3D;
-import de.amr.pacmanfx.ui.entities3D.livescounter.comp.Stand;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
@@ -45,7 +43,7 @@ public class LivesCounterView3DSystem {
             final float x = i * tilesPx(2);
             final int lift = i % 2 == 0 ? 0 : 4;
 
-            final var stand = new Stand(
+            final var stand = new LivesCounterStand(
                 view3D.pillarMaterialProperty(),
                 view3D.plateMaterialProperty(),
                 view3D.plateRadiusProperty(),

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
+package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
@@ -15,12 +15,12 @@ import javafx.scene.transform.Rotate;
 
 import static java.util.Objects.requireNonNull;
 
-public class Stand extends Group implements DisposableGraphicsObject {
+public class LivesCounterStand extends Group implements DisposableGraphicsObject {
 
     private final Cylinder pillar;
     private final Cylinder podium;
 
-    public Stand(
+    public LivesCounterStand(
         ObjectProperty<PhongMaterial> pillarMaterial,
         ObjectProperty<PhongMaterial> plateMaterial,
         DoubleProperty plateRadius,
