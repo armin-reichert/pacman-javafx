@@ -47,7 +47,7 @@ public class World3DUpdateSystem {
         final var ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
         entitySet.ghosts().forEach(ghost -> {
             ghostSystems3D.movementSystem().update(ghost);
-            ghostSystems3D.viewSystem().update(ghost);
+            ghostSystems3D.viewSystem().updateAppearance(ghost);
         });
     }
 

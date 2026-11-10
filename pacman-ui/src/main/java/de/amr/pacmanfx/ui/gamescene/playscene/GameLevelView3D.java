@@ -265,6 +265,9 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
 
     private void createGhost3DViews(CommonGameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
+            if (ghost.hasComponent(GhostView3D.class)) {
+                throw new IllegalStateException("Ghost has already 3D view");
+            }
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(systems, ghost, ghostSettings);
             ghost.assertComponent(GhostView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());

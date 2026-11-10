@@ -63,18 +63,18 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createGhost3D(CommonGameSystems systems, Ghost ghost, GhostSettings settings) {
-        final PacManMeshes3D model = PacManMeshes3D.instance();
-        if (!ghost.hasComponent(GhostView3D.class)) {
-            final GhostSystems3D ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
-            final GhostView3D view3D = ghostSystems3D.viewSystem().build(
-                settings,
-                model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
-            ghost.setComponent(GhostView3D.class, view3D);
-            ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
+        final PacManMeshes3D model3D = PacManMeshes3D.instance();
+        final GhostSystems3D systems3D = systems.assertSystem(GhostSystems3D.class);
+        final GhostView3D view3D = systems3D.viewSystem().buildGhostView3D(
+            settings,
+            model3D.ghostDressMesh(), model3D.ghostPupilsMesh(), model3D.ghostEyeballsMesh());
+        ghost.setComponent(GhostView3D.class, view3D);
 
-            final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
-            view3D.setAppearanceMaterialSet(materialSet);
-        }
+        ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
+
+        final GhostAppearanceMaterialSet materialSet = ghostMaterialsCache.computeIfAbsent(
+            settings.colors(), this::createGhostMaterial);
+        view3D.setAppearanceMaterialSet(materialSet);
     }
 
     @Override

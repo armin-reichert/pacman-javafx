@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.entities3D.ghost.system;
 
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostStateComp;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
@@ -12,102 +15,42 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import static java.util.Objects.requireNonNull;
+
 public class GhostView3DSystem {
 
     public GhostView3DSystem() {}
 
-    public GhostView3D build(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
-        return buildView3D(settings, dressMesh, pupilsMesh, eyeballsMesh);
-    }
+    public void updateAppearance(Ghost ghost) {
+        requireNonNull(ghost);
+        final var view3D = ghost.assertComponent(GhostView3D.class);
 
-    public void update(Ghost ghost) {
         final GhostStateComp state = ghost.state();
-
         final GhostAppearance appearance = switch (state.enumValue()) {
-            case LOCKED -> state.hasPacPower() ? appearFrightenedOrFlashing(state) : GhostAppearance.NORMAL;
+            case LOCKED -> state.hasPacPower() ? frightenedAppearance(state) : GhostAppearance.NORMAL;
             case EATEN -> GhostAppearance.EATEN;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
-            case FRIGHTENED -> appearFrightenedOrFlashing(state);
+            case FRIGHTENED -> frightenedAppearance(state);
             case HUNTING_PAC, LEAVING_HOUSE -> GhostAppearance.NORMAL;
         };
-        setAppearance(ghost, appearance);
-    }
-
-    private void lookNormal(GhostView3D ghostView3D) {
-        ghostView3D.dressMeshView()   .setVisible(true);
-        ghostView3D.eyeballsMeshView().setVisible(true);
-        ghostView3D.pupilsMeshView()  .setVisible(true);
-
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normalMaterials());
-    }
-
-    private void lookFrightened(GhostView3D ghostView3D) {
-        ghostView3D.dressMeshView()   .setVisible(true);
-        ghostView3D.eyeballsMeshView().setVisible(true);
-        ghostView3D.pupilsMeshView()  .setVisible(true);
-
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().frightenedMaterials());
-    }
-
-    private void lookEyesOnly(GhostView3D ghostView3D) {
-        ghostView3D.dressMeshView()   .setVisible(false);
-        ghostView3D.eyeballsMeshView().setVisible(true);
-        ghostView3D.pupilsMeshView()  .setVisible(true);
-
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normalMaterials());
-    }
-
-    private void applyMaterials(GhostView3D ghostView3D, Ghost3DPartsMaterials materials) {
-        ghostView3D.dressMeshView()   .setMaterial(materials.dressMaterial());
-        ghostView3D.pupilsMeshView()  .setMaterial(materials.pupilsMaterial());
-        ghostView3D.eyeballsMeshView().setMaterial(materials.eyeballsMaterial());
-    }
-
-    private GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
-        return state.isPacPowerFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-    }
-
-    private void setAppearance(Ghost ghost, GhostAppearance appearance) {
-        final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
-        final Ghost3DAnimations animation3D = ghost.assertComponent(Ghost3DAnimations.class);
-
-        view3D.setAppearance(appearance);
-        switch (appearance) {
-            case EATEN, EYES -> {
-                lookEyesOnly(view3D);
-                animation3D.lookEyesOnly();
-            }
-            case FLASHING -> {
-                lookFrightened(view3D);
-                ensureFlashingPlays(animation3D.flashing());
-            }
-            case FRIGHTENED -> {
-                lookFrightened(view3D);
-                animation3D.lookFrightened();
-            }
-            case NORMAL -> {
-                lookNormal(view3D);
-                animation3D.lookNormal();
-            }
-        }
-    }
-
-    private void ensureFlashingPlays(ManagedAnimation flashing) {
-        if (!flashing.isRunning()) {
-            flashing.playOrContinue();
-        }
+        setAppearance(view3D, ghost, appearance);
     }
 
     /*
     root (tf: scaling)
-       facingGroup (tf: facing-rotate, model-orientation-adjustment)
-          dressGroup (tf: dress-rotation-animation)
-             dressMeshView (tf: centering)
-          eyesGroup (tf: centering)
+        facingGroup (tf: facing-rotate, model-orientation-adjustment)
+            dressGroup (tf: dress-rotation-animation)
+            dressMeshView (tf: centering)
+        eyesGroup (tf: centering)
              pupilsMeshView
-             eyeballsMeshView
- */
-    private GhostView3D buildView3D(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
+            eyeballsMeshView
+    */
+    public GhostView3D buildGhostView3D(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
+        requireNonNull(settings);
+        requireNonNull(dressMesh);
+        requireNonNull(pupilsMesh);
+        requireNonNull(eyeballsMesh);
+
         final GhostView3D view3D = new GhostView3D();
 
         view3D.setRoot(new Group());
@@ -144,5 +87,63 @@ public class GhostView3DSystem {
         eyeballsMeshView.drawModeProperty().bind(view3D.drawModeProperty());
 
         return view3D;
+    }
+
+    private void setNormalAppearance(GhostView3D view3D) {
+        view3D.dressMeshView()   .setVisible(true);
+        view3D.eyeballsMeshView().setVisible(true);
+        view3D.pupilsMeshView()  .setVisible(true);
+
+        setSkin(view3D, view3D.appearanceMaterialSet().normalMaterials());
+    }
+
+    private void setFrightenedAppearance(GhostView3D view3D) {
+        view3D.dressMeshView()   .setVisible(true);
+        view3D.eyeballsMeshView().setVisible(true);
+        view3D.pupilsMeshView()  .setVisible(true);
+
+        setSkin(view3D, view3D.appearanceMaterialSet().frightenedMaterials());
+    }
+
+    private void setEyesOnlyAppearance(GhostView3D view3D) {
+        view3D.dressMeshView()   .setVisible(false);
+        view3D.eyeballsMeshView().setVisible(true);
+        view3D.pupilsMeshView()  .setVisible(true);
+
+        setSkin(view3D, view3D.appearanceMaterialSet().normalMaterials());
+    }
+
+    private void setSkin(GhostView3D view3D, Ghost3DPartsMaterials materials) {
+        view3D.dressMeshView()   .setMaterial(materials.dressMaterial());
+        view3D.pupilsMeshView()  .setMaterial(materials.pupilsMaterial());
+        view3D.eyeballsMeshView().setMaterial(materials.eyeballsMaterial());
+    }
+
+    private GhostAppearance frightenedAppearance(GhostStateComp state) {
+        return state.isPacPowerFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+    }
+
+    private void setAppearance(GhostView3D view3D, Ghost ghost, GhostAppearance appearance) {
+        final Ghost3DAnimations animation3D = ghost.assertComponent(Ghost3DAnimations.class);
+
+        view3D.setAppearance(appearance);
+        switch (appearance) {
+            case EATEN, EYES -> {
+                setEyesOnlyAppearance(view3D);
+                animation3D.lookEyesOnly();
+            }
+            case FLASHING -> {
+                setFrightenedAppearance(view3D);
+                animation3D.flashing().playOrContinue();
+            }
+            case FRIGHTENED -> {
+                setFrightenedAppearance(view3D);
+                animation3D.lookFrightened();
+            }
+            case NORMAL -> {
+                setNormalAppearance(view3D);
+                animation3D.lookNormal();
+            }
+        }
     }
 }
