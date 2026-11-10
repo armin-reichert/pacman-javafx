@@ -11,15 +11,11 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameVariantRuntime;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
@@ -29,7 +25,6 @@ import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
-import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
@@ -66,6 +61,10 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     
     public PlaySceneView3DAnimationSystem(AnimationRegistry registry) {
         this.registry = requireNonNull(registry);
+    }
+
+    public AnimationRegistry registry() {
+        return registry;
     }
 
     public void stopAllAnimations() {
@@ -133,12 +132,37 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     // The particle pool is only created when the animations are created
     private Pool<EnergizerParticle3D> particlePool;
 
+    public void createPacAnimations(Pac pac) {
+        if (pac.state().isMale()) {
+            createPacManAnimations(pac);
+        } else {
+            createMsPacManAnimations(pac);
+        }
+    }
 
-    public void createAnimations(GameVariantUIConfig uiConfig, GameVariantRuntime runtime, GameSession session, GameLevelView3D level3D) {
-        final GameLevel level = level3D.level();
-        final int numFlashes = runtime.gameRules().numLevelFlashes(level.number());
-        final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
-        final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), uiConfig.worldSettings());
+    public void createGhostAnimations(List<Ghost> ghosts, GameVariantUIConfig uiConfig, int numFlashes) {
+        ghosts.forEach(ghost -> {
+            final GhostSettings settings = uiConfig.worldSettings().ghosts().get(ghost.personality().ordinal());
+            createGhostAnimations(ghost, settings, numFlashes);
+        });
+    }
+
+    public void createGhostLightAnimation(List<Ghost> ghosts, GameVariantUIConfig config, PointLight ghostHunterLight) {
+        final var animation = new GhostLightRelayAnimation(
+            ghostHunterLight,
+            ghosts,
+            config.worldSettings().ghosts()
+        );
+        registry.register(PlayScene3DAnimationID.GHOST_LIGHT, animation);
+    }
+
+    public void createEnergizerAnimations(GameVariantUIConfig uiConfig, GameLevelView3D level3D) {
+        createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
+        createEnergizerParticlesAnimation(level3D.maze3D(), level3D.level());
+    }
+
+    public void createMazeAnimations(GameVariantUIConfig uiConfig, GameLevelView3D level3D, int numFlashes) {
+        final GenericWorldMapColorScheme mapColorScheme = uiConfig.renderConfig().colorScheme(level3D.level().worldMap(), uiConfig.worldSettings());
 
         registry.register(PlayScene3DAnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
@@ -147,30 +171,18 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
             new LevelCompletedAnimation(level3D, numFlashes, uiConfig.optSoundEffects().orElseThrow()));
 
         registry.register(PlayScene3DAnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
+    }
 
-        final House house = level.entitySet().theOne(House.class);
-        createHouseAnimations(house);
-
-        final MessageView messageView = level.entitySet().theOne(MessageView.class);
-        MessageView3DBuilder.createAnim3D(messageView, registry);
-
-        createEnergizerAnimations(level3D, uiConfig.worldSettings().energizer());
-        createEnergizerParticlesAnimation(level3D.maze3D(), level);
-
-        level.entitySet().ghosts().forEach(ghost -> {
-            final GhostSettings settings = uiConfig.worldSettings().ghosts().get(ghost.personality().ordinal());
-            createGhostAnimations(ghost, settings, numFlashes);
-        });
-        createGhostLightAnimation(uiConfig, level, level3D.ghostHunterLight());
-
-        final Pac pac = level.entitySet().pac();
-        if (pac.state().isMale()) {
-            createPacManAnimations(pac);
-        } else {
-            createMsPacManAnimations(pac);
+    public void createHouseAnimations(House house) {
+        final House3DViewComp house3D = house.assertComponent(House3DViewComp.class);
+        final var animation =  new House3DAnimationComp(registry);
+        animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
+        if (!house.hasComponent(House3DAnimationComp.class)) {
+            house.setComponent(House3DAnimationComp.class, animation);
         }
+    }
 
-        final LevelCounter levelCounter = session.hud().levelCounter();
+    public void createLevelCounterAnimation(LevelCounter levelCounter) {
         levelCounter.setComponent(LevelCounter3DAnimationComp.class,
             new LevelCounter3DAnimationComp(
                 levelCounter.assertComponent(LevelCounterView3D.class),
@@ -297,20 +309,5 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
             registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
                 .ifPresent(ManagedAnimation::dispose);
         });
-    }
-
-    private void createHouseAnimations(House house) {
-        final House3DViewComp house3D = house.assertComponent(House3DViewComp.class);
-        final var animation =  new House3DAnimationComp(registry);
-        animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
-        if (!house.hasComponent(House3DAnimationComp.class)) {
-            house.setComponent(House3DAnimationComp.class, animation);
-        }
-    }
-
-    private void createGhostLightAnimation(GameVariantUIConfig config, GameLevel level, PointLight ghostHunterLight) {
-        final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entitySet().ghosts().toList(),
-            config.worldSettings().ghosts());
-        registry.register(PlayScene3DAnimationID.GHOST_LIGHT, animation);
     }
 }

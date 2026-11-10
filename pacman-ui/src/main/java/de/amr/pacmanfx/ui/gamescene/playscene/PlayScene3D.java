@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
@@ -272,7 +273,10 @@ public class PlayScene3D extends AbstractGameScene {
 
         optView3D().ifPresent(view3D -> {
             view3D.removeLevel3D();
-            view3D.createLevel3D(engine, game, level);
+
+            final GameVariantUIConfig uiConfig = engine.uiConfig(game.runtime());
+            final GameViewModel gameViewModel = engine.ui().viewModel();
+            view3D.createLevel3D(uiConfig, gameViewModel, game, level);
 
             //TODO Replace by Tengen-specific view3D implementation
             addAdditional3DLevelElements(assertView3D().assertLevel3D());

@@ -6,14 +6,19 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
-import de.amr.pacmanfx.ui.EngineUIContext;
+import de.amr.pacmanfx.ui.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
+import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,6 +26,7 @@ import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -76,13 +82,13 @@ public class PlaySceneView3D implements Disposable {
         }
     }
 
-    public void createLevel3D(EngineUIContext engine, GameContext game, GameLevel level) {
-        // Create a new 3D game level representation
-        level3D = new GameLevelView3D(game, level, engine.ui().viewModel(), engine.uiConfig(game.runtime()));
-        level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
+    public void createLevel3D(GameVariantUIConfig uiConfig, GameViewModel gameViewModel, GameContext game, GameLevel level) {
+        level3D = new GameLevelView3D(game, level, gameViewModel, uiConfig);
         level3DHolder.getChildren().setAll(level3D.root());
-        animationSystem.createAnimations(engine.uiConfig(game.runtime()), game.runtime(), game.session(), level3D);
         settingsViewModel.drawModeProperty().addListener(level3D);
+
+        level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
+        createLevel3DAnimations(level3D, game, level, uiConfig);
     }
 
     public void handleScrollEvent(ScrollEvent e) {
@@ -181,5 +187,23 @@ public class PlaySceneView3D implements Disposable {
             animationSystem.dispose();
             animationSystem = null;
         }
+    }
+
+    private void createLevel3DAnimations(GameLevelView3D level3D, GameContext game, GameLevel level, GameVariantUIConfig uiConfig) {
+        final int numFlashes = game.rules().numLevelFlashes(level.number());
+
+        animationSystem.createPacAnimations(level.entitySet().pac());
+
+        final List<Ghost> ghosts = level.entitySet().ghosts().toList();
+        animationSystem.createGhostAnimations(ghosts, uiConfig, numFlashes);
+        animationSystem.createGhostLightAnimation(ghosts, uiConfig, level3D.ghostHunterLight());
+
+        animationSystem.createMazeAnimations(uiConfig, level3D, numFlashes);
+        animationSystem.createEnergizerAnimations(uiConfig, level3D);
+        animationSystem.createHouseAnimations(level.entitySet().theOne(House.class));
+        animationSystem.createLevelCounterAnimation(game.session().hud().levelCounter());
+
+        final MessageView messageView = level.entitySet().theOne(MessageView.class);
+        MessageView3DBuilder.createAnim3D(messageView, animationSystem.registry());
     }
 }
