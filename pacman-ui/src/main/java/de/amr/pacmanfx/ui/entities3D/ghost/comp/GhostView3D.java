@@ -32,8 +32,6 @@ public class GhostView3D {
     
     private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
-    private GhostAppearance appearance;
-
     public GhostView3D() {}
 
     public ObjectProperty<DrawMode> drawModeProperty() {
@@ -46,14 +44,6 @@ public class GhostView3D {
 
     public Group dressGroup() {
         return dressGroup;
-    }
-
-    public GhostAppearance appearance() {
-        return appearance;
-    }
-
-    public void setAppearance(GhostAppearance appearance) {
-        this.appearance = requireNonNull(appearance);
     }
 
     public void setDressMeshView(MeshView dressMeshView) {

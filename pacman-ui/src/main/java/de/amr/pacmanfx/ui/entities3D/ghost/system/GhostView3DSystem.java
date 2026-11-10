@@ -126,7 +126,6 @@ public class GhostView3DSystem {
     private void setAppearance(GhostView3D view3D, Ghost ghost, GhostAppearance appearance) {
         final Ghost3DAnimations animation3D = ghost.assertComponent(Ghost3DAnimations.class);
 
-        view3D.setAppearance(appearance);
         switch (appearance) {
             case EATEN, EYES -> {
                 setEyesOnlyAppearance(view3D);
