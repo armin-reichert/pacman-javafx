@@ -112,19 +112,19 @@ public class DefaultFactory3D implements Factory3D {
     public GhostAppearanceMaterialSet createGhostMaterial(GhostStateColors colors) {
         requireNonNull(colors);
 
-        final var normalMaterials = new Ghost3DMaterialSet(
+        final var normalMaterials = new Ghost3DPartsMaterials(
             coloredPhongMaterial(colors.normal().dressColor()),
             coloredPhongMaterial(colors.normal().eyeballsColor()),
             coloredPhongMaterial(colors.normal().pupilsColor())
         );
 
-        final var frightenedMaterials = new Ghost3DMaterialSet(
+        final var frightenedMaterials = new Ghost3DPartsMaterials(
             coloredPhongMaterial(colors.frightened().dressColor()),
             coloredPhongMaterial(colors.frightened().eyeballsColor()),
             coloredPhongMaterial(colors.frightened().pupilsColor())
         );
 
-        final var flashingMaterials = new Ghost3DMaterialSet(
+        final var flashingMaterials = new Ghost3DPartsMaterials(
             coloredPhongMaterial(colors.flashing().dressColor()),
             coloredPhongMaterial(colors.flashing().eyeballsColor()),
             coloredPhongMaterial(colors.flashing().pupilsColor())

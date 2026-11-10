@@ -4,4 +4,10 @@
 
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
-public enum GhostAppearance {NORMAL, FRIGHTENED, FLASHING, EYES, EATEN}
+public enum GhostAppearance {
+    NORMAL,
+    FRIGHTENED,
+    FLASHING,
+    EYES,
+    EATEN
+}

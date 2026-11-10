@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
 public record GhostAppearanceMaterialSet(
-    Ghost3DMaterialSet normal,
-    Ghost3DMaterialSet frightened,
-    Ghost3DMaterialSet flashing
+    Ghost3DPartsMaterials normalMaterials,
+    Ghost3DPartsMaterials frightenedMaterials,
+    Ghost3DPartsMaterials flashingMaterials
 ) {}

@@ -276,7 +276,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
 
         final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()
             .map(ghost -> ghost.assertComponent(GhostView3D.class))
-            .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
+            .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normalMaterials().dressMaterial())
             .toList();
 
         particlePool = new Pool<>(300, 300,

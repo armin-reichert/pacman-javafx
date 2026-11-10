@@ -38,7 +38,7 @@ public class GhostView3DSystem {
         ghostView3D.eyeballsMeshView().setVisible(true);
         ghostView3D.pupilsMeshView()  .setVisible(true);
 
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normal());
+        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normalMaterials());
     }
 
     private void lookFrightened(GhostView3D ghostView3D) {
@@ -46,7 +46,7 @@ public class GhostView3DSystem {
         ghostView3D.eyeballsMeshView().setVisible(true);
         ghostView3D.pupilsMeshView()  .setVisible(true);
 
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().frightened());
+        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().frightenedMaterials());
     }
 
     private void lookEyesOnly(GhostView3D ghostView3D) {
@@ -54,13 +54,13 @@ public class GhostView3DSystem {
         ghostView3D.eyeballsMeshView().setVisible(true);
         ghostView3D.pupilsMeshView()  .setVisible(true);
 
-        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normal());
+        applyMaterials(ghostView3D, ghostView3D.appearanceMaterialSet().normalMaterials());
     }
 
-    private void applyMaterials(GhostView3D ghostView3D, Ghost3DMaterialSet materials) {
-        ghostView3D.dressMeshView()   .setMaterial(materials.dress());
-        ghostView3D.pupilsMeshView()  .setMaterial(materials.pupils());
-        ghostView3D.eyeballsMeshView().setMaterial(materials.eyeballs());
+    private void applyMaterials(GhostView3D ghostView3D, Ghost3DPartsMaterials materials) {
+        ghostView3D.dressMeshView()   .setMaterial(materials.dressMaterial());
+        ghostView3D.pupilsMeshView()  .setMaterial(materials.pupilsMaterial());
+        ghostView3D.eyeballsMeshView().setMaterial(materials.eyeballsMaterial());
     }
 
     private GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
