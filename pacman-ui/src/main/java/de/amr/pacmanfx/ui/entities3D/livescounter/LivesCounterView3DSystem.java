@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.Factory3D;
@@ -27,15 +26,14 @@ public class LivesCounterView3DSystem {
 
         final LivesCounterView3D view3D = new LivesCounterView3D();
 
-        view3D.setPillarMaterial(Ufx.coloredPhongMaterial(view3D.pillarColor()));
-        view3D.setPlateMaterial(Ufx.coloredPhongMaterial(view3D.plateColor()));
-
         final var standsGroup = new Group();
         view3D.root().getChildren().add(standsGroup);
 
         for (int i = 0; i < settings.livesCounter().numShapes(); ++i) {
             final Node shape = factory3D.createLivesCounterShape3D(settings);
             view3D.counterShapes().add(shape);
+
+            view3D.trackers().add(new NodePositionTracker(shape));
 
             final float x = i * tilesPx(2);
             final int lift = i % 2 == 0 ? 0 : 4;
@@ -58,10 +56,6 @@ public class LivesCounterView3DSystem {
             shape.setTranslateZ(-(stand.pillar().getHeight() + view3D.plateThickness() + shapeRadius));
 
             view3D.root().getChildren().add(shape);
-        }
-
-        for (Node shape : view3D.counterShapes()) {
-            view3D.trackers().add(new NodePositionTracker(shape));
         }
 
         return view3D;

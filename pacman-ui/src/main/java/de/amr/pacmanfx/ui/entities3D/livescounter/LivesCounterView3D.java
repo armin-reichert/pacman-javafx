@@ -19,15 +19,11 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
 
     private double pillarHeight;
 
-    private Color pillarColor;
-
     private PhongMaterial pillarMaterial;
 
     private double plateThickness;
 
     private double plateRadius;
-
-    private Color plateColor;
 
     private PhongMaterial plateMaterial;
 
@@ -39,25 +35,15 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
 
     public LivesCounterView3D() {
         pillarHeight = 8;
-        pillarColor = Color.grayRgb(200);
-        pillarMaterial = Ufx.coloredPhongMaterial(pillarColor);
+        pillarMaterial = Ufx.coloredPhongMaterial(Color.grayRgb(200));
 
         plateRadius = 6;
         plateThickness = 1;
-        plateColor = Color.grayRgb(100);
-        plateMaterial = Ufx.coloredPhongMaterial(plateColor);
+        plateMaterial = Ufx.coloredPhongMaterial(Color.grayRgb(100));
     }
 
     public List<Node> counterShapes() {
         return counterShapes;
-    }
-
-    public Color pillarColor() {
-        return pillarColor;
-    }
-
-    public void setPillarColor(Color color) {
-        this.pillarColor = color;
     }
 
     public PhongMaterial pillarMaterial() {
@@ -90,14 +76,6 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
 
     public void setPlateRadius(double radius) {
         this.plateRadius = radius;
-    }
-
-    public Color plateColor() {
-        return plateColor;
-    }
-
-    public void setPlateColor(Color color) {
-        this.plateColor = color;
     }
 
     public PhongMaterial plateMaterial() {
