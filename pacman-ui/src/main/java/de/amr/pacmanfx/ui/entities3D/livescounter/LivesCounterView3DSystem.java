@@ -27,8 +27,8 @@ public class LivesCounterView3DSystem {
 
         final LivesCounterView3D view3D = new LivesCounterView3D();
 
-        view3D.pillarMaterialProperty().bind(view3D.pillarColorProperty().map(Ufx::coloredPhongMaterial));
-        view3D.plateMaterialProperty().bind((view3D.plateColorProperty().map(Ufx::coloredPhongMaterial)));
+        view3D.setPillarMaterial(Ufx.coloredPhongMaterial(view3D.pillarColor()));
+        view3D.setPlateMaterial(Ufx.coloredPhongMaterial(view3D.plateColor()));
 
         final var standsGroup = new Group();
         view3D.root().getChildren().add(standsGroup);
@@ -44,12 +44,12 @@ public class LivesCounterView3DSystem {
             final int lift = i % 2 == 0 ? 0 : 4;
 
             final var stand = new LivesCounterStand(
-                view3D.pillarMaterialProperty(),
-                view3D.plateMaterialProperty(),
-                view3D.plateRadiusProperty(),
-                view3D.plateThicknessProperty()
+                view3D.pillarMaterial(),
+                view3D.plateMaterial(),
+                view3D.plateRadius(),
+                view3D.plateThickness()
             );
-            stand.pillar().heightProperty().bind(view3D.pillarHeightProperty().add(lift));
+            stand.pillar().setHeight(view3D.pillarHeight() + lift);
             stand.setTranslateX(x);
             standsGroup.getChildren().add(stand);
 
@@ -58,15 +58,10 @@ public class LivesCounterView3DSystem {
             shape.setTranslateY(0);
             // let Pac shape sit on top of plate
             final double shapeRadius = 0.5 * shape.getBoundsInParent().getHeight(); // take scale transform into account!
-            shape.translateZProperty().bind(
-                stand.pillar().heightProperty()
-                    .add(view3D.plateThicknessProperty())
-                    .add(shapeRadius)
-                    .negate());
+            shape.setTranslateZ(-(stand.pillar().getHeight() + view3D.plateThickness() + shapeRadius));
 
-            shape.visibleProperty().bind(
-                view3D.livesCountProperty()
-                    .map(count -> count.intValue() > (int) shape.getUserData()));
+            shape.visibleProperty().bind(view3D.livesCountProperty()
+                .map(count -> (int) shape.getUserData() <= count.intValue()));
 
             view3D.root().getChildren().add(shape);
         }

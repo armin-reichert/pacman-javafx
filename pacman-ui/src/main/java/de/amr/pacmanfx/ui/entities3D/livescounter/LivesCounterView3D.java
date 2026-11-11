@@ -4,10 +4,11 @@
 
 package de.amr.pacmanfx.ui.entities3D.livescounter;
 
-
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -17,104 +18,91 @@ import java.util.List;
 
 public class LivesCounterView3D implements DisposableGraphicsObject {
 
-    private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
-    private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
-    private final DoubleProperty pillarHeight = new SimpleDoubleProperty(8);
+    private double pillarHeight;
+
+    private Color pillarColor;
+
+    private PhongMaterial pillarMaterial;
+
+    private double plateThickness;
+
+    private double plateRadius;
+
+    private Color plateColor;
+
+    private PhongMaterial plateMaterial;
+
+    private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
+
+    private final List<NodePositionTracker> trackers = new ArrayList<>();
 
     private final Group root = new Group();
 
-    private final DoubleProperty plateThickness = new SimpleDoubleProperty(1);
-    private final DoubleProperty plateRadius = new SimpleDoubleProperty(6);
-    private final ObjectProperty<Color> plateColor = new SimpleObjectProperty<>(Color.grayRgb(100));
-    private final ObjectProperty<PhongMaterial> plateMaterial = new SimpleObjectProperty<>(new PhongMaterial());
+    public LivesCounterView3D() {
+        pillarHeight = 8;
+        pillarColor = Color.grayRgb(200);
+        pillarMaterial = Ufx.coloredPhongMaterial(pillarColor);
 
-    private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
-    private final List<NodePositionTracker> trackers = new ArrayList<>();
-
-    public LivesCounterView3D() {}
-
-    public Color getPillarColor() {
-        return pillarColor.get();
+        plateRadius = 6;
+        plateThickness = 1;
+        plateColor = Color.grayRgb(100);
+        plateMaterial = Ufx.coloredPhongMaterial(plateColor);
     }
 
-    public ObjectProperty<Color> pillarColorProperty() {
+    public Color pillarColor() {
         return pillarColor;
     }
 
-    public void setPillarColor(Color pillarColor) {
-        this.pillarColor.set(pillarColor);
+    public void setPillarColor(Color color) {
+        this.pillarColor = color;
     }
 
-    public PhongMaterial getPillarMaterial() {
-        return pillarMaterial.get();
-    }
-
-    public ObjectProperty<PhongMaterial> pillarMaterialProperty() {
+    public PhongMaterial pillarMaterial() {
         return pillarMaterial;
     }
 
-    public void setPillarMaterial(PhongMaterial pillarMaterial) {
-        this.pillarMaterial.set(pillarMaterial);
+    public void setPillarMaterial(PhongMaterial material) {
+        this.pillarMaterial = material;
     }
 
-    public double getPillarHeight() {
-        return pillarHeight.get();
-    }
-
-    public DoubleProperty pillarHeightProperty() {
+    public double pillarHeight() {
         return pillarHeight;
     }
 
-    public void setPillarHeight(double pillarHeight) {
-        this.pillarHeight.set(pillarHeight);
+    public void setPillarHeight(double height) {
+        this.pillarHeight = height;
     }
 
-    public double getPlateThickness() {
-        return plateThickness.get();
-    }
-
-    public DoubleProperty plateThicknessProperty() {
+    public double plateThickness() {
         return plateThickness;
     }
 
-    public void setPlateThickness(double plateThickness) {
-        this.plateThickness.set(plateThickness);
+    public void setPlateThickness(double thickness) {
+        this.plateThickness = thickness;
     }
 
-    public double getPlateRadius() {
-        return plateRadius.get();
-    }
-
-    public DoubleProperty plateRadiusProperty() {
+    public double plateRadius() {
         return plateRadius;
     }
 
-    public void setPlateRadius(double plateRadius) {
-        this.plateRadius.set(plateRadius);
+    public void setPlateRadius(double radius) {
+        this.plateRadius = radius;
     }
 
-    public Color getPlateColor() {
-        return plateColor.get();
-    }
-
-    public ObjectProperty<Color> plateColorProperty() {
+    public Color plateColor() {
         return plateColor;
     }
 
-    public void setPlateColor(Color plateColor) {
-        this.plateColor.set(plateColor);
+    public void setPlateColor(Color color) {
+        this.plateColor = color;
     }
 
-    public PhongMaterial getPlateMaterial() {
-        return plateMaterial.get();
-    }
-
-    public ObjectProperty<PhongMaterial> plateMaterialProperty() {
+    public PhongMaterial plateMaterial() {
         return plateMaterial;
     }
 
-    public void setPlateMaterial(PhongMaterial plateMaterial) {
-        this.plateMaterial.set(plateMaterial);
+    public void setPlateMaterial(PhongMaterial material) {
+        this.plateMaterial = material;
     }
 
     public int getLivesCount() {
@@ -141,14 +129,6 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
     public void dispose() {
 //        stopTracking();
         livesCount.unbind();
-        pillarHeight.unbind();
-        pillarMaterial.unbind();
-        pillarColor.unbind();
-        plateColor.unbind();
-        plateThickness.unbind();
-        plateRadius.unbind();
-        plateMaterial.unbind();
-
         cleanupGroup(root, true);
     }
 }
