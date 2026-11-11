@@ -158,6 +158,7 @@ public class GamePlayView implements GameView {
         layers.gameSceneLayer().embedGameScene(engine.ui(), engine.uiConfig(runtime), (AbstractGameScene) nextGameScene);
 
         contextMenuManager.hideContextMenu();
+        engine.renderManager().clearRenderQueue();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
