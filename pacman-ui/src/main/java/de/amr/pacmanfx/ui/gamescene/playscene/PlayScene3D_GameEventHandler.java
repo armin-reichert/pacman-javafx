@@ -288,9 +288,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = level3D.level();
         playScene3D.initPac3DProperties(assertGame().systems(), level, level.entitySet().pac());
 
-        playScene3D.assertView3D().animationSystem().startEnergizerPumping(level3D);
-        playScene3D.assertView3D().animationSystem().startParticlesAnimation();
-        playScene3D.assertView3D().animationSystem().startGhostLightAnimation();
+        final PlaySceneView3DAnimationSystem animationSystem = playScene3D.assertView3D().animationSystem();
+        animationSystem.startEnergizerPumping(level3D);
+        animationSystem.startParticlesAnimation();
+        animationSystem.startGhostLightAnimation();
     }
 
     private void onPacManDying() {

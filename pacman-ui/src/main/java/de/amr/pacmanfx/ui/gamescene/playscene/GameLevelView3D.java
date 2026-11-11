@@ -51,7 +51,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +101,8 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
         createPac3DView(game.systems(), pac, uiConfig.worldSettings().pac());
         createGhost3DViews(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
-        createLevelCounter3DView(game, levelCounter);
+
+        replaceLevelCounter3DView(game, levelCounter);
         replaceLivesCounter3DView(game, livesCounter);
 
         compose(pac, ghosts, livesCounter, house);
@@ -273,14 +273,12 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
 
     private void createPac3DView(CommonGameSystems systems, Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(systems, pac, settings);
-        pac.assertComponent(PacView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
+        final PacView3D pac3D = pac.assertComponent(PacView3D.class);
+        pac3D.drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
     private void createGhost3DViews(CommonGameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
-            if (ghost.hasComponent(GhostView3D.class)) {
-                throw new IllegalStateException("Ghost has already 3D view");
-            }
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(systems, ghost, ghostSettings);
             ghost.assertComponent(GhostView3D.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
@@ -299,14 +297,9 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         livesCounter.setComponent(LivesCounterView3D.class, view3D);
     }
 
-    private void createLevelCounter3DView(GameContext game, LevelCounter levelCounter) {
-        if (!levelCounter.hasComponent(LevelCounterView3D.class)) {
-            final LevelCounterView3D view3D = new LevelCounterView3D();
-            levelCounter.setComponent(LevelCounterView3D.class, view3D);
-        }
-        else {
-            Logger.info("Level counter already had a 3D view!");
-        }
+    private void replaceLevelCounter3DView(GameContext game, LevelCounter levelCounter) {
+        final LevelCounterView3D view3D = new LevelCounterView3D();
+        levelCounter.setComponent(LevelCounterView3D.class, view3D);
         replaceLevelCounter3D(game, levelCounter);
     }
 

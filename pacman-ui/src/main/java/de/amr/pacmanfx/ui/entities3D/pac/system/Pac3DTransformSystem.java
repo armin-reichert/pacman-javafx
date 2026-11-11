@@ -27,6 +27,8 @@ public class Pac3DTransformSystem {
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
 
+        view3D.root().setVisible(false);
+
         update(pac);
     }
 

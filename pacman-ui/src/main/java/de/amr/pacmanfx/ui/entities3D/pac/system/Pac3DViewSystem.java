@@ -19,6 +19,7 @@ public class Pac3DViewSystem {
         final PacView3D view3D = new PacView3D();
         view3D.setBodyAndJaw(shapeFactory.createPacBody(config, true), shapeFactory.createPacBody(config, false));
         configurePowerLight(view3D, config.colors().headColor().desaturate());
+        view3D.root().setVisible(pac.isVisible());
         return view3D;
     }
 
@@ -27,6 +28,7 @@ public class Pac3DViewSystem {
         view3D.setBodyAndJaw(shapeFactory.createPacBody(config, true), shapeFactory.createPacBody(config, false));
         view3D.bodyGroup().getChildren().add(shapeFactory.createFemalePacBodyParts(config));
         configurePowerLight(view3D, config.colors().headColor().desaturate());
+        view3D.root().setVisible(msPacMan.isVisible());
         return view3D;
     }
 

@@ -281,14 +281,10 @@ public class PlayScene3D extends AbstractGameScene {
             //TODO Replace by Tengen-specific view3D implementation
             addAdditional3DLevelElements(assertView3D().assertLevel3D());
 
-            //TODO Rethink this
-            final Pac pac = level.entitySet().pac();
-            initPac3DProperties(game.systems(), level, pac);
-
             // Let lives counter shapes track Pac-Man location
             final LivesCounter livesCounter = game.session().hud().livesCounter();
             final LivesCounterView3DSystem livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3DSystem.class);
-            livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
+            livesCounterView3DSystem.startTrackingPac(livesCounter, level.entitySet().pac());
         });
     }
 
