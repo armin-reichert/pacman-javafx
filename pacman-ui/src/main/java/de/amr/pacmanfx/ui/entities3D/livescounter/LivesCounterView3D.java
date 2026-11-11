@@ -105,7 +105,7 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
         this.plateMaterial = material;
     }
 
-    public int getLivesCount() {
+    public int livesCount() {
         return livesCount.get();
     }
 

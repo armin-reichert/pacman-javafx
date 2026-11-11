@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
