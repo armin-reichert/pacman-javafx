@@ -7,9 +7,8 @@ package de.amr.pacmanfx.ui.entities3D.livescounter;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
@@ -32,11 +31,11 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
 
     private PhongMaterial plateMaterial;
 
-    private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
-
     private final List<NodePositionTracker> trackers = new ArrayList<>();
 
     private final Group root = new Group();
+
+    private final List<Node> counterShapes = new ArrayList<>();
 
     public LivesCounterView3D() {
         pillarHeight = 8;
@@ -47,6 +46,10 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
         plateThickness = 1;
         plateColor = Color.grayRgb(100);
         plateMaterial = Ufx.coloredPhongMaterial(plateColor);
+    }
+
+    public List<Node> counterShapes() {
+        return counterShapes;
     }
 
     public Color pillarColor() {
@@ -105,20 +108,8 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
         this.plateMaterial = material;
     }
 
-    public int livesCount() {
-        return livesCount.get();
-    }
-
-    public void setLivesCount(int livesCount) {
-        this.livesCount.set(livesCount);
-    }
-
     public Group root() {
         return root;
-    }
-
-    public IntegerProperty livesCountProperty() {
-        return livesCount;
     }
 
     public List<NodePositionTracker> trackers() {
@@ -128,7 +119,6 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
     @Override
     public void dispose() {
 //        stopTracking();
-        livesCount.unbind();
         cleanupGroup(root, true);
     }
 }

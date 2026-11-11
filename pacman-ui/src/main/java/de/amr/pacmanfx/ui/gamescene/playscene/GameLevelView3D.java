@@ -117,10 +117,6 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         Ufx.setDrawMode(mapView3D.root(), newValue);
     }
 
-    public Group root() {
-        return root;
-    }
-
     @Override
     public void dispose() {
         if (mapView3D != null) {
@@ -130,6 +126,10 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
     }
 
     // Public accessors
+
+    public Group root() {
+        return root;
+    }
 
     public WorldMapView3D maze3D() {
         return mapView3D;
@@ -188,6 +188,19 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox, risingHeight);
         animation.delegate().setOnFinished(_ -> root.getChildren().remove(numberBox));
         animation.replay();
+    }
+
+    public void replaceLevelCounter3D(GameContext game, LevelCounter levelCounter) {
+        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
+        final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
+
+        final Group oldRoot = view3D.root();
+        if (oldRoot != null) {
+            root.getChildren().remove(oldRoot);
+        }
+
+        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
+        root.getChildren().add(view3D.root());
     }
 
     // Private area, no trespassing!
@@ -277,7 +290,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
     private void createLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
         if (!livesCounter.hasComponent(LivesCounterView3D.class)) {
             final LivesCounterView3D view3D = game.systems().assertSystem(LivesCounterView3DSystem.class)
-                .createView(uiConfig.factory3D(), uiConfig.worldSettings());
+                .createView3D(uiConfig.factory3D(), uiConfig.worldSettings());
             livesCounter.setComponent(LivesCounterView3D.class, view3D);
             view3D.root().setTranslateX(2 * TS);
             view3D.root().setTranslateY(2 * TS);
@@ -293,19 +306,6 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
             Logger.info("Level counter already had a 3D view!");
         }
         replaceLevelCounter3D(game, levelCounter);
-    }
-
-    public void replaceLevelCounter3D(GameContext game, LevelCounter levelCounter) {
-        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
-        final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
-
-        final Group oldRoot = view3D.root();
-        if (oldRoot != null) {
-            root.getChildren().remove(oldRoot);
-        }
-
-        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
-        root.getChildren().add(view3D.root());
     }
 
     private void composeLevel3D(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {

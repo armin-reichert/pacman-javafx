@@ -21,7 +21,7 @@ public class LivesCounterView3DSystem {
 
     public LivesCounterView3DSystem() {}
 
-    public LivesCounterView3D createView(Factory3D factory3D, WorldSettings settings) {
+    public LivesCounterView3D createView3D(Factory3D factory3D, WorldSettings settings) {
         requireNonNull(factory3D);
         requireNonNull(settings);
 
@@ -33,12 +33,9 @@ public class LivesCounterView3DSystem {
         final var standsGroup = new Group();
         view3D.root().getChildren().add(standsGroup);
 
-        final var counterShapes = new Node[settings.livesCounter().numShapes()];
-        for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = factory3D.createLivesCounterShape3D(settings);
-        }
-        for (int i = 0; i < counterShapes.length; ++i) {
-            final Node shape = counterShapes[i];
+        for (int i = 0; i < settings.livesCounter().numShapes(); ++i) {
+            final Node shape = factory3D.createLivesCounterShape3D(settings);
+            view3D.counterShapes().add(shape);
 
             final float x = i * tilesPx(2);
             final int lift = i % 2 == 0 ? 0 : 4;
@@ -60,13 +57,10 @@ public class LivesCounterView3DSystem {
             final double shapeRadius = 0.5 * shape.getBoundsInParent().getHeight(); // take scale transform into account!
             shape.setTranslateZ(-(stand.pillar().getHeight() + view3D.plateThickness() + shapeRadius));
 
-            shape.visibleProperty().bind(view3D.livesCountProperty()
-                .map(count -> (int) shape.getUserData() <= count.intValue()));
-
             view3D.root().getChildren().add(shape);
         }
 
-        for (Node shape : counterShapes) {
+        for (Node shape : view3D.counterShapes()) {
             view3D.trackers().add(new NodePositionTracker(shape));
         }
 
@@ -90,6 +84,8 @@ public class LivesCounterView3DSystem {
 
     public void update(LivesCounter livesCounter) {
         final LivesCounterView3D view3D = livesCounter.assertComponent(LivesCounterView3D.class);
-        view3D.livesCountProperty().set(livesCounter.data().numLivesShown() - 1);
+        for (int i = 0; i < view3D.counterShapes().size(); ++i) {
+            view3D.counterShapes().get(i).setVisible(i < livesCounter.data().numLivesShown());
+        }
     }
 }
