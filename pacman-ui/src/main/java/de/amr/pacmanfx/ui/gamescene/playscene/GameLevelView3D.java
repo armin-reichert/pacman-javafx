@@ -288,13 +288,11 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
     }
 
     private void createLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
-        if (!livesCounter.hasComponent(LivesCounterView3D.class)) {
-            final LivesCounterView3D view3D = game.systems().assertSystem(LivesCounterView3DSystem.class)
-                .createView3D(uiConfig.factory3D(), uiConfig.worldSettings());
-            livesCounter.setComponent(LivesCounterView3D.class, view3D);
-            view3D.root().setTranslateX(2 * TS);
-            view3D.root().setTranslateY(2 * TS);
-        }
+        final LivesCounterView3DSystem system = game.systems().assertSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3D view3D = system.createView3D(uiConfig.factory3D(), uiConfig.worldSettings());
+        view3D.root().setTranslateX(2 * TS);
+        view3D.root().setTranslateY(2 * TS);
+        livesCounter.setComponent(LivesCounterView3D.class, view3D);
     }
 
     private void createLevelCounter3DView(GameContext game, LevelCounter levelCounter) {
