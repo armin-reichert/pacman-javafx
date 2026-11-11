@@ -42,7 +42,6 @@ public class Pac3DTransformSystem {
         final WorldMap worldMap = pac.worldNavigation().worldMap();
         final boolean outsideWorld = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
         view3D.root().setVisible(pac.isVisible() && !outsideWorld);
-        Logger.info("Pac 3D visible: {}", view3D.root().isVisible());
 
         view3D.root().setTranslateX(center.x());
         view3D.root().setTranslateY(center.y());
