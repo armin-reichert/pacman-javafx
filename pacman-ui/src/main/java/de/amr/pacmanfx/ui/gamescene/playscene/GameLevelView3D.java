@@ -103,9 +103,9 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         createPac3DView(game.systems(), pac, uiConfig.worldSettings().pac());
         createGhost3DViews(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
         createLevelCounter3DView(game, levelCounter);
-        createLivesCounter3DView(game, livesCounter);
+        replaceLivesCounter3DView(game, livesCounter);
 
-        composeLevel3D(pac, ghosts, livesCounter, house);
+        compose(pac, ghosts, livesCounter, house);
 
         root.setMouseTransparent(true); // this increases performance they say...
     }
@@ -287,9 +287,13 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         });
     }
 
-    private void createLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
+    private void replaceLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
         final LivesCounterView3DSystem system = game.systems().assertSystem(LivesCounterView3DSystem.class);
-        final LivesCounterView3D view3D = system.createView3D(uiConfig.factory3D(), uiConfig.worldSettings());
+        livesCounter.optComponent(LivesCounterView3D.class).ifPresent(oldView3D -> {
+            system.stopTrackingPac(oldView3D);
+            livesCounter.removeComponent(LivesCounterView3D.class);
+        });
+        final LivesCounterView3D view3D = system.createLivesCounterView3D(uiConfig.factory3D(), uiConfig.worldSettings());
         view3D.root().setTranslateX(2 * TS);
         view3D.root().setTranslateY(2 * TS);
         livesCounter.setComponent(LivesCounterView3D.class, view3D);
@@ -306,37 +310,40 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         replaceLevelCounter3D(game, levelCounter);
     }
 
-    private void composeLevel3D(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {
+    private void compose(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {
+        final var children = root.getChildren();
 
-        // Adding-order matters for correct transparency!
+        children.clear();
+
+        // Add-order matters for correct transparency!
 
         final LivesCounterView3D livesCounterView3D = livesCounter.assertComponent(LivesCounterView3D.class);
-        root.getChildren().add(livesCounterView3D.root());
+        children.add(livesCounterView3D.root());
 
         final PacView3D pacView3D = pac.assertComponent(PacView3D.class);
-        root.getChildren().add(pacView3D.root());
-        root.getChildren().add(pacView3D.powerLight());
+        children.add(pacView3D.root());
+        children.add(pacView3D.powerLight());
 
         for (Ghost ghost: ghosts) {
             final GhostView3D ghostView3D = ghost.assertComponent(GhostView3D.class);
-            root.getChildren().add(ghostView3D.root());
+            children.add(ghostView3D.root());
         }
 
         for (Energizer3D energizerView3D : energizerViews3D.values()) {
-            root.getChildren().add(energizerView3D.root());
+            children.add(energizerView3D.root());
         }
 
         for (Pellet3D pelletView3D : pelletViews3D.values()) {
-            root.getChildren().add(pelletView3D.root());
+            children.add(pelletView3D.root());
         }
 
-        root.getChildren().add(mapView3D.particlesGroup());
-        root.getChildren().add(mapView3D.root());
+        children.add(mapView3D.particlesGroup());
+        children.add(mapView3D.root());
 
-        root.getChildren().add(ghostHunterLight);
+        children.add(ghostHunterLight);
 
         final House3DViewComp houseView3D = house.assertComponent(House3DViewComp.class);
-        root.getChildren().add(houseView3D.root());
-        root.getChildren().add(houseView3D.doors());
+        children.add(houseView3D.root());
+        children.add(houseView3D.doors());
     }
 }

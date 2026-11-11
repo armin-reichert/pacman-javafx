@@ -96,7 +96,6 @@ public class LivesCounterView3D implements DisposableGraphicsObject {
 
     @Override
     public void dispose() {
-//        stopTracking();
         cleanupGroup(root, true);
     }
 }

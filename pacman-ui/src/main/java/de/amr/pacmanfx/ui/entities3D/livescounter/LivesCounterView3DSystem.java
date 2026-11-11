@@ -20,7 +20,7 @@ public class LivesCounterView3DSystem {
 
     public LivesCounterView3DSystem() {}
 
-    public LivesCounterView3D createView3D(Factory3D factory3D, WorldSettings settings) {
+    public LivesCounterView3D createLivesCounterView3D(Factory3D factory3D, WorldSettings settings) {
         requireNonNull(factory3D);
         requireNonNull(settings);
 
@@ -69,8 +69,7 @@ public class LivesCounterView3DSystem {
         }
     }
 
-    public void stopTrackingPac(LivesCounter livesCounter) {
-        final LivesCounterView3D view3D = livesCounter.assertComponent(LivesCounterView3D.class);
+    public void stopTrackingPac(LivesCounterView3D view3D) {
         for (NodePositionTracker tracker : view3D.trackers()) {
             tracker.stopTracking();
         }
