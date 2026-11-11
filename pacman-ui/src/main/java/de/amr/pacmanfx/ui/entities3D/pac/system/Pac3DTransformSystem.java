@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.scene.transform.Rotate;
+import org.tinylog.Logger;
 
 import static de.amr.basics.TileDimension.HTS;
 import static de.amr.basics.TileDimension.TS;
@@ -35,14 +36,13 @@ public class Pac3DTransformSystem {
     public void update(Pac pac) {
         requireNonNull(pac);
 
-        if (pac.state().enumValue() != PacState.ACTIVE) {
-            return;
-        }
-
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
         final Vector2f center = pac.position().bodyCenter();
 
-        updateVisibility(pac, center);
+        final WorldMap worldMap = pac.worldNavigation().worldMap();
+        final boolean outsideWorld = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
+        view3D.root().setVisible(pac.isVisible() && !outsideWorld);
+        Logger.info("Pac 3D visible: {}", view3D.root().isVisible());
 
         view3D.root().setTranslateX(center.x());
         view3D.root().setTranslateY(center.y());
@@ -52,13 +52,6 @@ public class Pac3DTransformSystem {
         if (moveDir != null) {
             updateFacing(view3D, moveDir);
         }
-    }
-
-    private void updateVisibility(Pac pac, Vector2f center) {
-        final PacView3D view3D = pac.assertComponent(PacView3D.class);
-        final WorldMap worldMap = pac.worldNavigation().worldMap();
-        final boolean outsideWorld = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
-        view3D.root().setVisible(pac.isVisible() && !outsideWorld);
     }
 
     private void updateFacing(PacView3D view3D, Direction dir) {

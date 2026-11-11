@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import org.tinylog.Logger;
 
 import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;

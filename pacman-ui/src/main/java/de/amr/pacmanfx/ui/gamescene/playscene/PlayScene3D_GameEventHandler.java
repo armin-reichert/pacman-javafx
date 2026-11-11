@@ -190,9 +190,6 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
-        //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
-        level.entitySet().pac().assertComponent(PacView3D.class).root().setVisible(true);
-
         playScene3D.replaceActionBindings(assertGame().session(), level);
 
         playScene3D.assertView3D().animationRegistry().optAnimation(PlaySceneView3D_FadeInAnimation.ANIMATION_NAME)
@@ -286,6 +283,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onHuntingStart(GameLevelView3D level3D) {
         final GameLevel level = level3D.level();
+
         playScene3D.initPac3DProperties(assertGame().systems(), level, level.entitySet().pac());
 
         final PlaySceneView3DAnimationSystem animationSystem = playScene3D.assertView3D().animationSystem();
