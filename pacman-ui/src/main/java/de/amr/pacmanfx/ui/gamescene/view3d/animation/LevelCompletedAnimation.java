@@ -8,7 +8,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -75,7 +75,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
                 mazeWallsAndHouseDisappearAnimation(
                     level3D,
-                    house.assertComponent(House3DViewComp.class).wallBaseHeightProperty(),
+                    house.assertComponent(HouseView3D.class).wallBaseHeightProperty(),
                     level3D.maze3D().wallBaseHeightProperty()),
 
                 pauseSecThen(1.0, soundEffects::playLevelChangedSound)

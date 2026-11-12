@@ -22,7 +22,7 @@ import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-public class House3DViewComp implements DisposableGraphicsObject {
+public class HouseView3D implements DisposableGraphicsObject {
 
     public static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
@@ -58,7 +58,7 @@ public class House3DViewComp implements DisposableGraphicsObject {
      * @param wallThickness     thickness of the wall cylinders
      * @param opacity           opacity of the wall base material
      */
-    public House3DViewComp(
+    public HouseView3D(
         HouseFloorplanComp floorplan,
         double baseHeight,
         double wallThickness,

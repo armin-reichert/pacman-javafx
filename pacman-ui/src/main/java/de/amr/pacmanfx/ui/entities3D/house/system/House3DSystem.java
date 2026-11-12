@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
 
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class House3DSystem {
         GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
 
     public void hideDoors(House house) {
-        final House3DViewComp view3D = house.assertComponent(House3DViewComp.class);
+        final HouseView3D view3D = house.assertComponent(HouseView3D.class);
         view3D.setDoorsVisible(false);
     }
 
@@ -38,7 +38,7 @@ public class House3DSystem {
     }
 
     private void updateLight(House house, GameLevelEntitySet entitySet) {
-        final House3DViewComp view3D = house.assertComponent(House3DViewComp.class);
+        final HouseView3D view3D = house.assertComponent(HouseView3D.class);
         boolean ghostNearHouseDoor = entitySet.ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
             .filter(ghost -> ghostIsNearHouseDoor(house, ghost))
             .anyMatch(GameEntity::isVisible);
@@ -46,7 +46,7 @@ public class House3DSystem {
     }
 
     private boolean ghostIsNearHouseDoor(House house, Ghost ghost) {
-        final House3DViewComp view3D = house.assertComponent(House3DViewComp.class);
+        final HouseView3D view3D = house.assertComponent(HouseView3D.class);
         final Vector2f houseEntryPos = house.floorplan().entryPosition();
         return ghost.position().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
     }

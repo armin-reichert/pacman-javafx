@@ -19,7 +19,7 @@ public class House3DAnimationComp implements Disposable {
     }
 
     public void createDoorsMeltingAnimationFactory(DoubleProperty barThicknessProperty) {
-        final double barThickness = 2.0 / House3DViewComp.DOOR_VERTICAL_BAR_COUNT;
+        final double barThickness = 2.0 / HouseView3D.DOOR_VERTICAL_BAR_COUNT;
         doorsMeltingAnimation.setAnimationFactory(() -> new Timeline(
             new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))

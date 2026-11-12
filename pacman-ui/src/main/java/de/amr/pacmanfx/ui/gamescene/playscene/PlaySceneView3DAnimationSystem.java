@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
@@ -177,7 +177,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     public void createHouseAnimations(House house) {
-        final House3DViewComp house3D = house.assertComponent(House3DViewComp.class);
+        final HouseView3D house3D = house.assertComponent(HouseView3D.class);
         final var animation =  new House3DAnimationComp(registry);
         animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
         if (!house.hasComponent(House3DAnimationComp.class)) {

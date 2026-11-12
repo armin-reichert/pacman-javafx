@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
@@ -335,7 +335,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
 
         children.add(ghostHunterLight);
 
-        final House3DViewComp houseView3D = house.assertComponent(House3DViewComp.class);
+        final HouseView3D houseView3D = house.assertComponent(HouseView3D.class);
         children.add(houseView3D.root());
         children.add(houseView3D.doors());
     }
