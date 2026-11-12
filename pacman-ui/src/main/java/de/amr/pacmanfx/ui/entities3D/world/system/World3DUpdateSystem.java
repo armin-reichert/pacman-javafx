@@ -53,8 +53,8 @@ public class World3DUpdateSystem {
 
     private void updateGhosts3D(GhostSystems3D ghostSystems3D, GameLevelEntitySet entitySet) {
         entitySet.ghosts().forEach(ghost -> {
-            ghostSystems3D.movementSystem().update(ghost);
-            ghostSystems3D.viewSystem().updateAppearance(ghost);
+            ghostSystems3D.updateTransform(ghost);
+            ghostSystems3D.updateAppearance(ghost);
         });
     }
 
