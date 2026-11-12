@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
-import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
@@ -31,7 +31,7 @@ public class World3DUpdateSystem {
         final GameSession session = game.session();
         final GameLevelEntitySet entitySet = session.optLevel().orElseThrow().entitySet();
 
-        updateLivesCounterView3D(systems.assertSystem(LivesCounterView3DSystem.class), session.hud().livesCounter());
+        updateLivesCounterView3D(systems.assertSystem(LivesCounterView3D_System.class), session.hud().livesCounter());
         updateHouseView3D(systems.assertSystem(HouseView3DSystem.class), entitySet.theOne(House.class), entitySet);
         updatePacView3D(systems.assertSystem(PacView3D_System.class), entitySet.pac());
         updateGhosts3D(systems.assertSystem(GhostView3D_System.class), entitySet);
@@ -45,7 +45,7 @@ public class World3DUpdateSystem {
         }
     }
 
-    private void updateLivesCounterView3D(LivesCounterView3DSystem livesCounterView3DSystem, LivesCounter livesCounter) {
+    private void updateLivesCounterView3D(LivesCounterView3D_System livesCounterView3DSystem, LivesCounter livesCounter) {
         if (livesCounter.hasComponent(LevelCounterView3D.class)) {
             livesCounterView3DSystem.update(livesCounter);
         }

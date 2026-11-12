@@ -16,9 +16,9 @@ import javafx.scene.Node;
 import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class LivesCounterView3DSystem {
+public class LivesCounterView3D_System {
 
-    public LivesCounterView3DSystem() {}
+    public LivesCounterView3D_System() {}
 
     public LivesCounterView3D createLivesCounterView3D(Factory3D factory3D, WorldSettings settings) {
         requireNonNull(factory3D);

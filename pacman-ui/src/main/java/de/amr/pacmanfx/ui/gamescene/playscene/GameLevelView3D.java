@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounter3DFactory;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
-import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
@@ -292,7 +292,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
     }
 
     private void replaceLivesCounterView3D(GameContext game, LivesCounter livesCounter) {
-        final LivesCounterView3DSystem system = game.systems().assertSystem(LivesCounterView3DSystem.class);
+        final LivesCounterView3D_System system = game.systems().assertSystem(LivesCounterView3D_System.class);
         livesCounter.optComponent(LivesCounterView3D.class).ifPresent(oldView3D -> {
             system.stopTrackingPac(oldView3D);
             livesCounter.removeComponent(LivesCounterView3D.class);
