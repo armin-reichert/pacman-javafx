@@ -9,11 +9,11 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 
 import static java.util.Objects.requireNonNull;
 
-public enum Ghost3DAnimationID implements Named {
+public enum GhostView3D_AnimationID implements Named {
     BRAKING, DRESS_MOVEMENT, FLASHING;
 
-    public Ghost3DAnimationKey key(Ghost ghost) {
+    public GhostView3D_AnimationKey key(Ghost ghost) {
         requireNonNull(ghost);
-        return new Ghost3DAnimationKey(this, ghost.personality());
+        return new GhostView3D_AnimationKey(this, ghost.personality());
     }
 }

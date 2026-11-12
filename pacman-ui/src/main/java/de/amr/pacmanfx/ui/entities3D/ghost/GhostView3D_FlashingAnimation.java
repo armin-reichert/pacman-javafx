@@ -10,11 +10,11 @@ import javafx.animation.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-public class Ghost3DFlashingAnimation extends ManagedAnimation {
+public class GhostView3D_FlashingAnimation extends ManagedAnimation {
 
     private static final float TOTAL_DURATION_SEC = 2;
 
-    public Ghost3DFlashingAnimation(
+    public GhostView3D_FlashingAnimation(
         Ghost ghost,
         GhostSettings settings,
         int numFlashes

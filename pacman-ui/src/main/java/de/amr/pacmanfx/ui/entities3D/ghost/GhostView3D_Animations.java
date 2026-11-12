@@ -5,13 +5,13 @@ import de.amr.basics.ecs.Resettable;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 
-public class GhostView3DAnimations implements Disposable, Resettable {
+public class GhostView3D_Animations implements Disposable, Resettable {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;
     private ManagedAnimation braking;
 
-    public GhostView3DAnimations() {}
+    public GhostView3D_Animations() {}
 
     @Override
     public void dispose() {
@@ -46,9 +46,9 @@ public class GhostView3DAnimations implements Disposable, Resettable {
         GhostSettings settings,
         int numFlashes)
     {
-        flashing = new Ghost3DFlashingAnimation(ghost, settings, numFlashes);
-        dressMovement = new Ghost3DDressAnimation(ghost);
-        braking = new Ghost3DBrakeAnimation(ghost);
+        flashing = new GhostView3D_FlashingAnimation(ghost, settings, numFlashes);
+        dressMovement = new GhostView3D_DressAnimation(ghost);
+        braking = new GhostView3D_BrakeAnimation(ghost);
     }
 
     @Override

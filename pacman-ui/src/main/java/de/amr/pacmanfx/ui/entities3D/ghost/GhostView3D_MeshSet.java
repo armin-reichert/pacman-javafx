@@ -6,4 +6,4 @@ package de.amr.pacmanfx.ui.entities3D.ghost;
 
 import javafx.scene.shape.Mesh;
 
-public record GhostMeshSet(Mesh dress, Mesh pupils, Mesh eyeballs) {}
+public record GhostView3D_MeshSet(Mesh dress, Mesh pupils, Mesh eyeballs) {}

@@ -22,7 +22,7 @@ public class GhostView3D {
 
     private Group dressGroup;
 
-    private GhostView3DMaterialSet appearanceMaterialSet;
+    private GhostView3D_MaterialSet appearanceMaterialSet;
 
     private MeshView dressMeshView;
     
@@ -90,11 +90,11 @@ public class GhostView3D {
         return facingRotate;
     }
 
-    public void setAppearanceMaterialSet(GhostView3DMaterialSet appearanceMaterialSet) {
+    public void setAppearanceMaterialSet(GhostView3D_MaterialSet appearanceMaterialSet) {
         this.appearanceMaterialSet = requireNonNull(appearanceMaterialSet);
     }
 
-    public GhostView3DMaterialSet appearanceMaterialSet() {
+    public GhostView3D_MaterialSet appearanceMaterialSet() {
         return appearanceMaterialSet;
     }
 

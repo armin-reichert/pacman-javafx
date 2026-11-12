@@ -6,5 +6,5 @@ package de.amr.pacmanfx.ui.entities3D.ghost;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-public record Ghost3DAnimationKey(Ghost3DAnimationID animationID, GhostPersonality ghostID) {
+public record GhostView3D_AnimationKey(GhostView3D_AnimationID animationID, GhostPersonality ghostID) {
 }

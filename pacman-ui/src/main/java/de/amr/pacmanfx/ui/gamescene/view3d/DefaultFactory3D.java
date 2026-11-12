@@ -42,7 +42,7 @@ public class DefaultFactory3D implements Factory3D {
 
     protected Pac3DShapeFactory pac3DShapeFactory = new Pac3DShapeFactory();
 
-    protected final Map<GhostColorsByState, GhostView3DMaterialSet> ghostMaterialsCache = new HashMap<>();
+    protected final Map<GhostColorsByState, GhostView3D_MaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
 
     protected DefaultFactory3D() {}
@@ -63,15 +63,15 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public void createGhost3D(CommonGameSystems systems, Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model3D = PacManMeshes3D.instance();
-        final GhostSystems3D ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
-        final GhostView3D view3D = ghostSystems3D.buildGhostView3D(
+        final GhostView3D_Systems ghostView3DSystems = systems.assertSystem(GhostView3D_Systems.class);
+        final GhostView3D view3D = ghostView3DSystems.buildGhostView3D(
             settings,
             model3D.ghostDressMesh(), model3D.ghostPupilsMesh(), model3D.ghostEyeballsMesh());
         ghost.setComponent(GhostView3D.class, view3D);
 
-        ghost.setComponent(GhostView3DAnimations.class, new GhostView3DAnimations());
+        ghost.setComponent(GhostView3D_Animations.class, new GhostView3D_Animations());
 
-        final GhostView3DMaterialSet materialSet = ghostMaterialsCache.computeIfAbsent(
+        final GhostView3D_MaterialSet materialSet = ghostMaterialsCache.computeIfAbsent(
             settings.colors(), this::createGhostMaterial);
         view3D.setAppearanceMaterialSet(materialSet);
     }
@@ -108,27 +108,27 @@ public class DefaultFactory3D implements Factory3D {
         return energizer3D;
     }
 
-    public GhostView3DMaterialSet createGhostMaterial(GhostColorsByState colors) {
+    public GhostView3D_MaterialSet createGhostMaterial(GhostColorsByState colors) {
         requireNonNull(colors);
 
-        final var normalMaterials = new GhostView3DPartsMaterials(
+        final var normalMaterials = new GhostView3D_PartsMaterials(
             coloredPhongMaterial(colors.normal().dressColor()),
             coloredPhongMaterial(colors.normal().eyeballsColor()),
             coloredPhongMaterial(colors.normal().pupilsColor())
         );
 
-        final var frightenedMaterials = new GhostView3DPartsMaterials(
+        final var frightenedMaterials = new GhostView3D_PartsMaterials(
             coloredPhongMaterial(colors.frightened().dressColor()),
             coloredPhongMaterial(colors.frightened().eyeballsColor()),
             coloredPhongMaterial(colors.frightened().pupilsColor())
         );
 
-        final var flashingMaterials = new GhostView3DPartsMaterials(
+        final var flashingMaterials = new GhostView3D_PartsMaterials(
             coloredPhongMaterial(colors.flashing().dressColor()),
             coloredPhongMaterial(colors.flashing().eyeballsColor()),
             coloredPhongMaterial(colors.flashing().pupilsColor())
         );
 
-        return new GhostView3DMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
+        return new GhostView3D_MaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 }

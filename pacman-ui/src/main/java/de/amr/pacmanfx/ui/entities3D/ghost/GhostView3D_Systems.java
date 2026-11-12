@@ -13,7 +13,7 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class GhostSystems3D {
+public class GhostView3D_Systems {
     public void updateTransform(Ghost ghost) {
         final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
@@ -37,7 +37,7 @@ public class GhostSystems3D {
         view3D.facingRotate().setAngle(angle);
 
         if (ghost.worldNavigation().info().tunnelEntered) {
-            ghost.assertComponent(GhostView3DAnimations.class).braking().replay();
+            ghost.assertComponent(GhostView3D_Animations.class).braking().replay();
         }
     }
 
@@ -133,7 +133,7 @@ public class GhostSystems3D {
         setSkin(view3D, view3D.appearanceMaterialSet().normalMaterials());
     }
 
-    private void setSkin(GhostView3D view3D, GhostView3DPartsMaterials materials) {
+    private void setSkin(GhostView3D view3D, GhostView3D_PartsMaterials materials) {
         view3D.dressMeshView()   .setMaterial(materials.dressMaterial());
         view3D.pupilsMeshView()  .setMaterial(materials.pupilsMaterial());
         view3D.eyeballsMeshView().setMaterial(materials.eyeballsMaterial());
@@ -144,7 +144,7 @@ public class GhostSystems3D {
     }
 
     private void setAppearance(GhostView3D view3D, Ghost ghost, GhostAppearance appearance) {
-        final GhostView3DAnimations animation3D = ghost.assertComponent(GhostView3DAnimations.class);
+        final GhostView3D_Animations animation3D = ghost.assertComponent(GhostView3D_Animations.class);
 
         switch (appearance) {
             case EATEN, EYES -> {

@@ -18,8 +18,8 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.entities3D.ghost.Ghost3DAnimationID;
-import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3DAnimations;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_AnimationID;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_Animations;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.House3DAnimation;
@@ -227,11 +227,11 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
-        final GhostView3DAnimations animations = ghost.assertComponent(GhostView3DAnimations.class);
+        final GhostView3D_Animations animations = ghost.assertComponent(GhostView3D_Animations.class);
         animations.createAnimations(ghost, settings, numFlashes);
-        registry.register(Ghost3DAnimationID.FLASHING.key(ghost), animations.flashing());
-        registry.register(Ghost3DAnimationID.DRESS_MOVEMENT.key(ghost), animations.dressMovement());
-        registry.register(Ghost3DAnimationID.BRAKING.key(ghost), animations.braking());
+        registry.register(GhostView3D_AnimationID.FLASHING.key(ghost), animations.flashing());
+        registry.register(GhostView3D_AnimationID.DRESS_MOVEMENT.key(ghost), animations.dressMovement());
+        registry.register(GhostView3D_AnimationID.BRAKING.key(ghost), animations.braking());
     }
 
     private void createEnergizerAnimations(GameLevelView3D level3D, Energizer3DSettings settings) {
