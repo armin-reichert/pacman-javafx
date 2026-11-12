@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
+import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -85,22 +85,22 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Pellet3D createPellet3D(Pellet3DSettings settings, PhongMaterial material) {
+    public PelletView3D createPellet3D(Pellet3DSettings settings, PhongMaterial material) {
         requireNonNull(settings);
         requireNonNull(material);
 
         final Sphere oval = new Sphere(settings.radius());
         oval.setMaterial(material);
         oval.setScaleX(1.25);
-        return new Pellet3D(oval);
+        return new PelletView3D(oval);
     }
 
     @Override
-    public Energizer3D createEnergizer3D(Energizer3DSettings settings, PhongMaterial material) {
+    public EnergizerView3D createEnergizer3D(Energizer3DSettings settings, PhongMaterial material) {
         requireNonNull(settings);
         requireNonNull(material);
 
-        final var energizer3D = new Energizer3D();
+        final var energizer3D = new EnergizerView3D();
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(settings.radius(), 48);
             shape.setMaterial(material);

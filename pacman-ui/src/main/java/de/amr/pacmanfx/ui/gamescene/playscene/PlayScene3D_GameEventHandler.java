@@ -37,8 +37,7 @@ import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
@@ -180,7 +179,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = level3D.level();
         final State<GameContext> newState = assertGame().state();
 
-        level3D.replaceLevelCounter3D(assertGame(), assertGame().session().hud().levelCounter());
+        level3D.replaceLevelCounterView3D(assertGame(), assertGame().session().hud().levelCounter());
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
@@ -202,7 +201,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final long tick = playScene3D.engine().clock().currentTick();
 
         if (event.allPellets()) {
-            level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
+            level3D.pellets3D().map(PelletView3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
         }
         else {
             final Vector2i tile = event.pac().position().tile();
@@ -215,7 +214,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
                 optSoundEffects().ifPresent(PacManGameSoundEffects::playEnergizerExplosion);
             }
             else {
-                level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
+                level3D.pellet3DAtTile(tile).ifPresent(pelletView3D -> removePelletAfterDelay(level3D, pelletView3D));
                 optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
@@ -227,8 +226,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
             .ifPresent(animation -> animation.triggerExplosion(center));
     }
 
-    private void removePelletAfterDelay(GameLevelView3D level3D, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.root().getChildren().remove(pellet3D.root())).play();
+    private void removePelletAfterDelay(GameLevelView3D level3D, PelletView3D pelletView3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.root().getChildren().remove(pelletView3D.root())).play();
     }
 
     @Override

@@ -35,9 +35,9 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSyste
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
@@ -75,9 +75,9 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
 
     private final PointLight ghostHunterLight = new PointLight();
 
-    private final Map<Vector2i, Energizer3D> energizerViews3D = new HashMap<>();
+    private final Map<Vector2i, EnergizerView3D> energizerViews3D = new HashMap<>();
 
-    private final Map<Vector2i, Pellet3D> pelletViews3D = new HashMap<>();
+    private final Map<Vector2i, PelletView3D> pelletViews3D = new HashMap<>();
 
     private WorldMapView3D mapView3D;
 
@@ -96,16 +96,16 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         final LivesCounter livesCounter = game.session().hud().livesCounter();
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 
-        createMaze3DView(level.worldMap(), house, colorScheme);
-        createFood3DViews();
+        createMapView3D(level.worldMap(), house, colorScheme);
+        createFoodView3D();
         new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
-        createPac3DView(game.systems(), pac, uiConfig.worldSettings().pac());
-        createGhost3DViews(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
+        createPacView3D(game.systems(), pac, uiConfig.worldSettings().pac());
+        createGhostsView3D(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
 
-        replaceLevelCounter3DView(game, levelCounter);
-        replaceLivesCounter3DView(game, livesCounter);
+        replaceLevelCounterView3D(game, levelCounter);
+        replaceLivesCounterView3D(game, livesCounter);
 
-        compose(pac, ghosts, livesCounter, house);
+        arrangeChildren(pac, ghosts, livesCounter, house);
 
         root.setMouseTransparent(true); // this increases performance they say...
     }
@@ -143,26 +143,26 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         return ghostHunterLight;
     }
 
-    public Stream<Energizer3D> energizers3D() {
+    public Stream<EnergizerView3D> energizers3D() {
         return energizerViews3D.values().stream();
     }
 
-    public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
+    public Optional<EnergizerView3D> energizer3DAt(Vector2i tile) {
         return Optional.ofNullable(energizerViews3D.get(tile));
     }
 
-    public Stream<Pellet3D> pellets3D() {
+    public Stream<PelletView3D> pellets3D() {
         return pelletViews3D.values().stream();
     }
 
-    public Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
+    public Optional<PelletView3D> pellet3DAtTile(Vector2i tile) {
         return Optional.ofNullable(pelletViews3D.get(tile));
     }
 
     public void cleanupFoodAndParticles() {
-        energizerViews3D.values().forEach(Energizer3D::hide);
+        energizerViews3D.values().forEach(EnergizerView3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        pelletViews3D.values().forEach(pellet3D -> pellet3D.root().setVisible(false));
+        pelletViews3D.values().forEach(pelletView3D -> pelletView3D.root().setVisible(false));
         mapView3D.particlesGroup().getChildren().clear();
     }
 
@@ -190,22 +190,23 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         animation.replay();
     }
 
-    public void replaceLevelCounter3D(GameContext game, LevelCounter levelCounter) {
-        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
-        final LevelCounterView3D view3D = levelCounter.assertComponent(LevelCounterView3D.class);
+    public void replaceLevelCounterView3D(GameContext game, LevelCounter levelCounter) {
+        final LevelCounterView3D view3D = new LevelCounterView3D();
+        levelCounter.setComponent(LevelCounterView3D.class, view3D);
 
         final Group oldRoot = view3D.root();
         if (oldRoot != null) {
             root.getChildren().remove(oldRoot);
         }
-
-        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
         root.getChildren().add(view3D.root());
+
+        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
+        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
     }
 
     // Private area, no trespassing!
 
-    private void createMaze3DView(WorldMap worldMap, House house, WorldMapColorScheme colorScheme) {
+    private void createMapView3D(WorldMap worldMap, House house, WorldMapColorScheme colorScheme) {
         mapView3D = new WorldMapView3DFactory().createMapView3D(
             p -> house.contains(PositionSystem.computeTileAt(p)),
             worldMap.terrainLayer(),
@@ -218,7 +219,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         mapView3D.floorColorProperty()    .bind(viewModel.maze3DSettings().floorColorProperty());
     }
 
-    private void createFood3DViews() {
+    private void createFoodView3D() {
         final GenericWorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
@@ -234,24 +235,24 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
             .filter(level.food()::hasFoodAtTile)
             .forEach(tile -> {
                 if (foodLayer.isEnergizerTile(tile)) {
-                    energizerViews3D.put(tile, createEnergizer3D(tile, energizerZ, foodMaterial));
+                    energizerViews3D.put(tile, createEnergizerView3D(tile, energizerZ, foodMaterial));
                 } else {
-                    pelletViews3D.put(tile, createPellet3D(tile, pelletZ, foodMaterial));
+                    pelletViews3D.put(tile, createPelletView3D(tile, pelletZ, foodMaterial));
                 }
             });
     }
 
-    private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.worldSettings().pellet(), foodMaterial);
-        pellet3D.setLocation(tile, z);
-        return pellet3D;
+    private PelletView3D createPelletView3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
+        final PelletView3D pelletView3D = uiConfig.factory3D().createPellet3D(uiConfig.worldSettings().pellet(), foodMaterial);
+        pelletView3D.setLocation(tile, z);
+        return pelletView3D;
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
+    private EnergizerView3D createEnergizerView3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
+        final EnergizerView3D energizerView3D = uiConfig.factory3D().createEnergizer3D(
             uiConfig.worldSettings().energizer(), foodMaterial);
-        energizer3D.setLocation(tile, z);
-        return energizer3D;
+        energizerView3D.setLocation(tile, z);
+        return energizerView3D;
     }
 
     private BonusView3D createBonusView3D(Bonus bonus, AnimationRegistry animationRegistry) {
@@ -271,13 +272,13 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         return view3D;
     }
 
-    private void createPac3DView(CommonGameSystems systems, Pac pac, PacSettings settings) {
+    private void createPacView3D(CommonGameSystems systems, Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(systems, pac, settings);
         final PacView3D pac3D = pac.assertComponent(PacView3D.class);
         pac3D.drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
-    private void createGhost3DViews(CommonGameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
+    private void createGhostsView3D(CommonGameSystems systems, List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(systems, ghost, ghostSettings);
@@ -285,7 +286,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         });
     }
 
-    private void replaceLivesCounter3DView(GameContext game, LivesCounter livesCounter) {
+    private void replaceLivesCounterView3D(GameContext game, LivesCounter livesCounter) {
         final LivesCounterView3DSystem system = game.systems().assertSystem(LivesCounterView3DSystem.class);
         livesCounter.optComponent(LivesCounterView3D.class).ifPresent(oldView3D -> {
             system.stopTrackingPac(oldView3D);
@@ -297,13 +298,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         livesCounter.setComponent(LivesCounterView3D.class, view3D);
     }
 
-    private void replaceLevelCounter3DView(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterView3D view3D = new LevelCounterView3D();
-        levelCounter.setComponent(LevelCounterView3D.class, view3D);
-        replaceLevelCounter3D(game, levelCounter);
-    }
-
-    private void compose(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {
+    private void arrangeChildren(Pac pac, List<Ghost> ghosts, LivesCounter livesCounter, House house) {
         final var children = root.getChildren();
 
         children.clear();
@@ -322,11 +317,11 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
             children.add(ghostView3D.root());
         }
 
-        for (Energizer3D energizerView3D : energizerViews3D.values()) {
+        for (EnergizerView3D energizerView3D : energizerViews3D.values()) {
             children.add(energizerView3D.root());
         }
 
-        for (Pellet3D pelletView3D : pelletViews3D.values()) {
+        for (PelletView3D pelletView3D : pelletViews3D.values()) {
             children.add(pelletView3D.root());
         }
 

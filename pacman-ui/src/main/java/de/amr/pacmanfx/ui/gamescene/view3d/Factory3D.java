@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.ui.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
+import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -51,12 +51,12 @@ public interface Factory3D extends Disposable {
      * @param material pellet material
      * @return 3D pellet representation
      */
-    Pellet3D createPellet3D(Pellet3DSettings config, PhongMaterial material);
+    PelletView3D createPellet3D(Pellet3DSettings config, PhongMaterial material);
 
     /**
      * @param config energizer configuration
      * @param material energizer material
      * @return 3D energizer representation
      */
-    Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material);
+    EnergizerView3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material);
 }

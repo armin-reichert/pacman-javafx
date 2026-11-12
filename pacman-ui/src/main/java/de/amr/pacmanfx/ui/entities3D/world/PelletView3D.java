@@ -12,12 +12,12 @@ import static de.amr.basics.TileDimension.HTS;
 import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Pellet3D implements DisposableGraphicsObject {
+public class PelletView3D implements DisposableGraphicsObject {
 
     private Shape3D shape;
     private Vector2i tile;
 
-    public Pellet3D(Shape3D shape) {
+    public PelletView3D(Shape3D shape) {
         this.shape = requireNonNull(shape);
         setLocation(Vector2i.ZERO, -HTS);
     }

@@ -33,7 +33,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimation;
@@ -111,14 +111,14 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         registry.optAnimation(PlayScene3DAnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
     }
 
-    public void startPumping(Energizer3D energizer3D) {
-        final Vector2i tile = energizer3D.tile();
-        registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::playOrContinue);
+    public void startPumping(EnergizerView3D energizerView3D) {
+        final Vector2i tile = energizerView3D.tile();
+        registry.optAnimation(EnergizerView3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::playOrContinue);
     }
 
-    public void stopPumping(Energizer3D energizer3D) {
-        final Vector2i tile = energizer3D.tile();
-        registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::stop);
+    public void stopPumping(EnergizerView3D energizerView3D) {
+        final Vector2i tile = energizerView3D.tile();
+        registry.optAnimation(EnergizerView3D.AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::stop);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
         final double expandedSize = settings.scalingExpanded();
         level3D.energizers3D().forEach(energizer3D -> {
             final Vector2i tile = energizer3D.tile();
-            final String animationID = Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile);
+            final String animationID = EnergizerView3D.AnimationID.ENERGIZER_PUMPING.atTile(tile);
             registry.optAnimation(animationID).ifPresent(ManagedAnimation::dispose);
             final var pumping = createEnergizerPumpingAnimation(
                 "Energizer Pumping, Tile %s".formatted(tile),
@@ -314,7 +314,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     private void disposeEnergizerAnimations(GameLevelView3D level3D) {
         level3D.energizers3D().forEach(energizer3D -> {
             final Vector2i tile = energizer3D.tile();
-            registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
+            registry.optAnimation(EnergizerView3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
                 .ifPresent(ManagedAnimation::dispose);
         });
     }

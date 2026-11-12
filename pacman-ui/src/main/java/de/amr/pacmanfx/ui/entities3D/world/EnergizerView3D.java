@@ -19,7 +19,7 @@ import static de.amr.basics.TileDimension.HTS;
 import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Energizer3D implements DisposableGraphicsObject {
+public class EnergizerView3D implements DisposableGraphicsObject {
 
     public enum AnimationID implements Named {
         ENERGIZER_PUMPING;
@@ -43,8 +43,8 @@ public class Energizer3D implements DisposableGraphicsObject {
     private Supplier<Shape3D> shapeFactory;
     private Shape3D shape;
 
-    public Energizer3D() {
-        this.shapeFactory = Energizer3D::createDefaultShape;
+    public EnergizerView3D() {
+        this.shapeFactory = EnergizerView3D::createDefaultShape;
         setLocation(Vector2i.ZERO, HTS);
     }
 
