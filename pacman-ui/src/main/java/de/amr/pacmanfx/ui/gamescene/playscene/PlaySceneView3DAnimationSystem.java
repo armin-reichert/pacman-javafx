@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3DAnimation;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
-import de.amr.pacmanfx.ui.entities3D.pac.MsPacManView3D_DyingAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.MsPacView3D_DyingAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_ChewingAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_DyingAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_Animation;
@@ -215,7 +215,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
 
         anim3D.setChewing(new PacView3D_ChewingAnimation(pac));
 //        anim3D.setMovement(new HipSwayingAnimation3D(pac));
-        anim3D.setDying(new MsPacManView3D_DyingAnimation(view3D));
+        anim3D.setDying(new MsPacView3D_DyingAnimation(view3D));
     }
 
     private PacView3D_Animation ensurePacAnim3DExists(Pac pac) {

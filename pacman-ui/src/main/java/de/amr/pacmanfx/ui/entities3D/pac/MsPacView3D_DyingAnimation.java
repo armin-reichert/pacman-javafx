@@ -12,9 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class MsPacManView3D_DyingAnimation extends ManagedAnimation {
+public class MsPacView3D_DyingAnimation extends ManagedAnimation {
 
-    public MsPacManView3D_DyingAnimation(PacView3D view3D) {
+    public MsPacView3D_DyingAnimation(PacView3D view3D) {
         super("Ms. Pac-Man Dying");
         setAnimationFactory(() -> createAnimation(view3D.root()));
     }
