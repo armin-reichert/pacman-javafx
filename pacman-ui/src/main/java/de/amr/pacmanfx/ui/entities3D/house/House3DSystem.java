@@ -28,8 +28,8 @@ public class House3DSystem {
             .filter(ghost -> house.isDoorAt(ghost.position().tile()))
             .anyMatch(GameEntity::isVisible);
         if (accessRequested) {
-            if (!animation.doorsMeltingAnimation().isRunning()) {
-                playDoorsMeltingAnimation(house);
+            if (!animation.isRunning()) {
+                animation.replay();
             }
         }
         updateLight(house, entitySet);
@@ -47,10 +47,5 @@ public class House3DSystem {
         final HouseView3D view3D = house.assertComponent(HouseView3D.class);
         final Vector2f houseEntryPos = house.floorplan().entryPosition();
         return ghost.position().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
-    }
-
-    private void playDoorsMeltingAnimation(House house) {
-        final House3DAnimation animation = house.assertComponent(House3DAnimation.class);
-        animation.doorsMeltingAnimation().replay();
     }
 }
