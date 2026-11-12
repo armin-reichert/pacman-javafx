@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.systems.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.Group;
 

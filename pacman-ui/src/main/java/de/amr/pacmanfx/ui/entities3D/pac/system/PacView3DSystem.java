@@ -1,4 +1,8 @@
-package de.amr.pacmanfx.ui.systems;
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.ui.entities3D.pac.system;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
@@ -27,9 +31,8 @@ public class PacView3DSystem {
     public PacView3DSystem() {
     }
 
-    public void initTransform(Pac pac, WorldMap worldMap) {
+    public void initTransform(Pac pac) {
         requireNonNull(pac);
-        requireNonNull(worldMap);
 
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
         view3D.root().setScaleX(1.0);

@@ -28,12 +28,12 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.systems.PacView3DSystem;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.SubScene;
@@ -262,7 +262,7 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(level);
 
         final PacView3DSystem pacView3DSystem = systems.assertSystem(PacView3DSystem.class);
-        pacView3DSystem.initTransform(pac, level.worldMap());
+        pacView3DSystem.initTransform(pac);
         pacView3DSystem.stopAnimations(pac);
         pacView3DSystem.setPowerModeAnimation(pac, false);
     }
