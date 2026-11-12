@@ -262,9 +262,9 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(level);
 
         final PacView3D_System pacView3DSystem = systems.assertSystem(PacView3D_System.class);
-        pacView3DSystem.initTransform(pac);
-        pacView3DSystem.stopAnimations(pac);
-        pacView3DSystem.setPowerModeAnimation(pac, false);
+        pacView3DSystem.initPacTransform(pac);
+        pacView3DSystem.stopPacAnimations(pac);
+        pacView3DSystem.setPacPowerModeAnimation(pac, false);
     }
 
     public void replaceLevel3D(GameContext game, GameLevel level) {

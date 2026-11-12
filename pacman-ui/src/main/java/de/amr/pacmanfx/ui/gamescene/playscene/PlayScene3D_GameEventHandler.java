@@ -238,7 +238,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
         if (!assertGame().rules().isLevelCompleted(level)) {
             final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
-            pacView3DSystem.setPowerModeAnimation(pac, true);
+            pacView3DSystem.setPacPowerModeAnimation(pac, true);
             playScene3D.assertView3D().animationSystem().startWallFlashing();
             optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
@@ -249,7 +249,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final Pac pac = e.pac();
         final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
 
-        pacView3DSystem.setPowerModeAnimation(pac, false);
+        pacView3DSystem.setPacPowerModeAnimation(pac, false);
         playScene3D.assertView3D().animationSystem().stopWallFlashing();
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopPacPowerSound);
     }
@@ -307,7 +307,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         playScene3D.assertView3D().animationSystem().stopAnimationsBeforePacManDies();
 
         final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
-        pacView3DSystem.playDyingAnimation(
+        pacView3DSystem.playPacDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound),
             assertGame().state()::triggerTimeout

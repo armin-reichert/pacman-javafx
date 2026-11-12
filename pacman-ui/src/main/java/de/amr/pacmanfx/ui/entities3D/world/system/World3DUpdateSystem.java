@@ -40,8 +40,8 @@ public class World3DUpdateSystem {
 
     private void updatePacView3D(PacView3D_System pacView3DSystem, Pac pac) {
         if (pac.hasComponent(PacView3D.class)) {
-            pacView3DSystem.updateTransform(pac);
-            pacView3DSystem.updateAnimations(pac);
+            pacView3DSystem.updatePacTransform(pac);
+            pacView3DSystem.updatePacAnimations(pac);
         }
     }
 

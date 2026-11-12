@@ -28,7 +28,7 @@ public class PacView3D_System {
     public PacView3D_System() {
     }
 
-    public void initTransform(Pac pac) {
+    public void initPacTransform(Pac pac) {
         requireNonNull(pac);
 
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
@@ -38,10 +38,10 @@ public class PacView3D_System {
 
         view3D.root().setVisible(false);
 
-        updateTransform(pac);
+        updatePacTransform(pac);
     }
 
-    public void updateTransform(Pac pac) {
+    public void updatePacTransform(Pac pac) {
         requireNonNull(pac);
 
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
@@ -74,7 +74,7 @@ public class PacView3D_System {
 
     // Animation
 
-    public void stopAnimations(Pac pac) {
+    public void stopPacAnimations(Pac pac) {
         requireNonNull(pac);
 
         final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
@@ -89,7 +89,7 @@ public class PacView3D_System {
         }
     }
 
-    public void updateAnimations(Pac pac) {
+    public void updatePacAnimations(Pac pac) {
         requireNonNull(pac);
 
         final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
@@ -111,7 +111,7 @@ public class PacView3D_System {
         updatePowerLightAnimation(pac);
     }
 
-    public void setPowerModeAnimation(Pac pac, boolean power) {
+    public void setPacPowerModeAnimation(Pac pac, boolean power) {
         requireNonNull(pac);
 
         final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
@@ -121,7 +121,7 @@ public class PacView3D_System {
         }
     }
 
-    public void playDyingAnimation(Pac pac, Runnable pacDeadSoundEffect, Runnable onFinishedCallback) {
+    public void playPacDyingAnimation(Pac pac, Runnable pacDeadSoundEffect, Runnable onFinishedCallback) {
         requireNonNull(pac);
         requireNonNull(pacDeadSoundEffect);
         requireNonNull(onFinishedCallback);
