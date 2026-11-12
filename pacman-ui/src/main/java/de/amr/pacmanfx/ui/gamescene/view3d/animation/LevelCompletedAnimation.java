@@ -8,7 +8,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;

@@ -22,10 +22,10 @@ import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DAnimationID;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3DAnimation;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
+import de.amr.pacmanfx.ui.entities3D.house.House3DAnimation;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3DAnimation;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.MsPacManDyingAnimation3D;
@@ -33,8 +33,8 @@ import de.amr.pacmanfx.ui.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.anim.PacManDyingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
+import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimationShort;
@@ -178,10 +178,9 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
 
     public void createHouseAnimations(House house) {
         final HouseView3D house3D = house.assertComponent(HouseView3D.class);
-        final var animation =  new House3DAnimationComp(registry);
-        animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
-        if (!house.hasComponent(House3DAnimationComp.class)) {
-            house.setComponent(House3DAnimationComp.class, animation);
+        final var animation = new House3DAnimation(registry, house3D.barThicknessProperty);
+        if (!house.hasComponent(House3DAnimation.class)) {
+            house.setComponent(House3DAnimation.class, animation);
         }
     }
 

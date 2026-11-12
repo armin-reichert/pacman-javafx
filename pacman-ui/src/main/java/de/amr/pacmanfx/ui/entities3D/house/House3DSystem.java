@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.house.system;
+package de.amr.pacmanfx.ui.entities3D.house;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
@@ -6,8 +6,6 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.ui.entities3D.house.comp.House3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
 
 import java.util.Set;
 
@@ -25,7 +23,7 @@ public class House3DSystem {
     }
 
     public void update(House house, GameLevelEntitySet entitySet) {
-        final House3DAnimationComp animation = house.assertComponent(House3DAnimationComp.class);
+        final House3DAnimation animation = house.assertComponent(House3DAnimation.class);
         boolean accessRequested = entitySet.ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
             .filter(ghost -> house.isDoorAt(ghost.position().tile()))
             .anyMatch(GameEntity::isVisible);
@@ -52,7 +50,7 @@ public class House3DSystem {
     }
 
     private void playDoorsMeltingAnimation(House house) {
-        final House3DAnimationComp animation = house.assertComponent(House3DAnimationComp.class);
+        final House3DAnimation animation = house.assertComponent(House3DAnimation.class);
         animation.doorsMeltingAnimation().replay();
     }
 }

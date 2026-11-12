@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.levelcounter.comp;
+package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.Group;

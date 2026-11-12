@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import javafx.scene.paint.Color;
 

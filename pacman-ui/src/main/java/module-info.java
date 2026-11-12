@@ -48,7 +48,7 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.entities3D.score;
     exports de.amr.pacmanfx.ui.entities3D.ghost.system;
     exports de.amr.pacmanfx.ui.entities3D.bonus.system;
-    exports de.amr.pacmanfx.ui.entities3D.house.system;
     exports de.amr.pacmanfx.ui.systems;
     exports de.amr.pacmanfx.ui.entities3D.livescounter;
+    exports de.amr.pacmanfx.ui.entities3D.house;
 }

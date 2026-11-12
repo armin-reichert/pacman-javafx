@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.systems;
 
 import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;

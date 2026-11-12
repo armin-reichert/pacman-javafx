@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.levelcounter.comp;
+package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
 import de.amr.basics.Named;
 

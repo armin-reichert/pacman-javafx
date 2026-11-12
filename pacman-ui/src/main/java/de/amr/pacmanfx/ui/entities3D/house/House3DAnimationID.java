@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.house.comp;
+package de.amr.pacmanfx.ui.entities3D.house;
 
 import de.amr.basics.Named;
 

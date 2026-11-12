@@ -33,7 +33,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;

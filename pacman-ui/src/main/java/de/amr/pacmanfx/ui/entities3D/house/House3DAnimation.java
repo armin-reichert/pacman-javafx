@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.house.comp;
+package de.amr.pacmanfx.ui.entities3D.house;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ui.animation.AnimationRegistry;
@@ -9,21 +9,18 @@ import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Duration;
 
-public class House3DAnimationComp implements Disposable {
+public class House3DAnimation implements Disposable {
 
     private final ManagedAnimation doorsMeltingAnimation;
 
-    public House3DAnimationComp(AnimationRegistry animationRegistry) {
+    public House3DAnimation(AnimationRegistry animationRegistry, DoubleProperty barThicknessProperty) {
         doorsMeltingAnimation = new ManagedAnimation("House Doors Melting");
-        animationRegistry.register(House3DAnimationID.HOUSE_DOORS_MELTING, doorsMeltingAnimation);
-    }
-
-    public void createDoorsMeltingAnimationFactory(DoubleProperty barThicknessProperty) {
         final double barThickness = 2.0 / HouseView3D.DOOR_VERTICAL_BAR_COUNT;
         doorsMeltingAnimation.setAnimationFactory(() -> new Timeline(
             new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
         );
+        animationRegistry.register(House3DAnimationID.HOUSE_DOORS_MELTING, doorsMeltingAnimation);
     }
 
     public ManagedAnimation doorsMeltingAnimation() {

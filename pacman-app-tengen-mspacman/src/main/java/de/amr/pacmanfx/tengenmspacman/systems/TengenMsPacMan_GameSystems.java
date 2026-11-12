@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_UpdateSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.system.TengenMsPacMan_PacAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.House3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.systems.GhostSystems3D;
