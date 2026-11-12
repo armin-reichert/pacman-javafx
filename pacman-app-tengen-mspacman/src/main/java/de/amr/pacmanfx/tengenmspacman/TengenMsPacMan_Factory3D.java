@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.scene.Group;
 
@@ -28,7 +28,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public void createPac3D(CommonGameSystems systems, Pac pac, PacSettings settings) {
-        final PacView3DSystem pacView3DSystem = systems.assertSystem(PacView3DSystem.class);
+        final PacView3D_System pacView3DSystem = systems.assertSystem(PacView3D_System.class);
         final PacView3D view3D = pacView3DSystem.createMsPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }

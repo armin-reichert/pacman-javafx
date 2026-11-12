@@ -7,27 +7,27 @@ package de.amr.pacmanfx.ui.entities3D.pac;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 
-public class PacView3DAnimation {
+public class PacView3D_Animation {
 
     private final AnimationRegistry registry;
 
-    private Pac3DMovementAnimation movement;
+    private PacView3D_MovementAnimation movement;
 
     private ManagedAnimation chewing;
 
     private ManagedAnimation dying;
 
-    public PacView3DAnimation(AnimationRegistry registry) {
+    public PacView3D_Animation(AnimationRegistry registry) {
         this.registry = registry;
     }
 
-    public Pac3DMovementAnimation movement() {
+    public PacView3D_MovementAnimation movement() {
         return movement;
     }
 
-    public void setMovement(Pac3DMovementAnimation movement) {
+    public void setMovement(PacView3D_MovementAnimation movement) {
         this.movement = movement;
-        registry.register(Pac3DAnimationID.MOVING, movement.managedAnimation());
+        registry.register(PacView3D_AnimationID.MOVING, movement.managedAnimation());
     }
 
     public ManagedAnimation chewing() {
@@ -36,7 +36,7 @@ public class PacView3DAnimation {
 
     public void setChewing(ManagedAnimation chewing) {
         this.chewing = chewing;
-        registry.register(Pac3DAnimationID.CHEWING, chewing);
+        registry.register(PacView3D_AnimationID.CHEWING, chewing);
     }
 
     public ManagedAnimation dying() {
@@ -45,6 +45,6 @@ public class PacView3DAnimation {
 
     public void setDying(ManagedAnimation dying) {
         this.dying = dying;
-        registry.register(Pac3DAnimationID.DYING,   dying);
+        registry.register(PacView3D_AnimationID.DYING,   dying);
     }
 }

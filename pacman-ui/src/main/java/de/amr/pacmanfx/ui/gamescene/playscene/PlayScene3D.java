@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
@@ -261,7 +261,7 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final PacView3DSystem pacView3DSystem = systems.assertSystem(PacView3DSystem.class);
+        final PacView3D_System pacView3DSystem = systems.assertSystem(PacView3D_System.class);
         pacView3DSystem.initTransform(pac);
         pacView3DSystem.stopAnimations(pac);
         pacView3DSystem.setPowerModeAnimation(pac, false);

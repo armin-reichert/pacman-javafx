@@ -13,9 +13,9 @@ import javafx.util.Duration;
 import static de.amr.basics.util.Ufx.doNow;
 import static de.amr.basics.util.Ufx.pauseSecThen;
 
-public class PacManDyingAnimation3D extends ManagedAnimation {
+public class PacView3D_DyingAnimation extends ManagedAnimation {
 
-    public PacManDyingAnimation3D(PacView3D view3D) {
+    public PacView3D_DyingAnimation(PacView3D view3D) {
         super("PacMan_Dying");
         setAnimationFactory(() -> createAnimation(view3D.root(), view3D.powerLight()));
     }

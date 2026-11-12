@@ -17,7 +17,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMovementAnimation {
+public class MsPacView3D_HipSwayingAnimation3D extends ManagedAnimation implements PacView3D_MovementAnimation {
 
     private static final short HIP_ANGLE_FROM = -20;
     private static final short HIP_ANGLE_TO = 20;
@@ -27,7 +27,7 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     private final Pac pac;
 
-    public HipSwayingAnimation3D(Pac pac) {
+    public MsPacView3D_HipSwayingAnimation3D(Pac pac) {
         super("Ms. Pac-Man Hip Swaying");
         this.pac = requireNonNull(pac);
         setAnimationFactory(() -> {

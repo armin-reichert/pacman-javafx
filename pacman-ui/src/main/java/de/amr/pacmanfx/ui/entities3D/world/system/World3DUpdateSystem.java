@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.GhostSystems3D;
-import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,12 +33,12 @@ public class World3DUpdateSystem {
 
         updateLivesCounterView3D(systems.assertSystem(LivesCounterView3DSystem.class), session.hud().livesCounter());
         updateHouseView3D(systems.assertSystem(HouseView3DSystem.class), entitySet.theOne(House.class), entitySet);
-        updatePacView3D(systems.assertSystem(PacView3DSystem.class), entitySet.pac());
+        updatePacView3D(systems.assertSystem(PacView3D_System.class), entitySet.pac());
         updateGhosts3D(systems.assertSystem(GhostSystems3D.class), entitySet);
         updateBonus3D(systems.assertSystem(Bonus3DUpdateSystem.class), entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
-    private void updatePacView3D(PacView3DSystem pacView3DSystem, Pac pac) {
+    private void updatePacView3D(PacView3D_System pacView3DSystem, Pac pac) {
         if (pac.hasComponent(PacView3D.class)) {
             pacView3DSystem.updateTransform(pac);
             pacView3DSystem.updateAnimations(pac);

@@ -42,7 +42,7 @@ import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnima
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
@@ -237,7 +237,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
         if (!assertGame().rules().isLevelCompleted(level)) {
-            final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
+            final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
             pacView3DSystem.setPowerModeAnimation(pac, true);
             playScene3D.assertView3D().animationSystem().startWallFlashing();
             optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
@@ -247,7 +247,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacPowerEnds(PacPowerEndsEvent e) {
         final Pac pac = e.pac();
-        final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
+        final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
 
         pacView3DSystem.setPowerModeAnimation(pac, false);
         playScene3D.assertView3D().animationSystem().stopWallFlashing();
@@ -306,7 +306,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.assertView3D().animationSystem().stopAnimationsBeforePacManDies();
 
-        final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
+        final PacView3D_System pacView3DSystem = assertGame().systems().assertSystem(PacView3D_System.class);
         pacView3DSystem.playDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound),

@@ -6,4 +6,4 @@ package de.amr.pacmanfx.ui.entities3D.pac;
 
 import de.amr.basics.Named;
 
-public enum Pac3DAnimationID implements Named {CHEWING, DYING, MOVING}
+public enum PacView3D_AnimationID implements Named {CHEWING, DYING, MOVING}

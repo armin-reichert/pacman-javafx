@@ -23,9 +23,9 @@ import static de.amr.basics.TileDimension.HTS;
 import static de.amr.basics.TileDimension.TS;
 import static java.util.Objects.requireNonNull;
 
-public class PacView3DSystem {
+public class PacView3D_System {
 
-    public PacView3DSystem() {
+    public PacView3D_System() {
     }
 
     public void initTransform(Pac pac) {
@@ -77,7 +77,7 @@ public class PacView3DSystem {
     public void stopAnimations(Pac pac) {
         requireNonNull(pac);
 
-        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
+        final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
         if (animation.chewing() != null) {
             animation.chewing().stop();
         }
@@ -92,9 +92,9 @@ public class PacView3DSystem {
     public void updateAnimations(Pac pac) {
         requireNonNull(pac);
 
-        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
+        final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
 
-        final Pac3DMovementAnimation movementAnimation = animation.movement();
+        final PacView3D_MovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.update();
         }
@@ -114,8 +114,8 @@ public class PacView3DSystem {
     public void setPowerModeAnimation(Pac pac, boolean power) {
         requireNonNull(pac);
 
-        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
-        final Pac3DMovementAnimation movementAnimation = animation.movement();
+        final PacView3D_Animation animation = pac.assertComponent(PacView3D_Animation.class);
+        final PacView3D_MovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
         }
@@ -126,7 +126,7 @@ public class PacView3DSystem {
         requireNonNull(pacDeadSoundEffect);
         requireNonNull(onFinishedCallback);
 
-        final PacView3DAnimation pacAnimation = pac.assertComponent(PacView3DAnimation.class);
+        final PacView3D_Animation pacAnimation = pac.assertComponent(PacView3D_Animation.class);
 
         final Animation animation = new SequentialTransition(
             Ufx.pauseSecThen(1.5, pacDeadSoundEffect),

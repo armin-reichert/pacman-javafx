@@ -17,7 +17,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMovementAnimation {
+public class PacView3D_HeadBangingAnimation extends ManagedAnimation implements PacView3D_MovementAnimation {
 
     private static final short    BANG_ANGLE_FROM = -10;
     private static final short    BANG_ANGLE_TO = 15;
@@ -33,7 +33,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     private final DoubleProperty toAngle   = new SimpleDoubleProperty(BANG_ANGLE_TO);
     private final DoubleProperty rate      = new SimpleDoubleProperty(1);
 
-    public HeadBangingAnimation3D(Pac pac) {
+    public PacView3D_HeadBangingAnimation(Pac pac) {
         super("Pac-Man Head Banging");
         this.pac = requireNonNull(pac);
 

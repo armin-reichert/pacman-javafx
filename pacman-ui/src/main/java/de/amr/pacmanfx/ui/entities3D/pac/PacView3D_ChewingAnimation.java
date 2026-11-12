@@ -11,12 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class PacChewingAnimation3D extends ManagedAnimation {
+public class PacView3D_ChewingAnimation extends ManagedAnimation {
 
     private static final Point3D AXIS = Rotate.Y_AXIS;
     private final Pac pac;
 
-    public PacChewingAnimation3D(Pac pac) {
+    public PacView3D_ChewingAnimation(Pac pac) {
         super("Pac-Man Chewing");
         this.pac = pac;
 

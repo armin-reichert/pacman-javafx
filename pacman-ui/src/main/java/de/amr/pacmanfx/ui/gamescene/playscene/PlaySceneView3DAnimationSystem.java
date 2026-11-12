@@ -29,10 +29,10 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3DAnimation;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
-import de.amr.pacmanfx.ui.entities3D.pac.MsPacManDyingAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.pac.PacChewingAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.pac.PacManDyingAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.pac.PacView3DAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.MsPacManView3D_DyingAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_ChewingAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_DyingAnimation;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_Animation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
@@ -202,28 +202,28 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
 
     private void createPacManAnimations(Pac pac) {
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
-        final PacView3DAnimation anim3D = ensurePacAnim3DExists(pac);
+        final PacView3D_Animation anim3D = ensurePacAnim3DExists(pac);
 
-        anim3D.setChewing(new PacChewingAnimation3D(pac));
+        anim3D.setChewing(new PacView3D_ChewingAnimation(pac));
 //        anim3D.setMovement(new HeadBangingAnimation3D(pac));
-        anim3D.setDying(new PacManDyingAnimation3D(view3D));
+        anim3D.setDying(new PacView3D_DyingAnimation(view3D));
     }
 
     private void createMsPacManAnimations(Pac pac) {
         final PacView3D view3D = pac.assertComponent(PacView3D.class);
-        final PacView3DAnimation anim3D = ensurePacAnim3DExists(pac);
+        final PacView3D_Animation anim3D = ensurePacAnim3DExists(pac);
 
-        anim3D.setChewing(new PacChewingAnimation3D(pac));
+        anim3D.setChewing(new PacView3D_ChewingAnimation(pac));
 //        anim3D.setMovement(new HipSwayingAnimation3D(pac));
-        anim3D.setDying(new MsPacManDyingAnimation3D(view3D));
+        anim3D.setDying(new MsPacManView3D_DyingAnimation(view3D));
     }
 
-    private PacView3DAnimation ensurePacAnim3DExists(Pac pac) {
-        if (!pac.hasComponent(PacView3DAnimation.class)) {
-            final var anim3D = new PacView3DAnimation(registry);
-            pac.setComponent(PacView3DAnimation.class, anim3D);
+    private PacView3D_Animation ensurePacAnim3DExists(Pac pac) {
+        if (!pac.hasComponent(PacView3D_Animation.class)) {
+            final var anim3D = new PacView3D_Animation(registry);
+            pac.setComponent(PacView3D_Animation.class, anim3D);
         }
-        return pac.assertComponent(PacView3DAnimation.class);
+        return pac.assertComponent(PacView3D_Animation.class);
     }
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {

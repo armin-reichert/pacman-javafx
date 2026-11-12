@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.pac;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 
-public interface Pac3DMovementAnimation {
+public interface PacView3D_MovementAnimation {
 
     ManagedAnimation managedAnimation();
 
