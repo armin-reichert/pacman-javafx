@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.systems.GhostSystems3D;
-import de.amr.pacmanfx.ui.systems.PacSystems3D;
+import de.amr.pacmanfx.ui.systems.PacView3DSystem;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
@@ -56,8 +56,8 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createPac3D(CommonGameSystems systems, Pac pac, PacSettings settings) {
-        final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
-        final PacView3D view3D = pacSystems3D.view3DSystem().createPacManView3D(pac3DShapeFactory, pac, settings);
+        final PacView3DSystem pacView3DSystem = systems.assertSystem(PacView3DSystem.class);
+        final PacView3D view3D = pacView3DSystem.createPacManView3D(pac3DShapeFactory, pac, settings);
         pac.setComponent(PacView3D.class, view3D);
     }
 

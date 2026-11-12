@@ -2,63 +2,71 @@ package de.amr.pacmanfx.ui.entities3D.world.system;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.ui.systems.GhostSystems3D;
-import de.amr.pacmanfx.ui.systems.PacSystems3D;
+import de.amr.pacmanfx.ui.systems.PacView3DSystem;
+
+import static java.util.Objects.requireNonNull;
 
 public class World3DUpdateSystem {
 
     public void updateEntities(GameContext game, AnimationRegistry animationRegistry) {
+        requireNonNull(game);
+        requireNonNull(animationRegistry);
+
+        final CommonGameSystems systems = game.systems();
         final GameSession session = game.session();
         final GameLevelEntitySet entitySet = session.optLevel().orElseThrow().entitySet();
 
-        updateLivesCounter3D(game.systems(), session.hud().livesCounter());
-        updateHouse3D(game.systems(), entitySet.theOne(House.class), entitySet);
-        updatePac3D(game.systems(), entitySet.pac());
-        updateGhosts3D(game.systems(), entitySet);
-        updateBonus3D(game.systems(), entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
+        updateLivesCounterView3D(systems.assertSystem(LivesCounterView3DSystem.class), session.hud().livesCounter());
+        updateHouseView3D(systems.assertSystem(HouseView3DSystem.class), entitySet.theOne(House.class), entitySet);
+        updatePacView3D(systems.assertSystem(PacView3DSystem.class), entitySet.pac());
+        updateGhosts3D(systems.assertSystem(GhostSystems3D.class), entitySet);
+        updateBonus3D(systems.assertSystem(Bonus3DUpdateSystem.class), entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
-    private void updatePac3D(CommonGameSystems systems, Pac pac) {
+    private void updatePacView3D(PacView3DSystem pacView3DSystem, Pac pac) {
         if (pac.hasComponent(PacView3D.class)) {
-            final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
-            pacSystems3D.transformSystem().update(pac);
-            pacSystems3D.animationSystem().updateAnimations(pac);
+            pacView3DSystem.updateTransform(pac);
+            pacView3DSystem.updateAnimations(pac);
         }
     }
 
-    private void updateLivesCounter3D(CommonGameSystems systems, LivesCounter livesCounter) {
-        // Lives counter shapes follow Pac location
-        final LivesCounterView3DSystem livesCounterView3DSystem = systems.assertSystem(LivesCounterView3DSystem.class);
-        livesCounterView3DSystem.update(livesCounter);
+    private void updateLivesCounterView3D(LivesCounterView3DSystem livesCounterView3DSystem, LivesCounter livesCounter) {
+        if (livesCounter.hasComponent(LevelCounterView3D.class)) {
+            livesCounterView3DSystem.update(livesCounter);
+        }
     }
 
-    private void updateGhosts3D(CommonGameSystems systems, GameLevelEntitySet entitySet) {
-        final var ghostSystems3D = systems.assertSystem(GhostSystems3D.class);
+    private void updateGhosts3D(GhostSystems3D ghostSystems3D, GameLevelEntitySet entitySet) {
         entitySet.ghosts().forEach(ghost -> {
             ghostSystems3D.movementSystem().update(ghost);
             ghostSystems3D.viewSystem().updateAppearance(ghost);
         });
     }
 
-    private void updateHouse3D(CommonGameSystems systems, House house, GameLevelEntitySet entitySet) {
-        final var houseSystem3D = systems.assertSystem(House3DSystem.class);
-        houseSystem3D.update(house, entitySet);
+    private void updateHouseView3D(HouseView3DSystem houseSystem3D, House house, GameLevelEntitySet entitySet) {
+        if (house.hasComponent(HouseView3D.class)) {
+            houseSystem3D.update(house, entitySet);
+        }
     }
 
-    private void updateBonus3D(CommonGameSystems systems, Bonus bonus, AnimationRegistry animationRegistry) {
-        if (bonus != null) {
-            systems.assertSystem(Bonus3DUpdateSystem.class).update(bonus, animationRegistry);
+    private void updateBonus3D(Bonus3DUpdateSystem bonusView3DSystem, Bonus bonus, AnimationRegistry animationRegistry) {
+        if (bonus != null && bonus.hasComponent(BonusView3D.class)) {
+            bonusView3DSystem.update(bonus, animationRegistry);
         }
     }
 }

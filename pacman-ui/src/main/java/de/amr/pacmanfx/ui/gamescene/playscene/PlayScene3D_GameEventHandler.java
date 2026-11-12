@@ -33,7 +33,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.House3DSystem;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
@@ -42,7 +42,7 @@ import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnima
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.systems.PacSystems3D;
+import de.amr.pacmanfx.ui.systems.PacView3DSystem;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
@@ -237,8 +237,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopSiren);
         if (!assertGame().rules().isLevelCompleted(level)) {
-            final PacSystems3D systems3D = assertGame().systems().assertSystem(PacSystems3D.class);
-            systems3D.animationSystem().setPowerMode(pac, true);
+            final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
+            pacView3DSystem.setPowerModeAnimation(pac, true);
             playScene3D.assertView3D().animationSystem().startWallFlashing();
             optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
         }
@@ -247,9 +247,9 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacPowerEnds(PacPowerEndsEvent e) {
         final Pac pac = e.pac();
-        final PacSystems3D systems3D = assertGame().systems().assertSystem(PacSystems3D.class);
+        final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
 
-        systems3D.animationSystem().setPowerMode(pac, false);
+        pacView3DSystem.setPowerModeAnimation(pac, false);
         playScene3D.assertView3D().animationSystem().stopWallFlashing();
         optSoundEffects().ifPresent(PacManGameSoundEffects::stopPacPowerSound);
     }
@@ -306,8 +306,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.assertView3D().animationSystem().stopAnimationsBeforePacManDies();
 
-        final PacSystems3D pacSystems3D = assertGame().systems().assertSystem(PacSystems3D.class);
-        pacSystems3D.animationSystem().playDyingAnimation(
+        final PacView3DSystem pacView3DSystem = assertGame().systems().assertSystem(PacView3DSystem.class);
+        pacView3DSystem.playDyingAnimation(
             level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(PacManGameSoundEffects::playPacDeadSound),
             assertGame().state()::triggerTimeout
@@ -327,7 +327,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameViewModel viewModel = playScene3D.engine().ui().viewModel();
         final GameLevel level = assertLevel3D().level();
         final House house = level.entitySet().theOne(House.class);
-        final House3DSystem houseSystem3D = assertGame().systems().assertSystem(House3DSystem.class);
+        final HouseView3DSystem houseSystem3D = assertGame().systems().assertSystem(HouseView3DSystem.class);
         final boolean cutSceneFollows = !assertGame().session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
             && assertGame().rules().cutSceneAfterLevel(level.number()).isPresent();
 

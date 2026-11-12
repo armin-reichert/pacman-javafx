@@ -33,7 +33,7 @@ import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.systems.PacSystems3D;
+import de.amr.pacmanfx.ui.systems.PacView3DSystem;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import javafx.scene.SubScene;
@@ -261,10 +261,10 @@ public class PlayScene3D extends AbstractGameScene {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final PacSystems3D pacSystems3D = systems.assertSystem(PacSystems3D.class);
-        pacSystems3D.transformSystem().init(pac, level.worldMap());
-        pacSystems3D.animationSystem().stopAnimations(pac);
-        pacSystems3D.animationSystem().setPowerMode(pac, false);
+        final PacView3DSystem pacView3DSystem = systems.assertSystem(PacView3DSystem.class);
+        pacView3DSystem.initTransform(pac, level.worldMap());
+        pacView3DSystem.stopAnimations(pac);
+        pacView3DSystem.setPowerModeAnimation(pac, false);
     }
 
     public void replaceLevel3D(GameContext game, GameLevel level) {
