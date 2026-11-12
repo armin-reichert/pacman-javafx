@@ -1,9 +1,8 @@
-package de.amr.pacmanfx.ui.entities3D.ghost.system;
+package de.amr.pacmanfx.ui.entities3D.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostStateComp;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.uilib.view3d.PacManMeshes3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

@@ -2,13 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.ghost.anim;
+package de.amr.pacmanfx.ui.entities3D.ghost;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostComponentColors;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;

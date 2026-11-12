@@ -33,7 +33,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;

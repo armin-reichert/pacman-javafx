@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.CommonGameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;

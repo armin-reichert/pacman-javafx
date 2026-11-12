@@ -1,12 +1,9 @@
-package de.amr.pacmanfx.ui.entities3D.ghost.comp;
+package de.amr.pacmanfx.ui.entities3D.ghost;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.ecs.Resettable;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DBrakeAnimation;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DDressAnimation;
-import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DFlashingAnimation;
 
 public class GhostView3DAnimations implements Disposable, Resettable {
 

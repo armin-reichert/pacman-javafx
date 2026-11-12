@@ -20,7 +20,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.assets;
-    exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
     exports de.amr.pacmanfx.ui.entities3D.world;
     exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.animation;
@@ -44,9 +43,9 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.views.startpages;
     exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.entities3D.score;
-    exports de.amr.pacmanfx.ui.entities3D.ghost.system;
     exports de.amr.pacmanfx.ui.entities3D.bonus.system;
     exports de.amr.pacmanfx.ui.entities3D.livescounter;
     exports de.amr.pacmanfx.ui.entities3D.house;
     exports de.amr.pacmanfx.ui.entities3D.pac;
+    exports de.amr.pacmanfx.ui.entities3D.ghost;
 }
