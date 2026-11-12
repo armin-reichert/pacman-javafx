@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.GhostSystems3D;
-import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
 
 public class TengenMsPacMan_GameSystems extends CommonGameSystems {
 

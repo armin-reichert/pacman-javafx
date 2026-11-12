@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.pac.system;
+package de.amr.pacmanfx.ui.entities3D.pac;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
@@ -11,9 +11,6 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.Pac3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import de.amr.pacmanfx.uilib.view3d.Pac3DShapeFactory;
 import de.amr.pacmanfx.uilib.view3d.PacSettings;
 import javafx.animation.Animation;
@@ -78,7 +75,9 @@ public class PacView3DSystem {
     // Animation
 
     public void stopAnimations(Pac pac) {
-        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
+        requireNonNull(pac);
+
+        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
         if (animation.chewing() != null) {
             animation.chewing().stop();
         }
@@ -91,7 +90,9 @@ public class PacView3DSystem {
     }
 
     public void updateAnimations(Pac pac) {
-        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
+        requireNonNull(pac);
+
+        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
 
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
@@ -111,18 +112,21 @@ public class PacView3DSystem {
     }
 
     public void setPowerModeAnimation(Pac pac, boolean power) {
-        final Pac3DAnimationComp animation = pac.assertComponent(Pac3DAnimationComp.class);
+        requireNonNull(pac);
+
+        final PacView3DAnimation animation = pac.assertComponent(PacView3DAnimation.class);
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
         }
     }
 
-    public void playDyingAnimation(
-        Pac pac,
-        Runnable pacDeadSoundEffect,
-        Runnable onFinishedCallback) {
-        final Pac3DAnimationComp pacAnimation = pac.assertComponent(Pac3DAnimationComp.class);
+    public void playDyingAnimation(Pac pac, Runnable pacDeadSoundEffect, Runnable onFinishedCallback) {
+        requireNonNull(pac);
+        requireNonNull(pacDeadSoundEffect);
+        requireNonNull(onFinishedCallback);
+
+        final PacView3DAnimation pacAnimation = pac.assertComponent(PacView3DAnimation.class);
 
         final Animation animation = new SequentialTransition(
             Ufx.pauseSecThen(1.5, pacDeadSoundEffect),

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.GhostSystems3D;
-import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
 
 public class ArcadePacMan_GameSystems extends CommonGameSystems {
 

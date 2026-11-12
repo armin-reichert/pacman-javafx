@@ -2,14 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.pac.comp;
+package de.amr.pacmanfx.ui.entities3D.pac;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DAnimationID;
-import de.amr.pacmanfx.ui.entities3D.pac.anim.Pac3DMovementAnimation;
 
-public class Pac3DAnimationComp {
+public class PacView3DAnimation {
 
     private final AnimationRegistry registry;
 
@@ -19,7 +17,7 @@ public class Pac3DAnimationComp {
 
     private ManagedAnimation dying;
 
-    public Pac3DAnimationComp(AnimationRegistry registry) {
+    public PacView3DAnimation(AnimationRegistry registry) {
         this.registry = registry;
     }
 

@@ -42,7 +42,7 @@ import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnima
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
-import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;

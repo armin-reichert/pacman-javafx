@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounter3DFactory;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;

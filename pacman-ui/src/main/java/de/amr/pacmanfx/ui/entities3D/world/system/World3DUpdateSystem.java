@@ -15,9 +15,9 @@ import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.system.GhostSystems3D;
-import de.amr.pacmanfx.ui.entities3D.pac.system.PacView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3DSystem;
 
 import static java.util.Objects.requireNonNull;
 

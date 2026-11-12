@@ -2,10 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.pac.anim;
+package de.amr.pacmanfx.ui.entities3D.pac;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

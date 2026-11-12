@@ -6,13 +6,12 @@ package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import org.tinylog.Logger;
 
 import static de.amr.basics.TileDimension.tilesPx;
 import static java.util.Objects.requireNonNull;
