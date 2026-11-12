@@ -43,7 +43,7 @@ public class DefaultFactory3D implements Factory3D {
 
     protected Pac3DShapeFactory pac3DShapeFactory = new Pac3DShapeFactory();
 
-    protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
+    protected final Map<GhostColorsByState, GhostView3DMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
 
     protected DefaultFactory3D() {}
@@ -70,9 +70,9 @@ public class DefaultFactory3D implements Factory3D {
             model3D.ghostDressMesh(), model3D.ghostPupilsMesh(), model3D.ghostEyeballsMesh());
         ghost.setComponent(GhostView3D.class, view3D);
 
-        ghost.setComponent(Ghost3DAnimations.class, new Ghost3DAnimations());
+        ghost.setComponent(GhostView3DAnimations.class, new GhostView3DAnimations());
 
-        final GhostAppearanceMaterialSet materialSet = ghostMaterialsCache.computeIfAbsent(
+        final GhostView3DMaterialSet materialSet = ghostMaterialsCache.computeIfAbsent(
             settings.colors(), this::createGhostMaterial);
         view3D.setAppearanceMaterialSet(materialSet);
     }
@@ -109,27 +109,27 @@ public class DefaultFactory3D implements Factory3D {
         return energizer3D;
     }
 
-    public GhostAppearanceMaterialSet createGhostMaterial(GhostStateColors colors) {
+    public GhostView3DMaterialSet createGhostMaterial(GhostColorsByState colors) {
         requireNonNull(colors);
 
-        final var normalMaterials = new Ghost3DPartsMaterials(
+        final var normalMaterials = new GhostView3DPartsMaterials(
             coloredPhongMaterial(colors.normal().dressColor()),
             coloredPhongMaterial(colors.normal().eyeballsColor()),
             coloredPhongMaterial(colors.normal().pupilsColor())
         );
 
-        final var frightenedMaterials = new Ghost3DPartsMaterials(
+        final var frightenedMaterials = new GhostView3DPartsMaterials(
             coloredPhongMaterial(colors.frightened().dressColor()),
             coloredPhongMaterial(colors.frightened().eyeballsColor()),
             coloredPhongMaterial(colors.frightened().pupilsColor())
         );
 
-        final var flashingMaterials = new Ghost3DPartsMaterials(
+        final var flashingMaterials = new GhostView3DPartsMaterials(
             coloredPhongMaterial(colors.flashing().dressColor()),
             coloredPhongMaterial(colors.flashing().eyeballsColor()),
             coloredPhongMaterial(colors.flashing().pupilsColor())
         );
 
-        return new GhostAppearanceMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
+        return new GhostView3DMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 }

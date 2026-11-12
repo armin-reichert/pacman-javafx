@@ -4,4 +4,4 @@
 
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
-public record GhostSettings(float size3D, GhostStateColors colors) {}
+public record GhostSettings(float size3D, GhostColorsByState colors) {}

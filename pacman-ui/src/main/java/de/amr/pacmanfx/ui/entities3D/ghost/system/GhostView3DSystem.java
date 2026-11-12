@@ -113,7 +113,7 @@ public class GhostView3DSystem {
         setSkin(view3D, view3D.appearanceMaterialSet().normalMaterials());
     }
 
-    private void setSkin(GhostView3D view3D, Ghost3DPartsMaterials materials) {
+    private void setSkin(GhostView3D view3D, GhostView3DPartsMaterials materials) {
         view3D.dressMeshView()   .setMaterial(materials.dressMaterial());
         view3D.pupilsMeshView()  .setMaterial(materials.pupilsMaterial());
         view3D.eyeballsMeshView().setMaterial(materials.eyeballsMaterial());
@@ -124,7 +124,7 @@ public class GhostView3DSystem {
     }
 
     private void setAppearance(GhostView3D view3D, Ghost ghost, GhostAppearance appearance) {
-        final Ghost3DAnimations animation3D = ghost.assertComponent(Ghost3DAnimations.class);
+        final GhostView3DAnimations animation3D = ghost.assertComponent(GhostView3DAnimations.class);
 
         switch (appearance) {
             case EATEN, EYES -> {

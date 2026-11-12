@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.entities3D.ghost.comp;
 
-public record GhostStateColors(
+public record GhostColorsByState(
     GhostComponentColors normal,
     GhostComponentColors frightened,
     GhostComponentColors flashing)

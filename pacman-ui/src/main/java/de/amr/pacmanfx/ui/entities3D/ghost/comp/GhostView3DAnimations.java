@@ -8,13 +8,13 @@ import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DBrakeAnimation;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DDressAnimation;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DFlashingAnimation;
 
-public class Ghost3DAnimations implements Disposable, Resettable {
+public class GhostView3DAnimations implements Disposable, Resettable {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;
     private ManagedAnimation braking;
 
-    public Ghost3DAnimations() {}
+    public GhostView3DAnimations() {}
 
     @Override
     public void dispose() {

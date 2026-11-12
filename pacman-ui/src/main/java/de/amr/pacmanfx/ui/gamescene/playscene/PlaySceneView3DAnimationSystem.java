@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.ghost.anim.Ghost3DAnimationID;
-import de.amr.pacmanfx.ui.entities3D.ghost.comp.Ghost3DAnimations;
+import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3DAnimations;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.House3DAnimation;
@@ -227,7 +227,7 @@ public class PlaySceneView3DAnimationSystem implements Disposable {
     }
 
     private void createGhostAnimations(Ghost ghost, GhostSettings settings, int numFlashes) {
-        final Ghost3DAnimations animations = ghost.assertComponent(Ghost3DAnimations.class);
+        final GhostView3DAnimations animations = ghost.assertComponent(GhostView3DAnimations.class);
         animations.createAnimations(ghost, settings, numFlashes);
         registry.register(Ghost3DAnimationID.FLASHING.key(ghost), animations.flashing());
         registry.register(Ghost3DAnimationID.DRESS_MOVEMENT.key(ghost), animations.dressMovement());
