@@ -15,31 +15,30 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class LevelCounter3DAnimationComp implements Disposable {
+public class LevelCounterView3DAnimation implements Disposable {
 
-    private ManagedAnimation spinningAnimation;
+    private ManagedAnimation spinning;
 
-    public LevelCounter3DAnimationComp(LevelCounterView3D view3D, AnimationRegistry registry) {
+    public LevelCounterView3DAnimation(LevelCounterView3D view3D, AnimationRegistry registry) {
         createSpinningAnimation(view3D);
-        registry.register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, spinningAnimation);
+        registry.register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, spinning);
     }
 
     public ManagedAnimation spinningAnimation() {
-        return spinningAnimation;
+        return spinning;
     }
 
     @Override
     public void dispose() {
-        if (spinningAnimation != null) {
-            spinningAnimation.dispose();
-            spinningAnimation = null;
+        if (spinning != null) {
+            spinning.dispose();
+            spinning = null;
         }
     }
 
     private void createSpinningAnimation(LevelCounterView3D view3D) {
-        spinningAnimation = new ManagedAnimation("Level Counter Spinning");
-
-        spinningAnimation.setAnimationFactory(() -> {
+        spinning = new ManagedAnimation("Level Counter Spinning");
+        spinning.setAnimationFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
             for (int i = 0; i < view3D.root().getChildren().size(); ++i) {
                 final Node cube = view3D.root().getChildren().get(i);

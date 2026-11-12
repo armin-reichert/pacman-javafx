@@ -21,7 +21,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.assets;
     exports de.amr.pacmanfx.ui.entities3D.ghost.comp;
-    exports de.amr.pacmanfx.ui.entities3D.levelcounter.system;
     exports de.amr.pacmanfx.ui.entities3D.pac.comp;
     exports de.amr.pacmanfx.ui.entities3D.pac.system;
     exports de.amr.pacmanfx.ui.entities3D.world;

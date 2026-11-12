@@ -87,7 +87,7 @@ public class PlaySceneView3D implements Disposable {
         level3DHolder.getChildren().setAll(level3D.root());
         settingsViewModel.drawModeProperty().addListener(level3D);
 
-        level3D.replaceLevelCounter3D(game, game.session().hud().levelCounter());
+        level3D.replaceLevelCounterView3D(level, game.session().hud().levelCounter());
 
         final MessageView messageView = level.entitySet().theOne(MessageView.class);
         messageView.setComponent(MessageView3DComp.class, new MessageView3DComp());

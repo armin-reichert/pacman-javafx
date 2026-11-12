@@ -179,7 +179,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = level3D.level();
         final State<GameContext> newState = assertGame().state();
 
-        level3D.replaceLevelCounterView3D(assertGame(), assertGame().session().hud().levelCounter());
+        level3D.replaceLevelCounterView3D(level, assertGame().session().hud().levelCounter());
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {

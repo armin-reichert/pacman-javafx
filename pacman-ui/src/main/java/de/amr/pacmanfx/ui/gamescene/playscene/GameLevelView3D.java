@@ -18,10 +18,7 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.FoodLayer;
-import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.bonus.anim.Bonus3DAnimationID;
@@ -30,8 +27,8 @@ import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.comp.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.comp.HouseView3D;
+import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounter3DFactory;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.comp.LevelCounterView3D;
-import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.comp.PacView3D;
@@ -59,6 +56,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.TileDimension.tilesPx;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -102,7 +100,7 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         createPacView3D(game.systems(), pac, uiConfig.worldSettings().pac());
         createGhostsView3D(game.systems(), ghosts, uiConfig.worldSettings().ghosts());
 
-        replaceLevelCounterView3D(game, levelCounter);
+        replaceLevelCounterView3D(level, levelCounter);
         replaceLivesCounterView3D(game, livesCounter);
 
         arrangeChildren(pac, ghosts, livesCounter, house);
@@ -190,18 +188,25 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         animation.replay();
     }
 
-    public void replaceLevelCounterView3D(GameContext game, LevelCounter levelCounter) {
+    public void replaceLevelCounterView3D(GameLevel level, LevelCounter levelCounter) {
+        levelCounter.optComponent(LevelCounterView3D.class).ifPresent(
+            oldView3D -> root.getChildren().remove(oldView3D.root()));
+
         final LevelCounterView3D view3D = new LevelCounterView3D();
         levelCounter.setComponent(LevelCounterView3D.class, view3D);
 
-        final Group oldRoot = view3D.root();
-        if (oldRoot != null) {
-            root.getChildren().remove(oldRoot);
-        }
-        root.getChildren().add(view3D.root());
+        final Group levelCounterRoot = LevelCounter3DFactory.buildLevelCounter3D(
+            levelCounter,
+            uiConfig.worldSettings().levelCounter(),
+            uiConfig.renderConfig()
+        );
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        levelCounterRoot.setTranslateX(tilesPx(terrain.numCols() - 2));
+        levelCounterRoot.setTranslateY(tilesPx(2));
+        levelCounterRoot.setTranslateZ(-uiConfig.worldSettings().levelCounter().elevation());
 
-        final LevelCounter3DViewSystem viewSystem = game.systems().assertSystem(LevelCounter3DViewSystem.class);
-        viewSystem.updateLevelCounter3D(levelCounter, level.worldMap(), uiConfig);
+        view3D.setRoot(levelCounterRoot);
+        root.getChildren().add(levelCounterRoot);
     }
 
     // Private area, no trespassing!
