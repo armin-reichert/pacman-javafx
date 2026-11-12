@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_Systems;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 
 import static java.util.Objects.requireNonNull;
@@ -34,7 +34,7 @@ public class World3DUpdateSystem {
         updateLivesCounterView3D(systems.assertSystem(LivesCounterView3DSystem.class), session.hud().livesCounter());
         updateHouseView3D(systems.assertSystem(HouseView3DSystem.class), entitySet.theOne(House.class), entitySet);
         updatePacView3D(systems.assertSystem(PacView3D_System.class), entitySet.pac());
-        updateGhosts3D(systems.assertSystem(GhostView3D_Systems.class), entitySet);
+        updateGhosts3D(systems.assertSystem(GhostView3D_System.class), entitySet);
         updateBonus3D(systems.assertSystem(Bonus3DUpdateSystem.class), entitySet.anyOfTypeOrNull(Bonus.class), animationRegistry);
     }
 
@@ -51,10 +51,10 @@ public class World3DUpdateSystem {
         }
     }
 
-    private void updateGhosts3D(GhostView3D_Systems ghostView3DSystems, GameLevelEntitySet entitySet) {
+    private void updateGhosts3D(GhostView3D_System ghostView3DSystems, GameLevelEntitySet entitySet) {
         entitySet.ghosts().forEach(ghost -> {
-            ghostView3DSystems.updateTransform(ghost);
-            ghostView3DSystems.updateAppearance(ghost);
+            ghostView3DSystems.updateGhostTransform(ghost);
+            ghostView3DSystems.updateGhostAppearance(ghost);
         });
     }
 

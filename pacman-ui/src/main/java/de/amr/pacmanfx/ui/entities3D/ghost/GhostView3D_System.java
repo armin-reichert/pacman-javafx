@@ -13,8 +13,11 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class GhostView3D_Systems {
-    public void updateTransform(Ghost ghost) {
+public class GhostView3D_System {
+
+    public void updateGhostTransform(Ghost ghost) {
+        requireNonNull(ghost);
+
         final GhostView3D view3D = ghost.assertComponent(GhostView3D.class);
 
         final Vector2f center = ghost.position().bodyCenter();
@@ -41,8 +44,9 @@ public class GhostView3D_Systems {
         }
     }
 
-    public void updateAppearance(Ghost ghost) {
+    public void updateGhostAppearance(Ghost ghost) {
         requireNonNull(ghost);
+
         final var view3D = ghost.assertComponent(GhostView3D.class);
 
         final GhostStateComp state = ghost.state();
@@ -165,5 +169,4 @@ public class GhostView3D_Systems {
             }
         }
     }
-
 }

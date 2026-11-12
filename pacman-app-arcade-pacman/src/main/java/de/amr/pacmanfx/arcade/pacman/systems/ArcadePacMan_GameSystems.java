@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_Systems;
+import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 
 public class ArcadePacMan_GameSystems extends CommonGameSystems {
@@ -18,7 +18,7 @@ public class ArcadePacMan_GameSystems extends CommonGameSystems {
     public ArcadePacMan_GameSystems() {
         addSystem(new Bonus3DUpdateSystem());
         addSystem(new LivesCounterView3DSystem());
-        addSystem(new GhostView3D_Systems());
+        addSystem(new GhostView3D_System());
         addSystem(new HouseView3DSystem());
         addSystem(new PacView3D_System());
         addSystem(new World3DUpdateSystem());

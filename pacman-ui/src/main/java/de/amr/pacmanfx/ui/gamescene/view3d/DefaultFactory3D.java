@@ -63,7 +63,7 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public void createGhost3D(CommonGameSystems systems, Ghost ghost, GhostSettings settings) {
         final PacManMeshes3D model3D = PacManMeshes3D.instance();
-        final GhostView3D_Systems ghostView3DSystems = systems.assertSystem(GhostView3D_Systems.class);
+        final GhostView3D_System ghostView3DSystems = systems.assertSystem(GhostView3D_System.class);
         final GhostView3D view3D = ghostView3DSystems.buildGhostView3D(
             settings,
             model3D.ghostDressMesh(), model3D.ghostPupilsMesh(), model3D.ghostEyeballsMesh());
