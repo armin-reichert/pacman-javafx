@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D_System;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3D_System;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
-import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.world.World3DUpdateSystem;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 

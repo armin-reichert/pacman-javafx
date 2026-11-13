@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.entities3D.world.system;
+package de.amr.pacmanfx.ui.entities3D.world;
 
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;

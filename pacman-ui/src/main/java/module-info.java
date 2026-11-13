@@ -21,7 +21,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.assets;
     exports de.amr.pacmanfx.ui.entities3D.world;
-    exports de.amr.pacmanfx.ui.entities3D.world.system;
     exports de.amr.pacmanfx.ui.gamescene.animation;
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.gamescene.view3d;
