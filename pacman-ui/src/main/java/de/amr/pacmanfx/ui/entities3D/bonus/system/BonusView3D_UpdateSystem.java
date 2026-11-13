@@ -3,9 +3,9 @@ package de.amr.pacmanfx.ui.entities3D.bonus.system;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 
-public record Bonus3DUpdateSystem(Bonus3DMovementSystem movement3D, Bonus3DAnimationSystem animation3D) {
+public record BonusView3D_UpdateSystem(Bonus3DMovementSystem movement3D, Bonus3DAnimationSystem animation3D) {
 
-    public Bonus3DUpdateSystem() {
+    public BonusView3D_UpdateSystem() {
         this(new Bonus3DMovementSystem(), new Bonus3DAnimationSystem());
     }
 

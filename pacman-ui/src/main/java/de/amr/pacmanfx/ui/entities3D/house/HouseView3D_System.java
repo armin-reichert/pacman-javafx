@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 import java.util.Set;
 
-public class HouseView3DSystem {
+public class HouseView3D_System {
 
     private static final Set<GhostState> GHOST_STATES_WITH_ACCESS_TO_HOUSE = Set.of(
         GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);

@@ -32,8 +32,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.entities3D.bonus.system.Bonus3DUpdateSystem;
-import de.amr.pacmanfx.ui.entities3D.house.HouseView3DSystem;
+import de.amr.pacmanfx.ui.entities3D.bonus.system.BonusView3D_UpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.house.HouseView3D_System;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.system.MessageView3DDisplaySystem;
@@ -110,7 +110,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     public void onBonusActivated(BonusActivatedEvent e) {
         final GameLevelView3D level3D = assertLevel3D();
         final Bonus bonus = e.bonus();
-        final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+        final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
 
         level3D.ensureBonus3DViewAddedToSceneGraph(bonus, playScene3D.assertView3D().animationRegistry());
 //        updateSystem3D.view3D().lookEdible(bonus);
@@ -122,7 +122,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
-        final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+        final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
 
         updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
         //TODO integrate into update, set flag at animation component
@@ -134,7 +134,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
-        final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+        final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
 
         updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
         optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusExpiredSound);
@@ -300,7 +300,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+            final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
         }
 
@@ -327,7 +327,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameViewModel viewModel = playScene3D.engine().ui().viewModel();
         final GameLevel level = assertLevel3D().level();
         final House house = level.entitySet().theOne(House.class);
-        final HouseView3DSystem houseSystem3D = assertGame().systems().assertSystem(HouseView3DSystem.class);
+        final HouseView3D_System houseSystem3D = assertGame().systems().assertSystem(HouseView3D_System.class);
         final boolean cutSceneFollows = !assertGame().session().booleanValue(SessionKey.DEMO_LEVEL_MODE)
             && assertGame().rules().cutSceneAfterLevel(level.number()).isPresent();
 
@@ -342,7 +342,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+            final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
         }
 
@@ -407,7 +407,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level3D.cleanupFoodAndParticles();
         final Bonus bonus = level3D.level().entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
-            final Bonus3DUpdateSystem updateSystem3D = assertGame().systems().assertSystem(Bonus3DUpdateSystem.class);
+            final BonusView3D_UpdateSystem updateSystem3D = assertGame().systems().assertSystem(BonusView3D_UpdateSystem.class);
             updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
         }
         playScene3D.optComponent(PacManGameSoundEffects.class).ifPresent(PacManGameSoundEffects::playGameOverSound);
