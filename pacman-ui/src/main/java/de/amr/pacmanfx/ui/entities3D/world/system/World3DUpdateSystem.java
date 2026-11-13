@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
-import de.amr.pacmanfx.ui.entities3D.bonus.system.BonusView3D_UpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D;
+import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D_System;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D_System;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
@@ -40,7 +40,7 @@ public class World3DUpdateSystem {
         updatePacView3D(systems.assertSystem(PacView3D_System.class), entitySet.pac());
         updateGhosts3D(systems.assertSystem(GhostView3D_System.class), entitySet.ghosts().toList());
         entitySet.anyOfType(Bonus.class).ifPresent(
-            bonus -> updateBonus3D(systems.assertSystem(BonusView3D_UpdateSystem.class), bonus, animationRegistry));
+            bonus -> updateBonus3D(systems.assertSystem(BonusView3D_System.class), bonus, animationRegistry));
     }
 
     private void updatePacView3D(PacView3D_System system, Pac pac) {
@@ -71,7 +71,7 @@ public class World3DUpdateSystem {
         }
     }
 
-    private void updateBonus3D(BonusView3D_UpdateSystem system, Bonus bonus, AnimationRegistry animationRegistry) {
+    private void updateBonus3D(BonusView3D_System system, Bonus bonus, AnimationRegistry animationRegistry) {
         if (bonus.hasComponent(BonusView3D.class)) {
             system.update(bonus, animationRegistry);
         }

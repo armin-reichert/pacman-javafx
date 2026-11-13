@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.view3d.animation;
 
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.pacmanfx.ui.entities3D.bonus.anim.NumberBoxRisingAnimation3D;
+import de.amr.pacmanfx.ui.entities3D.bonus.NumberBoxRisingAnimation3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
 import javafx.animation.KeyFrame;

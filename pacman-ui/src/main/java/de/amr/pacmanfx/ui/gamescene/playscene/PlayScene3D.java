@@ -24,7 +24,7 @@ import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
+import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;

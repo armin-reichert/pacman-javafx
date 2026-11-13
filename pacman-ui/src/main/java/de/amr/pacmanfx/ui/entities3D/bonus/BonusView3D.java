@@ -2,11 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.bonus.comp;
+package de.amr.pacmanfx.ui.entities3D.bonus;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
-import de.amr.pacmanfx.ui.entities3D.bonus.anim.BonusEatenAnimation3D;
-import de.amr.pacmanfx.ui.entities3D.bonus.anim.BonusRollingTransform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

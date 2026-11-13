@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_UpdateSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.system.TengenMsPacMan_PacAnimationSystem;
-import de.amr.pacmanfx.ui.entities3D.bonus.system.BonusView3D_UpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D_System;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3D_System;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.world.system.World3DUpdateSystem;
@@ -23,7 +23,7 @@ public class TengenMsPacMan_GameSystems extends CommonGameSystems {
     }
 
     public TengenMsPacMan_GameSystems() {
-        addSystem(new BonusView3D_UpdateSystem());
+        addSystem(new BonusView3D_System());
         addSystem(new LivesCounterView3D_System());
         addSystem(new GhostView3D_System());
         addSystem(new HouseView3D_System());
