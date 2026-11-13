@@ -52,7 +52,7 @@ public class World3DUpdateSystem {
 
     private void updateLivesCounterView3D(LivesCounterView3D_System system, LivesCounter livesCounter) {
         if (livesCounter.hasComponent(LivesCounterView3D.class)) {
-            system.update(livesCounter);
+            system.updateLivesCounterView3D(livesCounter);
         }
     }
 

@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
+import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
@@ -283,8 +284,13 @@ public class PlayScene3D extends AbstractGameScene {
 
             // Let lives counter shapes track Pac-Man location
             final LivesCounter livesCounter = game.session().hud().livesCounter();
-            final LivesCounterView3D_System livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3D_System.class);
-            livesCounterView3DSystem.startTrackingPac(livesCounter, level.entitySet().pac());
+            livesCounter.optComponent(LivesCounterView3D.class).ifPresent(livesCounterView3D -> {
+                final Pac pac = level.entitySet().pac();
+                if (pac.hasComponent(PacView3D.class)) {
+                    final LivesCounterView3D_System system = game.systems().assertSystem(LivesCounterView3D_System.class);
+                    system.startTrackingPac(livesCounterView3D, pac.assertComponent(PacView3D.class));
+                }
+            });
         });
     }
 

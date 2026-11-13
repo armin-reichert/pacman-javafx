@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter;
 
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.NodePositionTracker;
@@ -61,24 +60,22 @@ public class LivesCounterView3D_System {
         return view3D;
     }
 
-    public void startTrackingPac(LivesCounter livesCounter, Pac pac) {
-        final LivesCounterView3D livesCounter3D = livesCounter.assertComponent(LivesCounterView3D.class);
-        final PacView3D pac3D = pac.assertComponent(PacView3D.class);
-        for (NodePositionTracker tracker : livesCounter3D.trackers()) {
+    public void updateLivesCounterView3D(LivesCounter livesCounter) {
+        final LivesCounterView3D view3D = livesCounter.assertComponent(LivesCounterView3D.class);
+        for (int i = 0; i < view3D.counterShapes().size(); ++i) {
+            view3D.counterShapes().get(i).setVisible(i < livesCounter.data().numLivesShown());
+        }
+    }
+
+    public void startTrackingPac(LivesCounterView3D livesCounterView3D, PacView3D pac3D) {
+        for (NodePositionTracker tracker : livesCounterView3D.trackers()) {
             tracker.startTrackingTarget(pac3D.root());
         }
     }
 
-    public void stopTrackingPac(LivesCounterView3D view3D) {
-        for (NodePositionTracker tracker : view3D.trackers()) {
+    public void stopTrackingPac(LivesCounterView3D livesCounterView3D) {
+        for (NodePositionTracker tracker : livesCounterView3D.trackers()) {
             tracker.stopTracking();
-        }
-    }
-
-    public void update(LivesCounter livesCounter) {
-        final LivesCounterView3D view3D = livesCounter.assertComponent(LivesCounterView3D.class);
-        for (int i = 0; i < view3D.counterShapes().size(); ++i) {
-            view3D.counterShapes().get(i).setVisible(i < livesCounter.data().numLivesShown());
         }
     }
 }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
 import de.amr.basics.ui.animation.ManagedAnimation;
-import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -17,7 +16,9 @@ import de.amr.pacmanfx.engine.gamescene.GameSceneManager;
 import de.amr.pacmanfx.engine.gamescene.GameSceneSwitchType;
 import de.amr.pacmanfx.ui.EngineUIContext;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
+import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
@@ -174,9 +175,12 @@ public class DefaultGameSceneManager implements GameSceneManager {
         });
 
         // Lives counter shapes follow Pac location
-        final LivesCounter livesCounter = session.hud().livesCounter();
-        final LivesCounterView3D_System livesCounterView3DSystem = game.systems().assertSystem(LivesCounterView3D_System.class);
-        livesCounterView3DSystem.startTrackingPac(livesCounter, pac);
+        session.hud().livesCounter().optComponent(LivesCounterView3D.class).ifPresent(livesCounterView3D -> {
+            if (pac.hasComponent(PacView3D.class)) {
+                final LivesCounterView3D_System system = game.systems().assertSystem(LivesCounterView3D_System.class);
+                system.startTrackingPac(livesCounterView3D, pac.assertComponent(PacView3D.class));
+            }
+        });
 
         if (pac.power().isActive()) {
             uiConfig.optSoundEffects().ifPresent(PacManGameSoundEffects::playPacPowerSound);
