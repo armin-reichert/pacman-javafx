@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.entities3D.messageview;
 
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

@@ -2,11 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.entities3D.messageview.system;
+package de.amr.pacmanfx.ui.entities3D.messageview;
 
 import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DAnimationComp;
-import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
 
 import static java.util.Objects.requireNonNull;
 

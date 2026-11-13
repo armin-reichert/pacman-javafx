@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.entities3D.messageview.comp.MessageView3DComp;
+import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DComp;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
