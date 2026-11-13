@@ -33,8 +33,8 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
-import static de.amr.basics.TileDimension.halfTileRightOf;
+import static de.amr.basics.Tile.TS;
+import static de.amr.basics.Tile.halfTileRightOf;
 import static de.amr.basics.math.RandomNumbers.*;
 import static java.util.Objects.requireNonNull;
 

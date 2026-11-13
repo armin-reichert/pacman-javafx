@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 public class TotalPerspective implements Perspective<GameLevel> {

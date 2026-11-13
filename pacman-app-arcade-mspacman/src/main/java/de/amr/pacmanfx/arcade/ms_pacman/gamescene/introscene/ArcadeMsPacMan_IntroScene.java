@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

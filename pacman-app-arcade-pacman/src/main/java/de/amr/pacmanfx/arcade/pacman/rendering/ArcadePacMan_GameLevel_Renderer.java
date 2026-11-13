@@ -21,7 +21,7 @@ import de.amr.pacmanfx.uilib.view2d.LevelRenderInfoKey;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 

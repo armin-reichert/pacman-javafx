@@ -10,7 +10,7 @@ import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3D;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Score3DSystem {

@@ -12,7 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.basics.util.Ufx.scaleFontBy;
 
 /**

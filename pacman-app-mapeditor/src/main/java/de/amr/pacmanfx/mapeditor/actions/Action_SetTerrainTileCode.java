@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -26,7 +26,7 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
     }
 
     public Action_SetTerrainTileCode(TileMapEditor editor, int row, int col, byte code) {
-        this(editor, tile(col, row), code);
+        this(editor, createTile(col, row), code);
     }
 
     public Action_SetTerrainTileCode(TileMapEditor editor, WorldMap worldMap, Vector2i tile, byte code) {

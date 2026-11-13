@@ -8,8 +8,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.shape.Shape3D;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 public class PelletView3D implements DisposableGraphicsObject {

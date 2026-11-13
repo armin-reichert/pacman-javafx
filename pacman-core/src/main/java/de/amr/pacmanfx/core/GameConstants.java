@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 
 import java.io.File;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 
 public class GameConstants {
 

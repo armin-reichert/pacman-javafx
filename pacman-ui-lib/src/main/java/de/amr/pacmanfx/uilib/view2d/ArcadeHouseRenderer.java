@@ -17,8 +17,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 
 /**
  * Renders an arcade house shape. Used by generic level renderer (XXL game variants) and by the world map editor preview.

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 import static java.util.Objects.requireNonNull;

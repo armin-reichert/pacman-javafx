@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -8,8 +8,8 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static java.util.Objects.requireNonNull;
 

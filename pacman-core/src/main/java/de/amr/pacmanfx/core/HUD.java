@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 
 public class HUD {
 

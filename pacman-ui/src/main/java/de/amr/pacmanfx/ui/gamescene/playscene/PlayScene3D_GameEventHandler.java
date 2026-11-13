@@ -54,8 +54,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.pauseSecThen;
 

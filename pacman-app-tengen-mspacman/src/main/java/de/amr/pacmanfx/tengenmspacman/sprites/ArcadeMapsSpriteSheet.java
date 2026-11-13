@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import javafx.scene.image.Image;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.RectShort.sprite;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {

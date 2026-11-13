@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 

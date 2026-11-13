@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 
 public class Tengen_GameOverState extends AbstractGameState {

@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 

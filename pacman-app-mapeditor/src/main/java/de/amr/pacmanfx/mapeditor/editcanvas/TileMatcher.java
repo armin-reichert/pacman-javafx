@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 
 public class TileMatcher {
 

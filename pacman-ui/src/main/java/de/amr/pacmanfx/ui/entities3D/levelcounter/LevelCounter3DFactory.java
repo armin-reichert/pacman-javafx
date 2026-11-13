@@ -15,7 +15,7 @@ import javafx.scene.shape.Box;
 
 import java.util.List;
 
-import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.Tile.HTS;
 
 public class LevelCounter3DFactory {
 

@@ -16,7 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.Tile.HTS;
 import static java.util.Objects.requireNonNull;
 
 /**

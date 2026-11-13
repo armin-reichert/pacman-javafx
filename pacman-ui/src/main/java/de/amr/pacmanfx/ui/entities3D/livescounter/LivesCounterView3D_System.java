@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class LivesCounterView3D_System {

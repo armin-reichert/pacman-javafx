@@ -42,7 +42,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.*;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;

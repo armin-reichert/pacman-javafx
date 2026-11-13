@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 import static java.util.Objects.requireNonNull;
 
 public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
@@ -97,7 +97,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      * @return tile with given index
      */
     public Vector2i tileAtIndex(int index) {
-        return tile(index % numCols(), index / numCols());
+        return createTile(index % numCols(), index / numCols());
     }
 
     /**
@@ -106,7 +106,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      */
     public Vector2i mirrorPosition(Vector2i tile) {
         assertInsideWorld(tile);
-        return tile(numCols() - 1 - tile.x(), tile.y());
+        return createTile(numCols() - 1 - tile.x(), tile.y());
     }
 
     public byte content(int row, int col) {

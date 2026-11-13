@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 import static java.util.Objects.requireNonNull;
 
 public class Action_SetDefaultScatterPositions extends EditorAction<Void> {
@@ -27,10 +27,10 @@ public class Action_SetDefaultScatterPositions extends EditorAction<Void> {
     public Void execute() {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_RED_GHOST,    String.valueOf(tile(numCols - 3, 0)));
-            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_PINK_GHOST,   String.valueOf(tile(2, 0)));
-            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_CYAN_GHOST,   String.valueOf(tile(numCols - 1, numRows - 2)));
-            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST, String.valueOf(tile(0, numRows - 2)));
+            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_RED_GHOST,    String.valueOf(createTile(numCols - 3, 0)));
+            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_PINK_GHOST,   String.valueOf(createTile(2, 0)));
+            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_CYAN_GHOST,   String.valueOf(createTile(numCols - 1, numRows - 2)));
+            worldMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST, String.valueOf(createTile(0, numRows - 2)));
             editor.setTerrainMapChanged();
         }
         return null;

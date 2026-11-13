@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 

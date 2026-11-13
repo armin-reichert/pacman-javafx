@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
 import org.tinylog.Logger;
 
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.tilesPx;
 import static de.amr.basics.math.MathAdds.lerp;
 
 public class PlayScene2DCamera extends ParallelCamera {

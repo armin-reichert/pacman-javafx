@@ -11,8 +11,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.createTile;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.*;
 import static java.lang.Math.signum;
 
@@ -145,7 +145,7 @@ public class Obstacle {
         for (ObstacleSegment segment : segments) {
             Vector2i v = segment.vector();
             if (v.x() != 0 && v.y() != 0) { // diagonal
-                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? tile(0, v.y()) : tile(v.x(), 0);
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? createTile(0, v.y()) : createTile(v.x(), 0);
                 edges.add(e);
                 edges.add(v.minus(e));
             } else {

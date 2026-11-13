@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

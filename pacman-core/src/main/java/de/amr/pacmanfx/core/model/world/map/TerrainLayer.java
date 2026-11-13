@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.*;
@@ -44,10 +44,10 @@ public final class TerrainLayer extends WorldMapLayer {
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
-        scatterTiles[0] = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    tile(0, numCols() - 3));
-        scatterTiles[1] = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   tile(0, 3));
-        scatterTiles[2] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   tile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
-        scatterTiles[3] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, tile(numRows() - emptyRowsBelowMaze(), 0));
+        scatterTiles[0] = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    createTile(0, numCols() - 3));
+        scatterTiles[1] = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   createTile(0, 3));
+        scatterTiles[2] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   createTile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[3] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, createTile(numRows() - emptyRowsBelowMaze(), 0));
 
         if (layer.obstacleSet != null) {
             this.obstacleSet = Set.copyOf(layer.obstacleSet);
@@ -91,8 +91,8 @@ public final class TerrainLayer extends WorldMapLayer {
         var portals = new ArrayList<HPortal>();
         int firstColumn = 0, lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
-            Vector2i leftBorderTile = tile(firstColumn, row);
-            Vector2i rightBorderTile = tile(lastColumn, row);
+            Vector2i leftBorderTile = createTile(firstColumn, row);
+            Vector2i rightBorderTile = createTile(lastColumn, row);
             if (content(row, firstColumn) == TUNNEL.$ && content(row, lastColumn) == TUNNEL.$) {
                 portals.add(new HPortal(leftBorderTile, rightBorderTile, 2));
             }

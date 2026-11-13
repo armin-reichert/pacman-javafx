@@ -36,8 +36,8 @@ import javafx.scene.text.Font;
 
 import java.util.function.Predicate;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.COLOR_FOOD;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;

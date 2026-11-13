@@ -19,8 +19,8 @@ import org.tinylog.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 

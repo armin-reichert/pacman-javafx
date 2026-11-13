@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.canPlaceFoodAtTile;
 import static java.util.Objects.requireNonNull;
 
@@ -26,7 +26,7 @@ public class Action_SetFoodTileCode extends EditorAction<Void> {
     }
 
     public Action_SetFoodTileCode(TileMapEditor editor, int row, int col, byte code) {
-        this(editor, tile(col, row), code);
+        this(editor, createTile(col, row), code);
     }
 
     @Override

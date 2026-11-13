@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;

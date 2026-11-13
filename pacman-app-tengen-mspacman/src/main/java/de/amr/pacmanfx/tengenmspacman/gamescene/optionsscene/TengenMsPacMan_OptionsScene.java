@@ -42,7 +42,7 @@ import javafx.scene.input.KeyCode;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.engine.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;

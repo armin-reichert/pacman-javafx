@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.TS;
+import static de.amr.basics.Tile.tilesPx;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;

@@ -30,7 +30,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.*;
 import static java.util.Objects.requireNonNull;

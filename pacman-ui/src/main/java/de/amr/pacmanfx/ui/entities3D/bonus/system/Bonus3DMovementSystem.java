@@ -8,7 +8,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.entities3D.bonus.comp.BonusView3D;
 
-import static de.amr.basics.TileDimension.HTS;
+import static de.amr.basics.Tile.HTS;
 
 class Bonus3DMovementSystem {
 

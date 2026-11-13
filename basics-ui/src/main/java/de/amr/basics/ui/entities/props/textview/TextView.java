@@ -9,7 +9,7 @@ import de.amr.basics.ecs.comp.Movement;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.tilesPx;
 
 public class TextView extends GameEntity {
 

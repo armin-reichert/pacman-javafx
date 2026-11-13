@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.rendering.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static java.util.Objects.requireNonNull;
 

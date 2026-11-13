@@ -25,7 +25,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
@@ -134,10 +134,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
-        final Vector2i pacTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, tile(14, 26));
+        final Vector2i pacTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, createTile(14, 26));
         overPaintActorSprite(pacTile, margin);
 
-        final Vector2i redGhostTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, tile(13, 14));
+        final Vector2i redGhostTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, createTile(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 

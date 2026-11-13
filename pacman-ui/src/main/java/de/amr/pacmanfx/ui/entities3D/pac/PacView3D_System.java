@@ -19,8 +19,8 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static java.util.Objects.requireNonNull;
 
 public class PacView3D_System {

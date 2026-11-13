@@ -3,13 +3,14 @@
  */
 package de.amr.pacmanfx.mapeditor.actions;
 
+import de.amr.basics.Tile;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 
 public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
 
@@ -30,7 +31,7 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
         new Action_SetDefaultScatterPositions(editor, newMap).execute();
         new Action_AddBorderWall(editor, newMap).execute();
         if (newMap.numRows() >= 20) {
-            final Vector2i houseMinTile = tile(numCols / 2 - 4, numRows / 2 - 3);
+            final Vector2i houseMinTile = createTile(numCols / 2 - 4, numRows / 2 - 3);
             new Action_PlaceArcadeHouse(editor, newMap, houseMinTile).execute();
             terrain.propertyMap().put(WorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
             terrain.propertyMap().put(WorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));

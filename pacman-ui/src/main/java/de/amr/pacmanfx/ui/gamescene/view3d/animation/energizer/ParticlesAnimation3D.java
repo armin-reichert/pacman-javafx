@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.RandomNumbers.chance;
 import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static java.util.Objects.requireNonNull;

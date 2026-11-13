@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
@@ -67,25 +67,25 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     public static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
-        tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
-        tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
-        tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
-        tile( 6,17), tile( 6 ,4), tile( 1, 4), tile( 1, 8), tile(12, 8),
-        tile(12, 4), tile( 6, 4), tile( 6,11), tile( 1,11), tile( 1, 8),
-        tile( 9, 8), tile( 9,11), tile(12,11), tile(12,14), tile( 9,14),
-        tile( 9,17), tile( 0,17), /*tunnel*/   tile(21,17), tile(21,29),
-        tile(26,29), tile(26,32), tile( 1,32), tile( 1,29), tile( 3,29),
-        tile( 3,26), tile( 1,26), tile( 1,23), tile(12,23), tile(12,26),
-        tile(15,26), tile(15,23), tile(26,23), tile(26,26), tile(24,26),
-        tile(24,29), tile(26,29), tile(26,32), tile( 1,32),
-        tile( 1,29), tile( 3,29), tile( 3,26), tile( 1,26), tile( 1,23),
-        tile( 6,23)
+        createTile( 9,26), createTile( 9,29), createTile(12,29), createTile(12,32), createTile(26,32),
+        createTile(26,29), createTile(24,29), createTile(24,26), createTile(26,26), createTile(26,23),
+        createTile(21,23), createTile(18,23), createTile(18,14), createTile( 9,14), createTile( 9,17),
+        createTile( 6,17), createTile( 6 ,4), createTile( 1, 4), createTile( 1, 8), createTile(12, 8),
+        createTile(12, 4), createTile( 6, 4), createTile( 6,11), createTile( 1,11), createTile( 1, 8),
+        createTile( 9, 8), createTile( 9,11), createTile(12,11), createTile(12,14), createTile( 9,14),
+        createTile( 9,17), createTile( 0,17), /*tunnel*/   createTile(21,17), createTile(21,29),
+        createTile(26,29), createTile(26,32), createTile( 1,32), createTile( 1,29), createTile( 3,29),
+        createTile( 3,26), createTile( 1,26), createTile( 1,23), createTile(12,23), createTile(12,26),
+        createTile(15,26), createTile(15,23), createTile(26,23), createTile(26,26), createTile(24,26),
+        createTile(24,29), createTile(26,29), createTile(26,32), createTile( 1,32),
+        createTile( 1,29), createTile( 3,29), createTile( 3,26), createTile( 1,26), createTile( 1,23),
+        createTile( 6,23)
     );
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
      */
-    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = createTile(10, 15);
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 

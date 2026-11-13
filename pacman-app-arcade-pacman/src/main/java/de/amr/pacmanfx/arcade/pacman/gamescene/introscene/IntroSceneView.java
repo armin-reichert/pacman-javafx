@@ -29,7 +29,7 @@ import javafx.scene.image.Image;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.*;
+import static de.amr.basics.Tile.*;
 import static de.amr.basics.ui.rendering.Renderable.filterRenderables;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;

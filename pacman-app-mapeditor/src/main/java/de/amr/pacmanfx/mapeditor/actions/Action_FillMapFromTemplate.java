@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
-import static de.amr.basics.TileDimension.TS;
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.TS;
+import static de.amr.basics.Tile.createTile;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
@@ -72,7 +72,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = tile(col, row + emptyRowsTop);
+                Vector2i worldMapTile = createTile(col, row + emptyRowsTop);
                 try {
                     int[] pixelsOfTile = new int[TS * TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);

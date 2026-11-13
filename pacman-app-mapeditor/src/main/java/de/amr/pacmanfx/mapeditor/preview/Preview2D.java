@@ -23,8 +23,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 

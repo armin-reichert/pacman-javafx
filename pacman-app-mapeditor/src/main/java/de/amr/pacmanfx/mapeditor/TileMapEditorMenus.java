@@ -13,7 +13,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.*;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 
@@ -91,7 +91,7 @@ public class TileMapEditorMenus {
         final var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(_ -> {
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
-            new Action_MoveArcadeHouse(editor, tile(numCols / 2 - 4, numRows / 2 - 3)).execute();
+            new Action_MoveArcadeHouse(editor, createTile(numCols / 2 - 4, numRows / 2 - 3)).execute();
         });
 
         final var miDeleteHouse = new MenuItem(translated("menu.edit.delete_house"));

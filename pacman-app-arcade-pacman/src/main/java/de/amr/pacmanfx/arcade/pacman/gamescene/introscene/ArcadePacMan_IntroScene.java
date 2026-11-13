@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.arcade.pacman.gamescene.introscene.IntroSceneController.*;
 import static de.amr.pacmanfx.core.entities.actor.ghost.GhostState.EATEN;
 

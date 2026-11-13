@@ -13,7 +13,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import org.tinylog.Logger;
 
-import static de.amr.basics.TileDimension.tile;
+import static de.amr.basics.Tile.createTile;
 
 class TilePropertyEditor extends AbstractPropertyEditor {
 
@@ -66,7 +66,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return MapEditorPropertyType.TILE.format(tile(spinnerX.getValue(), spinnerY.getValue()));
+        return MapEditorPropertyType.TILE.format(createTile(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override

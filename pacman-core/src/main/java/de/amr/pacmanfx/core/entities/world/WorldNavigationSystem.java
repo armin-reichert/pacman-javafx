@@ -18,8 +18,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 

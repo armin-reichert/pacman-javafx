@@ -35,8 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

@@ -55,8 +55,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.basics.TileDimension.TS;
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.TS;
+import static de.amr.basics.Tile.tilesPx;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 

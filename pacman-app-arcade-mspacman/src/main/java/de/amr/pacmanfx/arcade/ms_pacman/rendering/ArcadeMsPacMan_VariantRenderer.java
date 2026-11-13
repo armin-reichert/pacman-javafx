@@ -49,8 +49,8 @@ import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
 
-import static de.amr.basics.TileDimension.TS;
-import static de.amr.basics.TileDimension.tilesPx;
+import static de.amr.basics.Tile.TS;
+import static de.amr.basics.Tile.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 /**

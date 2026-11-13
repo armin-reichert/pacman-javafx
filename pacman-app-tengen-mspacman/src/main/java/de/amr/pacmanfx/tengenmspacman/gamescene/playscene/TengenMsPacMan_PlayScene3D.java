@@ -28,7 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptionValues;
 import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfViews;
 

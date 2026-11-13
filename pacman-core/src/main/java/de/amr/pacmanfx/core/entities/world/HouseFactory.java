@@ -9,8 +9,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 

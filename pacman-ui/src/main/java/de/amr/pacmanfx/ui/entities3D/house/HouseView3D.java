@@ -15,8 +15,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.basics.TileDimension.HTS;
-import static de.amr.basics.TileDimension.TS;
+import static de.amr.basics.Tile.HTS;
+import static de.amr.basics.Tile.TS;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
