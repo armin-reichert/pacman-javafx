@@ -61,6 +61,7 @@ public class LivesCounterView3D_System {
     }
 
     public void updateLivesCounterView3D(LivesCounter livesCounter) {
+        requireNonNull(livesCounter);
         final LivesCounterView3D view3D = livesCounter.assertComponent(LivesCounterView3D.class);
         for (int i = 0; i < view3D.counterShapes().size(); ++i) {
             view3D.counterShapes().get(i).setVisible(i < livesCounter.data().numLivesShown());
@@ -68,12 +69,17 @@ public class LivesCounterView3D_System {
     }
 
     public void startTrackingPac(LivesCounterView3D livesCounterView3D, PacView3D pac3D) {
+        requireNonNull(livesCounterView3D);
+        requireNonNull(pac3D);
+
         for (NodePositionTracker tracker : livesCounterView3D.trackers()) {
             tracker.startTrackingTarget(pac3D.root());
         }
     }
 
     public void stopTrackingPac(LivesCounterView3D livesCounterView3D) {
+        requireNonNull(livesCounterView3D);
+
         for (NodePositionTracker tracker : livesCounterView3D.trackers()) {
             tracker.stopTracking();
         }
