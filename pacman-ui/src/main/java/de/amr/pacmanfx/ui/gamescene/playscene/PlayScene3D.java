@@ -189,7 +189,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         //TODO check this
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            levelView3D.ensureBonus3DViewAddedToSceneGraph(bonus, view3D.animationRegistry()));
+            levelView3D.ensureBonus3DViewAddedToChildren(game, bonus, view3D.animationRegistry()));
 
         //TODO move out of this class?
         final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);

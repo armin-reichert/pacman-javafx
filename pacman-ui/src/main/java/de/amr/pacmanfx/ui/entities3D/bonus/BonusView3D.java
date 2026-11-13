@@ -25,8 +25,8 @@ public class BonusView3D implements DisposableGraphicsObject {
     private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
     private final Translate translate = new Translate();
 
-    private final BonusRollingTransform rollingTransform;
-    private final BonusEatenAnimation3D eatenAnimation;
+    private final BonusView3D_RollingTransform rollingTransform;
+    private final BonusView3D_EatenAnimation eatenAnimation;
 
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
@@ -63,9 +63,9 @@ public class BonusView3D implements DisposableGraphicsObject {
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        rollingTransform = new BonusRollingTransform();
+        rollingTransform = new BonusView3D_RollingTransform();
 
-        eatenAnimation = new BonusEatenAnimation3D(shape3D);
+        eatenAnimation = new BonusView3D_EatenAnimation(shape3D);
     }
 
     @Override
@@ -95,11 +95,11 @@ public class BonusView3D implements DisposableGraphicsObject {
         return rotateY;
     }
 
-    public BonusEatenAnimation3D eatenAnimation() {
+    public BonusView3D_EatenAnimation eatenAnimation() {
         return eatenAnimation;
     }
 
-    public BonusRollingTransform rollingTransform() {
+    public BonusView3D_RollingTransform rollingTransform() {
         return rollingTransform;
     }
 

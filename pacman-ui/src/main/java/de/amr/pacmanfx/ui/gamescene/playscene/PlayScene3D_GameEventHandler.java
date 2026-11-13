@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.playscene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.util.Ufx;
@@ -103,7 +104,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         final GameLevelView3D level3D = assertLevel3D();
         //TODO Check this
-        level3D.ensureBonus3DViewAddedToSceneGraph(bonus, playScene3D.assertView3D().animationRegistry());
+        level3D.ensureBonus3DViewAddedToChildren(assertGame(), bonus, playScene3D.assertView3D().animationRegistry());
 
         final BonusView3D_System bonusSystem = assertGame().systems().assertSystem(BonusView3D_System.class);
         bonusSystem.update(bonus, playScene3D.assertView3D().animationRegistry());
@@ -114,12 +115,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
-        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
         final BonusView3D_System system = assertGame().systems().assertSystem(BonusView3D_System.class);
+        final AnimationRegistry animationRegistry = playScene3D.assertView3D().animationRegistry();
 
-        system.update(bonus, playScene3D.assertView3D().animationRegistry());
-        //TODO integrate into update, set flag at animation component
-        system.lookExpired(view3D, bonus, playScene3D.assertView3D().animationRegistry());
+        system.update(bonus, animationRegistry);
 
         optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusEatenSound);
     }
@@ -127,9 +126,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
-        final BonusView3D_System updateSystem3D = assertGame().systems().assertSystem(BonusView3D_System.class);
+        final BonusView3D_System system = assertGame().systems().assertSystem(BonusView3D_System.class);
+        final BonusView3D view3D = bonus.assertComponent(BonusView3D.class);
+        final AnimationRegistry animationRegistry = playScene3D.assertView3D().animationRegistry();
 
-        updateSystem3D.update(bonus, playScene3D.assertView3D().animationRegistry());
+        system.lookExpired(view3D, animationRegistry);
+
         optSoundEffects().ifPresent(PacManGameSoundEffects::playBonusExpiredSound);
     }
 

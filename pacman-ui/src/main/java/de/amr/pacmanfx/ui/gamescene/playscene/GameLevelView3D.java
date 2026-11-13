@@ -19,11 +19,9 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
-import de.amr.pacmanfx.ui.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.entities3D.bonus.Bonus3DAnimationID;
-import de.amr.pacmanfx.ui.entities3D.bonus.Bonus3DSettings;
 import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D;
+import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D_System;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.ui.entities3D.ghost.GhostView3D;
 import de.amr.pacmanfx.ui.entities3D.house.HouseView3D;
@@ -164,10 +162,11 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
         mapView3D.particlesGroup().getChildren().clear();
     }
 
-    public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus, AnimationRegistry animationRegistry) {
+    public void ensureBonus3DViewAddedToChildren(GameContext game, Bonus bonus, AnimationRegistry animationRegistry) {
         if (!bonus.hasComponent(BonusView3D.class)) {
-            final var view3D = createBonusView3D(bonus, animationRegistry);
-            root.getChildren().add(view3D.root());
+            final BonusView3D_System system = game.systems().assertSystem(BonusView3D_System.class);
+            system.createBonusView3D(bonus, uiConfig, animationRegistry);
+            root.getChildren().add(bonus.assertComponent(BonusView3D.class).root());
         }
     }
 
@@ -258,23 +257,6 @@ public class GameLevelView3D implements ChangeListener<DrawMode>, DisposableGrap
             uiConfig.worldSettings().energizer(), foodMaterial);
         energizerView3D.setLocation(tile, z);
         return energizerView3D;
-    }
-
-    private BonusView3D createBonusView3D(Bonus bonus, AnimationRegistry animationRegistry) {
-        final Bonus3DSettings config = uiConfig.worldSettings().bonus();
-        final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
-        final BonusView3D view3D = new BonusView3D(
-            renderConfig.createBonusSymbolImage(bonus.data().symbolCode()),
-            config.symbolWidth(),
-            renderConfig.createBonusPointsImage(bonus.data().symbolCode()),
-            config.pointsWidth()
-        );
-        bonus.setComponent(BonusView3D.class, view3D);
-
-        //TODO move elsewhere
-        animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
-
-        return view3D;
     }
 
     private void createPacView3D(CommonGameSystems systems, Pac pac, PacSettings settings) {

@@ -4,17 +4,17 @@
 
 package de.amr.pacmanfx.ui.entities3D.bonus;
 
-import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 
-public class BonusRollingTransform {
+public class BonusView3D_RollingTransform {
 
     public static final int ANGLE_DELTA = 5;
 
-    public BonusRollingTransform() {}
+    public BonusView3D_RollingTransform() {}
 
-    public void update(GameEntity bonus) {
+    public void update(Bonus bonus) {
         bonus.optComponent(WorldNavigationComp.class).ifPresent(worldNavigation -> {
             final BonusView3D comp3D = bonus.assertComponent(BonusView3D.class);
             final Direction moveDir = worldNavigation.moveDir();

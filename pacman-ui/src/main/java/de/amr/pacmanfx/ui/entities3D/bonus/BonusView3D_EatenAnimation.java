@@ -12,9 +12,9 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class BonusEatenAnimation3D extends ManagedAnimation {
+public class BonusView3D_EatenAnimation extends ManagedAnimation {
 
-    public BonusEatenAnimation3D(Shape3D bonusShape3D) {
+    public BonusView3D_EatenAnimation(Shape3D bonusShape3D) {
         super("Bonus (Eaten, Points)");
         setAnimationFactory(() -> createAnimationFX(bonusShape3D));
     }
