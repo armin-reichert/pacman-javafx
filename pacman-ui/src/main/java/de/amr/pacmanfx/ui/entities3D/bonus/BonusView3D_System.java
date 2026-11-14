@@ -30,7 +30,7 @@ public class BonusView3D_System {
         animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
     }
 
-    public void update(Bonus bonus, AnimationRegistry animationRegistry) {
+    public void updateBonus(Bonus bonus, AnimationRegistry animationRegistry) {
         requireNonNull(bonus);
         requireNonNull(animationRegistry);
 

@@ -187,13 +187,9 @@ public class PlayScene3D extends AbstractGameScene {
             return;
         }
 
-        //TODO check this
-        level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            levelView3D.ensureBonus3DViewAddedToChildren(game, bonus, sceneView3D.animationRegistry()));
-
         //TODO move out of this class?
         final GameLevel3DUpdateSystem updateSystem = game.systems().assertSystem(GameLevel3DUpdateSystem.class);
-        updateSystem.updateGameLevel3D(game, sceneView3D.animationRegistry());
+        updateSystem.updateGameLevelView3D(levelView3D, game, sceneView3D.animationRegistry());
 
         optComponent(ScoresView.class).ifPresent(scoresView -> {
             final Score3DSystem score3DSystem = game.systems().assertSystem(Score3DSystem.class);
