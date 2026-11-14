@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
+import de.amr.pacmanfx.core.entities.actor.bonus.BonusStateEnum;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.gamestate.SimulationFrame;
@@ -59,7 +59,7 @@ public class ActorCollisionHandler {
         final Pac pac = level.entitySet().pac();
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         frame.setEdibleBonus(null);
-        if (bonus != null && bonus.state().enumValue() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
+        if (bonus != null && bonus.state().enumValue() == BonusStateEnum.EDIBLE && strategy.collide(pac, bonus)) {
             frame.setEdibleBonus(bonus);
         }
     }

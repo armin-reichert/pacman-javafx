@@ -17,7 +17,7 @@ public class BonusStateSystem {
         requireNonNull(game);
         requireNonNull(bonus);
 
-        final BonusStateComp state = bonus.state();
+        final BonusState state = bonus.state();
         state.timer().doTick();
 
         switch (state.enumValue()) {
@@ -49,8 +49,8 @@ public class BonusStateSystem {
     public void setInactive(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusStateComp state = bonus.state();
-        state.setEnumValue(BonusState.INACTIVE);
+        final BonusState state = bonus.state();
+        state.setEnumValue(BonusStateEnum.INACTIVE);
         state.timer().restartIndefinitely();
 
         bonus.hide();
@@ -59,8 +59,8 @@ public class BonusStateSystem {
     public void setEdible(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusStateComp state = bonus.state();
-        state.setEnumValue(BonusState.EDIBLE);
+        final BonusState state = bonus.state();
+        state.setEnumValue(BonusStateEnum.EDIBLE);
         bonus.show();
     }
 }

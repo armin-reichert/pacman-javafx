@@ -16,7 +16,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
-import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
+import de.amr.pacmanfx.core.entities.actor.bonus.BonusStateEnum;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.HPortal;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final Bonus prevBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
-            if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
+            if (prevBonus.state().enumValue() == BonusStateEnum.EDIBLE) {
                 //TODO Can this happen in original game?
                 Logger.info("Previous bonus is still edible, skip new bonus creation");
                 return;

@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
+import de.amr.pacmanfx.core.entities.actor.bonus.BonusStateEnum;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -183,7 +183,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         final Bonus bonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Vector2i bonusTile = bonus.position().tile();
-            return bonus.state().enumValue() == BonusState.EDIBLE
+            return bonus.state().enumValue() == BonusStateEnum.EDIBLE
                 && bonusTile.manhattanDist(pacTile) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }
         return false;

@@ -62,7 +62,7 @@ public class BonusView3D_System {
     private void updateAnimation(BonusView3D view3D, Bonus bonus, AnimationRegistry animationRegistry) {
         switch (bonus.state().enumValue()) {
             case EDIBLE -> lookEdible(view3D, animationRegistry);
-            case EATEN  -> lookEaten(view3D, bonus, animationRegistry);
+            case EATEN  -> lookEaten(view3D, animationRegistry);
             case INACTIVE -> {}
         }
     }
@@ -74,7 +74,7 @@ public class BonusView3D_System {
         animationRegistry.optAnimation(Bonus3DAnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::playOrContinue);
     }
 
-    private void lookEaten(BonusView3D view3D, Bonus bonus, AnimationRegistry animationRegistry) {
+    private void lookEaten(BonusView3D view3D, AnimationRegistry animationRegistry) {
         final Box shape3D = view3D.box3D();
         shape3D.setVisible(true);
         shape3D.setWidth(view3D.pointsWidth());

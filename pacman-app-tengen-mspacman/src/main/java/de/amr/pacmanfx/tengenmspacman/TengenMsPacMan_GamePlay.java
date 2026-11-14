@@ -18,7 +18,7 @@ import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
-import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
+import de.amr.pacmanfx.core.entities.actor.bonus.BonusStateEnum;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.HPortal;
@@ -329,7 +329,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         //TODO Find out how Tengen really implemented this
         final Bonus prevBonus = level.entitySet().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
-            if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
+            if (prevBonus.state().enumValue() == BonusStateEnum.EDIBLE) {
                 Logger.info("Previous bonus is still active, skip new bonus");
                 return;
             }

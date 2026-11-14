@@ -34,15 +34,15 @@ public final class Bonus extends GameEntity {
 
     public Bonus(int symbolCode) {
         setComponent(BonusDataComp.class, new BonusDataComp(symbolCode));
-        setComponent(BonusStateComp.class, new BonusStateComp());
+        setComponent(BonusState.class, new BonusState());
     }
 
     public BonusDataComp data() {
         return assertComponent(BonusDataComp.class);
     }
 
-    public BonusStateComp state() {
-        return assertComponent(BonusStateComp.class);
+    public BonusState state() {
+        return assertComponent(BonusState.class);
     }
 
     public Optional<BonusMoveAndJumpComp> optMoveAndJump() {

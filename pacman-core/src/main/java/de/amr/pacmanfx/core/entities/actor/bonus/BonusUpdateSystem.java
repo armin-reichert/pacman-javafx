@@ -21,7 +21,7 @@ public class BonusUpdateSystem {
     }
 
     public void update(GameContext game, GameLevel level, Bonus bonus) {
-        final BonusStateComp state = bonus.state();
+        final BonusState state = bonus.state();
         switch (state.enumValue()) {
             case INACTIVE -> {}
             case EDIBLE -> {
