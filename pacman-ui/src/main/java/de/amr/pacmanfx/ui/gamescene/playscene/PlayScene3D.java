@@ -32,7 +32,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
-import de.amr.pacmanfx.ui.entities3D.world.World3DUpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevel3DUpdateSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
@@ -175,13 +175,13 @@ public class PlayScene3D extends AbstractGameScene {
             return;
         }
 
-        final PlaySceneView3D view3D = optView3D().orElse(null);
-        if (view3D == null) {
+        final PlaySceneView3D sceneView3D = optView3D().orElse(null);
+        if (sceneView3D == null) {
             Logger.info("Tick {}: Play Scene 3D view not yet created, update ignored", tick);
             return;
         }
 
-        final GameLevelView3D levelView3D = view3D.optGameLevel3D().orElse(null);
+        final GameLevelView3D levelView3D = sceneView3D.optGameLevel3D().orElse(null);
         if (levelView3D == null) {
             Logger.info("Tick {}: Game level 3D view not yet created, update ignored", tick);
             return;
@@ -189,17 +189,26 @@ public class PlayScene3D extends AbstractGameScene {
 
         //TODO check this
         level.entitySet().anyOfType(Bonus.class).ifPresent(bonus ->
-            levelView3D.ensureBonus3DViewAddedToChildren(game, bonus, view3D.animationRegistry()));
+            levelView3D.ensureBonus3DViewAddedToChildren(game, bonus, sceneView3D.animationRegistry()));
 
         //TODO move out of this class?
-        final World3DUpdateSystem updateSystem = game.systems().assertSystem(World3DUpdateSystem.class);
-        updateSystem.updateEntities(game, view3D.animationRegistry());
+        final GameLevel3DUpdateSystem updateSystem = game.systems().assertSystem(GameLevel3DUpdateSystem.class);
+        updateSystem.updateGameLevel3D(game, sceneView3D.animationRegistry());
 
-        updateScoresView(game);
+        optComponent(ScoresView.class).ifPresent(scoresView -> {
+            final Score3DSystem score3DSystem = game.systems().assertSystem(Score3DSystem.class);
+            score3DSystem.updateScoresView(
+                scoresView,
+                game.session().hud().gameScore(),
+                game.session().hud().highScore(),
+                engine.translationManager(),
+                uiConfig().assets()
+            );
+        });
 
         ensureAnimationsRunning(game.state());
 
-        view3D.perspectiveManager().updatePerspective(level);
+        sceneView3D.perspectiveManager().updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> soundEffects.playAmbientGameLevelSound(game, level));
     }
@@ -244,18 +253,6 @@ public class PlayScene3D extends AbstractGameScene {
 
     public void replaceActionBindings(GameSession session, GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
-    }
-
-    public void updateScoresView(GameContext game) {
-        requireNonNull(game);
-        final ScoresView scoresView = assertComponent(ScoresView.class);
-        game.systems().assertSystem(Score3DSystem.class).updateScoresView(
-            scoresView,
-            game.session().hud().gameScore(),
-            game.session().hud().highScore(),
-            engine.translationManager(),
-            uiConfig().assets()
-        );
     }
 
     public void initPac3DProperties(CommonGameSystems systems, GameLevel level, Pac pac) {

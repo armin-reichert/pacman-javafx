@@ -25,9 +25,12 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class World3DUpdateSystem {
+public class GameLevel3DUpdateSystem {
 
-    public void updateEntities(GameContext game, AnimationRegistry animationRegistry) {
+    public GameLevel3DUpdateSystem() {
+    }
+
+    public void updateGameLevel3D(GameContext game, AnimationRegistry animationRegistry) {
         requireNonNull(game);
         requireNonNull(animationRegistry);
 
