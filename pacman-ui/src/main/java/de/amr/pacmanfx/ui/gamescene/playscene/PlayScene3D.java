@@ -4,21 +4,16 @@
 
 package de.amr.pacmanfx.ui.gamescene.playscene;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.ui.assets.RandomTextPicker;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.core.CommonGameSystems;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.SessionKey;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.SimulationFrame;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Input;
 import de.amr.pacmanfx.ui.EngineUIContext;
@@ -165,46 +160,36 @@ public class PlayScene3D extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSession session = game.session();
-        final SimulationFrame thisFrame = session.thisFrame();
-        final long tick = thisFrame.tickCount();
 
-        final GameLevel level = session.optLevel().orElse(null);
+        // TODO Can this still happen?
+        final GameLevel level = game.session().optLevel().orElse(null);
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", tick);
+            Logger.info("Tick {}: Game level not yet created", game.session().thisFrame().tickCount());
             return;
         }
 
-        final PlaySceneView3D sceneView3D = optView3D().orElse(null);
-        if (sceneView3D == null) {
-            Logger.info("Tick {}: Play Scene 3D view not yet created, update ignored", tick);
-            return;
-        }
+        optView3D().ifPresent(view3D -> {
+            view3D.optGameLevel3D().ifPresent(levelView3D -> {
+                final var system = game.systems().assertSystem(GameLevel3DUpdateSystem.class);
+                system.updateGameLevelView3D(levelView3D, game, view3D.animationRegistry());
 
-        final GameLevelView3D levelView3D = sceneView3D.optGameLevel3D().orElse(null);
-        if (levelView3D == null) {
-            Logger.info("Tick {}: Game level 3D view not yet created, update ignored", tick);
-            return;
-        }
+                //TODO This is crap, change it!
+                if (game.state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+                    game.state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
+                    view3D.animationSystem().startEnergizerPumping(levelView3D);
+                }
+            });
+            view3D.perspectiveManager().updatePerspective(level);
 
-        //TODO move out of this class?
-        final GameLevel3DUpdateSystem updateSystem = game.systems().assertSystem(GameLevel3DUpdateSystem.class);
-        updateSystem.updateGameLevelView3D(levelView3D, game, sceneView3D.animationRegistry());
-
-        optComponent(ScoresView.class).ifPresent(scoresView -> {
-            final Score3DSystem score3DSystem = game.systems().assertSystem(Score3DSystem.class);
-            score3DSystem.updateScoresView(
-                scoresView,
-                game.session().hud().gameScore(),
-                game.session().hud().highScore(),
-                engine.translationManager(),
-                uiConfig().assets()
-            );
+            optComponent(ScoresView.class).ifPresent(scoresView -> {
+                final var system = game.systems().assertSystem(Score3DSystem.class);
+                final HUD hud = game.session().hud();
+                system.updateScoresView(scoresView, hud.gameScore(), hud.highScore(),
+                    engine.translationManager(),
+                    uiConfig().assets()
+                );
+            });
         });
-
-        ensureAnimationsRunning(game.state());
-
-        sceneView3D.perspectiveManager().updatePerspective(level);
 
         optComponent(PacManGameSoundEffects.class).ifPresent(soundEffects -> soundEffects.playAmbientGameLevelSound(game, level));
     }
@@ -304,12 +289,4 @@ public class PlayScene3D extends AbstractGameScene {
         }
     }
 
-    private void ensureAnimationsRunning(State<GameContext> gameState) {
-        assertView3D().optGameLevel3D().ifPresent(level3D -> {
-            if (gameState.hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
-                gameState.hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
-                assertView3D().animationSystem().startEnergizerPumping(level3D);
-            }
-        });
-    }
 }
