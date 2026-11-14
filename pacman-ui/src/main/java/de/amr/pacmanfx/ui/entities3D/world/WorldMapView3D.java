@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.playscene;
+package de.amr.pacmanfx.ui.entities3D.world;
 
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;

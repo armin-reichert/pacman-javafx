@@ -7,6 +7,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
+import de.amr.pacmanfx.ui.entities3D.world.WorldMapView3D;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;

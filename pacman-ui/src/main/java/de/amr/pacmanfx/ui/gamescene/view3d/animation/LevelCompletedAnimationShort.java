@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.gamescene.view3d.animation;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
-import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3D;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D;
+import de.amr.pacmanfx.ui.entities3D.world.WorldMapView3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 

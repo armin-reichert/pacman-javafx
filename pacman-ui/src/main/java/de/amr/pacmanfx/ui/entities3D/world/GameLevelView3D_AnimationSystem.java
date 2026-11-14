@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.playscene;
+package de.amr.pacmanfx.ui.entities3D.world;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Pool;
@@ -34,8 +34,7 @@ import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_ChewingAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_DyingAnimation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_Animation;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.EnergizerParticle3D;
-import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.PlayScene3DAnimationID;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.LevelCompletedAnimationShort;
@@ -59,11 +58,11 @@ import static de.amr.basics.math.RandomNumbers.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PlaySceneView3DAnimationSystem implements Disposable {
+public class GameLevelView3D_AnimationSystem implements Disposable {
 
     private final AnimationRegistry registry;
     
-    public PlaySceneView3DAnimationSystem(AnimationRegistry registry) {
+    public GameLevelView3D_AnimationSystem(AnimationRegistry registry) {
         this.registry = requireNonNull(registry);
     }
 

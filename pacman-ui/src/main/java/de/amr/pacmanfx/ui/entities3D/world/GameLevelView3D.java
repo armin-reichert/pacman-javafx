@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.playscene;
+package de.amr.pacmanfx.ui.entities3D.world;
 
 import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Vector2i;
@@ -30,9 +30,8 @@ import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
-import de.amr.pacmanfx.ui.entities3D.world.EnergizerView3D;
-import de.amr.pacmanfx.ui.entities3D.world.NumberBox3D;
-import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.HouseFactory3D;
+import de.amr.pacmanfx.ui.gamescene.playscene.WorldMapView3DFactory;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;

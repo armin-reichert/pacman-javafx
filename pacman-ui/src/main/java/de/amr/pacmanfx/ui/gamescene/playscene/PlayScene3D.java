@@ -27,7 +27,8 @@ import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
 import de.amr.pacmanfx.ui.entities3D.score.Score3DSystem;
 import de.amr.pacmanfx.ui.entities3D.score.ScoresView;
-import de.amr.pacmanfx.ui.entities3D.world.GameLevel3DUpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D_UpdateSystem;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsViewModel;
@@ -170,7 +171,7 @@ public class PlayScene3D extends AbstractGameScene {
 
         optView3D().ifPresent(view3D -> {
             view3D.optGameLevel3D().ifPresent(levelView3D -> {
-                final var system = game.systems().assertSystem(GameLevel3DUpdateSystem.class);
+                final var system = game.systems().assertSystem(GameLevelView3D_UpdateSystem.class);
                 system.updateGameLevelView3D(levelView3D, game, view3D.animationRegistry());
 
                 //TODO This is crap, change it!

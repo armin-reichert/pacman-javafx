@@ -40,7 +40,10 @@ import de.amr.pacmanfx.ui.entities3D.messageview.LevelMessageType;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DAnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D_AnimationSystem;
 import de.amr.pacmanfx.ui.entities3D.world.PelletView3D;
+import de.amr.pacmanfx.ui.entities3D.world.WorldMapView3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveID;
@@ -281,7 +284,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         playScene3D.initPac3DProperties(assertGame().systems(), level, level.entitySet().pac());
 
-        final PlaySceneView3DAnimationSystem animationSystem = playScene3D.assertView3D().animationSystem();
+        final GameLevelView3D_AnimationSystem animationSystem = playScene3D.assertView3D().animationSystem();
         animationSystem.startEnergizerPumping(level3D);
         animationSystem.startParticlesAnimation();
         animationSystem.startGhostLightAnimation();

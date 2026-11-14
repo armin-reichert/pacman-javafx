@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D;
 import de.amr.pacmanfx.ui.entities3D.bonus.BonusView3D_System;
@@ -24,13 +23,12 @@ import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.LivesCounterView3D_System;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D;
 import de.amr.pacmanfx.ui.entities3D.pac.PacView3D_System;
-import de.amr.pacmanfx.ui.gamescene.playscene.GameLevelView3D;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevel3DUpdateSystem {
+public class GameLevelView3D_UpdateSystem {
 
-    public GameLevel3DUpdateSystem() {
+    public GameLevelView3D_UpdateSystem() {
     }
 
     public void updateGameLevelView3D(GameLevelView3D levelView3D, GameContext game, AnimationRegistry animationRegistry) {

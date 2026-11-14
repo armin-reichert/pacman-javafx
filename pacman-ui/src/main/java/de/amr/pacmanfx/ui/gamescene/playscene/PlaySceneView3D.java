@@ -14,6 +14,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.engine.input.Keyboard;
 import de.amr.pacmanfx.ui.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.messageview.MessageView3DComp;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D;
+import de.amr.pacmanfx.ui.entities3D.world.GameLevelView3D_AnimationSystem;
 import de.amr.pacmanfx.ui.gamescene.view3d.animation.PlaySceneView3D_FadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.view3d.camera.PerspectiveManager;
@@ -44,7 +46,7 @@ public class PlaySceneView3D implements Disposable {
     private PerspectiveManager perspectiveManager;
 
     private AnimationRegistry animationRegistry;
-    private PlaySceneView3DAnimationSystem animationSystem;
+    private GameLevelView3D_AnimationSystem animationSystem;
     private PlaySceneView3D_FadeInAnimation fadeInAnimation;
 
     private GameLevelView3D level3D;
@@ -68,7 +70,7 @@ public class PlaySceneView3D implements Disposable {
         perspectiveManager = new PerspectiveManager(camera);
 
         animationRegistry = new AnimationRegistry();
-        animationSystem = new PlaySceneView3DAnimationSystem(animationRegistry);
+        animationSystem = new GameLevelView3D_AnimationSystem(animationRegistry);
 
         fadeInAnimation = new PlaySceneView3D_FadeInAnimation(Duration.seconds(3), this);
         animationRegistry.register(fadeInAnimation.name(), fadeInAnimation);
@@ -160,7 +162,7 @@ public class PlaySceneView3D implements Disposable {
         return animationRegistry;
     }
 
-    public PlaySceneView3DAnimationSystem animationSystem() {
+    public GameLevelView3D_AnimationSystem animationSystem() {
         return animationSystem;
     }
 
