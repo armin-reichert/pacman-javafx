@@ -4,4 +4,4 @@
 
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
-public record BonusDataComp(int symbolCode) {}
+public record BonusData(int symbolCode) {}
